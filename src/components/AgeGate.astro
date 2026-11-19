@@ -5,14 +5,14 @@
 // page and stays while the page loads.
 //
 // The door stands on the home header's own skeleton (styles/first-screen.css): its name where the header's is, its
-// question where the motto will be, its two buttons where the header's two are. So "Yes" does not cut to another
+// question where the header's words are, its two buttons where the header's two are (a line higher there). So "Yes" does not cut to another
 // picture. The question goes, the light answers, and the slabs slide apart from the line (one movement drives the
 // slabs, their lit edges and the name: the script below). What the light does next depends on what is behind:
 //   - the home header on an upright phone: the line opens into the header's gap of light. The two lights come to
 //     rest on the gap's two edges and the name stays between them and the screen's edges, HOT before the gap and
 //     LAND on its far edge: they are the header's own from then on;
-//   - the home header on a wider screen: one light comes to rest between the T and the L of the big word, where
-//     the header's own line is; the other leaves with its slab, and the name leaves with the slabs;
+//   - the home header on a wider screen: the big word has no line of its own (the club took it out, 2026-11-20),
+//     so both lights leave with their slabs, and the small name sinks at once, before the big word shows through;
 //   - any other page (or the home page opened part-way down): light and name leave with the slabs.
 // The page's own pieces then come in behind it (the header's plates, the phone's dock: global.css, "The door
 // opens"; the home header's words: hero.css, Entrances). Styles: styles/gate.css.
@@ -83,13 +83,14 @@ const shape = (h: { paths: string[]; width: number }) =>
     : [];
   behind.forEach((el) => { el.inert = true; });
   if (behind.length && !gate!.contains(document.activeElement)) gate!.focus({ preventScroll: true });
-  // The page behind is not drawn while the door arrives (gate.css). Once the door stands (its last piece, the small
-  // links, has arrived) the page is drawn behind it, so the answer has nothing left to paint.
+  // The page behind is not drawn while the door arrives (gate.css). Once the whole arrival is over (the band of
+  // light has crossed the name, about 2.6 s in) and the browser has a free moment, the page is drawn behind the
+  // door, so the answer has nothing left to paint; drawing it earlier cost the arrival its last frames.
   if (behind.length) {
     const set = () => root.classList.add('door-set');
-    const foot = gate!.querySelector('.gate-foot');
-    if (!foot || !root.classList.contains('motion') || root.classList.contains('door-still')) set();
-    else { foot.addEventListener('animationend', set, { once: true }); setTimeout(set, 2600); }
+    const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(set, { timeout: 1200 }) : setTimeout(set, 200));
+    if (!root.classList.contains('motion') || root.classList.contains('door-still')) set();
+    else setTimeout(idle, 3000);
   }
 
   // Yes: remember the answer for this visit (Base.astro asks again on the next one), give the page back, and open
@@ -124,7 +125,8 @@ const shape = (h: { paths: string[]; width: number }) =>
      starting up.
        0 ms     the question and the small links go; the light answers along the line (to 300 ms); nothing else moves
        140      the slabs start (1300 ms). A light that stays leaves with its slab, falls behind and settles on the
-                header's own line; a light that leaves is out soon after. The wall's red is out by 660
+                header's own line (an upright phone's gap); a light that leaves is out soon after. The wall's red
+                is out by 660
        ~640     a light that stayed gives way to the header's own line: one cross-fade, 450 ms, the two always adding
                 up to one light
        500      the header's film comes up inside the gap (hero.css)
@@ -146,11 +148,8 @@ const shape = (h: { paths: string[]; width: number }) =>
     const mid = (el: Element) => { const r = el.getBoundingClientRect(); return r.width ? r.left + r.width / 2 : NaN; };
     const hero = scrollY < 2 ? document.querySelector<HTMLElement>('.hero .hv3') : null;
     const gap = hero ? Array.from(hero.querySelectorAll<HTMLElement>('.hv3-gap i')) : [];
-    const seam = hero?.querySelector<HTMLElement>('.hv3-seam');
     let ownL: HTMLElement | undefined, ownR: HTMLElement | undefined;
     if (gap.length === 2 && mid(gap[0]) > 0) [ownL, ownR] = gap;
-    else if (seam && mid(seam) < W / 2) ownL = seam;
-    else if (seam && mid(seam) >= W / 2) ownR = seam;
     const reach = (d: number) => (d > 1 && d < W / 2 ? d : 0);
     const aL = ownL ? reach(mid(q('.gate-edge-l i')) - mid(ownL)) : 0;
     const aR = ownR ? reach(mid(ownR) - mid(q('.gate-edge-r i'))) : 0;

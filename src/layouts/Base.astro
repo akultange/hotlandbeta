@@ -90,6 +90,7 @@ const preload = lang === 'ru'
 
     {/* the concrete of the 18+ door and of the page itself, found otherwise only after the stylesheet */}
     {!bare && <link rel="preload" as="image" href="/img/concrete/concrete.webp" />}
+    {!bare && <link rel="preload" as="image" href="/img/concrete/mottle.webp" />}
     {/* what one page needs first (the home page's poster, HeroPreload.astro) */}
     <slot name="head" />
     {/* Dev and preview builds: which version of each contested part shows (Luka's or Gio's, data/variants.ts) */}

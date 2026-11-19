@@ -2,7 +2,7 @@
    The first screen's skeleton, shared by the 18+ door (AgeGate.astro, on every page) and the home page's header
    (Hero.astro, its take v3).
    The door and the header are one composition in two materials. The door's name stands where the header's does,
-   its question where the header's motto will be, its two buttons where the header's two are. So when the door
+   its question where the header's words are, its two buttons where the header's two are. So when the door
    opens, nothing has to travel: the concrete leaves, and each thing is already in its place.
    Here: the screen's box (.hv, and the door's copy of it, .gate-in), where the big word or the gap sits in it
    (--mw --mh --cx --cy), the words under it (.hv-copy), and the name as the wall carries it (.wall-name).
@@ -29,7 +29,7 @@
 
 /* ---------- Where things stand (the header's take v3, and the door) ----------
    The big word as wide as the page's column, the words centred under it, and the free room split two to one above
-   the word and below the words. --copy-h is a close guess at the words' height (the motto, the one line under it
+   the word and below the words. --copy-h is a close guess at the words' height as the door has them (the question, the one line under it
    and the two buttons: 148 to 189px), so the word can be placed before anything is measured; the words themselves
    always sit exactly --hv-gap under the word. */
 .hv3, .gate-in {
@@ -72,7 +72,8 @@
      buttons keep their air above the dock) */
   .hv, .gate-in { height: calc(100svh - var(--dock)); min-height: 480px; --hv-pb: 24px; --hv-gap: 22px; }
   .hero-tag { font-size: clamp(27px, 8.6vw, 42px); }
-  /* the line under the motto stays one line down to the narrowest phone (17px from 370 wide up) */
+  /* the line under the name (under the door's question) stays one line down to the narrowest phone (17px from 370
+     wide up) */
   .hv-lead { font-size: min(17px, 4.6vw); }
   .hv-copy { gap: 10px; }
   .hv-act { gap: 10px; margin-top: 8px; }
@@ -94,11 +95,11 @@
    the words sit at the foot of the screen, where the gap has frosted over again. */
 @media (max-width: 899px) and (orientation: portrait) {
   .hv3, .gate-in {
-    /* the words' height: the motto and the one line under it (their sizes here, each on one line), the buttons' row,
+    /* the words' height: the door's question and the one line under it (their sizes here, each on one line), the buttons' row,
        and the gaps between them */
     --copy-h: calc(clamp(27px, 8.6vw, 42px) * 1.05 + min(17px, 4.6vw) * 1.6 + 78px);
     --mw: clamp(56px, 17.5cqw, 88px);
-    /* the gap runs from the top of the screen to just behind the motto */
+    /* the gap runs from the top of the screen to just above the words (on the door: to just behind the question) */
     --mh: calc(100cqh - var(--hv-pb) - var(--copy-h) + 28px);
     --cx: 50cqw;
     --cy: calc(var(--mh) / 2);

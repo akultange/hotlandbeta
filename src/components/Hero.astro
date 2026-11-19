@@ -19,7 +19,7 @@
 // SETTLED off to compare them again).
 import { type Lang, ui } from '../data/i18n';
 import { HERO_PHONE } from '../data/hero';
-import { place, line, GLYPHS, nameHalves } from '../data/wordmark';
+import { place, line, nameHalves } from '../data/wordmark';
 import '../styles/first-screen.css';
 import '../styles/hero.css';
 interface Props { lang: Lang }
@@ -41,8 +41,6 @@ const takes: Take[] = CHOOSING ? ['v1', 'v2', 'v3'] : [DEFAULT];
 const word = line('HOTLAND');
 const W = word.width;
 const box = `0 -725 ${W} 735`;
-// the line of red light stands in the joint between the T and the L (v3): where that is across the word
-const seamX = (word.at[2] + GLYPHS.T[2] + word.at[3] + GLYPHS.L[1]) / 2 / W;
 // v2 opens around the middle of the L's stem (x 80 to 265 of the letter, y -710 to -150)
 const stemX = (word.at[3] + (80 + 265) / 2) / W;
 const stemY = (725 - 430) / 735;
@@ -87,7 +85,8 @@ const film = {
   play: ru ? 'Смотреть' : 'Play',
 };
 const copy = {
-  tag: ru ? 'Только <em>между нами</em>' : 'Just <em>between us</em>',
+  // (2026-11-20: the club asked for the motto, «Только между нами», to go from the header: the name, one line that
+  // says what the place is, and the two buttons. The motto stays in the page's title and on the footer's card.)
   // (no-break spaces keep a short word with the one after it, so no line ends on "в", "с" or "The")
   // (2026-11-19: the club found the second sentence, «Шоу, ужин и бар каждую ночь с 22:00 до 06:00», one too many: the
   // line under the motto only says what the place is; the hours are in the menu sheet, the footer and «О нас»)
@@ -105,7 +104,7 @@ const PHONE = HERO_PHONE;
 const starter = `(function (v) { v.poster = matchMedia('${PHONE}').matches ? v.dataset.posterPhone : v.dataset.poster; })(document.currentScript.previousElementSibling);`;
 ---
 {CHOOSING && <script is:inline set:html={chooser} />}
-<section class:list={['hero', { 'hv-test': CHOOSING }]} style={`--wl:${nm.land.width};--ngu:${nm.gap};--sxn:${seamX.toFixed(5)};--wr:${(735 / W).toFixed(5)};--wr-m:${(stackH / land.width).toFixed(5)};--ax:${(stemX * 100).toFixed(2)}%;--ay:${(stemY * 100).toFixed(2)}%;--axn:${stemX.toFixed(4)};--ayn:${stemY.toFixed(4)}`}>
+<section class:list={['hero', { 'hv-test': CHOOSING }]} style={`--wl:${nm.land.width};--ngu:${nm.gap};--wr:${(735 / W).toFixed(5)};--wr-m:${(stackH / land.width).toFixed(5)};--ax:${(stemX * 100).toFixed(2)}%;--ay:${(stemY * 100).toFixed(2)}%;--axn:${stemX.toFixed(4)};--ayn:${stemY.toFixed(4)}`}>
   <h1 class="sr-only">{ru ? 'HOTLAND, премиальный мужской клуб в Москве' : 'HOTLAND, a premium gentlemen’s club in Moscow'}</h1>
   {takes.map((take) => (
     <div class:list={['hv', `h${take}`]} data-take={take} style={take === 'v3' ? glass : undefined}>
@@ -122,8 +121,6 @@ const starter = `(function (v) { v.poster = matchMedia('${PHONE}').matches ? v.d
           <div class="hv3-edge" aria-hidden="true"></div>
           <div class="hv3-shine" aria-hidden="true"><i></i></div>
           <div class="hv3-dim" aria-hidden="true"></div>
-          {/* the line of red light in the joint between the T and the L, as on the wall (wide screens) */}
-          <div class="hv3-seam" aria-hidden="true"></div>
           {/* a phone held upright: the red light along the gap's two edges, and the name across it */}
           <div class="hv3-gap" aria-hidden="true"><i></i><i></i></div>
           <div class="wall-name hv3-name" aria-hidden="true">
@@ -147,7 +144,6 @@ const starter = `(function (v) { v.poster = matchMedia('${PHONE}').matches ? v.d
           </div>
         )}
         <div class="hv-copy">
-          <p class="hero-tag" set:html={copy.tag} />
           <p class="lead hv-lead">{copy.lead}</p>
           <div class="hv-act">
             <a class="btn btn-crimson" href={p('booking')}>{copy.book}</a>
