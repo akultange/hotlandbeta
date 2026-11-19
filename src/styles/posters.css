@@ -1,0 +1,198 @@
+/* =====================================================================
+   Event posters (the Афиша). Loaded after global.css (Base.astro); the card is PosterCard.astro.
+   Each night is a printed poster, framed and resting on the page: tall (9:16), rounded corners, a quiet
+   light edge, the photograph edge to edge and, at the bottom left, the date in white: the day in heavy
+   condensed figures with the month beside it, reading upwards. With a mouse it leans toward the pointer (Luka's tilt).
+   Under the poster: the weekday and doors time in a pill with the entry price, the night's name in bold and
+   one short line. Three in a row (the weekend), one swipe row on phones. The whole card is one link; hover plays the night's film.
+   ===================================================================== */
+
+/* ---------- The row: the weekend's three nights, large, across the page ----------
+   The posters are cut shorter than 9:16, so three big ones and the words under them still fit
+   one laptop screen (3:4); the photograph keeps its middle, where the night's figure stands. */
+.posters {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px clamp(16px, 2vw, 28px);
+  /* as wide as the page, with the first poster in line with the text above it (.wrap) */
+  padding: 0 max(var(--pad), calc((100% - var(--max)) / 2 + var(--pad)));
+}
+.posters.in-wrap { padding: 0; }
+.posters .poster-frame { aspect-ratio: 3 / 4; }
+/* the photograph sits low in the frame, so the date at the top-right stays clear of the face; its film (the video
+   scripts/site.ts adds on hover, or on a phone when the poster is in view) is framed the same way, so the girl
+   stays where she stood when the film takes over from the photograph. A night whose girl stands lower in her
+   photo shows a lower part of it (content.ts `pos`, set by PosterCard.astro as --ppos). */
+.posters .poster-shot :is(img, video) { object-position: var(--ppos, 50% 0%); }
+@media (max-width: 699px) {
+  /* phones: one swipe row, a poster and the edge of the next; the poster on screen plays its film */
+  .posters, .posters.three {
+    grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: 78vw; gap: 12px;
+    /* room above and below for the focus ring, which the scrolling row would otherwise cut */
+    margin: -8px 0; padding: 8px var(--pad); scroll-padding-inline: var(--pad);
+    overflow: auto hidden; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none;
+  }
+  .posters::-webkit-scrollbar { display: none; }
+  .poster { scroll-snap-align: start; }
+  .posters.in-wrap { margin: -8px calc(-1 * var(--pad)); padding: 8px var(--pad); }
+  /* the home page's weekend: the row holds still on the screen (above the dock) while the page scrolls on,
+     sliding from one poster to the next and resting on each; PosterCard.astro switches it on and makes .prow as
+     tall as the screen plus the slide. The posters are sized so one, with its lines, fits. The row sits in the
+     middle of the held screen, but never further down it than just under the header, so it stays close under
+     its heading; the room left under it (--pin-free, measured by PosterCard.astro, less what is above the row)
+     is taken back after the hold, so the next section comes as close as every section does. */
+  .prow.on .prow-pin {
+    --pin-top: min(calc(var(--hdr) + 8px), var(--pin-free, 0px) / 2);
+    position: sticky; top: 0; height: calc(100svh - var(--dock)); display: flex; flex-direction: column; justify-content: flex-start;
+    padding-top: var(--pin-top);
+    /* the room over the row is for the header while the row is held, not air under the heading: the held screen
+       starts that much higher (over the heading row's foot, letting clicks through), so before the hold the
+       posters stand the heading gap under the heading row, as every section's content does */
+    margin-top: calc(-1 * var(--pin-top)); pointer-events: none;
+  }
+  .prow.on .prow-pin > * { pointer-events: auto; }
+  .prow.on { margin-bottom: calc(min(calc(var(--hdr) + 8px), var(--pin-free, 0px) / 2) - var(--pin-free, 0px)); }
+  .prow.on .posters { position: relative; overflow: hidden; scroll-snap-type: none; grid-auto-columns: min(78vw, (100svh - var(--dock) - 190px) * .75); }
+}
+
+/* ---------- One poster ---------- */
+.poster { min-width: 0; container: poster / inline-size; }
+.poster-link { display: grid; align-content: start; color: var(--fg); -webkit-tap-highlight-color: transparent; }
+.poster-frame {
+  position: relative; display: block; aspect-ratio: 9 / 16; overflow: hidden; isolation: isolate;
+  container-type: inline-size; border-radius: clamp(16px, 1.3vw, 20px); background: #0b0b0c;
+  /* held up to the light: with a mouse it leans toward the pointer (PosterCard.astro sets --rx/--ry) */
+  transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .9s var(--ease-out);
+}
+.poster-frame.is-tilting { transition: transform .15s linear; }
+.poster-glare {
+  position: absolute; inset: 0; z-index: 2; border-radius: inherit; pointer-events: none; opacity: 0; mix-blend-mode: soft-light;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 30%), rgba(255, 255, 255, .55), rgba(255, 255, 255, 0) 55%);
+  transition: opacity .5s ease;
+}
+.poster-frame.is-tilting .poster-glare { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .poster-frame { transform: none; transition: none; } }
+/* the photograph and its film, edge to edge */
+.poster-shot { position: absolute; inset: 0; z-index: 0; background: #0b0b0c; }
+/* a poster whose shot is framed wider than the rest comes closer and lower (content.ts, `zoom` and `drop`), photo and
+   film alike; the top of the shot, black like the poster, fades into it */
+.poster-shot[style*="--pz"] {
+  transform: translateY(var(--pdy)) scale(var(--pz)); transform-origin: 50% 0;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 12%); mask-image: linear-gradient(180deg, transparent 0, #000 12%);
+}
+.poster-shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* a shade at the top, so the date reads on any picture */
+.poster-frame::before {
+  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0) 56%, rgba(0, 0, 0, .36) 74%, rgba(0, 0, 0, .8) 100%);
+}
+/* the edge: a quiet light line just inside the rim, as on a printed card */
+.poster-frame::after {
+  content: ''; position: absolute; inset: 0; z-index: 3; border-radius: inherit; pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(242, 240, 236, .17), inset 0 1px 0 rgba(255, 255, 255, .07);
+  transition: box-shadow .4s ease;
+}
+
+/* The date, in the top-right corner: the day big and heavy, the month beside it reading upwards, its top level
+   with the top of the figures; a long month is set smaller so it never runs past them (--em is the month's
+   length, from PosterCard.astro). */
+.poster-date { position: absolute; z-index: 2; top: 6cqw; right: 6.5cqw; display: flex; align-items: flex-end; gap: 1.2cqw; color: #fff; }
+.poster-day {
+  font: 900 34cqw/.78 var(--display); font-stretch: 62.5%; letter-spacing: -.02em;
+  font-variant-numeric: lining-nums proportional-nums; margin-left: -.035em;
+}
+.poster-month {
+  writing-mode: vertical-rl; rotate: 180deg; white-space: nowrap;
+  font: 800 7.4cqw/.84 var(--display); font-size: min(7.4cqw, calc(24.5cqw / var(--em, 3.44)));
+  font-stretch: 62.5%; letter-spacing: .005em;
+}
+
+/* ---------- Under the poster ---------- */
+.poster-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; margin-top: 18px; }
+.poster-when {
+  display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 999px;
+  background: rgba(242, 240, 236, .08); box-shadow: inset 0 0 0 1px rgba(242, 240, 236, .1);
+  font: 500 14px/1 var(--sans); color: var(--fg); white-space: nowrap; font-variant-numeric: lining-nums;
+}
+.poster-price { font: 600 16px/1 var(--sans); color: var(--fg); white-space: nowrap; font-variant-numeric: lining-nums; }
+.poster-price span { font-weight: 400; color: var(--fg-2); }
+.poster-title {
+  margin-top: 14px; font: 800 clamp(28px, 2.4vw, 34px)/1.02 var(--display); font-stretch: 75%; letter-spacing: .004em;
+  overflow-wrap: break-word; transition: color .3s ease;
+}
+.poster-line {
+  margin-top: 8px; max-width: 40ch; font: 400 15px/1.5 var(--sans); color: var(--fg-2);
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
+}
+/* A narrow poster (four across on a small laptop, a small phone) has no room for the price beside the pill:
+   the price moves to the foot of every card, under a two-line slot, so a row of cards still lines up. So do a
+   past night's «Прошёл» and the crimson «Вы здесь»: never a small label over the night's name. */
+@container poster (width < 272px) {
+  .poster-row { display: contents; }
+  .poster-when { justify-self: start; margin-top: 18px; }
+  .poster-line { min-height: 3em; }
+  :is(.poster-price, .poster-past, .poster-here) { order: 1; margin-top: 12px; }
+}
+
+/* ---------- Response: the film plays (scripts/site.ts), the picture leans in, the name turns crimson ---------- */
+.poster-shot :is(img, video) { transition: scale 1.2s var(--ease-out), opacity .6s ease; }
+@media (hover: hover) {
+  .poster-link:hover .poster-shot :is(img, video) { scale: 1.035; }
+  .poster-link:hover .poster-frame::after { box-shadow: inset 0 0 0 1px rgba(242, 240, 236, .3), inset 0 1px 0 rgba(255, 255, 255, .1); }
+  .poster-link:hover .poster-title { color: var(--red-text); }
+}
+.poster-link:focus-visible { outline: none; }
+.poster-link:focus-visible .poster-frame { outline: 2px solid var(--red-text); outline-offset: 4px; }
+
+/* Entrance (only under html.motion, so never for reduced motion): the poster rises with the rest of the
+   page (global.css), its picture settles from a slight zoom and the date comes up a beat later. */
+@keyframes poster-settle { from { scale: 1.12; } }
+@keyframes poster-date-in { from { opacity: 0; translate: 0 14%; } }
+html.motion .poster.is-in .poster-shot img { animation: poster-settle 1.8s var(--ease-out) var(--d, 0s) backwards; }
+html.motion .poster.is-in .poster-date { animation: poster-date-in 1s var(--ease-out) calc(var(--d, 0s) + .3s) backwards; }
+@media (prefers-reduced-motion: reduce) {
+  .poster-shot :is(img, video), .poster-title, .poster-frame::after { transition: none; }
+  .poster-link:hover .poster-shot :is(img, video) { scale: none; }
+}
+
+/* the night whose page you are on: a crimson note in place of the price, and a crimson edge */
+.poster-here { font: 600 14px/1 var(--sans); color: var(--red-text); white-space: nowrap; }
+.poster.is-here .poster-frame::after { box-shadow: inset 0 0 0 1.5px rgba(255, 77, 104, .7), inset 0 1px 0 rgba(255, 255, 255, .07); }
+
+/* ---------- With a mouse: over a poster the pointer is a small metal disc reading "Бронь" (PosterCard.astro) ---------- */
+/* the real pointer hides only while the disc stands in for it (PosterCard.astro sets html.poster-disc) */
+@media (hover: hover) and (pointer: fine) { html.poster-disc .poster-frame { cursor: none; } }
+/* the holder moves with the pointer (GSAP); the disc inside grows in and out (CSS), so neither undoes the other */
+.poster-cursor { position: fixed; left: 0; top: 0; z-index: 60; width: 0; height: 0; pointer-events: none; }
+.poster-cursor > span {
+  position: absolute; left: -33px; top: -33px; width: 66px; height: 66px;
+  display: grid; place-items: center; border-radius: 50%;
+  font: 600 13px/1 var(--sans); color: #141416; white-space: nowrap;
+  background: radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, .95) 0%, rgba(255, 255, 255, 0) 60%), var(--metal-read);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95), inset 0 -1px 1px rgba(0, 0, 0, .22), 0 0 0 1px rgba(255, 255, 255, .14), 0 14px 30px -12px rgba(0, 0, 0, .95);
+  opacity: 0; scale: .3; transition: opacity .25s ease, scale .5s var(--ease-out);
+}
+.poster-cursor.on > span { opacity: 1; scale: 1; }
+.poster-cursor.on.down > span { scale: .86; }
+@media (prefers-reduced-motion: reduce) { .poster-cursor > span { transition: opacity .2s ease; scale: 1; } }
+
+/* ---------- Nights that have been (the events page) ----------
+   The same posters, a size smaller (the row keeps the width of four, so three take three quarters of it), in
+   black and white and a little dim, the colour coming back under the mouse; the date figures quieter; «Прошёл»
+   where the price was. They lead to the gallery. */
+.posters.past { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.poster.is-past .poster-shot { filter: grayscale(1) brightness(.62) contrast(1.06); transition: filter .7s ease; }
+@media (hover: hover) { .poster.is-past .poster-link:hover .poster-shot { filter: grayscale(.1) brightness(.95); } }
+.poster.is-past .poster-date { opacity: .6; }
+.poster.is-past .poster-title { color: var(--fg-2); }
+.poster-past { font: 500 14px/1 var(--sans); color: var(--muted); }
+@media (max-width: 899px) { .posters.past { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 699px) { .posters.past { grid-template-columns: none; grid-auto-columns: 62vw; } }
+
+/* ---------- A phone held sideways (or any screen as short): see landscape.css ---------- */
+@media (orientation: landscape) and (max-height: 500px) {
+  /* ---------- The posters (Афиша): cut wider, so a poster and its lines fit the screen ---------- */
+  .posters .poster-frame { aspect-ratio: auto; height: clamp(150px, calc(100svh - var(--hdr) - 150px), 300px); }
+}
+/* ---------- (and on the smallest phones (an SE): the posters a swipe row, two and a bit across ---------- */
+@media (orientation: landscape) and (max-height: 500px) and (max-width: 699px) {
+  .posters, .posters.three { grid-auto-columns: min(46vw, 300px); }
+}

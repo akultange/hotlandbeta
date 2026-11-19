@@ -1,0 +1,222 @@
+---
+// About us («О нас»): everything about HOTLAND on one page, contacts included (the old Contacts page sends visitors
+// to #contacts).
+//   1. The page's name, the slogan, one line and the two actions (book a table, find us).
+//   2. The club: two show portraits stand like the wings of a stage, and the words about the club sit between
+//      them, centre stage. Each portrait plays its film on hover (on a phone, when it settles in view).
+//   3. House rules (#rules): four big steel numerals, a short name and the rule itself, like a theatre programme.
+//   4. Finding us (#contacts): the home page's own block (Visit.astro: the address, the hours and the shows, the
+//      way there, beside the peephole on the door), and under it four big ways to reach the club.
+//   5. The casting call, as on the home page and the artists page (CastingCall.astro). The footer's own closing
+//      invitation ("your table is waiting") ends the page.
+// Styles: styles/about.css (and visit.css, casting.css for the shared blocks). No words on photos, nothing in
+// capitals, no long dashes in the copy.
+import Base from '../../layouts/Base.astro';
+import Photo from '../../components/Photo.astro';
+import PageTitle from '../../components/PageTitle.astro';
+import Visit from '../../components/Visit.astro';
+import CastingCall from '../../components/CastingCall.astro';
+import { type Lang, ui, tr, langPaths } from '../../data/i18n';
+import { site } from '../../data/site';
+import { manifesto, houseRules, houseRulesTitle, night, media } from '../../data/content';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const t = ui[lang];
+const ru = lang === 'ru';
+const p = (s: string) => `/${lang}/${s}/`;
+// Russian typesetting: a short word stays on the line of the word after it ("в которых", "и костюмы").
+const keep = (s: string) => (ru ? s.replace(/(?<=^|\s)(в|во|на|за|до|по|с|со|к|ко|и|а|о|у|не|ни|от|из|для|без|что)\s/gi, '$1\u00a0') : s);
+// …and a word with a hyphen ("дресс-код") never breaks at it. Our own copy only (returns HTML).
+const nowrapHyphens = (s: string) => s.replace(/[^\s-]+(?:-[^\s-]+)+/g, (w) => `<span class="ab-nw">${w}</span>`);
+const hours = `${site.hours[0].open}–${site.hours[0].close}`;
+
+// The two show portraits: the feather fans of the first show, the crystals of the second (portrait cuts and films).
+const wings = [night.acts[1], night.acts[2]];
+
+// A short name for each house rule (the rules themselves come from content.ts).
+const ruleNames = ru
+  ? ['Телефон в чехле', 'Без съёмки', 'Свой менеджер', '18+ и дресс-код']
+  : ['Phone in a pouch', 'No cameras', 'Your own host', '18+ and dress code'];
+
+// The ways to reach the club, as big buttons. The club's number is never shown: "Request a call" and "Ask a
+// question" open the dialog where a visitor leaves theirs (Ask.astro).
+const icons = {
+  phone: '<path d="M8.4 3.6 9.9 7c.3.7.1 1.5-.5 2l-1.3 1.1a11.6 11.6 0 0 0 5.8 5.8l1.1-1.3c.5-.6 1.3-.8 2-.5l3.4 1.5c.7.3 1.1 1.1.9 1.9l-.5 2.1c-.2.8-.9 1.4-1.8 1.4C10.6 21 3 13.4 3 4.9c0-.9.6-1.6 1.4-1.8l2.1-.5c.8-.2 1.6.2 1.9 1z" />',
+  wa: '<path d="M3.5 20.5 4.8 16A8.6 8.6 0 1 1 8 19.3z" /><path d="M9.3 8.3c.3-.4.9-.4 1.2 0l.8 1.5c.2.3.1.7-.1 1l-.5.5c.6 1.2 1.5 2.1 2.7 2.7l.5-.5c.3-.2.7-.3 1-.1l1.5.8c.4.3.4.9 0 1.2-.6.6-1.5.9-2.4.7-2.4-.6-4.3-2.5-4.9-4.9-.2-.9.1-1.8.7-2.4z" />',
+  tg: '<path d="M20.6 3.6 2.9 10.4c-.8.3-.8 1.4 0 1.7l4.4 1.6 1.7 5.4c.2.7 1.1.9 1.6.4l2.5-2.4 4.4 3.2c.6.4 1.4.1 1.6-.6l3-14.6c.2-.9-.7-1.6-1.5-1.5z" /><path d="m7.3 13.7 9.4-6.2-6.6 7.4" />',
+  mail: '<rect x="3" y="5.5" width="18" height="13" rx="2.6" /><path d="m4.2 7.6 7.8 5.9 7.8-5.9" />',
+  ask: '<path d="M5.2 4.5h13.6c.9 0 1.7.8 1.7 1.7v8.9c0 .9-.8 1.7-1.7 1.7H10l-4.6 3.6v-3.6h-.2c-.9 0-1.7-.8-1.7-1.7V6.2c0-.9.8-1.7 1.7-1.7z" /><path d="M10.1 8.7a1.95 1.95 0 1 1 2.7 1.8c-.5.2-.8.6-.8 1.1v.3" /><path d="M12 13.9h.01" />',
+};
+type Way = { k: string; v: string; html?: string; ic: string; href?: string; contact?: 'callback' | 'question'; ext?: boolean };
+// Gio's ways in (data/variants.ts, 'contact'): the number and the email shown. A number may break only between its
+// groups (+7 495 / 000-00-00), the address only after its @ (hello@ / hotland.club).
+const phoneHtml = nowrapHyphens(site.phone);
+const waysGio: Way[] = [
+  { k: t.call, v: site.phone, html: phoneHtml, href: site.phoneHref, ic: icons.phone },
+  { k: t.whatsapp, v: site.phone, html: phoneHtml, href: site.whatsapp, ic: icons.wa, ext: true },
+  { k: t.telegram, v: site.telegram.replace(/^https?:\/\/t\.me\//, '@'), href: site.telegram, ic: icons.tg, ext: true },
+  { k: ru ? 'Почта' : 'Email', v: site.email, html: site.email.replace('@', '@<wbr>'), href: `mailto:${site.email}`, ic: icons.mail },
+];
+// Luka's ways in: the club's number is never shown; a call is asked for (Ask.astro)
+const ways: Way[] = [
+  { k: ru ? 'Заказать звонок' : 'Request a call', v: ru ? 'Перезвоним сами' : 'We’ll call you back', contact: 'callback', ic: icons.phone },
+  { k: ru ? 'Задать вопрос' : 'Ask a question', v: ru ? 'Ответим, как удобно вам' : 'Answered your way', contact: 'question', ic: icons.ask },
+  { k: t.whatsapp, v: ru ? 'Написать в чат' : 'Message us', href: site.whatsapp, ic: icons.wa, ext: true },
+  { k: t.telegram, v: site.telegram.replace(/^https?:\/\/t\.me\//, '@'), href: site.telegram, ic: icons.tg, ext: true },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'NightClub',
+  name: site.name,
+  address: site.address[lang],
+  email: site.email,
+  openingHours: `Mo-Su ${hours.replace('–', '-')}`,
+};
+import { show } from '../../data/variants';
+import '../../styles/about.css';
+---
+<Base
+  lang={lang}
+  title={t.nav.about}
+  description={ru
+    ? `HOTLAND: ночное кабаре, где каждый танец поставлен как спектакль. Правила дома, адрес, часы и как с нами связаться. Каждую ночь ${hours}.`
+    : `HOTLAND, a late-night cabaret where every dance is staged like a play. House rules, the address, the hours and how to reach us. Every night ${hours}.`}
+  schema={schema}
+>
+  <PageTitle
+    title={ru ? 'О&nbsp;нас' : 'About&nbsp;us'}
+    sub={ru ? 'Город остаётся <em>за&nbsp;дверью</em>' : 'The city <em>stays outside</em>'}
+    lead={keep(ru ? 'Кто мы, как у нас принято и где та самая дверь. Остальное расскажем при встрече.' : 'Who we are, how things are done here and where to find the door. The rest we’ll tell you in person.')}
+  >
+    <a class="btn btn-crimson" href={p('booking')}>{t.bookTable}</a>
+    <a class="btn btn-line" href="#contacts">{ru ? 'Как нас найти' : 'Find us'}</a>
+  </PageTitle>
+
+  <!-- THE CLUB: two show portraits like the wings of a stage, the words centre stage -->
+  <section class="sec ab-club" id="club" aria-labelledby="club-h">
+    <div class="wrap ab-stage">
+      {wings.map((a, i) => (
+        <div class:list={['ab-wing', i ? 'ab-wing-r' : 'ab-wing-l']}>
+          <Photo src={media(a.imgPhone)} loop={media(a.filmPhone)} alt={tr(a.alt, lang)} ratio="4/5" />
+        </div>
+      ))}
+      <div class="ab-centre">
+        <h2 class="t-l ab-centre-h" id="club-h" set:html={ru ? 'Театр <em>после полуночи</em>' : 'Theatre <em>after midnight</em>'} />
+        <p class="lead">{keep(ru
+          ? 'Ночное кабаре, где каждый танец поставлен как спектакль: свет, хореография и костюмы, в которых ткани ровно столько, сколько нужно номеру.'
+          : 'A late-night cabaret where every dance is staged like a play: light, choreography and costumes with exactly as much fabric as the number needs.')}</p>
+        <p class="body">{keep(tr(manifesto.text, lang))}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOUSE RULES: a theatre programme, four big steel numerals -->
+  <section class="sec soot ab-rules" id="rules" aria-labelledby="rules-h">
+    <div class="wrap">
+      <div class="bighead bh-line">
+        <h2 class="t-l" id="rules-h">{tr(houseRulesTitle, lang)}</h2>
+        <div class="bighead-side"><p class="body">{keep(ru ? 'Их всего четыре, и каждое бережёт ваш вечер.' : 'Just four, and each one looks after your night.')}</p></div>
+      </div>
+      <ol class="ab-rules-list" role="list">
+        {houseRules.map((r, i) => (
+          <li class="ab-rule" data-rise>
+            <span class="ab-rule-n metal" aria-hidden="true">{i + 1}</span>
+            <h3 class="ab-rule-t">{ruleNames[i]}</h3>
+            <p class="ab-rule-x" set:html={nowrapHyphens(keep(tr(r, lang)))} />
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- FINDING US: the home page's block (Visit.astro), with the id the old Contacts page links to. It lists only the
+       hours and the shows (the dress code and the 18+ rule are house rule 4, just above) and leaves out its call
+       button: under it come the four ways to reach the club, a call first (both versions, data/variants.ts
+       'contact'; the block's switch flips them too). -->
+  <Visit lang={lang} id="contacts" facts={2} call={false}>
+    {show('contact', 'luka') && (
+    <ul class="ab-ways" data-v="contact:luka" role="list" aria-label={ru ? 'Связаться с клубом' : 'Reach the club'}>
+      {ways.map((w) => (
+        <li data-rise>
+          {w.contact ? (
+            <button class="ab-way" type="button" data-contact={w.contact}>
+              <svg class="ab-way-ic" viewBox="0 0 24 24" aria-hidden="true" set:html={w.ic} />
+              <span class="ab-way-k">{w.k}</span>
+              <span class="ab-way-v">{w.v}</span>
+            </button>
+          ) : (
+            <a class="ab-way" href={w.href} target={w.ext ? '_blank' : undefined} rel={w.ext ? 'noopener' : undefined}>
+              <svg class="ab-way-ic" viewBox="0 0 24 24" aria-hidden="true" set:html={w.ic} />
+              <span class="ab-way-k">{w.k}</span>
+              {w.html ? <span class="ab-way-v" set:html={w.html} /> : <span class="ab-way-v">{w.v}</span>}
+            </a>
+          )}
+        </li>
+      ))}
+    </ul>
+    )}
+    {show('contact', 'gio') && (
+    <ul class="ab-ways" data-v="contact:gio" role="list" aria-label={ru ? 'Связаться с клубом' : 'Reach the club'}>
+      {waysGio.map((w) => (
+        <li data-rise>
+          {w.contact ? (
+            <button class="ab-way" type="button" data-contact={w.contact}>
+              <svg class="ab-way-ic" viewBox="0 0 24 24" aria-hidden="true" set:html={w.ic} />
+              <span class="ab-way-k">{w.k}</span>
+              <span class="ab-way-v">{w.v}</span>
+            </button>
+          ) : (
+            <a class="ab-way" href={w.href} target={w.ext ? '_blank' : undefined} rel={w.ext ? 'noopener' : undefined}>
+              <svg class="ab-way-ic" viewBox="0 0 24 24" aria-hidden="true" set:html={w.ic} />
+              <span class="ab-way-k">{w.k}</span>
+              {w.html ? <span class="ab-way-v" set:html={w.html} /> : <span class="ab-way-v">{w.v}</span>}
+            </a>
+          )}
+        </li>
+      ))}
+    </ul>
+    )}
+  </Visit>
+
+  <!-- CASTING: the dressing room, the roles and the way to apply (CastingCall.astro, as on the home page) -->
+  <CastingCall lang={lang} />
+</Base>
+
+<script>
+  // The page's own pieces (the rules, the ways to reach us) rise into view like the rest of the site, after the
+  // 18+ question. They wait hidden only under html.motion (about.css), so with reduced motion, or if motion never
+  // starts (Base.astro then drops html.motion), they simply show.
+  const root = document.documentElement;
+  const items = Array.from(document.querySelectorAll<HTMLElement>('[data-rise]'));
+  const showAll = () => items.forEach((el) => el.classList.add('is-in'));
+  const start = () => {
+    try {
+      if (!root.classList.contains('motion')) return;
+      if (!('IntersectionObserver' in window)) return showAll();
+      const io = new IntersectionObserver((entries) => {
+        entries
+          .filter((e) => e.isIntersecting)
+          .map((e) => e.target as HTMLElement)
+          .sort((a, b) => {
+            const ra = a.getBoundingClientRect();
+            const rb = b.getBoundingClientRect();
+            return Math.abs(ra.top - rb.top) > 8 ? ra.top - rb.top : ra.left - rb.left;
+          })
+          .forEach((el, i) => {
+            io.unobserve(el);
+            el.style.setProperty('--d', `${Math.min(i, 8) * 0.08}s`);
+            el.classList.add('is-in');
+          });
+      }, { threshold: 0.12 });
+      items.forEach((el) => io.observe(el));
+    } catch (err) {
+      showAll();
+      console.error(err);
+    }
+  };
+  const gate = document.getElementById('gate');
+  if (!gate || root.classList.contains('age-ok') || gate.classList.contains('out')) start();
+  else addEventListener('hotland:gate', start, { once: true });
+</script>

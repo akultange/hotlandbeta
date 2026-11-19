@@ -1,0 +1,38 @@
+---
+import { photo } from '../data/images';
+// A photograph in its own frame. With `loop`, a short film of the same shot plays while the mouse is over
+// it (scripts/site.ts); with `autoplay` as well, the film plays by itself whenever the photo is on screen.
+// Without `src` it is a red placeholder that says which picture belongs here.
+interface Props {
+  src?: string;
+  alt?: string;
+  ratio?: string;
+  pos?: string;
+  cap?: string;
+  capR?: string;
+  label?: string;
+  eager?: boolean;
+  loop?: string;
+  /** Play the film whenever the photo is on screen, not only under the mouse. */
+  autoplay?: boolean;
+  class?: string;
+}
+const { src, alt = '', ratio, pos, cap, capR, label = 'Photo', eager = false, loop, autoplay = false, class: cls = '' } = Astro.props;
+// (a phone's own copy: src/data/images.ts)
+const r = await photo(src, '(max-width: 899px) 95vw, 52vw', !eager);
+---
+<figure class:list={['fig', cls]}>
+  <div class:list={['photo', { ph: !src }]} style={ratio ? `aspect-ratio:${ratio}` : undefined} data-loop={src ? loop : undefined} data-autoloop={src && loop && autoplay ? '' : undefined}>
+    {src ? (
+      <img src={src} {...r} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" style={pos ? `object-position:${pos}` : undefined} />
+    ) : (
+      <span class="ph-label">{label}</span>
+    )}
+  </div>
+  {(cap || capR) && (
+    <figcaption class="cap">
+      <span class="label">{cap}</span>
+      {capR && <span class="label">{capR}</span>}
+    </figcaption>
+  )}
+</figure>

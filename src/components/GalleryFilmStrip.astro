@@ -1,0 +1,88 @@
+---
+// The gallery in brief, take two (the home page's «Галерея», data/variants.ts 'gallery': v2; styles in
+// styles/filmstrip.css): the pictures as a strip of real film. A length of half-frame 35 mm film (upright frames,
+// as a half-frame camera makes them) over a faint warm light: the dark base, a little see-through, with its grain
+// and sheen; the sprocket holes cut clean through it along both edges (four to a frame, as on the real thing), so
+// the page shows through them, and the film's thickness shows as a thin edge inside each hole and along the
+// strip's foot; the frame numbers printed in amber along the edge; in each frame a different photograph. The strip
+// is turned a little away from you about its top edge, which stays level, so it starts the heading gap under the
+// heading row along its whole width (only its foot runs lower where it comes nearer); it casts a soft shadow, and
+// fades into the dark at the screen's sides; as the page scrolls it slides sideways past you (with reduced motion
+// it stays, and a finger or a trackpad can move it). Under the mouse a frame comes up brighter and plays its film
+// if it has one (on phones, the frame that settles in view plays). Each frame opens the gallery.
+import { photo } from '../data/images';
+import { type Lang } from '../data/i18n';
+import { galleryPhotos } from '../data/gallery';
+
+interface Props { lang: Lang; href: string; next?: Record<string, string> }
+const { href, next = {} } = Astro.props;
+// twelve frames, each a different picture from the gallery (all upright, so they fill the half-frame)
+const names = [
+  'gal-01-pole-red-smoke', 'gal-04-blue-velvet-chair', 'gal-02-duet-red-blue', 'gal-06-dressing-room',
+  'gal-03-on-the-bar', 'gal-07-red-stripes', 'gal-09-duet-curtain', 'gal-10-red-light',
+  'gal-11-foam-bath', 'gal-12-corset-chair', 'gal-14-armchair-duet', 'gal-15-behind-the-curtain',
+];
+const frames = names
+  .map((name) => galleryPhotos.find((s) => s.src.includes(`/${name}.`)))
+  .filter((s): s is (typeof galleryPhotos)[number] => Boolean(s));
+// the film's own numbering starts part way along the roll, as a cut strip does
+const FIRST = 7;
+const sets = await Promise.all(frames.map((s) => photo(s.thumb ?? s.src, '(max-width: 899px) 40vw, 16vw')));
+---
+<div class="gfs" data-gfs>
+  <div class="gfs-light" aria-hidden="true"></div>
+  <div class="gfs-run" data-lenis-prevent-horizontal>
+    <div class="gfs-body" data-gfs-strip>
+    <!-- under the strip: its soft shadow, and its thickness (the same film, cut the same, a hair lower and lighter) -->
+    <div class="gfs-shadow" aria-hidden="true"></div>
+    <div class="gfs-wall gfs-cut" aria-hidden="true"></div>
+    <div class="gfs-strip gfs-cut">
+      <ol class="gfs-frames" role="list">
+        {frames.map((s, i) => (
+          <li class="gfs-frame">
+            <a class="gfs-a" href={href} tabindex="-1" aria-hidden="true" {...next}>
+              <span class="gfs-img" data-loop={s.film}>
+                <img src={s.thumb ?? s.src} {...sets[i]} alt="" loading="lazy" decoding="async" />
+              </span>
+            </a>
+            {/* the edge print: the frame's number and an arrow under it; the film's name over every fourth */}
+            <span class="gfs-no" aria-hidden="true"><i>▸</i>{i % 2 ? `${FIRST + Math.floor(i / 2)}A` : FIRST + i / 2}</span>
+            {i % 4 === 1 && <span class="gfs-brand" aria-hidden="true">HOTLAND 400</span>}
+          </li>
+        ))}
+      </ol>
+    </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  // As the strip passes through the screen, it slides sideways: from its first frames just in from the left to
+  // its last ones just in from the right. Not for reduced motion (the strip then simply scrolls sideways by hand).
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-gfs]').forEach((box) => {
+    const strip = box.querySelector<HTMLElement>('[data-gfs-strip]');
+    if (!strip) return;
+    if (still || !document.documentElement.classList.contains('motion')) {
+      box.classList.add('by-hand');
+      return;
+    }
+    // On a phone the whole strip went by in one short pass of the narrow, tall screen, about twice as fast as the
+    // page (2026-11-13, the client: too fast). There it slides no faster than the page scrolls (0.85 of it): the
+    // first frames pass slowly, and the rest wait in the gallery.
+    const phone = matchMedia('(max-width: 699px)');
+    const travel = () => {
+      const all = Math.max(0, strip.scrollWidth - box.clientWidth * 0.8);
+      return phone.matches ? Math.min(all, (innerHeight + box.offsetHeight) * 0.85 - box.clientWidth * 0.06) : all;
+    };
+    gsap.fromTo(strip, { x: () => box.clientWidth * 0.06 }, {
+      x: () => -travel(),
+      ease: 'none',
+      scrollTrigger: { trigger: box, start: 'top bottom', end: 'bottom top', scrub: 0.6, invalidateOnRefresh: true },
+    });
+  });
+</script>

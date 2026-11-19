@@ -1,0 +1,352 @@
+/* The home hero (Hero.astro). Loaded after global.css (Base.astro).
+   Three takes while we choose (the dev server and preview builds show a switch; production renders one):
+   v1  the film across the screen, falling into black; the line, the lead and the buttons on the left where it
+       darkens; HOTLAND in steel across the foot of the screen, so the hero ends on the name and the page goes on;
+   v2  black, the film playing only inside the giant letters (black cut out around them), the words centred below;
+   v3  the film behind frosted glass across the whole screen, HOTLAND cut clear out of the frost, edged in chrome.
+   All are exactly one screen tall. Their entrances are here (the older hero rules in global.css's Motion
+   section target class names this hero no longer uses). */
+
+/* ---------- Shared ---------- */
+.hero { position: relative; background: #000; }
+.hv {
+  position: relative; height: 100svh; min-height: 600px; overflow: clip; isolation: isolate;
+  container-type: size;
+  /* the side margins (the page's own column on very wide screens), the space under the last line, the gap above
+     the name, and the name's height (the word is --wr as tall as it is wide) */
+  --inl: max(var(--pad), calc((100cqw - var(--max)) / 2 + var(--pad)));
+  --hv-pb: clamp(28px, 2.8vw, 40px);
+  --hv-gap: clamp(26px, 3.2vw, 46px);
+  --wh: calc((100cqw - 2 * var(--inl)) * var(--wr));
+}
+/* the take that isn't chosen (html[data-hero] is set before the first paint) */
+html[data-hero]:not([data-hero="v1"]) .hv1,
+html[data-hero]:not([data-hero="v2"]) .hv2,
+html[data-hero]:not([data-hero="v3"]) .hv3 { display: none; }
+
+.hv-film { position: absolute; z-index: 0; overflow: clip; background: #000; }
+.hv-film video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hv-stage { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; padding: var(--hdr) var(--inl) var(--hv-pb); }
+
+/* the line, the lead and the two buttons */
+.hv-copy { position: relative; z-index: 1; display: grid; justify-items: start; gap: clamp(10px, 1vw, 14px); }
+.hero-tag { font: italic 500 clamp(34px, 3.4vw, 54px)/1.02 var(--display); letter-spacing: -.012em; color: var(--fg); padding-right: .08em; }
+.hv-lead { max-width: 36ch; color: #d6d3ce; text-wrap: pretty; }
+.hv-act { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 14px; margin-top: clamp(10px, 1.2vw, 18px); }
+
+/* the pause / play switch for the film (WCAG 2.2.2) */
+.vid-toggle {
+  position: absolute; z-index: 3;
+  display: inline-flex; align-items: center; gap: 10px; padding-bottom: 4px; border-bottom: 1px solid var(--rule-2);
+  font: 500 14px/1 var(--sans); color: var(--fg); white-space: nowrap;
+}
+.vid-toggle:hover { border-color: var(--red); }
+.vid-toggle i { color: var(--red-text); width: 8px; height: 10px; border-left: 2px solid currentColor; border-right: 2px solid currentColor; }
+.vid-toggle.paused i { width: 0; height: 0; border-left: 8px solid currentColor; border-right: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
+
+/* ---------- v1: the film falling into black, the words where it darkens, the name at the foot ---------- */
+.hv1-film {
+  inset: 0 0 auto; height: calc(100% - var(--hv-pb) - var(--wh) * .5);
+  /* an eased fall into black over the lower half, so the film ends without a grey band */
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 44%, rgba(0, 0, 0, .96) 50%, rgba(0, 0, 0, .87) 56%, rgba(0, 0, 0, .73) 62%, rgba(0, 0, 0, .56) 68%, rgba(0, 0, 0, .39) 74%, rgba(0, 0, 0, .24) 80%, rgba(0, 0, 0, .12) 86%, rgba(0, 0, 0, .04) 93%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 44%, rgba(0, 0, 0, .96) 50%, rgba(0, 0, 0, .87) 56%, rgba(0, 0, 0, .73) 62%, rgba(0, 0, 0, .56) 68%, rgba(0, 0, 0, .39) 74%, rgba(0, 0, 0, .24) 80%, rgba(0, 0, 0, .12) 86%, rgba(0, 0, 0, .04) 93%, transparent 100%);
+}
+.hv1-film video { object-position: 50% 42%; }
+/* a shade under the header and behind the words on the left; --dim darkens it as the page moves on (Hero.astro) */
+.hv1-film::before {
+  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, .5) 0, rgba(0, 0, 0, 0) 170px),
+    linear-gradient(90deg, rgba(0, 0, 0, .45) 0, rgba(0, 0, 0, 0) 42%),
+    radial-gradient(85% 75% at 0% 100%, rgba(0, 0, 0, .62) 0%, rgba(0, 0, 0, .3) 45%, rgba(0, 0, 0, 0) 75%);
+}
+.hv1-film::after { content: ''; position: absolute; inset: 0; z-index: 1; background: #000; opacity: var(--dim, 0); pointer-events: none; }
+.hv1 .hv-stage { justify-content: flex-end; }
+.hv1 .hv-copy { margin-bottom: var(--hv-gap); }
+.hv1 .hv-lead { text-shadow: 0 1px 24px rgba(0, 0, 0, .55); }
+/* the line's crimson words are clipped colour: a text shadow would paint over them, so the line casts a drop shadow */
+.hv1 .hero-tag { filter: drop-shadow(0 1px 18px rgba(0, 0, 0, .6)); }
+.hv1 .hero-tag em { text-shadow: none; }
+.hv1-name { display: block; width: 100%; height: auto; overflow: hidden; }
+.hv1-letters path { transform-box: fill-box; }
+/* the pause switch at the right, level with the buttons */
+.hv1 > .vid-toggle { right: var(--inl); bottom: calc(var(--hv-pb) + var(--wh) + var(--hv-gap) + 17px); }
+
+/* ---------- v2: black, the film only inside the letters ----------
+   The film fills the hero under a black sheet with the letters cut out of it (.hv2-word). On a computer the
+   sheet grows on scroll around the L's stem (--ax --ay) until the film fills the screen (Hero.astro). */
+.hv2-film { inset: 0; background: #000 url(/img/metal/brushed.webp) center / cover; }
+/* under the film, inside the letters: dim brushed steel. The film is laid over it with "lighten", so a dark frame
+   shows steel letters instead of black on black, and a normal frame is the film itself. The floor sinks into
+   black as the letters open (--lift goes to 0), so the film then fills the screen in its own colours. */
+.hv2-film::before { content: ''; position: absolute; inset: 0; background: #000; opacity: calc(1 - .3 * var(--lift, 1)); pointer-events: none; }
+.hv2-film video { mix-blend-mode: lighten; }
+/* a touch brighter inside the letters, so the word reads in the film's dark moments
+   (--lift goes to 0 as the letters open, so the film fills the screen in its own colours) */
+.hv2-film video {
+  object-position: 50% 45%;
+  filter: brightness(calc(1 + .32 * var(--lift, 1))) contrast(calc(1 - .1 * var(--lift, 1))) saturate(calc(1 + .12 * var(--lift, 1)));
+}
+.hv2-shade { position: absolute; inset: auto 0 0; z-index: 1; height: 38%; background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .3) 35%, rgba(0, 0, 0, .75) 70%, #000 100%); opacity: 0; pointer-events: none; }
+/* the word sits about the middle of the screen with the words under it: the room above the word is twice the room
+   below the buttons, so the hero doesn't end on an empty band */
+.hv2 .hv-stage { display: grid; grid-template-rows: minmax(0, 2fr) auto auto minmax(var(--hv-pb), 1fr); justify-items: center; text-align: center; padding-bottom: 0; }
+.hv2 .hv2-word { grid-row: 2; }
+.hv2 .hv-copy { grid-row: 3; }
+.hv2-word { position: relative; z-index: 0; width: 100%; transform-origin: var(--ax) var(--ay); }
+.hv2-cut { display: block; width: 100%; height: auto; overflow: visible; }
+.hv2-black { fill: #000; }
+/* a hairline of light along the letters' edges */
+.hv2-edge { fill: none; stroke: rgba(255, 255, 255, .3); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.hv2-stack { display: none; }
+.hv2 .hv-copy { justify-items: center; margin-top: var(--hv-gap); }
+.hv2 .hv-lead { max-width: 60ch; text-wrap: balance; }
+.hv2 .hv-act { justify-content: center; }
+.hv2 > .vid-toggle { right: var(--inl); bottom: var(--hv-pb); }
+
+/* ---------- v3: the film through frosted glass ----------
+   The film fills the hero. Over it lies a pane of frost (a backdrop blur, dimmed, warmed from below, with a
+   little grain) that covers everything but the word: the pane's mask is the whole hero minus the letters
+   (--word, --mw wide with its middle at --cx --cy) minus four soft rounds where the pointer or a finger wipes the
+   fog (--l0 … --l3, set by Hero.astro). So HOTLAND is a clear window onto the film, and a chrome line traces
+   its edge (--edge: the same outlines as a line, in a box E units larger on every side, --ex --ey). */
+.hv3 {
+  --wd: var(--word); --ed: var(--edge); --exx: var(--ex); --eyy: var(--ey);
+  /* laid out the way v2 is: the word as wide as the page's column, the words centred under it, and the free
+     room split two to one above the word and below the words. --copy-h is a close guess at the words' height
+     (the line, the lead and the buttons: 167 to 187px), so the window can be placed before anything is measured;
+     the words themselves always sit exactly --hv-gap under the word. */
+  --mw: calc(100cqw - 2 * var(--inl));
+  --mh: calc(var(--mw) * var(--wr));
+  --copy-h: clamp(160px, 12.5vw, 190px);
+  --cx: 50cqw;
+  --cy: calc(var(--hdr) + max(0px, 100cqh - var(--hdr) - var(--mh) - var(--hv-gap) - var(--copy-h)) * 2 / 3 + var(--mh) / 2);
+  --fog: blur(22px) brightness(.44) saturate(1.3);
+  /* the clear letters' window, grown --z times around the L's stem (--axn --ayn: where the stem is in the word,
+     set on .hero): 1 at rest; on a computer the scroll takes it to 30, opening the film like v2 (Hero.astro) */
+  --z: 1;
+  --zw: calc(var(--mw) * var(--z));
+  --zh: calc(var(--mh) * var(--z));
+  --zx: calc(var(--cx) - var(--mw) / 2 + var(--axn) * var(--mw) * (1 - var(--z)));
+  --zy: calc(var(--cy) - var(--mh) / 2 + var(--ayn) * var(--mh) * (1 - var(--z)));
+}
+/* the line, the lead and the two buttons, centred under the word (as in v2) */
+.hv3 .hv-stage { z-index: 4; display: block; }
+.hv3 .hv-copy {
+  position: absolute; left: var(--inl); right: var(--inl); top: calc(var(--cy) + var(--mh) / 2 + var(--hv-gap));
+  justify-items: center; text-align: center;
+}
+.hv3 .hv-lead { max-width: 60ch; text-wrap: balance; }
+.hv3 .hv-act { justify-content: center; }
+.hv3 .hv-lead { text-shadow: 0 1px 20px rgba(0, 0, 0, .6); }
+/* a finger wiping the glass sideways must not drag the page sideways (it still scrolls up and down, and zooms) */
+.hv3 { touch-action: pan-y pinch-zoom; }
+.hv3-film { position: absolute; inset: 0; z-index: 0; overflow: clip; background: #000; }
+.hv3-film video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hv3-frost {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  --l0x: 0px; --l0y: 0px; --l0r: 0px; --l1x: 0px; --l1y: 0px; --l1r: 0px;
+  --l2x: 0px; --l2y: 0px; --l2r: 0px; --l3x: 0px; --l3y: 0px; --l3r: 0px;
+  -webkit-backdrop-filter: var(--fog); backdrop-filter: var(--fog);
+  -webkit-mask-image: linear-gradient(#000, #000), var(--wd),
+    radial-gradient(circle at var(--l0x) var(--l0y), #000 calc(var(--l0r) * .3), transparent var(--l0r)),
+    radial-gradient(circle at var(--l1x) var(--l1y), #000 calc(var(--l1r) * .3), transparent var(--l1r)),
+    radial-gradient(circle at var(--l2x) var(--l2y), #000 calc(var(--l2r) * .3), transparent var(--l2r)),
+    radial-gradient(circle at var(--l3x) var(--l3y), #000 calc(var(--l3r) * .3), transparent var(--l3r));
+  mask-image: linear-gradient(#000, #000), var(--wd),
+    radial-gradient(circle at var(--l0x) var(--l0y), #000 calc(var(--l0r) * .3), transparent var(--l0r)),
+    radial-gradient(circle at var(--l1x) var(--l1y), #000 calc(var(--l1r) * .3), transparent var(--l1r)),
+    radial-gradient(circle at var(--l2x) var(--l2y), #000 calc(var(--l2r) * .3), transparent var(--l2r)),
+    radial-gradient(circle at var(--l3x) var(--l3y), #000 calc(var(--l3r) * .3), transparent var(--l3r));
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%, var(--zw) var(--zh), 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  mask-size: 100% 100%, var(--zw) var(--zh), 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  -webkit-mask-position: 0 0, var(--zx) var(--zy), 0 0, 0 0, 0 0, 0 0;
+  mask-position: 0 0, var(--zx) var(--zy), 0 0, 0 0, 0 0, 0 0;
+  /* the whole pane, minus the letters and the wiped rounds below it */
+  -webkit-mask-composite: source-out, source-over, source-over, source-over, source-over, source-over;
+  mask-composite: subtract, add, add, add, add, add;
+}
+/* (no backdrop blur: the pane is a dark veil instead) */
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .hv3-frost { background: rgba(0, 0, 0, .7); }
+}
+/* the frost's own colour: a warm crimson light from below, a slow drift of it, and grain */
+.hv3-tint {
+  position: absolute; inset: 0; overflow: hidden;
+  background:
+    radial-gradient(90% 60% at 50% 118%, rgba(220, 20, 60, .3) 0%, rgba(220, 20, 60, 0) 72%),
+    linear-gradient(180deg, rgba(0, 0, 0, .3) 0%, rgba(0, 0, 0, 0) 30%),
+    rgba(10, 8, 11, .2);
+}
+.hv3-glow { position: absolute; left: 50%; top: 50%; width: 110vmax; height: 70vmax; margin: -35vmax 0 0 -55vmax; border-radius: 50%; background: radial-gradient(closest-side, rgba(220, 20, 60, .17), rgba(220, 20, 60, 0)); translate: -12% 14%; }
+.hv3-tint::after {
+  content: ''; position: absolute; inset: -60px; opacity: .07;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0 0 / 180px 180px;
+}
+/* the chrome edge of the clear letters, and a band of light that runs along it every few seconds */
+.hv3-edge, .hv3-shine {
+  position: absolute; z-index: 2; pointer-events: none;
+  left: calc(var(--zx) - var(--zw) * var(--exx));
+  top: calc(var(--zy) - var(--zh) * var(--eyy));
+  width: calc(var(--zw) * (1 + 2 * var(--exx)));
+  height: calc(var(--zh) * (1 + 2 * var(--eyy)));
+  -webkit-mask: var(--ed) 0 0 / 100% 100% no-repeat; mask: var(--ed) 0 0 / 100% 100% no-repeat;
+}
+.hv3-edge {
+  background: linear-gradient(180deg, rgba(255, 255, 255, .95) 0%, rgba(255, 253, 250, .62) 26%, rgba(255, 253, 250, .2) 47%, rgba(255, 253, 250, .34) 54%, rgba(255, 253, 250, .85) 66%, rgba(255, 253, 250, .42) 100%);
+}
+.hv3-shine { overflow: hidden; }
+.hv3-shine i { position: absolute; top: -10%; bottom: -10%; left: 0; width: 14%; background: linear-gradient(90deg, rgba(255, 255, 255, 0), #fff, rgba(255, 255, 255, 0)); transform: translateX(-130%) skewX(-18deg); }
+/* the page moves on: the glass and the word dim (Hero.astro); the foot of the hero fades into the page */
+.hv3-dim { position: absolute; inset: 0; z-index: 3; background: #000; opacity: 0; pointer-events: none; }
+.hv3::after { content: ''; position: absolute; inset: auto 0 0; z-index: 3; height: 30%; background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .55) 55%, #000 100%); pointer-events: none; }
+.hv3 > .vid-toggle { z-index: 4; right: calc(100cqw - var(--cx) - var(--mw) / 2); top: calc(var(--cy) - var(--mh) / 2 - 44px); }
+
+/* ---------- Phones ---------- */
+@media (max-width: 899px) {
+  /* the hero ends where the phone's action dock begins: what lies under the dock is already the next section,
+     so once the page moves there is no empty band between the name and Афиша */
+  .hv { height: calc(100svh - var(--dock)); min-height: 520px; --hv-pb: 24px; --hv-gap: 22px; }
+  .hero-tag { font-size: clamp(31px, 8.6vw, 42px); }
+  .hv-copy { gap: 10px; }
+  .hv-act { gap: 10px; margin-top: 8px; }
+  .hv-act .btn { height: 50px; padding: 0 22px; }
+  /* the pause switch under the header, on the right */
+  .hv > .vid-toggle { top: calc(var(--hdr) + 14px); right: var(--inl); bottom: auto; }
+  .hv1-film { height: calc(100% - var(--hv-pb) - var(--wh) * .5); }
+  .hv1-film video { object-position: 50% 30%; }
+  /* v2: HOT over LAND, each the full width */
+  .hv2-line { display: none; }
+  .hv2-stack { display: block; }
+  .hv2-word { width: min(100%, calc(52cqh / var(--wr-m))); }
+  .hv2 .hv-stage { grid-template-rows: minmax(0, 3fr) auto auto minmax(var(--hv-pb), 1fr); }
+  /* v3: HOT over LAND, as big as the screen allows, in the middle; a lighter blur for a phone; the words in one column */
+  /* v3 as v2 on a phone: HOT over LAND, the full width (or 52% of the height), three parts of the free room above
+     the word to one below the words */
+  .hv3 {
+    --wd: var(--word-m); --ed: var(--edge-m); --exx: var(--ex-m); --eyy: var(--ey-m);
+    --mw: min(calc(100cqw - 2 * var(--pad)), calc(52cqh / var(--wr-m))); --mh: calc(var(--mw) * var(--wr-m));
+    --copy-h: 170px;
+    --cx: 50cqw;
+    --cy: calc(var(--hdr) + max(0px, 100cqh - var(--hdr) - var(--mh) - var(--hv-gap) - var(--copy-h)) * 3 / 4 + var(--mh) / 2);
+    --fog: blur(16px) brightness(.44) saturate(1.3);
+  }
+  .hv3 > .vid-toggle { top: calc(var(--cy) - var(--mh) / 2 - 36px); right: calc(100cqw - var(--cx) - var(--mw) / 2); bottom: auto; }
+}
+
+/* ---------- Entrances (motion only; they start once the 18+ question is answered) ---------- */
+@keyframes hv-fade { from { opacity: 0; } }
+@keyframes hv-settle { from { scale: 1.1; } }
+@keyframes hv-rise { from { opacity: 0; translate: 0 26px; } }
+@keyframes hv-letter { from { translate: 0 108%; } }
+@keyframes hv2-open { from { scale: 1.08; } }
+html.motion:is(.age-ok, :has(.gate.out)) .hv-film { animation: hv-fade 1.8s ease backwards; }
+html.motion:is(.age-ok, :has(.gate.out)) .hv1-film video { animation: hv-settle 3.4s var(--ease-out) backwards; }
+html.motion:is(.age-ok, :has(.gate.out)) .hv1-letters path { animation: hv-letter 1.25s var(--ease-out) calc(.3s + var(--i) * .07s) backwards; }
+html.motion:is(.age-ok, :has(.gate.out)) .hv2-film { animation-duration: 2.2s; animation-delay: .1s; }
+html.motion:is(.age-ok, :has(.gate.out)) .hv2-cut { animation: hv2-open 2.6s var(--ease-out) backwards; }
+html.motion:is(.age-ok, :has(.gate.out)) .hv-copy > * { animation: hv-rise 1.2s var(--ease-out) .9s backwards; }
+html.motion:is(.age-ok, :has(.gate.out)) .hv-copy > :nth-child(2) { animation-delay: 1s; }
+html.motion:is(.age-ok, :has(.gate.out)) .hv-copy > :nth-child(3) { animation-delay: 1.1s; }
+html.motion:is(.age-ok, :has(.gate.out)) .hv .vid-toggle { animation: hv-fade 1s ease 1.5s backwards; }
+/* the home page again in the same session: a shorter entrance */
+html.motion.hero-again:is(.age-ok, :has(.gate.out)) .hv-film { animation-duration: .9s; animation-delay: 0s; }
+html.motion.hero-again:is(.age-ok, :has(.gate.out)) .hv1-film video { animation-duration: 2s; }
+html.motion.hero-again:is(.age-ok, :has(.gate.out)) .hv1-letters path { animation-delay: calc(.05s + var(--i) * .04s); animation-duration: .9s; }
+html.motion.hero-again:is(.age-ok, :has(.gate.out)) .hv2-cut { animation-duration: 1.4s; }
+html.motion.hero-again:is(.age-ok, :has(.gate.out)) .hv-copy > * { animation-delay: .35s; }
+html.motion.hero-again:is(.age-ok, :has(.gate.out)) .hv .vid-toggle { animation-delay: .6s; }
+
+/* a band of light crosses the steel now and then */
+@keyframes hv1-glint { 0% { transform: translateX(0); } 14%, 100% { transform: translateX(5200px); } }
+html.motion .hv1-glint { animation: hv1-glint 11s var(--ease-io) 2.4s infinite; }
+@media (prefers-reduced-motion: reduce) { .hv1-glint { display: none; } }
+
+/* v3: the whole effect is there from the first frame: the frost, the clear word and its chrome edge (never the
+   bare film first, nor the outline drawing itself in); only the film comes up behind them, quickly, out of the black */
+html.motion:is(.age-ok, :has(.gate.out)) .hv3-film { animation: hv-fade .5s ease backwards; }
+html.motion:is(.age-ok, :has(.gate.out)) .hv3-film video { animation: hv-settle 3.4s var(--ease-out) backwards; }
+html.motion.hero-again:is(.age-ok, :has(.gate.out)) .hv3-film { animation-duration: .4s; }
+@keyframes hv3-drift { from { translate: -12% 14%; } to { translate: 14% -6%; } }
+@keyframes hv3-run { 0% { transform: translateX(-130%) skewX(-18deg); } 18%, 100% { transform: translateX(820%) skewX(-18deg); } }
+html.motion .hv3-glow { animation: hv3-drift 20s ease-in-out infinite alternate; }
+html.motion:is(.age-ok, :has(.gate.out)) .hv3-shine i { animation: hv3-run 9s var(--ease-io) 3.4s infinite; }
+@media (prefers-reduced-motion: reduce) { .hv3-shine { display: none; } }
+
+/* ---------- The test switch: a small pill at the top left of the hero, under the header ----------
+   It belongs to the hero, so it scrolls away with it (and stays on screen through v2's pin). */
+.hx-switch {
+  position: absolute; z-index: 5; left: max(var(--pad), calc((100% - var(--max)) / 2 + var(--pad))); top: calc(var(--hdr) + 12px);
+  display: flex; align-items: center; gap: 2px; padding: 4px 4px 4px 12px; border-radius: 999px;
+  font: 500 12px/1 var(--sans); color: var(--fg-2);
+  background: rgba(24, 24, 27, .7); -webkit-backdrop-filter: blur(16px) saturate(1.4); backdrop-filter: blur(16px) saturate(1.4);
+  box-shadow: inset 0 0 0 1px rgba(242, 240, 236, .12), 0 10px 30px -12px rgba(0, 0, 0, .9);
+}
+.hx-switch span { margin-right: 6px; }
+.hx-switch button { height: 26px; padding: 0 12px; border-radius: 999px; font: inherit; color: var(--fg-2); transition: background-color .2s, color .2s; }
+.hx-switch button:hover { color: var(--fg); }
+html[data-hero="v1"] .hx-switch [data-hero-set="v1"],
+html[data-hero="v2"] .hx-switch [data-hero-set="v2"],
+html[data-hero="v3"] .hx-switch [data-hero-set="v3"] { background: linear-gradient(180deg, #fbfaf7 0%, #e9e6e0 100%); color: var(--ink); }
+@media (max-width: 899px) { .hx-switch { top: calc(var(--hdr) + 10px); } }
+
+/* ---------- Full-bleed film band and photo strip ---------- */
+.film-media { position: relative; }
+.film-media video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; max-height: 94svh; object-fit: cover; }
+.film-cap { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 24px; padding-top: 14px; padding-bottom: 14px; }
+.strip { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.strip .photo { aspect-ratio: 3 / 4.4; }
+@media (max-width: 899px) {
+  .strip { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 68vw; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .strip::-webkit-scrollbar { display: none; }
+  .strip .fig { scroll-snap-align: start; }
+}
+
+/* ---------- The variant switches (VariantSwitch.astro): Luka's or Gio's version of a part, preview only ----------
+   The same pill as the hero's, at the top left of the part it changes (its parent carries .vx-host). */
+.vx-host { position: relative; }
+.vx-switch {
+  position: absolute; z-index: 6; left: var(--vx-left, max(var(--pad), calc((100% - var(--max)) / 2 + var(--pad)))); top: var(--vx-top, 8px);
+  display: flex; align-items: center; gap: 2px; padding: 4px 4px 4px 12px; border-radius: 999px;
+  font: 500 12px/1 var(--sans); color: var(--fg-2); white-space: nowrap;
+  background: rgba(24, 24, 27, .78); -webkit-backdrop-filter: blur(16px) saturate(1.4); backdrop-filter: blur(16px) saturate(1.4);
+  box-shadow: inset 0 0 0 1px rgba(242, 240, 236, .12), 0 10px 30px -12px rgba(0, 0, 0, .9);
+}
+.vx-switch span { margin-right: 6px; }
+.vx-switch button { height: 26px; padding: 0 12px; border-radius: 999px; font: inherit; color: var(--fg-2); transition: background-color .2s, color .2s; }
+.vx-switch button:hover { color: var(--fg); }
+.vx-switch button[aria-pressed="true"] { background: linear-gradient(180deg, #fbfaf7 0%, #e9e6e0 100%); color: var(--ink); }
+.vx-part { display: contents; }
+/* the footer's switch sits in the room above the sign, clear of its letters */
+
+@media (max-width: 599px) { .vx-switch { top: var(--vx-top, 4px); font-size: 11px; } .vx-switch button { padding: 0 9px; } }
+
+/* ---------- A phone held sideways (or any screen as short): see landscape.css ---------- */
+@media (orientation: landscape) and (max-height: 500px) {
+  /* the hero: one screen, the word on one line */
+  .hv { height: 100svh; min-height: 300px; --hv-pb: max(14px, env(safe-area-inset-bottom, 0px)); --hv-gap: 12px; }
+  .hv-copy { gap: 6px; }
+  .hero-tag { font-size: clamp(26px, 8svh, 36px); }
+  .hv-lead { font-size: 14px; line-height: 1.45; max-width: 46ch; }
+  .hv-act { margin-top: 2px; }
+  /* v3, laid out as v2 is here: the word on one line (34% of the height at most), the words centred under it, the
+     free room split two to one (--copy-h: a close guess at the words' height on a short screen) */
+  .hv3 {
+    --wd: var(--word); --ed: var(--edge); --exx: var(--ex); --eyy: var(--ey);
+    --mw: min(calc(100cqw - 2 * var(--inl)), calc(34cqh / var(--wr))); --mh: calc(var(--mw) * var(--wr));
+    --copy-h: 124px;
+    --cx: 50cqw;
+    --cy: calc(var(--hdr) + max(0px, 100cqh - var(--hdr) - var(--mh) - var(--hv-gap) - var(--copy-h)) * 2 / 3 + var(--mh) / 2);
+    --fog: blur(16px) brightness(.44) saturate(1.3);
+  }
+  .hv3 > .vid-toggle { top: calc(var(--cy) - var(--mh) / 2 - 30px); right: calc(100cqw - var(--cx) - var(--mw) / 2); bottom: auto; }
+  /* v2: the word on one line (not the HOT-over-LAND stack), the words under it */
+  .hv2-line { display: block; }
+  .hv2-stack { display: none; }
+  .hv2-word { width: min(100%, calc(34cqh / var(--wr))); }
+  .hv2 .hv-stage { grid-template-rows: minmax(0, 1fr) auto auto minmax(var(--hv-pb), .5fr); }
+  /* v1: the name at the foot no taller than about a quarter of the screen */
+  .hv1 { --wh: min(calc((100cqw - 2 * var(--inl)) * var(--wr)), 26cqh); }
+  .hv1-name { width: calc(var(--wh) / var(--wr)); }
+}

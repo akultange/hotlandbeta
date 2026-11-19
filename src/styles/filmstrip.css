@@ -1,0 +1,119 @@
+/* ---------- The gallery in brief, take two: a strip of film (GalleryFilmStrip.astro) ----------
+   Half-frame 35 mm film, measured from the real thing and scaled by the strip's height --sh (35 mm):
+   frames 18 x 24 mm (upright, 3:4) one millimetre apart, so a frame every 19 mm; along both edges a row of
+   sprocket holes every 4.75 mm (four to a frame), 2.8 x 1.98 mm, 2 mm in from the edge.
+   Layers, back to front: a faint warm light on the page; the strip's soft shadow; its thickness (the same cut film,
+   a hair lower and lighter, so a thin edge shows inside the top of each hole and along the strip's foot); the
+   strip itself: a dark base, a little see-through, with its sheen and grain, the holes cut clean through it (the
+   page shows through, nothing white), the pictures, the amber edge print. The whole strip is turned a little away
+   from you, hinged on its top edge: that edge stays level, so the strip starts the heading gap under the heading row
+   along its whole width (under the title as under the link), and the turn shows in its foot, which runs a little
+   lower where the strip comes nearer. At the screen's sides it fades into the dark. */
+.gfs {
+  --sh: clamp(300px, 50svh, 500px);                 /* the strip's height: 35 mm */
+  --mm: calc(var(--sh) / 35);                       /* one millimetre of film */
+  --thick: max(1.5px, calc(var(--mm) * .14));        /* how much of the film's edge shows */
+  /* the sprocket holes, cut out of the film: a hole every 4.75 mm, along both edges */
+  --hole: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4.75 1.98'%3E%3Crect x='.975' width='2.8' height='1.98' rx='.42' fill='%23000'/%3E%3C/svg%3E");
+  /* cut at the screen's sides only: the near end of the turned strip runs lower than the far end, into the room kept
+     under the strip (the strip's foot, where it runs lowest before the dark at the side, is what the next section's
+     air is measured from). The wider the screen, the further the near end comes towards you, so the room grows
+     with the width: about 2 mm on a phone, 3 on a laptop, 5 on a wide screen. */
+  position: relative; overflow-x: clip; overflow-y: visible;
+  padding: 0 0 calc(var(--mm) * 2 + max(0px, 3.95vw - 35px));
+}
+/* the warm light behind, faint: it shows through the holes and the base, and catches the strip's shadow */
+.gfs-light {
+  position: absolute; left: 50%; top: 50%; width: 110%; height: 90%; translate: -50% -50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255, 206, 160, .11), rgba(255, 206, 160, .04) 55%, rgba(255, 206, 160, 0));
+}
+/* the dark at the screen's sides, which the strip comes out of and goes into */
+.gfs::after {
+  content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: linear-gradient(90deg, #000 0%, rgba(0, 0, 0, 0) 13%, rgba(0, 0, 0, 0) 87%, #000 100%);
+}
+/* (the turn's centre is on the strip's top edge, so that edge keeps its place and stays level; no tilt in the plane
+   of the page, which would drop the strip away from the title on the left) */
+.gfs-run { position: relative; transform: perspective(1700px) rotateY(-11deg) rotateX(5deg); transform-origin: 40% 0; }
+.gfs-body { position: relative; width: max-content; will-change: transform; }
+
+/* the holes, cut through both the strip and its thickness */
+.gfs-cut {
+  -webkit-mask-image: linear-gradient(#000, #000), var(--hole), var(--hole);
+  mask-image: linear-gradient(#000, #000), var(--hole), var(--hole);
+  -webkit-mask-size: 100% 100%, calc(var(--mm) * 4.75) calc(var(--mm) * 1.98), calc(var(--mm) * 4.75) calc(var(--mm) * 1.98);
+  mask-size: 100% 100%, calc(var(--mm) * 4.75) calc(var(--mm) * 1.98), calc(var(--mm) * 4.75) calc(var(--mm) * 1.98);
+  -webkit-mask-position: 0 0, 0 calc(var(--mm) * 2), 0 calc(100% - var(--mm) * 2);
+  mask-position: 0 0, 0 calc(var(--mm) * 2), 0 calc(100% - var(--mm) * 2);
+  -webkit-mask-repeat: no-repeat, repeat-x, repeat-x; mask-repeat: no-repeat, repeat-x, repeat-x;
+  /* the whole strip, less the two rows of holes */
+  -webkit-mask-composite: source-out, source-over, source-over; mask-composite: subtract, add, add;
+}
+/* the soft shadow the strip casts on the light behind it */
+.gfs-shadow {
+  position: absolute; left: 1%; right: 1%; top: 14%; bottom: -6%; border-radius: calc(var(--mm) * 2);
+  background: rgba(0, 0, 0, .75); filter: blur(calc(var(--mm) * 3.2)); translate: 0 calc(var(--mm) * 2.5);
+}
+/* the film's thickness: the same cut strip, a hair lower, in the colour of the base's cut edge */
+.gfs-wall {
+  position: absolute; inset: 0; translate: 0 var(--thick);
+  background: linear-gradient(180deg, #3a3330 0%, #241f1d 50%, #3a3330 100%);
+}
+.gfs-strip {
+  position: relative; height: var(--sh);
+  padding: 0 calc(var(--mm) * 3);
+  background:
+    /* the light along its top and bottom edges, and a long soft sheen across the plastic */
+    linear-gradient(180deg, rgba(255, 255, 255, .1) 0, rgba(255, 255, 255, 0) 3px, rgba(255, 255, 255, 0) calc(100% - 3px), rgba(255, 255, 255, .05) 100%),
+    linear-gradient(104deg, rgba(255, 255, 255, 0) 30%, rgba(255, 240, 225, .05) 46%, rgba(255, 255, 255, 0) 60%),
+    /* the base itself: very dark, warm, a little see-through */
+    linear-gradient(180deg, rgba(22, 18, 17, .94) 0%, rgba(10, 8, 8, .95) 50%, rgba(22, 18, 17, .94) 100%);
+}
+/* the base's grain, under the pictures */
+.gfs-frames::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .08;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0 0 / 160px 160px;
+}
+.gfs-frames {
+  list-style: none; margin: 0; padding: 0; height: 100%;
+  display: flex; align-items: center; gap: var(--mm);
+}
+.gfs-frame { position: relative; flex: none; width: calc(var(--mm) * 18); height: calc(var(--mm) * 24); }
+.gfs-a { position: relative; z-index: 1; display: block; width: 100%; height: 100%; -webkit-tap-highlight-color: transparent; }
+/* the picture in its frame: corners a touch round, a fine dark line where the image ends on the film */
+.gfs-img {
+  position: relative; display: block; width: 100%; height: 100%; overflow: hidden; border-radius: calc(var(--mm) * .35);
+  background: #050404; box-shadow: 0 0 0 1px rgba(0, 0, 0, .7);
+}
+/* the picture at full strength, with no vignette or shadow over it (the client: "remove shadow from gallery
+   images"); under the pointer it comes up a touch brighter */
+.gfs-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: contrast(1.05); transition: filter .5s ease; }
+@media (hover: hover) { .gfs-a:hover .gfs-img img { filter: brightness(1.06) contrast(1.05); } }
+
+/* the edge print: the frame's number and an arrow, in the margin under the frame; the film's name over some
+   frames, in the top margin. Small and quiet, as it is on film. */
+.gfs-no, .gfs-brand {
+  position: absolute; z-index: 1; left: calc(var(--mm) * 2);
+  font: 600 calc(var(--mm) * 1.05)/1 var(--sans); letter-spacing: .08em; color: #d98f3a; opacity: .62;
+  font-variant-numeric: tabular-nums; white-space: nowrap; pointer-events: none;
+}
+.gfs-no { top: calc(100% + var(--mm) * .2); display: flex; align-items: center; gap: calc(var(--mm) * .5); }
+.gfs-no i { font-style: normal; font-size: .85em; }
+.gfs-brand { bottom: calc(100% + var(--mm) * .2); left: calc(var(--mm) * 6); }
+
+/* with reduced motion (or before the scripts): the strip stays put and flat; a finger or a trackpad moves it */
+/* (flat, it needs none of the turned strip's room above and below; the 6 mm under it, inside the scrolling row, hold
+   the strip's shadow and are taken back, so the next section's air starts at the strip's foot) */
+/* (the sides stay clipped as the turned strip's are: the warm light behind is wider than the screen, and unclipped
+   it made the whole home page wider than the window, a phone showing it zoomed out) */
+.gfs.by-hand { padding: 0; }
+.gfs.by-hand::after { display: none; }
+.gfs.by-hand .gfs-run { overflow-x: auto; scrollbar-width: none; transform: none; padding: 0 var(--pad) calc(var(--mm) * 6); margin-bottom: calc(var(--mm) * -6); }
+.gfs.by-hand .gfs-run::-webkit-scrollbar { display: none; }
+.gfs.by-hand .gfs-body { will-change: auto; }
+
+@media (max-width: 699px) {
+  .gfs { --sh: clamp(250px, 74vw, 330px); }
+  .gfs-run { transform: perspective(900px) rotateY(-12deg) rotateX(4deg); }
+  .gfs::after { background: linear-gradient(90deg, #000 0%, rgba(0, 0, 0, 0) 9%, rgba(0, 0, 0, 0) 91%, #000 100%); }
+}

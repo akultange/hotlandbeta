@@ -1,0 +1,182 @@
+/* =====================================================================
+   About us (pages/[lang]/about.astro). Loaded after global.css (Base.astro).
+   One page, five pieces:
+   - the club: two show portraits stand like the wings of a stage, the words sit centre stage between them;
+   - house rules: a theatre programme, four big steel numerals in a row;
+   - finding us: the home page's block (Visit.astro, styles in visit.css) and, under it, four ways to reach us;
+   - the casting call, as on the home page (CastingCall.astro, styles in casting.css);
+   - then the footer's own closing invitation.
+   Every section keeps the site's air above and below (.sec, --sec-y).
+   Photos keep the site's rule: no frames, they fade into the black, and no words sit on them.
+   The door in an arch (components/ClubDoor.astro) is on no page at the moment; its styles stay at the end.
+   ===================================================================== */
+
+/* the page's own pieces rise into view like the rest of the site (about.astro's script adds .is-in; the
+   animation itself is global.css: html.motion .is-in) */
+html.motion [data-rise]:not(.is-in) { opacity: 0; }
+
+/* ---------- The club: the wings and centre stage ---------- */
+.ab-stage {
+  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap);
+  align-items: start;
+}
+.ab-wing { grid-row: 1; min-width: 0; }
+.ab-wing-l { grid-column: 1 / span 4; }
+/* the second portrait hangs lower, so the eye travels across the stage; it is the section's last thing, so the
+   section ends at the middle of its fall into the black (4:5: a tenth of its height; global.css, Photos) */
+.ab-wing-r { grid-column: 9 / span 4; margin-top: clamp(56px, 8.4vw, 132px); margin-bottom: -12.5%; }
+.ab-centre {
+  grid-column: 5 / span 4; grid-row: 1; align-self: center;
+  display: grid; justify-items: center; gap: clamp(16px, 1.6vw, 22px); text-align: center;
+  padding-top: clamp(24px, 4vw, 64px);
+}
+.ab-centre-h { text-wrap: balance; }
+.ab-centre .lead { max-width: 30ch; color: var(--fg); text-wrap: balance; }
+.ab-centre .body { max-width: 34ch; text-wrap: balance; }
+.ab-centre .lnk { margin-top: 4px; }
+
+@media (max-width: 899px) {
+  .ab-stage { grid-template-columns: minmax(0, 1fr); row-gap: clamp(28px, 7vw, 44px); }
+  .ab-wing, .ab-centre { grid-column: 1; grid-row: auto; }
+  .ab-wing-l { width: 88%; }
+  .ab-centre { order: 1; justify-items: start; text-align: left; padding-top: 0; }
+  .ab-centre :is(.lead, .body) { text-wrap: pretty; }
+  .ab-wing-r { order: 2; width: 88%; justify-self: end; margin-top: 0; margin-bottom: calc(-12.5% * .88); } /* (88% of the column) */
+}
+@media (min-width: 600px) and (max-width: 899px) {
+  .ab-stage { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--gap); }
+  .ab-wing-l { grid-column: 1; grid-row: 1; width: auto; }
+  .ab-wing-r { grid-column: 2; grid-row: 1; width: auto; justify-self: stretch; margin-top: clamp(40px, 7vw, 64px); margin-bottom: 0; } /* (the words come last here; the portrait fills its column, as the left one does) */
+  .ab-centre { grid-column: 1 / -1; grid-row: 2; }
+}
+
+/* ---------- House rules: a theatre programme (the heading row is every section's .bighead.bh-line) ---------- */
+.ab-rules-list {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px var(--gap);
+}
+.ab-rule { display: grid; align-content: start; gap: 12px; min-width: 0; }
+.ab-rule-n {
+  display: block; justify-self: start; margin-bottom: 10px; padding-right: .05em;
+  font: 800 clamp(96px, 10.6vw, 168px)/.78 var(--display); font-stretch: 62.5%; font-variant-numeric: lining-nums;
+}
+.ab-rule-t { font: 700 clamp(24px, 2vw, 30px)/1.06 var(--display); font-stretch: 75%; letter-spacing: .005em; color: var(--fg); }
+.ab-rule-x { font: 400 16px/1.6 var(--sans); color: var(--fg-2); max-width: 30ch; text-wrap: pretty; }
+.ab-nw { white-space: nowrap; }
+
+@media (max-width: 1099px) {
+  .ab-rules-list { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 44px; }
+}
+/* phones: one rule per row, the numeral beside its words */
+@media (max-width: 599px) {
+  .ab-rules-list { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .ab-rule { grid-template-columns: 58px minmax(0, 1fr); column-gap: 16px; row-gap: 6px; padding: 20px 0 22px; }
+  .ab-rule:first-child { padding-top: 4px; } /* (the first sits as close under the heading as every section's content) */
+  .ab-rule:last-child { padding-bottom: 0; } /* (and under the last, only the section's own air) */
+  .ab-rule-n { grid-row: 1 / span 2; margin: 2px 0 0; font-size: 84px; }
+  .ab-rule-t { font-size: 25px; }
+}
+
+/* ---------- Finding us: the ways to reach the club, under the home page's block (Visit.astro) ---------- */
+/* Four buttons of dark glass in a row (two by two under 900px), each with its line icon, its name and a line under
+   the name. The icons, the names and the lines share their rows across a row of buttons (subgrid), so when a name
+   or a line takes two lines somewhere, the ones beside it still start level with it. */
+.ab-ways {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px;
+}
+.ab-ways > li { display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: 0; min-width: 0; }
+.ab-way {
+  display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: 0; align-content: start; justify-items: start;
+  width: 100%; padding: 18px 20px 20px; text-align: left;
+  border-radius: 20px; color: var(--fg);
+  background: rgba(242, 240, 236, .05);
+  box-shadow: inset 0 0 0 1px rgba(242, 240, 236, .08), inset 0 1px 0 rgba(255, 255, 255, .05);
+  transition: background-color .3s ease, box-shadow .3s ease, scale .2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.ab-way-ic { width: 26px; height: 26px; margin-bottom: 14px; fill: none; stroke: var(--red-text); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.ab-way-k { font: 700 clamp(21px, 1.7vw, 26px)/1.08 var(--display); font-stretch: 75%; letter-spacing: .005em; }
+/* words break only where a line may: between words, or after the @ of the address */
+.ab-way-v { margin-top: 4px; font: 400 14px/1.4 var(--sans); color: var(--muted); font-variant-numeric: lining-nums; overflow-wrap: normal; text-wrap: balance; transition: color .3s ease; }
+.ab-way:active { scale: .97; }
+/* Under the mouse the glass only lightens a shade, its edge turns a soft silver and the number or address comes
+   up to white, like the footer's pills. No crimson ring, no glow, no italics, nothing moves. */
+@media (hover: hover) {
+  .ab-way:hover { background-color: rgba(242, 240, 236, .09); box-shadow: inset 0 0 0 1px rgba(242, 240, 236, .2), inset 0 1px 0 rgba(255, 255, 255, .08); }
+  .ab-way:hover .ab-way-v { color: var(--fg); }
+}
+
+@media (max-width: 899px) {
+  .ab-ways { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* phones: two by two; the names a touch smaller on the narrowest screens, so "Заказать звонок" keeps to one line */
+@media (max-width: 599px) {
+  .ab-way { padding: 14px 14px 16px; border-radius: 18px; }
+  .ab-way-ic { margin-bottom: 10px; }
+  .ab-way-k { font-size: min(20px, 4.9vw); }
+  .ab-way-v { font-size: 13.5px; }
+}
+
+/* ---------- The door (ClubDoor.astro, on no page at the moment: kept in case it comes back) ---------- */
+.ab-door { position: relative; display: grid; justify-items: center; gap: 12px; margin: 0; isolation: isolate; }
+/* the warm light of the doorway, faint on the black around it */
+.ab-door::before {
+  content: ''; position: absolute; z-index: -1; inset: -4% -16% 6%; pointer-events: none;
+  background: radial-gradient(50% 46% at 50% 42%, rgba(255, 190, 140, .11), rgba(255, 190, 140, 0) 72%);
+}
+.ab-arch {
+  position: relative; display: block; width: 100%; aspect-ratio: 2 / 3; max-height: 74svh; overflow: hidden; isolation: isolate;
+  border-radius: 999px 999px 0 0; background: #0b0b0c; cursor: pointer;
+  /* a doorway: round at the top, sinking into the black at the threshold */
+  -webkit-mask-image: linear-gradient(180deg, #000 76%, transparent 100%); mask-image: linear-gradient(180deg, #000 76%, transparent 100%);
+}
+.ab-arch:focus-visible { outline: none; }
+.ab-door:has(.ab-arch:focus-visible) { outline: 2px solid var(--red-text); outline-offset: 8px; border-radius: 24px; }
+.ab-door:has(.ab-arch:focus-visible) .ab-door-cap { color: var(--fg); text-decoration: underline; text-decoration-color: var(--red-text); text-underline-offset: 5px; }
+.ab-arch-layer { position: absolute; inset: 0; }
+.ab-arch-layer :is(img, video) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ab-arch video { opacity: 0; transition: opacity .6s ease; }
+.ab-arch video.on { opacity: 1; }
+/* outside: the street; the view moves into the door as it opens */
+.ab-arch-out { transform-origin: 62% 34%; transition: opacity .6s var(--ease-io) .05s, scale 1.2s var(--ease-io); }
+/* inside: the hostess, settling as the street dissolves */
+.ab-arch-in { opacity: 0; scale: 1.1; transition: opacity .7s var(--ease-io), scale 1.3s var(--ease-out); }
+.ab-arch-in img, .ab-arch-in video { object-position: 50% 30%; }
+.ab-door.is-open .ab-arch-out { opacity: 0; scale: 1.75; transition: opacity .75s var(--ease-io) .2s, scale 1.25s var(--ease-io); }
+.ab-door.is-open .ab-arch-in { opacity: 1; scale: 1; transition: opacity .8s var(--ease-io) .25s, scale 1.5s var(--ease-out) .2s; }
+/* a little warm light spills out when the door opens */
+.ab-arch-spill {
+  position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0; mix-blend-mode: screen;
+  background: radial-gradient(34% 26% at 62% 34%, rgba(255, 214, 172, .9), rgba(255, 214, 172, 0) 72%);
+}
+@keyframes ab-spill { 0% { opacity: 0; scale: .6; } 40% { opacity: .85; } 100% { opacity: 0; scale: 2; } }
+.ab-door.is-open .ab-arch-spill { animation: ab-spill 1.25s var(--ease-out) .12s both; }
+@media (hover: hover) and (pointer: fine) {
+  .ab-door:not(.is-open) .ab-arch:hover .ab-arch-out { scale: 1.04; }
+}
+
+/* the hint sits just under the threshold, where the arch has already sunk into the black */
+.ab-door-cap { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 40px; margin-top: -26px; font: 500 15px/1.3 var(--sans); color: var(--fg-2); text-align: center; }
+/* a small crimson light, like the one that marks "your table" in the hall */
+.ab-door-dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 3px rgba(220, 20, 60, .25), 0 0 14px 3px rgba(220, 20, 60, .45); }
+.ab-cap-in { display: none; color: var(--red-text); }
+.ab-door.is-open .ab-cap-out { display: none; }
+.ab-door.is-open .ab-cap-in { display: inline; }
+
+@media (max-width: 699px) {
+  .ab-arch { aspect-ratio: 3 / 4; max-height: none; }
+  .ab-door::before { inset: -4% -6% 6%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ab-arch-out, .ab-arch-in, .ab-door.is-open .ab-arch-out, .ab-door.is-open .ab-arch-in { transition: opacity .2s ease; scale: 1; }
+  .ab-door.is-open .ab-arch-spill { animation: none; }
+}
+
+/* ---------- A phone held sideways (or any screen as short): see landscape.css ---------- */
+@media (orientation: landscape) and (max-height: 500px) {
+  /* ---------- Club and contacts: the two portraits, the door and the map within the screen ---------- */
+  .ab-wing-l, .ab-wing-r { width: min(88%, calc((100svh - var(--hdr) - 32px) * .8)); }
+  .ab-find-door { width: min(100%, calc((100svh - var(--hdr) - 72px) * .75)); }
+  .ab-map .photo { aspect-ratio: 5 / 2 !important; }
+}

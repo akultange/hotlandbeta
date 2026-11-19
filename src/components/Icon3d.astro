@@ -1,0 +1,20 @@
+---
+// One of the HOTLAND 3D icons: polished chrome and crimson lacquer, rendered offline in SceneKit
+// (transparent AVIF, PNG fallback). Decorative by default (empty alt).
+//   stiletto · cherries · coupe · lips · peach · mic · pole · key · keyhole · emblem
+import { icon } from '../data/images';
+interface Props {
+  name: 'stiletto' | 'cherries' | 'coupe' | 'lips' | 'peach' | 'mic' | 'pole' | 'key' | 'keyhole' | 'emblem';
+  size?: number;
+  alt?: string;
+  eager?: boolean;
+  class?: string;
+}
+const { name, size = 160, alt = '', eager = false, class: cls = '' } = Astro.props;
+// (copies at the size it shows, for sharp screens twice that: src/data/images.ts)
+const set = await icon(name, size, !eager);
+---
+<picture class:list={['ic3d', cls]}>
+  <source srcset={set.srcset} sizes={set.sizes} type="image/avif" />
+  <img src={`/img/icons/${name}.png`} alt={alt} aria-hidden={alt ? undefined : 'true'} width={size} height={size} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+</picture>

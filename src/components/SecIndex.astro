@@ -1,0 +1,12 @@
+---
+// Section heading: the section's name as a real heading (heavy condensed type) and an optional link on the
+// right. No overline label, no number, no rule above, and no icon: the 3D icons now mark choices and places
+// (the booking choices, the menu tabs, the phone menu) instead of decorating headlines. `num` and `icon` are
+// accepted for older call sites but not shown.
+interface Props { num?: string; label: string; link?: { href: string; label: string }; icon?: string }
+const { label, link } = Astro.props;
+---
+<div class="shead">
+  <h2 class="t-l">{label}</h2>
+  {link && <a class="lnk" href={link.href}>{link.label}</a>}
+</div>

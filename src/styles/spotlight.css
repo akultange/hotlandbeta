@@ -1,0 +1,117 @@
+/* =====================================================================
+   The artists, take two: the spotlight stage (ModelsStage.astro). A dark stage, one screen tall: the artist in the
+   light shown whole in the middle, her name huge in outline behind her, a soft cone of light from above and a pool
+   of it on the floor; her neighbours on either side smaller, blurred, colourless and barely lit, dissolving into the
+   dark at their edges; under the stage her two lines and every name, the one in the light in metal over a crimson
+   line that fills while she stands there. The script sets each artist's place, size, light and edges (--e: 0 in
+   the light, 1 in the dark) from where the light is.
+   ===================================================================== */
+
+.mst {
+  /* the artist in the light: as tall as the screen allows, 3:4 */
+  --mst-ch: clamp(340px, min(56svh, 44vw), 600px);
+  --mst-cw: calc(var(--mst-ch) * .75);
+  overflow: hidden;
+}
+.mst-stage {
+  /* (a stacking context of its own: the artists, the light and the arrows layer up inside it, and never over the
+     header or her story, which opens above the page) */
+  position: relative; isolation: isolate; height: calc(var(--mst-ch) + 36px); margin-top: clamp(4px, 1vw, 14px);
+  touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab; outline: none;
+}
+.mst-stage.drag { cursor: grabbing; }
+.mst-stage:focus-visible .mst-a.on { outline: 2px solid var(--red-text); outline-offset: 8px; border-radius: 16px; }
+
+/* her name, huge, in outline, behind the line */
+.mst-big {
+  position: absolute; left: 0; right: 0; top: 2%; z-index: 0; margin: 0; text-align: center; white-space: nowrap; pointer-events: none;
+  font: 800 clamp(110px, 17vw, 300px)/.82 var(--display); font-stretch: 62.5%; letter-spacing: -.01em;
+  color: transparent; -webkit-text-stroke: 1.2px rgba(242, 240, 236, .15);
+}
+/* the pool of light on the floor under her, and the cone it falls from */
+.mst-floor {
+  position: absolute; left: 50%; bottom: 6px; z-index: 0; width: calc(var(--mst-cw) * 2); height: 90px; translate: -50% 0; pointer-events: none;
+  border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 214, 180, .16), rgba(220, 20, 60, .06) 60%, rgba(0, 0, 0, 0));
+}
+.mst-cone {
+  /* a soft beam from above her head, widening to the floor: no hard edges, strongest at its source */
+  position: absolute; left: 50%; top: -4%; z-index: 150; width: calc(var(--mst-cw) * 2.2); height: 106%; translate: -50% 0; pointer-events: none;
+  background: conic-gradient(from 180deg at 50% 0%, rgba(255, 238, 220, 0) 152deg, rgba(255, 238, 220, .07) 166deg, rgba(255, 238, 220, .11) 180deg, rgba(255, 238, 220, .07) 194deg, rgba(255, 238, 220, 0) 208deg);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, .55) 55%, rgba(0, 0, 0, .15) 100%); mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, .55) 55%, rgba(0, 0, 0, .15) 100%);
+  filter: blur(14px); mix-blend-mode: screen;
+}
+
+/* the line of artists: each one stands on the floor, set in place by the script */
+.mst-cam { position: absolute; inset: 0; transform-origin: 50% 85%; }
+.mst-a {
+  --e: 1;
+  position: absolute; left: 50%; bottom: 24px; width: var(--mst-cw); height: var(--mst-ch); margin: 0;
+  overflow: hidden; border-radius: clamp(12px, 1vw, 16px);
+  transform-origin: 50% 100%; will-change: transform, filter, opacity;
+  /* in the light the picture shows whole; in the dark its edges dissolve, so a silhouette has no frame */
+  -webkit-mask-image: linear-gradient(rgb(0 0 0 / calc(1 - var(--e))), rgb(0 0 0 / calc(1 - var(--e)))), radial-gradient(closest-side, #000 52%, transparent 100%);
+  mask-image: linear-gradient(rgb(0 0 0 / calc(1 - var(--e))), rgb(0 0 0 / calc(1 - var(--e)))), radial-gradient(closest-side, #000 52%, transparent 100%);
+  -webkit-mask-composite: source-over; mask-composite: add;
+}
+.mst-a img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; -webkit-user-drag: none; }
+/* framed as the row frames her (styles/models.css): zoomed in around her eyes, which stand at the same point on every
+   card, her face one size, so she fills her frame; her second photograph puts her eyes at the very same point. The
+   camera's slow push-in grows from her eyes. */
+.mst-a > img {
+  transform-origin: calc(var(--ox, .5) * 100%) calc(var(--oy, .5) * 100%);
+  transform: scale(var(--az, 1)) translate(calc((var(--ox, .5) - var(--aex, .5)) * 100%), calc((var(--oy, .5) - var(--aey, .5)) * 100%));
+}
+.mst-a > img.mst-hot {
+  transform: scale(var(--bz, 1)) translate(calc((var(--ox, .5) - var(--bex, .5)) * 100%), calc((var(--oy, .5) - var(--bey, .5)) * 100%));
+}
+/* without scripts: only the first artist, in the light */
+.mst:not(.is-live) .mst-a:not(:first-child) { display: none; }
+.mst:not(.is-live) .mst-a { translate: -50% 0; --e: 0; }
+/* the camera creeps in on the one in the light while she stands there (both her photographs, in step) */
+@media (prefers-reduced-motion: no-preference) {
+  .mst-a.on > img { animation: mst-push 10s ease-out both; }
+}
+@keyframes mst-push { from { scale: 1; } to { scale: 1.07; } }
+/* her second photograph: on a computer it shows under the pointer; a phone has no hover, and there her story (a tap
+   on her) brings it in, as the row's does */
+.mst-a .mst-hot { opacity: 0; transition: opacity .45s ease; }
+@media (hover: hover) and (pointer: fine) and (min-width: 900px) { .mst-stage:not(.drag) .mst-a.on:hover .mst-hot { opacity: 1; } }
+/* the one in the light opens her story: a tap, a click (the hand says so with a mouse) */
+.mst-stage:not(.drag) .mst-a.on { cursor: pointer; }
+
+/* the arrows: round metal buttons at the stage's sides, where anyone sees them */
+.mst-arrow { position: absolute; top: 50%; z-index: 160; width: 60px; height: 60px; margin-top: -30px; padding: 0; }
+.mst-arrow svg { position: relative; z-index: 2; width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.mst-prev { left: max(var(--pad), calc((100% - var(--max)) / 2 + var(--pad))); }
+.mst-next { right: max(var(--pad), calc((100% - var(--max)) / 2 + var(--pad))); }
+
+/* under the stage: her two lines, then every name */
+.mst-foot { display: grid; justify-items: center; gap: clamp(14px, 1.6vw, 22px); margin-top: clamp(14px, 1.6vw, 22px); text-align: center; }
+.mst-lines { min-height: 3.1em; margin: 0; font: 400 16px/1.55 var(--sans); color: var(--fg-2); }
+.mst-names {
+  display: flex; gap: clamp(16px, 2.6vw, 40px); max-width: 100%; padding: 6px 4px 12px; overflow-x: auto;
+  scrollbar-width: none; overscroll-behavior-x: contain;
+}
+.mst-names::-webkit-scrollbar { display: none; }
+.mst-n { position: relative; flex: none; padding: 4px 0; font: 700 clamp(19px, 1.6vw, 24px)/1 var(--display); font-stretch: 75%; letter-spacing: .01em; color: rgba(242, 240, 236, .38); cursor: pointer; transition: color .3s ease; }
+.mst-n:hover { color: var(--fg-2); }
+.mst-n.on span {
+  background-image: var(--metal-read); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+}
+.mst-n:focus-visible { outline: 2px solid var(--red-text); outline-offset: 4px; border-radius: 4px; }
+/* the line under the name in the light: crimson, filling while she stands there when the line moves on its own */
+.mst-n i { position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px; background: rgba(242, 240, 236, .14); overflow: hidden; opacity: 0; transition: opacity .3s ease; }
+.mst-n.on i { opacity: 1; }
+.mst-n i::before { content: ''; position: absolute; inset: 0; border-radius: inherit; background: var(--red); transform-origin: 0 50%; }
+.mst.auto .mst-n.on i::before { animation: mst-fill var(--mst-hold, 6s) linear both paused; }
+.mst.auto.run .mst-n.on i::before { animation-play-state: running; }
+@keyframes mst-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* ---------- Phones: the artist in the light about two thirds of the width, the arrows a step smaller ---------- */
+@media (max-width: 699px) {
+  .mst { --mst-ch: clamp(320px, 88vw, 460px); }
+  .mst-arrow { width: 46px; height: 46px; margin-top: -23px; }
+  .mst-arrow svg { width: 18px; height: 18px; }
+  .mst-big { top: 6%; font-size: clamp(90px, 26vw, 150px); }
+  .mst-names { justify-content: flex-start; width: 100%; padding-inline: 20px; }
+}

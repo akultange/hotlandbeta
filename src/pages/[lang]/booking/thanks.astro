@@ -1,0 +1,26 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Icon3d from '../../../components/Icon3d.astro';
+import { type Lang, langPaths } from '../../../data/i18n';
+import { site } from '../../../data/site';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const ru = lang === 'ru';
+// (the guest has just booked: the page ends with the thanks, without the closing «Ваш стол уже ждёт» and another
+// booking button under it)
+---
+<Base lang={lang} title={ru ? 'Заявка принята' : 'Request received'} noindex closing={false}>
+  <section class="thanks">
+    <div class="wrap stack center">
+      <Icon3d name="peach" size={240} class="moment-ic" eager />
+      <h1 class="t-xl" set:html={ru ? 'Заявка <em>принята</em>' : 'Request <em>received</em>'} />
+      <p class="lead">{ru ? 'Шампанское пока не открываем: сначала перезвоним. Обычно в течение 15 минут. Если срочно, напишите нам.' : 'We’ll hold the champagne until we’ve called you back, usually within 15 minutes. If it’s urgent, message us.'}</p>
+      <div class="btns" style="justify-content: center">
+        <a class="btn btn-crimson" href={`/${lang}/program/`}>{ru ? 'Смотреть афишу' : 'See the events'}</a>
+        <a class="btn btn-line" href={site.whatsapp} target="_blank" rel="noopener">WhatsApp</a>
+        <a class="btn btn-line" href={`/${lang}/`}>{ru ? 'На главную' : 'Home'}</a>
+      </div>
+    </div>
+  </section>
+</Base>

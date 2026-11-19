@@ -1,0 +1,41 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageTitle from '../../../components/PageTitle.astro';
+import MemberCards from '../../../components/MemberCards.astro';
+import Zones from '../../../components/Zones.astro';
+import Parties from '../../../components/Parties.astro';
+import { type Lang, ui, tr, langPaths } from '../../../data/i18n';
+import { vip, media, g } from '../../../data/content';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const t = ui[lang];
+const ru = lang === 'ru';
+const request = `/${lang}/booking/?type=vip`;
+const title = g(3);
+---
+<Base lang={lang} title={t.nav.vip} description={ru ? 'VIP и праздники в HOTLAND: три карты VIP, четыре VIP-зоны, три караоке-зала и праздник по вашему сценарию.' : 'VIP & parties at HOTLAND: three VIP cards, four VIP zones, three karaoke rooms and a party to your own script.'}>
+  <PageTitle
+    crumbs={[{ href: `/${lang}/`, label: 'HOTLAND' }, { label: t.nav.vip }]}
+    title={ru ? 'VIP и&nbsp;праздники' : t.nav.vip}
+    sub={ru ? 'Три карты <em>VIP</em> и ваш праздник' : 'Three <em>VIP cards</em> and your party'}
+    lead={tr(vip.lead, lang)}
+    img={media(title.img)}
+    imgAlt={tr(title.alt, lang)}
+  >
+    <a class="btn btn-crimson" href={request}>{tr(vip.request, lang)}</a>
+  </PageTitle>
+
+  <!-- 01 The cards -->
+  <section class="sec">
+    <div class="wrap">
+      <MemberCards lang={lang} />
+    </div>
+  </section>
+
+  <!-- 02 Zones: a look through the keyhole, held on screen while the page moves through the five rooms (Zones.astro) -->
+  <Zones lang={lang} />
+
+  <!-- 03 Parties: the same section as on the home page (Parties.astro), anchored "occasions" for the footer's «Праздники» -->
+  <Parties lang={lang} id="occasions" />
+</Base>

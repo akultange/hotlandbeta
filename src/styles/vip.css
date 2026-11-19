@@ -1,0 +1,117 @@
+/* VIP cards (MemberCards.astro): three metal cards on a crimson velvet field, after Luka's version of the site.
+   Loaded after global.css (Base.astro). The classes are the component's own (vfield, vdeck, vtier, vcard), so the
+   older .mem-card tilt and sweep rules in global.css (Motion) don't reach them; the motion is in the component. */
+
+/* ---------- The field: deep crimson velvet rising out of the black, fine dots, rounded corners ---------- */
+.vfield {
+  --vf-x: clamp(20px, 3.9vw, 64px);
+  position: relative; isolation: isolate; overflow: hidden; overflow: clip;
+  /* the air above and below follows the screen's height too, so a wide, low laptop screen still holds the field */
+  padding: clamp(28px, min(3.4vw, 5vh), 52px) var(--vf-x) clamp(30px, min(3.1vw, 4.6vh), 48px);
+  border-radius: clamp(20px, 2.2vw, 34px);
+  /* a soft stage light from above, the crimson glowing up from the lower corners */
+  background:
+    radial-gradient(42% 62% at 50% -6%, rgba(255, 214, 222, .1) 0%, rgba(255, 214, 222, 0) 72%),
+    radial-gradient(64% 86% at 0% 100%, rgba(170, 14, 46, .5) 0%, rgba(170, 14, 46, 0) 70%),
+    radial-gradient(64% 86% at 100% 100%, rgba(170, 14, 46, .5) 0%, rgba(170, 14, 46, 0) 70%),
+    linear-gradient(180deg, #120609 0%, #1b070d 42%, #2c0914 100%);
+}
+.vfield::before {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Ccircle cx='2.5' cy='2.5' r='1' fill='%23fff' fill-opacity='.07'/%3E%3Ccircle cx='7.5' cy='7.5' r='1' fill='%23fff' fill-opacity='.07'/%3E%3C/svg%3E") 0 0 / 10px 10px;
+}
+/* a page's own heading, set inside the field (slot "head"), close over the cards so the whole field fits a screen */
+.vfield.has-head { padding-top: clamp(32px, min(3.6vw, 5vh), 56px); }
+.vfield-head { margin-bottom: var(--head-gap); }
+.vfield-head > :last-child { margin-bottom: 0; }
+/* (the heading row is every section's .bighead.bh-line: the title, its line under it, the link under that) */
+
+/* ---------- The three cards, each with its words under it ---------- */
+.vdeck { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px clamp(20px, 2.6vw, 44px); }
+.vtier { display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+
+/* the card: a holder that is dealt (GSAP) and a metal face inside it that tilts (--rx, --ry) */
+.vcard { position: relative; aspect-ratio: 1.586; perspective: 900px; }
+.vcard-in {
+  position: absolute; inset: 0; overflow: hidden; isolation: isolate;
+  display: grid; grid-template-rows: auto 1fr; padding: 7% 7.5%;
+  border-radius: clamp(10px, 1vw, 14px);
+  background: #222 center / cover no-repeat;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform .7s var(--ease-out), box-shadow .5s ease;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), inset 0 0 0 1px rgba(255, 255, 255, .05), 0 34px 54px -32px rgba(0, 0, 0, .95), 0 6px 14px -6px rgba(0, 0, 0, .5);
+}
+.vcard.tilting .vcard-in {
+  transition: transform .12s linear, box-shadow .3s ease;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), inset 0 0 0 1px rgba(255, 255, 255, .05), 0 46px 74px -30px rgba(0, 0, 0, .95), 0 8px 18px -8px rgba(0, 0, 0, .5);
+}
+.vtier-silver .vcard-in { background-image: url(/img/cards/card-silver.webp); color: rgba(28, 24, 24, .82); }
+.vtier-black .vcard-in { background-image: url(/img/cards/card-black.webp); color: var(--silver); }
+.vtier-crimson .vcard-in { background-image: url(/img/cards/card-crimson.webp); color: #fde9ef; }
+.vcard-wm { width: 36%; height: auto; fill: currentColor; }
+.vcard-lily { align-self: center; justify-self: end; width: 22%; height: auto; margin-bottom: -4%; fill: currentColor; opacity: .55; }
+/* a band of light crosses each card once as it lands: the band is the card's own background, swept from left to
+   right (the component moves background-position), so it never reaches past the card's rounded edge. (Moving a
+   band element across instead leaned on the card's clipping, which Safari on the iPhone drops for a tilted card:
+   the light showed as white edges outside the card.) */
+.vcard-glint {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none; border-radius: inherit;
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0) 38%, rgba(255, 255, 255, .7) 50%, rgba(255, 255, 255, 0) 62%) 105% 0 / 260% 100% no-repeat;
+  mix-blend-mode: soft-light;
+}
+/* with a mouse: the light follows the pointer while the card tilts */
+.vcard-glare {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity .4s ease; border-radius: inherit;
+  background: radial-gradient(60% 80% at var(--gx, 50%) var(--gy, 30%), rgba(255, 255, 255, .9), rgba(255, 255, 255, 0) 60%);
+  mix-blend-mode: soft-light;
+}
+.vcard.tilting .vcard-glare { opacity: 1; }
+
+/* the entrance (MemberCards.astro): out of sight until the component takes over (.vf-ready), and back on
+   its own after a few seconds should the component never start */
+@keyframes vf-show { to { opacity: 1; } }
+html.motion .vfield:not(.vf-ready) :is(.vcard, .vtier-body) { opacity: 0; animation: vf-show .3s ease 3.5s both; }
+
+/* the words under the card, set close; the buttons line up along the bottom of the three */
+.vtier-body { display: flex; flex-direction: column; align-items: flex-start; margin-top: clamp(16px, 1.5vw, 22px); }
+.vtier-sub { margin-top: 4px; font: 400 16px/1.45 var(--sans); color: rgba(242, 240, 236, .8); }
+.vtier .lily-list { gap: 6px; margin-top: 12px; line-height: 1.5; color: rgba(242, 240, 236, .88); }
+.vtier .lily-list li::before { margin-top: .4em; color: #d6d8dc; } /* steel lilies on the velvet, as on the cards */
+.vtier-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px clamp(12px, 1.3vw, 20px); margin-top: auto; padding-top: clamp(16px, 1.4vw, 20px); }
+.vtier-foot .btn { flex: none; }
+.vtier-price { font: 400 14px/1.45 var(--sans); color: rgba(242, 240, 236, .64); }
+
+/* ---------- Tablets and phones: a row to swipe, the next card showing at the edge, a meter under it ---------- */
+.vmeter { display: none; align-items: center; gap: 14px; margin-top: 16px; }
+.vmeter-bar { position: relative; flex: 1; height: 2px; border-radius: 2px; background: rgba(242, 240, 236, .16); overflow: hidden; }
+.vmeter-bar i { position: absolute; top: 0; bottom: 0; left: 0; width: var(--w, 38%); border-radius: inherit; background: var(--metal); translate: var(--x, 0%) 0; }
+.vmeter-n { min-width: 56px; text-align: right; font: 500 13px/1 var(--sans); letter-spacing: .06em; color: rgba(242, 240, 236, .72); font-variant-numeric: tabular-nums; }
+@media (max-width: 1023px) {
+  .vdeck {
+    grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: min(calc(100% - 28px), 336px); gap: 16px;
+    margin-inline: calc(-1 * var(--vf-x)); padding: 0 var(--vf-x) 8px;
+    overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory; scroll-padding-inline: var(--vf-x); scrollbar-width: none;
+  }
+  .vdeck::-webkit-scrollbar { display: none; }
+  /* the card peeking in fades at the right; room after the last card, so it comes to rest at the start too */
+  /* the card peeking in fades at the right; room after the last card, so it comes to rest at the start too. The
+     card's width is taken from the screen (the panel spans the page column), not from the row's own box, which
+     that end room changes. */
+  .vdeck {
+    --vd-card: min(calc(100vw - 2 * var(--pad) - 2 * var(--vf-x) - 28px), 336px);
+    grid-auto-columns: var(--vd-card);
+    -webkit-mask-image: var(--peek-fade); mask-image: var(--peek-fade);
+    padding-inline-end: calc(100vw - 2 * var(--pad) - var(--vf-x) - var(--vd-card));
+  }
+  .vtier { scroll-snap-align: start; }
+  .vtier-body { margin-top: 18px; }
+  .vtier .lily-list { margin-top: 10px; }
+  .vtier-foot { padding-top: 16px; }
+  html.js .vmeter { display: flex; }
+}
+@media (max-width: 699px) {
+  .vfield { --vf-x: 20px; padding-top: 24px; padding-bottom: 22px; border-radius: 22px; }
+  .vfield.has-head { padding-top: 30px; }
+  .vdeck { gap: 14px; }
+}

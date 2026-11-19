@@ -1,0 +1,297 @@
+/* =====================================================================
+   Navigation: the header, the phone menu and the phone action dock.
+   Loaded after global.css (Base.astro), so the rules here win over the older header, phone-menu and
+   phone-bar rules still in global.css ("Header: tucks away", "Phone menu: drops in", "Taps").
+   The pieces are dark glass on the black page: a translucent fill, a blur of whatever passes behind, and a
+   1px edge of light. Nothing sits on a bar; the header itself is transparent.
+   ===================================================================== */
+
+:root {
+  /* the space the phone dock takes at the bottom of the screen (0 on desktop), for anything sized to the screen */
+  --dock: 0px;
+  /* what is chosen (the page in the header, the language, a menu tab): a small pill of brushed steel, built like the
+     silver buttons (the light along its top, the bevel, the grain), with dark words on it */
+  --steel-pill: linear-gradient(180deg, rgba(255, 255, 255, .86) 0%, rgba(255, 255, 255, .2) 46%, rgba(0, 0, 0, .1) 54%, rgba(255, 255, 255, .46) 100%), var(--brushed);
+  --steel-pill-edge: inset 0 1px 0 rgba(255, 255, 255, .95), inset 0 -1px 0 rgba(0, 0, 0, .24), 0 0 0 1px rgba(255, 255, 255, .28), 0 8px 20px -10px rgba(0, 0, 0, .85);
+  --nav-glass: rgba(24, 24, 27, .58);
+  --nav-edge: inset 0 0 0 1px rgba(242, 240, 236, .1), inset 0 1px 0 rgba(255, 255, 255, .07);
+  --nav-lift: 0 14px 34px -18px rgba(0, 0, 0, .9);
+  --nav-blur: blur(20px) saturate(1.5);
+  /* the header's motion: quick to start, soft to land (the highlight, the pill between pages) */
+  --ease-nav: cubic-bezier(.3, .7, .1, 1);
+}
+
+.glass {
+  background-color: var(--nav-glass);
+  -webkit-backdrop-filter: var(--nav-blur);
+  backdrop-filter: var(--nav-blur);
+  box-shadow: var(--nav-edge), var(--nav-lift);
+}
+
+/* ---------- Header ---------- */
+.hdr {
+  position: fixed; inset: 0 0 auto; z-index: 50;
+  color: var(--fg);
+  pointer-events: none; /* the empty parts of the header let clicks through to the page */
+}
+/* no band behind the header at any scroll: the page passes under it untouched, and only the glass pieces (the
+   lily, the sections, the menu) blur what is behind them */
+.hdr::before { content: none; }
+/* the old reading line along the bottom of the bar (global.css) has no bar to sit on any more */
+.hdr::after { content: none; }
+
+.hdr-in {
+  height: var(--hdr-row); padding: 0 var(--pad);
+  display: grid; grid-template-columns: minmax(max-content, 1fr) auto minmax(max-content, 1fr);
+  align-items: center; column-gap: 14px;
+}
+.hdr-in > * { pointer-events: auto; }
+
+/* the lily alone, in a round glass chip */
+.hdr-chip {
+  justify-self: start; flex: none;
+  display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%;
+  transition: background-color .3s ease;
+}
+.hdr-chip .logo { display: block; }
+.hdr-chip .emblem { width: 28px; height: 28px; }
+@media (hover: hover) {
+  .hdr-chip:hover { background-color: rgba(44, 44, 48, .66); }
+}
+
+/* the sections: a floating glass capsule; the current page is a light pill */
+.hdr-nav { position: relative; display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: 999px; }
+.hdr-nav a {
+  position: relative; z-index: 1;
+  display: inline-flex; align-items: center; height: 38px; padding: 0 17px; border-radius: 999px;
+  font: 500 15px/1 var(--sans); color: rgba(242, 240, 236, .8); white-space: nowrap;
+  transition: color .18s ease;
+}
+.hdr-tx { display: block; }
+.hdr-nav a.on { color: var(--ink); }
+.hdr-pill {
+  position: absolute; inset: 0; z-index: -1; overflow: hidden; border-radius: inherit;
+  background-color: #d3d5d9; background-image: var(--steel-pill);
+  background-size: 100% 100%, cover; background-position: 0 0, center; background-blend-mode: soft-light, multiply;
+  box-shadow: var(--steel-pill-edge);
+}
+/* once, as the page arrives, a band of light crosses the steel (the buttons' glint) */
+.hdr-pill::after {
+  content: ''; position: absolute; inset: 0 -60%; pointer-events: none;
+  background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, .75) 50%, transparent 60%);
+  mix-blend-mode: soft-light; translate: -100% 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hdr-pill::after { animation: pill-glint 1.3s var(--ease-io) .7s both; }
+}
+@keyframes pill-glint { to { translate: 100% 0; } }
+@media (hover: hover) {
+  .hdr-nav a:not(.on):hover { color: #fff; }
+}
+.hdr-nav a:not(.on):focus-visible { color: #fff; }
+/* a soft highlight that snaps from link to link (Header.astro sets --x and --w) */
+.hdr-hl {
+  position: absolute; top: 4px; bottom: 4px; left: 0; width: var(--w, 0); translate: var(--x, 0) 0;
+  border-radius: 999px; background: rgba(242, 240, 236, .1); box-shadow: inset 0 0 0 1px rgba(242, 240, 236, .08), inset 0 1px 0 rgba(255, 255, 255, .06);
+  opacity: 0; pointer-events: none;
+  transition: translate .32s var(--ease-nav), width .32s var(--ease-nav), opacity .16s ease;
+}
+.hdr-hl.on { opacity: 1; }
+.hdr-hl.jump { transition: opacity .25s ease; }
+
+.hdr-r { justify-self: end; display: flex; align-items: center; gap: 10px; }
+
+/* language: a small segmented pill */
+.seg { display: flex; gap: 2px; padding: 4px; border-radius: 999px; }
+.seg a {
+  display: grid; place-items: center; min-width: 40px; height: 38px; padding: 0 10px; border-radius: 999px;
+  font: 600 14px/1 var(--sans); letter-spacing: .02em; color: rgba(242, 240, 236, .62);
+  transition: color .25s ease, background-color .25s ease;
+}
+.seg a.on {
+  color: var(--ink); background-color: #d3d5d9; background-image: var(--steel-pill);
+  background-size: 100% 100%, cover; background-position: 0 0, center; background-blend-mode: soft-light, multiply;
+  box-shadow: var(--steel-pill-edge);
+}
+@media (hover: hover) {
+  .seg a:not(.on):hover { color: #fff; background: rgba(242, 240, 236, .07); }
+}
+
+.hdr-book { height: 46px; padding: 0 24px; }
+
+/* phones: a glass "Menu" pill with two lines; in the open sheet it becomes "Close" with a cross */
+.hdr-menu {
+  display: none; align-items: center; gap: 11px; height: 42px; padding: 0 16px 0 18px; border-radius: 999px;
+  font: 500 15px/1 var(--sans); color: var(--fg); white-space: nowrap;
+  transition: scale .2s ease;
+}
+.hdr-menu i { position: relative; flex: none; width: 18px; height: 8px; }
+.hdr-menu i::before, .hdr-menu i::after { content: ''; position: absolute; left: 0; right: 0; height: 1.6px; border-radius: 2px; background: currentColor; }
+.hdr-menu i::before { top: 0; }
+.hdr-menu i::after { bottom: 0; }
+.hdr-menu.is-close i::before { translate: 0 3.2px; rotate: 45deg; }
+.hdr-menu.is-close i::after { translate: 0 -3.2px; rotate: -45deg; }
+.hdr-menu:active { scale: .96; }
+
+/* narrower desktops: the capsule tightens so everything stays on one line */
+@media (max-width: 1239px) { .hdr-nav a { padding: 0 13px; } }
+@media (max-width: 1099px) {
+  .hdr-in { column-gap: 10px; }
+  .hdr-nav a { padding: 0 11px; font-size: 14px; }
+  .hdr-r { gap: 8px; }
+  .seg a { min-width: 36px; padding: 0 8px; font-size: 13px; }
+  .hdr-book { padding: 0 18px; font-size: 14px; }
+}
+@media (max-width: 999px) {
+  .hdr-in { column-gap: 6px; }
+  .hdr-nav { gap: 0; }
+  .hdr-nav a { padding: 0 8px; font-size: 13.5px; }
+}
+
+@media (max-width: 899px) {
+  .hdr-in { display: flex; justify-content: space-between; column-gap: 12px; }
+  .hdr-nav, .hdr-lang, .hdr-book { display: none; }
+  .hdr-menu { display: inline-flex; }
+  .hdr-chip { width: 42px; height: 42px; }
+  .hdr-chip .emblem { width: 26px; height: 26px; }
+  /* phones: a shorter, denser fade that ends just past the header, over the top padding of the menu page's pinned tabs */
+  .hdr::before {
+    inset: 0 0 -10px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, .9) 0%, rgba(0, 0, 0, .82) 55%, rgba(0, 0, 0, .45) 82%, rgba(0, 0, 0, 0) 100%);
+    -webkit-mask-image: linear-gradient(180deg, #000 75%, transparent); mask-image: linear-gradient(180deg, #000 75%, transparent);
+  }
+}
+
+/* ---------- Phone menu: a full-screen sheet ---------- */
+.mnav {
+  position: fixed; inset: 0; z-index: 70; overflow-y: auto; overscroll-behavior: contain;
+  background: radial-gradient(120% 52% at 100% 0%, rgba(220, 20, 60, .1), rgba(220, 20, 60, 0) 62%), #000;
+  color: var(--fg);
+}
+.mnav-top {
+  height: var(--hdr-row); padding: 0 var(--pad);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.mnav-top .hdr-chip { width: 42px; height: 42px; }
+.mnav-top .hdr-chip .emblem { width: 26px; height: 26px; }
+.mnav-top-r { display: flex; align-items: center; gap: 8px; }
+.mnav-top .hdr-menu { display: inline-flex; }
+.mnav-top .seg a { min-width: 38px; height: 34px; }
+
+.mnav-body { display: grid; gap: 30px; padding: 14px var(--pad) calc(40px + env(safe-area-inset-bottom)); }
+.mnav-links { display: grid; }
+.mnav-links { --ic: 46px; }
+.mnav-links a {
+  display: grid; grid-template-columns: var(--ic) minmax(0, 1fr); align-items: center; column-gap: 16px;
+  margin: 0 -10px; padding: 7px 10px; border-radius: 22px;
+  font: 700 clamp(34px, 10.4vw, 46px)/1.06 var(--display); font-stretch: 75%; letter-spacing: -.005em;
+  color: var(--fg); transition: background-color .25s ease, color .25s ease;
+}
+.mnav-links a span { min-width: 0; }
+.mnav-links a.on { color: var(--red-text); font-style: italic; }
+.mnav-links a:active { background-color: rgba(242, 240, 236, .07); }
+.mnav-links .mnav-ic { width: var(--ic); }
+
+.mnav-info { display: grid; gap: 24px; justify-items: start; }
+.mnav-book { width: 100%; max-width: 460px; }
+/* tablets held upright: the same sheet, a size up */
+@media (min-width: 600px) and (min-height: 700px) {
+  .mnav-links { --ic: 58px; }
+  .mnav-links a { column-gap: 20px; font-size: clamp(46px, 7.6vw, 64px); }
+  .mnav-body { gap: 40px; padding-top: 24px; }
+}
+.mnav-visit { display: grid; gap: 2px; font: 400 17px/1.55 var(--sans); color: var(--fg-2); }
+.mnav-phone { margin-top: 10px; font: 600 22px/1.25 var(--sans); color: var(--fg); font-variant-numeric: lining-nums; } /* Gio's contact variant */
+.mnav-ask { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-top: 10px; font: 600 19px/1.3 var(--sans); color: var(--fg); }
+.mnav-ask span { color: var(--muted); font-weight: 400; }
+.mnav-msg { display: flex; flex-wrap: wrap; gap: 10px; }
+.mnav-msg a {
+  display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 20px 0 16px; border-radius: 999px;
+  font: 500 16px/1 var(--sans); color: var(--fg); transition: scale .2s ease, background-color .25s ease;
+}
+.mnav-msg a:active { scale: .97; background-color: rgba(44, 44, 48, .7); }
+.mnav-msg svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.mnav-careers { display: inline-flex; align-items: center; gap: 10px; padding: 6px 0; font: 500 16px/1 var(--sans); color: var(--fg-2); }
+.mnav-careers span { color: var(--red-text); }
+
+/* the sheet drops like a curtain with a soft rounded edge, the links follow one by one, and the two lines
+   of the button turn into a cross; closing lifts it away again (Header.astro waits 340ms) */
+@keyframes nav-curtain-in { from { clip-path: inset(0 0 100% 0 round 0 0 48px 48px); } to { clip-path: inset(0 0 0 0 round 0); } }
+@keyframes nav-curtain-out { from { clip-path: inset(0 0 0 0 round 0); } to { clip-path: inset(0 0 100% 0 round 0 0 48px 48px); } }
+@keyframes nav-x { from { translate: 0 0; rotate: 0deg; } }
+html.motion .mnav:not([hidden]) { animation: nav-curtain-in .6s cubic-bezier(.22, 1, .36, 1) both; }
+html.motion .mnav:not([hidden]) :is(.mnav-links a, .mnav-info > *) { animation: rv-up .7s var(--ease-out) calc(.12s + var(--i, 0) * .035s) backwards; }
+html.motion .mnav:not([hidden]) .mnav-ic { animation: rv-pop .8s var(--ease-back) calc(.18s + var(--i, 0) * .035s) backwards; }
+html.motion .mnav:not([hidden]) .is-close i::before,
+html.motion .mnav:not([hidden]) .is-close i::after { animation: nav-x .5s var(--ease-out) .12s backwards; }
+html.motion .mnav.closing { animation: nav-curtain-out .32s cubic-bezier(.5, 0, .2, 1) both; }
+
+/* ---------- Phone action dock ---------- */
+.mbar {
+  position: fixed; z-index: 45; left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom));
+  max-width: 540px; margin-inline: auto; /* tablets: a dock, not a bar */
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) auto; align-items: center;
+  padding: 5px; border-radius: 999px;
+  background-color: rgba(20, 20, 23, .7);
+  -webkit-backdrop-filter: blur(22px) saturate(1.6); backdrop-filter: blur(22px) saturate(1.6);
+  box-shadow: var(--nav-edge), 0 18px 44px -14px rgba(0, 0, 0, .95);
+  transition: translate .5s var(--ease-out), opacity .3s ease;
+}
+/* (global.css paints the first link of the old bar crimson; here the first item is "Call", a button) */
+.mbar .mbar-act {
+  display: grid; justify-items: center; align-content: center; gap: 6px; min-width: 0; height: 52px; padding: 0;
+  border: 0; border-radius: 999px; background: none; box-shadow: none; filter: none;
+  font: 500 13px/1 var(--sans); color: var(--fg); white-space: nowrap;
+}
+.mbar .mbar-act:active { background-color: rgba(242, 240, 236, .1); filter: none; color: var(--fg); }
+.mbar-act svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.mbar a.mbar-book { height: 52px; padding: 0 17px; transition: filter .2s, scale .2s ease; }
+/* smaller phones: the labels keep their room (the dock never cuts a word) */
+@media (max-width: 389px) {
+  .mbar a.mbar-book { padding: 0 14px; font-size: 14px; }
+  .mbar .mbar-act { font-size: 12.5px; }
+}
+/* the smallest phones: icons only, the words stay for screen readers */
+@media (max-width: 359px) {
+  .mbar-act span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+@media (min-width: 900px) { .mbar { display: none; } }
+@media (max-width: 899px) {
+  :root { --dock: calc(72px + env(safe-area-inset-bottom)); }
+  /* room at the end of every page so the dock never covers the last lines */
+  body:not(.bare) { padding-bottom: calc(var(--dock) + 14px); }
+  /* while you type in a form, the dock steps out of the way */
+  body:has(:is(input:not([type="radio"], [type="checkbox"], [type="range"], [type="submit"], [type="button"]), textarea, select):focus) .mbar {
+    translate: 0 calc(100% + 24px); opacity: 0; pointer-events: none;
+  }
+}
+
+/* ---------- Between pages: the steel pill glides to the new section (cross-document view transitions) ----------
+   The capsule itself holds still (it is its own part of the change, shown at once, never faded with the page), so
+   the sections don't blink; only the pill and the chosen section's name glide across it. While the page changes
+   the capsule is a picture of itself, which can't blur what passes behind it: a darker fill stands in for the
+   glass for that moment. */
+.hdr-nav { view-transition-name: hdr-nav; }
+::view-transition-group(hdr-nav) { animation: none; border-radius: 999px; background: rgba(18, 18, 21, .9); }
+::view-transition-old(hdr-nav), ::view-transition-new(hdr-nav) { animation: none; mix-blend-mode: normal; }
+.hdr-nav .hdr-pill { view-transition-name: hdr-pill; }
+.hdr-nav a.on .hdr-tx { view-transition-name: hdr-on; }
+::view-transition-group(hdr-pill), ::view-transition-group(hdr-on) { animation-duration: .4s; animation-timing-function: var(--ease-nav); }
+::view-transition-old(hdr-pill), ::view-transition-new(hdr-pill) { height: 100%; }
+::view-transition-old(hdr-on), ::view-transition-new(hdr-on) { width: auto; height: 100%; left: 50%; translate: -50% 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hdr-hl { transition: opacity .2s ease; }
+  .hdr::before, .mbar, .hdr-menu { transition: none; }
+}
+
+
+/* the header's parts keep still across page changes (the header itself has no view-transition-name, so
+   its glass can blur what is under it) */
+.hdr-chip { view-transition-name: hdr-chip; }
+.hdr-r { view-transition-name: hdr-r; }
+/* small desktops and laptops: the capsule centred in the free middle, not pushed against the language pill (with
+   seven sections, Gallery included, the capsule only fits centred on the page from 1440px) */
+@media (min-width: 900px) and (max-width: 1439px) { .hdr-in { grid-template-columns: auto minmax(0, 1fr) auto; } .hdr-nav { justify-self: center; } }
+/* phones: anything scrolled into view (a focused button, an #anchor) stops above the dock */
+@media (max-width: 899px) { html { scroll-padding-bottom: calc(var(--dock) + 16px); } }

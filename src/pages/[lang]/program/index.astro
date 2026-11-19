@@ -1,0 +1,53 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageTitle from '../../../components/PageTitle.astro';
+import PosterCard from '../../../components/PosterCard.astro';
+import { type Lang, ui, tr, langPaths } from '../../../data/i18n';
+import { events, pastEvents, eventsLead, night, media } from '../../../data/content';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const t = ui[lang];
+const ru = lang === 'ru';
+const first = night.acts[1];
+---
+<Base lang={lang} title={ru ? 'Афиша' : 'Events'} description={ru ? 'Афиша HOTLAND: Courchevel в пятницу, Velvet в субботу, Ritual в воскресенье. А шоу-балет каждую ночь в 23:30 и 01:30.' : 'Events at HOTLAND: Courchevel on Friday, Velvet on Saturday, Ritual on Sunday. And the show ballet every night at 23:30 and 01:30.'}>
+  <PageTitle
+    crumbs={[{ href: `/${lang}/`, label: 'HOTLAND' }, { label: t.nav.program }]}
+    title={ru ? 'Афиша' : 'Events'}
+    sub={ru ? 'Каждые выходные <em>премьера</em>' : 'A premiere <em>every weekend</em>'}
+    lead={tr(eventsLead, lang)}
+    img={media(first.imgPhone)}
+    imgAlt={tr(first.alt, lang)}
+  >
+    <a class="btn btn-crimson" href={`/${lang}/booking/`}>{t.bookTable}</a>
+  </PageTitle>
+
+  <!-- 01 Event nights -->
+  <section class="sec">
+    <div class="posters" data-events data-lenis-prevent-horizontal>
+      {events.map((e) => <PosterCard e={e} lang={lang} />)}
+    </div>
+    <div class="wrap">
+      <p class="body" data-events-empty hidden>{ru ? 'Новые особые вечера скоро. А шоу-балет каждую ночь в 23:30 и 01:30.' : 'New special nights are coming. The show ballet is on every night at 23:30 and 01:30.'}</p>
+    </div>
+  </section>
+
+  <!-- 02 Nights that have been: smaller, in black and white, each leading to the gallery -->
+  <section class="sec past-sec" aria-labelledby="past-h">
+    <div class="wrap">
+      <div class="bighead bh-line">
+        <h2 class="t-l" id="past-h">{ru ? 'Прошедшие вечера' : 'Past nights'}</h2>
+        <div class="bighead-side">
+          <p class="body">{ru ? 'Как это было. Остальное осталось между нами.' : 'How it went. The rest stays between us.'}</p>
+          <a class="lnk" href={`/${lang}/gallery/`}>{ru ? 'Фото в галерее' : 'Photos in the gallery'}</a>
+        </div>
+      </div>
+    </div>
+    <div class="posters past" data-lenis-prevent-horizontal>
+      {pastEvents.map((e) => <PosterCard e={e} lang={lang} past />)}
+    </div>
+  </section>
+
+
+</Base>

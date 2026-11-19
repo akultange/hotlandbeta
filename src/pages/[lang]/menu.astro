@@ -1,0 +1,244 @@
+---
+// The menu page: the page's header (as every page's), then the bar card: three tabs (bar, kitchen, entry and
+// shows), each marked with its 3D icon and pinned under the header while you read, the chosen list set large in
+// two columns, and beside it the tab's picture, which stays in view and plays its film (styles/menu.css).
+// Then the hookah lounge (the bottle sets are hidden for now). Without scripts the three lists simply
+// follow one another, each under its own heading.
+import Base from '../../layouts/Base.astro';
+import Photo from '../../components/Photo.astro';
+import PageTitle from '../../components/PageTitle.astro';
+import Icon3d from '../../components/Icon3d.astro';
+import '../../styles/menu.css'; // after the layout, so it follows global.css
+import { type Lang, tr, langPaths } from '../../data/i18n';
+import { barMenu, bar, kitchen, entryShows, hookah, media, type Item } from '../../data/content';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const ru = lang === 'ru';
+/** A price as the menu sets it: the number, its rouble sign a little quieter and «от» / "from" quieter still; or
+ *  "on request". (HTML: our own figures only.) */
+const cost = (x: Item) => {
+  if (x.price === null) return tr(barMenu.onRequest, lang);
+  const from = x.from ? '<span class="pr-from">' + (ru ? 'от' : 'from') + '</span>' : '';
+  return from + x.price.toLocaleString('ru-RU') + '<span class="pr-cur">\u00a0₽</span>';
+};
+/** The few words under a name, and the house cocktails' mark. */
+const own = ru ? 'фирменный' : 'our own';
+const shot = barMenu.shots;
+const tabs = [
+  { id: 'bar', label: tr(barMenu.tabs.bar, lang), shot: shot.bar, icon: 'coupe' },
+  { id: 'kitchen', label: tr(barMenu.tabs.kitchen, lang), shot: shot.kitchen, icon: 'cherries' },
+  { id: 'entry', label: tr(barMenu.tabs.entry, lang), shot: shot.entry, icon: 'stiletto' },
+] as const;
+---
+<Base lang={lang} title={ru ? 'Меню' : 'Menu'} description={tr(barMenu.lead, lang)}>
+  <!-- the page's header, as every page's: its name, its second line and a short lead -->
+  <PageTitle title={tr(barMenu.title, lang)} sub={tr(barMenu.sub, lang)} lead={tr(barMenu.intro, lang)} />
+
+  <!-- the bar card: the tabs (pinned while you read), the chosen list, and its picture beside it, which plays its film -->
+  <section class="sec bm" id="menu">
+    <div class="wrap bm-in">
+      <div class="bm-media" aria-hidden="true">
+        <div class="bm-stack">
+          {tabs.map((x, i) => (
+            <div class:list={['photo', 'bm-shot', { on: i === 0 }]} data-for={x.id}>
+              <img src={media(x.shot.img)} alt="" loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+              {x.shot.loop && <video class="loop" muted loop playsinline preload="none" data-src={media(x.shot.loop)}></video>}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="bm-tabs">
+        <div class="tabs" role="tablist" aria-label={ru ? 'Разделы меню' : 'Menu sections'}>
+          <span class="tabs-ink" aria-hidden="true"></span>
+          {tabs.map((x, i) => (
+            <button type="button" role="tab" id={`tab-${x.id}`} aria-controls={x.id} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}><Icon3d name={x.icon} size={30} eager class="tab-ic" /><span>{x.label}</span></button>
+          ))}
+        </div>
+      </div>
+
+      <div class="bm-panels">
+        <div class="bm-panel" id="bar" role="tabpanel" aria-labelledby="tab-bar">
+          <h2 class="bm-panel-h">{tabs[0].label}</h2>
+          <div class="bm-cols">
+            {bar.map((c) => (
+              <div class="mgroup">
+                <h3 class="mgroup-h">{tr(c.title, lang)}</h3>
+                {c.items.map((it) => (
+                  <div class="mrow">
+                    <span class="nm">{tr(it.name, lang)}{it.vol && <><span class="vgap">{' '}</span><span class="vol">{tr(it.vol, lang)}</span></>}{(it.desc || it.own) && <small>{it.desc && <span class="desc">{tr(it.desc, lang)}</span>}{it.own && <span class="own">{own}</span>}</small>}</span>
+                    <span class="dots"></span>
+                    <span class:list={['pr', { req: it.price === null }]} set:html={cost(it)} />
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="bm-panel" id="kitchen" role="tabpanel" aria-labelledby="tab-kitchen">
+          <h2 class="bm-panel-h">{tabs[1].label}</h2>
+          <div class="bm-cols">
+            {kitchen.map((it) => (
+              <div class="mrow"><span class="nm">{tr(it.name, lang)}{it.desc && <small>{tr(it.desc, lang)}</small>}</span><span class="dots"></span><span class:list={['pr', { req: it.price === null }]} set:html={cost(it)} /></div>
+            ))}
+          </div>
+        </div>
+
+        <div class="bm-panel" id="entry" role="tabpanel" aria-labelledby="tab-entry">
+          <h2 class="bm-panel-h">{tabs[2].label}</h2>
+          <div class="mrows" style="margin-top: 0">
+            {entryShows.map((it) => (
+              <div class="mrow"><span class="nm">{tr(it.name, lang)}{it.desc && <small>{tr(it.desc, lang)}</small>}</span><span class="dots"></span><span class:list={['pr', { req: it.price === null }]} set:html={cost(it)} /></div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <p class="bm-note">{tr(barMenu.note, lang)}</p>
+    </div>
+  </section>
+  <script is:inline>
+    // The bar card's tabs (runs at once, so the page never shows all three lists first).
+    (() => {
+      const bm = document.currentScript && document.currentScript.previousElementSibling;
+      if (!bm || !bm.classList.contains('bm')) return;
+      const tabs = Array.from(bm.querySelectorAll('[role="tab"]'));
+      const panels = tabs.map((t) => document.getElementById(t.getAttribute('aria-controls')));
+      const shots = Array.from(bm.querySelectorAll('.bm-shot'));
+      const ink = bm.querySelector('.tabs-ink');
+      const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const saveData = Boolean(navigator.connection && navigator.connection.saveData);
+      let inView = false;
+      // the chosen tab's film plays while the picture is on screen (an iPhone in Low Power Mode refuses to start it
+      // without a touch: the next tap starts it)
+      let refused = false;
+      const films = () => shots.forEach((s) => {
+        const v = s.querySelector('video');
+        if (!v) return;
+        if (s.classList.contains('on') && inView && !still && !saveData) {
+          if (!v.getAttribute('src')) v.src = v.dataset.src;
+          v.play()
+            .then(() => { refused = false; s.classList.add('looping'); })
+            .catch((err) => { if (err && err.name === 'NotAllowedError') refused = true; });
+        } else {
+          v.pause();
+          s.classList.remove('looping');
+        }
+      });
+      addEventListener('touchend', () => { if (refused) films(); }, { passive: true });
+      const moveInk = () => {
+        const t = tabs.find((x) => x.getAttribute('aria-selected') === 'true');
+        if (!t || !ink) return;
+        ink.style.setProperty('--x', t.offsetLeft + 'px');
+        ink.style.setProperty('--w', t.offsetWidth + 'px');
+      };
+      const select = (tab, focus) => {
+        tabs.forEach((t, i) => {
+          const on = t === tab;
+          t.setAttribute('aria-selected', on ? 'true' : 'false');
+          t.tabIndex = on ? 0 : -1;
+          panels[i].hidden = !on;
+        });
+        const id = tab.getAttribute('aria-controls');
+        shots.forEach((s) => s.classList.toggle('on', s.dataset.for === id));
+        if (focus) tab.focus();
+        moveInk();
+        films();
+      };
+      bm.classList.add('tabbed');
+      select(tabs.find((t) => '#' + t.getAttribute('aria-controls') === location.hash) || tabs[0], false);
+      const list = bm.querySelector('.bm-panels');
+      const bar = bm.querySelector('.bm-tabs');
+      const root = document.documentElement;
+      // the header's height (var(--hdr)): where the pinned tabs stand while the header is out
+      const hdrHeight = () => {
+        const probe = document.createElement('div');
+        probe.style.cssText = 'position:absolute;visibility:hidden;height:var(--hdr)';
+        document.body.append(probe);
+        const h = probe.offsetHeight;
+        probe.remove();
+        return h;
+      };
+      tabs.forEach((t, i) => {
+        t.addEventListener('click', () => {
+          select(t, false);
+          // If the list was scrolled past, the new list opens from its first item, just under the pinned tabs (where
+          // it stands before any scrolling). Going back up brings the header back, and the tabs move down under it,
+          // so aim for where they will be, not where they are now; and bring the header back at once, so it is so.
+          if (getComputedStyle(bar).position !== 'sticky') return;
+          const under = hdrHeight() + bar.offsetHeight + (parseFloat(getComputedStyle(list).marginTop) || 24);
+          const top = list.getBoundingClientRect().top;
+          if (top >= under - 1) return;
+          root.classList.remove('hdr-hide');
+          scrollTo({ top: Math.max(0, Math.round(scrollY + top - under)), behavior: 'smooth' });
+        });
+        t.addEventListener('keydown', (e) => {
+          const n = { ArrowRight: (i + 1) % tabs.length, ArrowLeft: (i - 1 + tabs.length) % tabs.length, Home: 0, End: tabs.length - 1 }[e.key];
+          if (n === undefined) return;
+          e.preventDefault();
+          select(tabs[n], true);
+        });
+      });
+      addEventListener('resize', moveInk);
+      if (document.fonts) document.fonts.ready.then(moveInk);
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(([e]) => { inView = e.isIntersecting; films(); }, { threshold: 0.3 }).observe(bm.querySelector('.bm-stack'));
+      }
+    })();
+  </script>
+
+  {/* Bottle sets (TableSets.astro) are hidden at the client's request (2026-11-13); the component stays: to bring
+      them back, import it and put <TableSets lang={lang} /> here */}
+
+  <!-- Hookah lounge -->
+  <section class="sec soot" id="hookah">
+    <div class="wrap g12" style="align-items: center">
+      <div style="grid-column: 1 / span 5">
+        <Photo src={media(hookah.shot.img)} loop={hookah.shot.loop && media(hookah.shot.loop)} alt={tr(hookah.shot.alt, lang)} ratio="4/5" />
+      </div>
+      <div class="stack" style="grid-column: 7 / span 6">
+        <h2 class="t-l" set:html={tr(hookah.title, lang)} />
+        <p class="body" style="text-wrap: pretty">{tr(hookah.lead, lang)}</p>
+        <div style="width: 100%">
+          <h3 class="mgroup-h">{tr(hookah.flavorsTitle, lang)}</h3>
+          <ul class="lily-list two">{hookah.flavors.map((f) => <li>{tr(f, lang)}</li>)}</ul>
+        </div>
+        <div class="mrows hk-offers" style="width: 100%; margin-top: 0">
+          {hookah.offers.map((it) => (
+            <div class="mrow"><span class="nm">{tr(it.name, lang)}{it.desc && <small>{tr(it.desc, lang)}</small>}</span><span class="dots"></span><span class="pr" set:html={cost(it)} /></div>
+          ))}
+        </div>
+        <a class="btn btn-crimson" href={`/${lang}/booking/?type=lounge`}>{tr(hookah.cta, lang)}</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* The bar card's tabs, big: a coupe for the bar, the cherries for the kitchen, a stiletto for entry and shows,
+     each 3D icon beside a large label. The chosen tab's icon stands a little larger, with a shadow on the light
+     pill. On phones the three share the width, the icon above its label. (A step under the page's name and over
+     the lists' headings: they lead into the list, they don't outweigh it.) */
+  .bm-tabs .tabs { padding: 6px; }
+  .bm-tabs .tabs :global(.tabs-ink) { top: 6px; bottom: 6px; }
+  .bm-tabs .tabs button { display: inline-flex; align-items: center; gap: 12px; height: 66px; padding: 0 30px 0 12px; font: 600 20px/1 var(--sans); }
+  .bm-tabs :global(.tab-ic) { width: 50px; margin: -8px 0; filter: saturate(.8) brightness(.9); transition: scale .5s var(--ease-back), filter .4s; }
+  .bm-tabs [aria-selected="true"] :global(.tab-ic) { scale: 1.1; filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, .5)); }
+  @media (hover: hover) { .bm-tabs .tabs button:not([aria-selected="true"]):hover :global(.tab-ic) { filter: none; scale: 1.06; } }
+  @media (max-width: 899px) {
+    .bm-tabs .tabs button { gap: 10px; height: 60px; padding: 0 24px 0 10px; font-size: 18px; }
+    .bm-tabs :global(.tab-ic) { width: 44px; }
+  }
+  @media (max-width: 599px) {
+    .bm-tabs .tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; border-radius: 26px; }
+    .bm-tabs .tabs :global(.tabs-ink) { border-radius: 20px; }
+    .bm-tabs .tabs button { flex-direction: column; justify-content: center; gap: 6px; height: 96px; padding: 8px 4px; border-radius: 20px; font-size: 15.5px; line-height: 1.15; white-space: normal; text-align: center; }
+    .bm-tabs :global(.tab-ic) { width: 46px; margin: 0; }
+  }
+  /* (the smallest phones: the labels a step smaller, so each stays on one line and the three icons line up) */
+  @media (max-width: 379px) { .bm-tabs .tabs button { font-size: 14.5px; } }
+  /* a dish never splits between the two columns (the kitchen list has no groups to hold it together) */
+  .bm-cols > .mrow { break-inside: avoid; }
+</style>

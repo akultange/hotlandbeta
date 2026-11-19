@@ -1,0 +1,43 @@
+/* =====================================================================
+   The booking (Book.astro): the job application's full-screen page (apply.css: the picture on the left, the
+   count and the cross, the crimson line, the step in the middle, the buttons at the foot), with the little the
+   booking adds: the six kinds three to a row, the night line, the guests (a minus, the number, a plus) and
+   shorter wishes.
+   ===================================================================== */
+
+html.bk-lock { overflow: hidden; }
+/* (a scroll that reaches the end of a step stays in the dialog; the page behind never moves) */
+.bk { overscroll-behavior: contain; }
+
+/* 1: the six kinds, three to a row as the roles are (a wide screen's booking form set all six in one row) */
+@media (min-width: 1200px) {
+  .bk .bk-types { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .bk .bk-types span { min-height: 148px; padding-inline: 10px; font-size: 16px; }
+}
+
+/* 2: what and which night, then the guests: a round minus and plus, the number big between them (a real field: it
+   can be typed into, and it keeps to 1 to 200) */
+.bk-chosen { display: grid; gap: 6px; }
+/* («изменить» is a word in a line, but a finger's height to tap: the extra is invisible and takes no room) */
+.bk .apl-change { padding-block: 12px; margin-block: -12px; }
+.bk-guests { display: grid; justify-items: start; gap: 10px; margin-top: 6px; }
+.bk-count { display: flex; align-items: center; gap: 14px; }
+.bk-pm {
+  display: grid; place-items: center; flex: none; width: 52px; height: 52px; border-radius: 50%; color: var(--fg);
+  background: rgba(242, 240, 236, .06); box-shadow: inset 0 0 0 1px rgba(242, 240, 236, .14);
+  transition: background-color .2s ease, opacity .2s ease;
+}
+.bk-pm:hover { background: rgba(242, 240, 236, .12); }
+.bk-pm[aria-disabled="true"] { opacity: .32; cursor: default; }
+.bk-pm[aria-disabled="true"]:hover { background: rgba(242, 240, 236, .06); }
+.bk-pm svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.bk-count input {
+  box-sizing: border-box; width: calc(3ch + 10px); height: calc(1em + 10px); margin: 0; padding: 0 0 4px;
+  border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: none; color: var(--fg); text-align: center;
+  font: 800 clamp(52px, 4.6vw, 72px)/1 var(--display); font-stretch: 62.5%; font-variant-numeric: tabular-nums lining-nums;
+  appearance: textfield; -moz-appearance: textfield; transition: border-color .3s ease;
+}
+.bk-count input::-webkit-inner-spin-button, .bk-count input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.bk-count input:focus { outline: none; border-bottom-color: var(--red); }
+/* the wishes: three lines (the application's few words have five) */
+.bk .apl-step .field textarea { min-height: 0; }

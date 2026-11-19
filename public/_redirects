@@ -1,0 +1,2 @@
+# Cloudflare: the bare address goes straight to the Russian site (src/pages/index.astro stays as a fallback)
+/ /ru/ 302

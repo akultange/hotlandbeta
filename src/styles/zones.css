@@ -1,0 +1,113 @@
+/* =====================================================================
+   The club's zones (Zones.astro, VIP page): a look through the keyhole.
+   The section is one dark room. Its rooms are named down the left, outlined until chosen; the chosen one is
+   seen through a tall keyhole on the right, its light leaking round the keyhole's steel edge, and its colour
+   washing the whole section from behind, blurred. On phones the names are on the left, the keyhole beside them.
+   With scripts (Zones.astro) the heading, the names and the keyhole hold still on the screen while the page
+   scrolls through the rooms, one stretch each, then move on with the page. The heading sits as close over the
+   names as every section's heading over its content, and as far below the section above as every heading.
+   ===================================================================== */
+
+.zn { --zn-h: 100svh; --zn-step: 40svh; position: relative; isolation: isolate; overflow: clip; padding: var(--sec-y) 0 0; background: #000; }
+/* the stage: the colour wash, the names and the keyhole */
+.zn-stage { position: relative; isolation: isolate; padding-bottom: var(--sec-y); }
+/* held on screen: the track is a screen tall plus a stretch for each room, the stage stays at the top of the
+   screen through it: the heading just under the header, the names and the keyhole under it. The stage keeps the
+   header's room clear above the heading, so the section's own air above is less by as much: the heading still
+   starts --sec-y under the section above, and the section after starts --sec-y under the keyhole. */
+.zn.pinned { padding: max(0px, calc(var(--sec-y) - var(--hdr) - 12px)) 0 var(--sec-y); }
+.zn.pinned .zn-track { height: calc(var(--zn-h) + var(--n, 5) * var(--zn-step)); }
+.zn.pinned .zn-stage { position: sticky; top: 0; display: grid; align-content: start; padding: calc(var(--hdr) + 12px) 0 0; overflow: clip; }
+/* the chosen room's colour, behind everything */
+.zn-amb { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.zn-amb-i {
+  position: absolute; inset: -12%; width: 124%; height: 124%; object-fit: cover;
+  filter: blur(54px) saturate(1.35) brightness(.55); opacity: 0; scale: 1.06; transition: opacity 1.4s ease, scale 6s var(--ease-out);
+}
+.zn-amb-i.on { opacity: .62; scale: 1; }
+.zn-amb::after { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 90% at 72% 50%, rgba(0, 0, 0, .08) 0%, rgba(0, 0, 0, .7) 62%, #000 100%), linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0) 18%, rgba(0, 0, 0, 0) 82%, #000 100%); }
+
+.zn-h { margin: 0 0 var(--head-gap); }
+/* (the names start at the top, under the heading, as the keyhole does: not centred against the tall keyhole, which
+   would leave a band of black between the heading and the first name) */
+.zn-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: clamp(32px, 6vw, 120px); }
+
+/* ---------- the names ---------- */
+/* (the first name's own padding is taken back, so the name itself starts the heading gap under the heading) */
+.zn-list { list-style: none; margin: calc(-1 * clamp(10px, 1.1vw, 16px)) 0 0; padding: 0; counter-reset: zn; }
+.zn-item { position: relative; padding: clamp(10px, 1.1vw, 16px) 0 clamp(12px, 1.3vw, 18px); }
+.zn-name {
+  display: block; padding: 0; text-align: left; cursor: pointer;
+  font: 800 clamp(40px, 4.8vw, 84px)/.95 var(--display); font-stretch: 62.5%; letter-spacing: .005em;
+  color: transparent; -webkit-text-stroke: 1px rgba(242, 240, 236, .38);
+  transition: color .45s ease, -webkit-text-stroke-color .45s ease, translate .6s var(--ease-out);
+}
+.zn-item:hover .zn-name { -webkit-text-stroke-color: rgba(242, 240, 236, .75); }
+.zn-item.on .zn-name { color: var(--fg); -webkit-text-stroke-color: transparent; translate: clamp(10px, 1.2vw, 20px) 0; }
+.zn-name:focus-visible { outline: 2px solid var(--red-text); outline-offset: 6px; border-radius: 4px; }
+/* a crimson mark before the chosen name */
+.zn-item::before {
+  content: ''; position: absolute; left: 0; top: calc(clamp(10px, 1.1vw, 16px) + .46 * clamp(40px, 4.8vw, 84px) - 3px);
+  width: 6px; height: 6px; border-radius: 50%; background: var(--red); box-shadow: 0 0 14px 2px rgba(220, 20, 60, .6);
+  opacity: 0; scale: .2; transition: opacity .4s ease, scale .5s var(--ease-back);
+}
+.zn-item.on::before { opacity: 1; scale: 1; }
+/* its line and its link open under it */
+.zn-detail { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .55s var(--ease-out); }
+.zn-detail > div { overflow: hidden; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 24px; padding-left: clamp(10px, 1.2vw, 20px); }
+.zn-item.on .zn-detail { grid-template-rows: 1fr; }
+.zn-text { margin: 12px 0 0; font: 400 clamp(16px, 1.2vw, 19px)/1.5 var(--sans); color: rgba(242, 240, 236, .78); }
+.zn-detail .lnk { margin-top: 12px; }
+/* the hairline under each name; under the one on show, a crimson line for how far through its stretch the page is */
+.zn-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: rgba(242, 240, 236, .1); overflow: hidden; }
+.zn-bar i { display: block; width: 100%; height: 100%; background: linear-gradient(90deg, var(--red-deep), var(--red)); transform-origin: 0 50%; scale: 0 1; }
+.zn.pinned .zn-item.on .zn-bar i { scale: var(--zp, 0) 1; }
+
+/* ---------- the keyhole ---------- */
+.zk { position: relative; width: min(42vw, calc(min(76svh, 680px) * .625)); aspect-ratio: 100 / 160; }
+/* the room's light leaking round the keyhole */
+.zk-glow { position: absolute; inset: -14% -22%; border-radius: 50%; background: radial-gradient(50% 50% at 50% 46%, rgba(220, 20, 60, .3) 0%, rgba(220, 20, 60, .1) 40%, rgba(220, 20, 60, 0) 70%); pointer-events: none; }
+.zk-win {
+  position: absolute; inset: 0; overflow: hidden; background: #000;
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+}
+.zk-shot { position: absolute; inset: 0; opacity: 0; transition: opacity .9s ease; }
+.zk-shot.on { opacity: 1; }
+.zk-shot img, .zk-shot video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.zk-shot img { scale: calc(var(--zs, 1) * 1.1); transition: scale 7s var(--ease-out); }
+.zk-shot.on img { scale: var(--zs, 1); }
+.zk-shot video { opacity: 0; transition: opacity .8s ease; }
+.zk-shot video.on { opacity: 1; }
+/* the dark at the keyhole's edge, so the room seems to lie behind a door */
+.zk-shade { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(70% 46% at 50% 26%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, .55) 100%), linear-gradient(180deg, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, .5) 100%); }
+.zk-rim { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; filter: drop-shadow(0 0 10px rgba(255, 60, 90, .35)); }
+
+/* ---------- phones: the names on the left, the keyhole beside them, both held above the call bar ---------- */
+@media (max-width: 899px) {
+  .zn { --zn-h: calc(100svh - var(--dock)); }
+  .zn-grid { grid-template-columns: minmax(0, 1fr) 38%; align-items: start; gap: 18px; }
+  .zk { width: 100%; position: sticky; top: calc(var(--hdr) + 18px); margin-top: 6px; }
+  .zn.pinned .zk { position: relative; top: auto; }
+  .zn-name { font-size: clamp(27px, 7.8vw, 36px); line-height: 1; }
+  .zn-item::before { top: calc(clamp(10px, 1.1vw, 16px) + .46 * clamp(27px, 7.8vw, 36px) - 3px); }
+  .zn-item.on .zn-name { translate: 12px 0; }
+  .zn-detail > div { padding-left: 12px; }
+  .zn-text { font-size: 15px; }
+  .zn-amb::after { background: radial-gradient(130% 60% at 70% 34%, rgba(0, 0, 0, .1) 0%, rgba(0, 0, 0, .74) 60%, #000 100%), linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0) 14%, rgba(0, 0, 0, 0) 86%, #000 100%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .zn-amb-i, .zk-shot img { transition: opacity .3s ease; scale: 1; }
+  .zn-name { transition: color .2s ease; translate: none !important; }
+}
+
+/* ---------- A phone held sideways (or any screen as short): see landscape.css ---------- */
+@media (orientation: landscape) and (max-height: 500px) {
+  /* ---------- The VIP rooms: the names smaller, the keyhole as tall as the screen allows ---------- */
+  .zn { --zn-h: 100svh; }
+  .zn-grid { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: clamp(24px, 5vw, 64px); }
+  /* (the header tucks away on the way down: the held heading needs little room above it) */
+  .zn.pinned { padding-top: max(0px, calc(var(--sec-y) - 12px)); }
+  .zn.pinned .zn-stage { padding-top: 12px; }
+  .zk { width: calc((100svh - 64px - 10svh - 16px) * .625); position: relative; top: auto; margin-top: 0; } /* (less the heading over them) */
+  .zn-name { font-size: clamp(24px, 7.4svh, 32px); }
+}

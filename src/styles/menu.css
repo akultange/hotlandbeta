@@ -1,0 +1,125 @@
+/* =====================================================================
+   The menu page (menu.astro). Loaded after global.css (Base.astro). The page's header is the shared one
+   (PageTitle); under it, the bar card: three tabs, the chosen list, and that tab's picture, which plays its film.
+   The client (2026-11-13): "everything is too tight, no hierarchy". So the card no longer squeezes itself into
+   one screen: the list is set large and with air, and the tabs stay pinned under the header while you read, so
+   you can switch at any point. Each tab is as long as its own list.
+   Desktop: the tabs and the list on the left (the bar's groups and the kitchen's dishes in two columns), the
+   picture on the right (4:5), staying in view while the list scrolls. Phones: the picture, the pinned tabs, the
+   list in one column.
+   The order the eye reads in: the page's name; the tabs; each group's name over a fine rule; the dishes and
+   drinks, one to a row between fine rules, their prices on the right a step quieter (the rouble sign and «от»
+   quieter still); the volumes and the few words under a name quieter again. The house cocktails are marked in
+   crimson. The price note closes the list.
+   ===================================================================== */
+
+/* ---------- The card ---------- */
+/* (right under the page's header, as any content without a heading of its own: the lists' headings are hidden when
+   the tabs work, so the global rule for a section with headings, two sections' air, isn't for this one) */
+section.bm, .ptitle + section.bm { padding-top: var(--head-gap); }
+.bm-in { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "media" "tabs" "panels" "note"; }
+.bm-media { grid-area: media; }
+.bm-tabs { grid-area: tabs; }
+.bm-panels { grid-area: panels; min-width: 0; }
+.bm-note { grid-area: note; }
+
+/* the picture: one for each tab, the chosen one in front, playing its film; shown whole, with no fade at its edges */
+.bm-stack { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: clamp(14px, 1.2vw, 20px); background: #0b0b0c; }
+.photo.bm-shot {
+  position: absolute; inset: 0; aspect-ratio: auto; opacity: 0; scale: 1.03; pointer-events: none;
+  -webkit-mask-image: none; mask-image: none;
+  transition: opacity .8s ease, scale 1.2s var(--ease-out);
+}
+.photo.bm-shot.on { opacity: 1; scale: 1; }
+
+/* the tabs, pinned under the header while the list scrolls under them (solid black, the list sliding in under a
+   short soft edge); when the header hides, they move up into its place */
+.bm-tabs { position: sticky; top: var(--hdr); z-index: 5; padding: 12px 0; background: #000; transition: top .45s var(--ease-out); }
+.bm-tabs::after { content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 20px; pointer-events: none; background: linear-gradient(180deg, #000, rgba(0, 0, 0, 0)); }
+html.hdr-hide .bm-tabs { top: 0; }
+
+/* without scripts: no tabs, the three lists one after another, each under its own heading */
+.bm-panel-h { margin: 0 0 18px; font: 700 clamp(32px, 3vw, 48px)/1 var(--display); font-stretch: 75%; }
+/* with the tabs, each panel's own heading is for screen readers only (the tab says it on screen) */
+.bm.tabbed .bm-panel-h { position: absolute; width: 1px; height: 1px; margin: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.bm:not(.tabbed) .bm-tabs { display: none; }
+.bm:not(.tabbed) .bm-panel + .bm-panel { margin-top: 56px; }
+/* with them: the chosen list rises in */
+@media (prefers-reduced-motion: no-preference) {
+  .bm.tabbed .bm-panel:not([hidden]) { animation: bm-panel .6s var(--ease-out) both; }
+}
+@keyframes bm-panel { from { opacity: 0; translate: 0 10px; } }
+
+/* ---------- The lists ---------- */
+.bm-panels { margin-top: 18px; }
+.bm-cols { columns: 1; }
+.mgroup { break-inside: avoid; padding-bottom: clamp(36px, 4vw, 60px); }
+.bm .mgroup-h {
+  margin: 0; padding-bottom: 14px; border-bottom: 1px solid var(--rule-2);
+  font: 600 clamp(26px, 2.4vw, 38px)/1 var(--display); font-stretch: 75%; letter-spacing: .004em;
+}
+/* the kitchen's and the door's lists have no group names: a fine rule opens them all the same */
+.bm :is(#kitchen .bm-cols, #entry .mrows) { margin-top: 0; border-top: 1px solid var(--rule-2); }
+
+/* a row: the name (and its volume) on the left, the price on the right; the few words under the name run the
+   whole width of the row; a fine rule under each row carries the eye across to its price (no dotted leaders) */
+.bm .mrow { gap: 16px; padding: 13px 0 14px; border-bottom: 1px solid var(--rule); container-type: inline-size; }
+.bm .mrow .dots { visibility: hidden; min-width: 16px; }
+.bm .mrow .nm { font-size: 18px; line-height: 1.35; }
+.bm .mrow .nm small { width: 100cqw; margin: 5px -100cqw 0 0; font-size: 15px; line-height: 1.45; }
+.bm .mrow .nm small .own { color: var(--red-text); }
+.bm .mrow .nm small .desc + .own::before { content: '·'; margin: 0 .45em; color: var(--muted); }
+.bm .mrow .vol { margin-left: 0; font-size: 14px; }
+/* the space before a volume is a little wider; a volume that doesn't fit goes under the name, flush left */
+.bm .mrow .vgap { word-spacing: 3px; }
+.bm .mrow .pr { font-size: 21px; font-weight: 500; font-stretch: 87.5%; letter-spacing: .01em; }
+.bm .mrow .pr.req { font-size: 15px; font-weight: 400; font-stretch: 100%; letter-spacing: 0; color: var(--muted); }
+/* every price on the page (the card's and the hookah's): «от» small and quiet before the figure, the rouble sign a
+   little smaller and dimmer after it */
+.mrow .pr .pr-from { margin-right: .35em; font: 400 14px/1 var(--sans); letter-spacing: 0; color: var(--muted); }
+.mrow .pr .pr-cur { font-size: .8em; opacity: .7; }
+
+/* the price note: the list's last line */
+.bm-note { margin-top: clamp(4px, 1vw, 14px); font: 400 14px/1.5 var(--sans); color: var(--muted); text-wrap: balance; }
+
+/* ---------- Tablets and up: two columns where a list is long ---------- */
+@media (min-width: 600px) {
+  .bm :is(#bar, #kitchen) .bm-cols { columns: 2; column-gap: clamp(40px, 4.4vw, 76px); }
+  .bm #entry .mrows { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(40px, 4.4vw, 76px); }
+}
+
+/* ---------- Desktop: the tabs and the list on the left, the picture on the right, staying in view ---------- */
+@media (min-width: 900px) {
+  section.bm { --bm-pic: clamp(300px, 31vw, 460px); }
+  .bm-in {
+    grid-template-columns: minmax(0, 1fr) var(--bm-pic);
+    grid-template-areas: "tabs media" "panels media" "note media";
+    grid-template-rows: auto auto 1fr;
+    column-gap: clamp(44px, 5.5vw, 96px);
+  }
+  .bm-media { align-self: start; position: sticky; top: calc(var(--hdr) + 24px); }
+  .bm-tabs { margin-top: -12px; }   /* (its pinned padding is the bar's room, not air under the page's header) */
+  .bm-panels { margin-top: clamp(22px, 2.6vw, 40px); }
+}
+
+/* ---------- Phones: the picture, then the tabs pinned across the screen, then the list ---------- */
+@media (max-width: 899px) {
+  .bm-media { margin-bottom: 6px; }
+  /* the pinned tabs span the screen, solid black, with black reaching up under the header */
+  .bm-tabs { margin: 0 calc(-1 * var(--pad)); padding: 10px var(--pad); box-shadow: 0 calc(-1 * var(--hdr)) 0 0 #000; }
+  .bm .mgroup-h { padding-bottom: 12px; }
+  .bm .mrow { padding: 12px 0 13px; }
+  .bm .mrow .nm { font-size: 17px; }
+  .bm .mrow .nm small { font-size: 14px; }
+  .bm .mrow .pr { font-size: 19px; }
+}
+
+/* ---------- A phone held sideways, or any screen as short (landscape.css): the picture no taller than the
+   screen ---------- */
+@media (orientation: landscape) and (max-height: 500px) {
+  .bm .bm-stack { aspect-ratio: auto; height: calc(100svh - var(--hdr) - 48px); }
+}
+
+/* ---------- The hookah lounge: its picture (4:5) is the section's last thing on a computer, so the section ends
+   at the middle of the picture's fall into the charcoal (global.css, Photos) ---------- */
+@media (min-width: 900px) { #hookah .g12 > :first-child { margin-bottom: -12.5%; } }

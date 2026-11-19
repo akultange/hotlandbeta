@@ -1,0 +1,74 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Logo from '../../../components/Logo.astro';
+import PageTitle from '../../../components/PageTitle.astro';
+import { type Lang, ui, langPaths } from '../../../data/i18n';
+import { site } from '../../../data/site';
+import { bookingFine } from '../../../data/content';
+import { tr } from '../../../data/i18n';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const t = ui[lang];
+const f = t.form;
+const ru = lang === 'ru';
+import { show } from '../../../data/variants';
+---
+<Base lang={lang} title={ru ? 'Бронь стола' : 'Book a table'} description={ru ? 'Забронируйте стол, VIP-карту, сет или праздник в HOTLAND.' : 'Book a table, a VIP card, a bottle set or a party at HOTLAND.'} closing={false}>
+  <PageTitle
+    crumbs={[{ href: `/${lang}/`, label: 'HOTLAND' }, { label: ru ? 'Бронь стола' : 'Book a table' }]}
+    title={ru ? 'Бронь стола' : 'Book a table'}
+    sub={ru ? 'Пара строк, <em>и&nbsp;стол ваш</em>' : 'A few lines <em>and the table’s yours</em>'}
+    lead={tr(bookingFine, lang)}
+  />
+
+  <!-- The booking is the full-screen dialog (Book.astro), three short steps; arriving here opens it straight away,
+       with this page's ?type=, ?date= and ?occasion=. Closed, this button opens it again. -->
+  <section class="sec">
+    <div class="wrap g12" style="align-items: start">
+      <div class="stack bk-cta" style="grid-column: 1 / span 7">
+        <h2 class="t-l" set:html={ru ? 'Бронь <em>в&nbsp;три шага</em>' : 'Book <em>in three steps</em>'} />
+        <p class="body">{ru ? 'Что бронируем, сколько вас и как с вами связаться. Менеджер подтвердит бронь и назовёт депозит.' : 'What you’re booking, how many of you and how to reach you. Your host confirms and names the deposit.'}</p>
+        <div class="btns">
+          <button class="btn btn-crimson" type="button" data-book aria-haspopup="dialog">{ru ? 'Забронировать' : 'Book a table'}</button>
+        </div>
+      </div>
+      <aside class="stack" style="grid-column: 9 / span 4; gap: 56px">
+        <div class="invite">
+          <Logo variant="mark" size={40} />
+          <!-- (the contact is settled on Luka's, the call back: data/variants.ts; the phone number's version stays here, hidden) -->
+          {show('contact', 'luka') && (
+            <div class="vx-part" data-v="contact:luka">
+              <p class="t-s">{ru ? 'Удобнее голосом или есть вопрос?' : 'Rather talk, or have a question?'}</p>
+              <div class="btns" style="justify-content: center">
+                <!-- (silver, as in «Как нас найти»: «Забронировать» stays the page's one crimson action) -->
+                <button class="btn btn-line btn-sm" type="button" data-contact="callback">{ru ? 'Заказать звонок' : 'Request a call'}</button>
+                <button class="btn btn-line btn-sm" type="button" data-contact="question">{ru ? 'Задать вопрос' : 'Ask a question'}</button>
+              </div>
+              <p class="t-s invite-or">{f.faster}</p>
+            </div>
+          )}
+          {show('contact', 'gio') && (
+            <div class="vx-part" data-v="contact:gio">
+              <p class="t-s">{f.faster}</p>
+              <a class="phone" href={site.phoneHref}>{site.phone}</a>
+            </div>
+          )}
+          <div class="btns" style="justify-content: center">
+            <a class="btn btn-line btn-sm" href={site.whatsapp} target="_blank" rel="noopener">WhatsApp</a>
+            <a class="btn btn-line btn-sm" href={site.telegram} target="_blank" rel="noopener">Telegram</a>
+          </div>
+        </div>
+        <div class="stack fine">
+          <h3 class="t-m">{f.termsTitle}</h3>
+          <div class="rows">{f.terms.map((x) => <div class="row"><span class="k">{x}</span></div>)}</div>
+          <a class="lnk" href={`/${lang}/terms/`}>{f.allTerms}</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .bk-cta { max-width: 640px; }
+</style>

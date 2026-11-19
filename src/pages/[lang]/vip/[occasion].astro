@@ -1,0 +1,108 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Photo from '../../../components/Photo.astro';
+import PageTitle from '../../../components/PageTitle.astro';
+import MemberCards from '../../../components/MemberCards.astro';
+import { type Lang, ui, tr, langs } from '../../../data/i18n';
+import { site } from '../../../data/site';
+import { occasions, parties, vip, bookingFine, gallery, media, type Occasion } from '../../../data/content';
+
+export function getStaticPaths() {
+  return langs.flatMap((lang) => occasions.map((o) => ({ params: { lang, occasion: o.slug }, props: { o } })));
+}
+const lang = Astro.params.lang as Lang;
+const { o } = Astro.props as { o: Occasion };
+const t = ui[lang];
+const ru = lang === 'ru';
+const title = tr(o.title, lang);
+const altOf = (file: string) => gallery.find((x) => x.img === file)?.alt;
+const ratios = ['4/3', '1/1', '3/4'];
+// The parties' title over the list of what comes with a party, in two lines as on the home page (the h2 is held
+// to 7em): "Ваш праздник," and the crimson "ваш сценарий", whose two words always stay together on their line.
+const listTitle = tr(parties.title, lang).replace(/<em>(.*?)<\/em>/, (_, s: string) => `<em>${s.replace(/ /g, '\u00a0')}</em>`);
+// Russian typesetting: a short word stays on the line of the word after it ("за каждый", "без счёта"), and a
+// hyphenated word never breaks at its hyphen ("VIP-зоны", "караоке-зала").
+const keep = (s: string) => (ru ? s.replace(/(?<=^|\s)(в|во|на|за|до|по|под|с|со|к|ко|и|а|о|у|не|ни|от|из|для|без)\s/gi, '$1\u00a0') : s).replace(/(\S)-(?=\S)/g, '$1\u2011');
+// The request is the booking dialog (Book.astro), opened by a link to the booking page with a party and this
+// occasion chosen, so it starts on its second step (a new tab opens the booking page with the same choice). Beside
+// the request's words, its three steps, the first already done.
+const occasion = (t.form.occasions as Record<string, string>)[o.slug];
+const bookHref = `/${lang}/booking/?type=event${occasion ? `&occasion=${o.slug}` : ''}`;
+const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
+const requestSteps = [
+  `${ru ? 'Праздник' : 'A party'}: ${lower(occasion ?? title)}`,
+  ru ? 'Сколько вас и ваши пожелания' : 'How many of you, and your wishes',
+  ru ? 'Как с вами связаться' : 'How we reach you',
+];
+---
+<Base lang={lang} title={title} description={tr(o.text, lang)} waContext={title} closing={false}>
+  <PageTitle
+    crumbs={[{ href: `/${lang}/`, label: 'HOTLAND' }, { href: `/${lang}/vip/`, label: t.nav.vip }, { label: title }]}
+    title={title}
+    lead={tr(o.text, lang)}
+    img={media(o.img)}
+    imgAlt={tr(o.alt, lang)}
+    band
+  >
+    <a class="btn btn-crimson" href={bookHref}>{tr(parties.cta, lang)}</a>
+  </PageTitle>
+
+  <!-- 01 Included -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="g12">
+        <h2 class="t-l" style="grid-column: 1 / span 6; max-width: 7em" set:html={listTitle} />
+        <div class="rows" style="grid-column: 8 / span 5; text-wrap: pretty">
+          {parties.included.map((x, i) => <div class="row num"><span class="n">0{i + 1}</span><span class="k">{keep(tr(x, lang))}</span><span></span></div>)}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 VIP: the three cards as on the home page, on the black, with the heading row (title, note and the link
+       to the VIP page) inside the velvet field -->
+  <section class="sec">
+    <div class="wrap">
+      <MemberCards lang={lang}>
+        <div slot="head" class="bighead bh-line">
+          <h2 class="t-l">{tr(vip.title, lang)}</h2>
+          <div class="bighead-side">
+            <p class="body">{keep(tr(vip.lead, lang))}</p>
+            <a class="lnk" href={`/${lang}/vip/`}>{t.nav.vip}</a>
+          </div>
+        </div>
+      </MemberCards>
+    </div>
+  </section>
+
+  <section class="sec-t">
+    <div class="wrap trio">
+      {o.more.map((f, i) => {
+        const alt = altOf(f);
+        return <Photo src={media(f)} alt={alt ? tr(alt, lang) : ''} ratio={ratios[i]} />;
+      })}
+    </div>
+  </section>
+
+  <!-- 04 Request -->
+  <section class="sec soot" id="request">
+    <div class="wrap">
+      <div class="g12">
+        <div class="stack" style="grid-column: 1 / span 4">
+          <h2 class="t-l" set:html={ru ? 'Отправить <em>заявку</em>' : 'Send <em>a request</em>'} />
+          <p class="body">{tr(bookingFine, lang)}</p>
+          <div class="btns">
+            <a class="btn btn-line btn-sm" href={site.whatsapp} target="_blank" rel="noopener">WhatsApp</a>
+            <a class="btn btn-line btn-sm" href={site.telegram} target="_blank" rel="noopener">Telegram</a>
+          </div>
+        </div>
+        <div class="stack" style="grid-column: 6 / span 7">
+          <div class="rows">
+            {requestSteps.map((s, i) => <div class="row num"><span class="n">0{i + 1}</span><span class="k">{keep(s)}</span><span></span></div>)}
+          </div>
+          <div class="btns"><a class="btn btn-crimson" href={bookHref}>{ru ? 'Заполнить заявку' : 'Fill in the request'}</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

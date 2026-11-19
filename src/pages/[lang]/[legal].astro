@@ -1,0 +1,52 @@
+---
+// Privacy, cookies and booking terms. PLACEHOLDER structure: the text must come from a lawyer.
+import Base from '../../layouts/Base.astro';
+import PageTitle from '../../components/PageTitle.astro';
+import { type Lang, langs } from '../../data/i18n';
+import { site } from '../../data/site';
+
+const pages = {
+  privacy: {
+    ru: { title: 'Политика конфиденциальности', parts: ['Какие данные мы собираем', 'Зачем мы их используем', 'Сколько храним', 'Ваши права', 'Контакты'] },
+    en: { title: 'Privacy policy', parts: ['What data we collect', 'Why we use it', 'How long we keep it', 'Your rights', 'Contact'] },
+  },
+  cookies: {
+    ru: { title: 'Политика cookies', parts: ['Что такое cookies', 'Какие cookies мы используем', 'Как отказаться'] },
+    en: { title: 'Cookie policy', parts: ['What cookies are', 'Which cookies we use', 'How to opt out'] },
+  },
+  terms: {
+    ru: { title: 'Условия бронирования', parts: ['Подтверждение брони', 'Отмена и неявка', 'Депозит для групп', 'Возраст и документы', 'Право отказать во входе'] },
+    en: { title: 'Booking terms', parts: ['Booking confirmation', 'Cancellations and no-shows', 'Group deposits', 'Age and ID', 'Right to refuse entry'] },
+  },
+} as const;
+type Key = keyof typeof pages;
+
+export function getStaticPaths() {
+  // getStaticPaths can't see variables defined in this file, so the list is repeated here.
+  return langs.flatMap((lang) => ['privacy', 'cookies', 'terms'].map((legal) => ({ params: { lang, legal } })));
+}
+const lang = Astro.params.lang as Lang;
+const page = pages[Astro.params.legal as Key][lang];
+const ru = lang === 'ru';
+---
+<Base lang={lang} title={page.title}>
+  <PageTitle
+    crumbs={[{ href: `/${lang}/`, label: 'HOTLAND' }, { label: page.title }]}
+    title={page.title}
+    label={ru ? 'Документ' : 'Document'}
+    lead={ru ? 'Черновик-заглушка. Окончательный текст должен подготовить юрист.' : 'Placeholder draft. The final text must be written by a lawyer.'}
+  />
+  <section class="sec-t">
+    <div class="wrap g12">
+      <div class="prose" style="grid-column: 4 / span 7">
+        {page.parts.map((h) => (
+          <Fragment>
+            <h2>{h}</h2>
+            <p>{ru ? 'Текст раздела. Будет добавлен позже.' : 'Section text, to be added.'}</p>
+          </Fragment>
+        ))}
+        <p class="label" style="margin-top: 32px">{site.name} · {site.email}</p>
+      </div>
+    </div>
+  </section>
+</Base>

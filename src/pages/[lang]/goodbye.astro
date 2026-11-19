@@ -1,0 +1,17 @@
+---
+// Neutral page for visitors who answer "under 18". No club content, no menu.
+import Base from '../../layouts/Base.astro';
+import { type Lang, ui, langPaths } from '../../data/i18n';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const ru = lang === 'ru';
+---
+<Base lang={lang} title={ru ? 'Доступ ограничен' : 'Access restricted'} bare noindex>
+  <section class="bare-page">
+    <div class="stack center" style="max-width: 480px">
+      <h1 class="t-l">{ru ? 'До встречи' : 'See you'}</h1>
+      <p class="body">{ui[lang].gate.bye}</p>
+    </div>
+  </section>
+</Base>

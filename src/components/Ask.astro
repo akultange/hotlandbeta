@@ -1,0 +1,198 @@
+---
+// "Request a call" and "Ask a question" (styles in styles/ask.css). The club's own number is never shown on the
+// site: a visitor leaves theirs, and a manager calls back or answers the question. One dialog for the whole site
+// (Base.astro), opened by any button with data-contact="callback" or data-contact="question"; a switch at the top
+// goes from one to the other. It sends to /api/booking like the booking form (the managers' Telegram); if that
+// fails, everything typed stays in place to send again, and the same words are ready to send in WhatsApp. Personal
+// data is never put in the URL.
+import { type Lang, ui } from '../data/i18n';
+import { site } from '../data/site';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ru = lang === 'ru';
+const f = ui[lang].form;
+const [consentA, ...consentB] = f.consent.split(',');
+const L = ru
+  ? {
+      callback: 'Заказать звонок', question: 'Задать вопрос',
+      hCallback: 'Перезвоним вам', hQuestion: 'Задайте вопрос',
+      leadCallback: 'Оставьте имя и номер: менеджер клуба позвонит сам.',
+      leadQuestion: 'Напишите, что хотите узнать, и мы ответим так, как вам удобно.',
+      text: 'Вопрос', via: 'Как ответить', call: 'Звонок',
+      sendCallback: 'Заказать звонок', sendQuestion: 'Отправить вопрос',
+      doneCallback: 'Спасибо! Менеджер скоро позвонит.', doneQuestion: 'Спасибо! Скоро ответим.',
+      doneText: 'Номер видят только менеджеры клуба. Всё остальное между нами.', ok: 'Хорошо',
+      failTitle: 'Не получилось отправить', failText: 'Всё, что вы ввели, сохранено: попробуйте ещё раз. Или напишите нам в WhatsApp или Telegram, текст уже в сообщении.', retry: 'Отправить ещё раз',
+      close: 'Закрыть', fill: 'Заполните обязательные поля.',
+    }
+  : {
+      callback: 'Request a call', question: 'Ask a question',
+      hCallback: 'We’ll call you', hQuestion: 'Ask us anything',
+      leadCallback: 'Leave your name and number, and a club manager will call you.',
+      leadQuestion: 'Tell us what you’d like to know, and how you’d like the answer.',
+      text: 'Your question', via: 'How should we answer', call: 'Phone call',
+      sendCallback: 'Request a call', sendQuestion: 'Send your question',
+      doneCallback: 'Thank you! A manager will call you soon.', doneQuestion: 'Thank you! We’ll answer soon.',
+      doneText: 'Only the club’s managers see your number. The rest stays between us.', ok: 'All right',
+      failTitle: 'We couldn’t send it', failText: 'Everything you typed is kept: try again. Or message us on WhatsApp or Telegram, your words are already in the message.', retry: 'Try again',
+      close: 'Close', fill: 'Please fill in the required fields.',
+    };
+---
+<dialog class="ask" id="ask" aria-labelledby="ask-h" data-wa={site.whatsapp} data-l={JSON.stringify({ callback: L.callback, question: L.question, call: L.call, fill: L.fill, sending: f.sending })}>
+  <form class="ask-box" method="dialog" novalidate data-mode="callback">
+    <button class="ask-x" type="button" data-ask-close aria-label={L.close}>
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3 3 13" /></svg>
+    </button>
+    <div class="ask-switch" role="group" aria-label={ru ? 'Что вы хотите' : 'What you’d like'}>
+      <button type="button" data-mode="callback" aria-pressed="true">{L.callback}</button>
+      <button type="button" data-mode="question" aria-pressed="false">{L.question}</button>
+    </div>
+    <div class="ask-form">
+      <div class="ask-head">
+        <h2 class="ask-h" id="ask-h"><span data-only="callback">{L.hCallback}</span><span data-only="question" hidden>{L.hQuestion}</span></h2>
+        <p class="ask-lead"><span data-only="callback">{L.leadCallback}</span><span data-only="question" hidden>{L.leadQuestion}</span></p>
+      </div>
+      <div class="fields">
+        <div class="field"><label for="ask-name">{f.name}</label><input id="ask-name" name="name" autocomplete="name" required autofocus /></div>
+        <div class="field"><label for="ask-phone">{f.phone}</label><input id="ask-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required /></div>
+        <div class="field full" data-only="question" hidden><label for="ask-text">{L.text}</label><textarea id="ask-text" name="question" rows="3"></textarea></div>
+        <div class="field full" data-only="question" hidden>
+          <label for="ask-via">{L.via}</label>
+          <select id="ask-via" name="messenger"><option>WhatsApp</option><option>Telegram</option><option>{L.call}</option></select>
+        </div>
+      </div>
+      <div class="hp" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off" /></label></div>
+      <label class="consent"><input type="checkbox" name="consent" required /><span>{consentA}, <a href={`/${lang}/privacy/`}>{consentB.join(',').trim()}</a></span></label>
+      <p class="form-error" role="alert" hidden></p>
+      <button class="btn btn-crimson ask-send" type="submit"><span data-only="callback">{L.sendCallback}</span><span data-only="question" hidden>{L.sendQuestion}</span></button>
+    </div>
+    <div class="ask-done" role="status" hidden>
+      <span class="ask-done-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12.5 4.4 4.3L19 7.5" /></svg></span>
+      <p class="ask-h"><span data-only="callback">{L.doneCallback}</span><span data-only="question" hidden>{L.doneQuestion}</span></p>
+      <p class="ask-lead">{L.doneText}</p>
+      <button class="btn btn-line" type="button" data-ask-close>{L.ok}</button>
+    </div>
+    <div class="form-fallback ask-fail" role="alert" hidden>
+      <p class="t-m">{L.failTitle}</p>
+      <p class="body">{L.failText}</p>
+      <div class="btns">
+        <button class="btn btn-crimson" type="submit">{L.retry}</button>
+        <a class="btn btn-line" data-ask-wa href={site.whatsapp} target="_blank" rel="noopener">{f.sendWa}</a>
+        <a class="btn btn-line" href={site.telegram} target="_blank" rel="noopener">Telegram</a>
+      </div>
+    </div>
+  </form>
+</dialog>
+
+<script>
+  import { track } from '../scripts/track';
+
+  const dlg = document.querySelector<HTMLDialogElement>('dialog#ask');
+  if (dlg) ask(dlg);
+
+  function ask(dlg: HTMLDialogElement) {
+    type Mode = 'callback' | 'question';
+    const form = dlg.querySelector<HTMLFormElement>('form')!;
+    const L = JSON.parse(dlg.dataset.l || '{}') as Record<string, string>;
+    const ru = document.documentElement.lang === 'ru';
+    const err = form.querySelector<HTMLElement>('.form-error')!;
+    const body = form.querySelector<HTMLElement>('.ask-form')!;
+    const done = form.querySelector<HTMLElement>('.ask-done')!;
+    const fail = form.querySelector<HTMLElement>('.ask-fail')!;
+    const send = form.querySelector<HTMLButtonElement>('.ask-send')!;
+    const text = form.querySelector<HTMLTextAreaElement>('textarea[name="question"]')!;
+    let mode: Mode = 'callback';
+    let opened = 0;
+
+    const setMode = (m: Mode) => {
+      mode = m;
+      form.dataset.mode = m;
+      form.querySelectorAll<HTMLElement>('[data-only]').forEach((el) => { el.hidden = el.dataset.only !== m; });
+      form.querySelectorAll<HTMLButtonElement>('.ask-switch [data-mode]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === m)));
+      text.required = m === 'question';
+      err.hidden = true;
+    };
+    const open = (m: Mode) => {
+      form.reset();
+      body.hidden = false;
+      done.hidden = true;
+      fail.hidden = true;
+      setMode(m);
+      opened = Date.now();
+      if (typeof dlg.showModal === 'function') dlg.showModal();
+      else dlg.setAttribute('open', '');
+      track(m === 'callback' ? 'callback_open' : 'question_open');
+    };
+    const close = () => (typeof dlg.close === 'function' ? dlg.close() : dlg.removeAttribute('open'));
+
+    // any "Request a call" / "Ask a question" button on the page
+    document.addEventListener('click', (e) => {
+      const b = (e.target as Element | null)?.closest<HTMLElement>('[data-contact]');
+      if (!b) return;
+      e.preventDefault();
+      open(b.dataset.contact === 'question' ? 'question' : 'callback');
+    });
+    form.querySelectorAll<HTMLButtonElement>('.ask-switch [data-mode]').forEach((b) =>
+      b.addEventListener('click', () => { setMode(b.dataset.mode as Mode); form.querySelector<HTMLInputElement>('input[name="name"]')?.focus(); }));
+    form.querySelectorAll('[data-ask-close]').forEach((b) => b.addEventListener('click', close));
+    // a tap on the dark around the card closes it
+    dlg.addEventListener('click', (e) => { if (e.target === dlg) close(); });
+
+    const collect = () => {
+      const fd = new FormData(form);
+      return {
+        type: mode,
+        typeLabel: mode === 'callback' ? L.callback : L.question,
+        name: String(fd.get('name') || ''),
+        phone: String(fd.get('phone') || ''),
+        messenger: mode === 'callback' ? L.call : String(fd.get('messenger') || ''),
+        wishes: mode === 'question' ? String(fd.get('question') || '') : '',
+        website: String(fd.get('website') || ''),
+      };
+    };
+    const asMessage = (d: ReturnType<typeof collect>) => (mode === 'callback'
+      ? [ru ? 'Здравствуйте! Перезвоните мне, пожалуйста.' : 'Hello! Please call me back.', `${d.name}, ${d.phone}`]
+      : [ru ? 'Здравствуйте! У меня вопрос:' : 'Hello! I have a question:', d.wishes, `${d.name}, ${d.phone}`]
+    ).filter(Boolean).join('\n');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        form.querySelector<HTMLElement>(':invalid')?.focus();
+        err.hidden = false;
+        err.textContent = L.fill;
+        return;
+      }
+      err.hidden = true;
+      fail.hidden = true;
+      const data = collect();
+      const label = send.innerHTML;
+      send.disabled = true;
+      send.textContent = L.sending || '…';
+      try {
+        const r = await fetch('/api/booking', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ ...data, elapsed: Date.now() - opened, lang: document.documentElement.lang, page: location.pathname }),
+          signal: typeof AbortSignal.timeout === 'function' ? AbortSignal.timeout(12000) : undefined,
+        });
+        const res = await r.json().catch(() => ({}));
+        if (!(r.ok && res.ok)) throw new Error(res.error || String(r.status));
+        track(mode === 'callback' ? 'callback_sent' : 'question_sent');
+        body.hidden = true;
+        done.hidden = false;
+        done.querySelector<HTMLButtonElement>('[data-ask-close]')?.focus();
+      } catch {
+        track('contact_failed');
+        const wa = fail.querySelector<HTMLAnchorElement>('[data-ask-wa]');
+        if (wa) wa.href = `${dlg.dataset.wa}?text=${encodeURIComponent(asMessage(data))}`;
+        fail.hidden = false;
+        fail.scrollIntoView({ block: 'nearest' });
+      } finally {
+        send.disabled = false;
+        send.innerHTML = label;
+      }
+    });
+  }
+</script>

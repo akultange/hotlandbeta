@@ -1,0 +1,179 @@
+/* =====================================================================
+   "Tune in" (GalleryTune.astro): the way into the gallery, in the middle of the four pictures (artists page).
+   Outside in: a crimson light breathing behind, the ticks of a tuning dial, a slowly turning ring of words, a
+   chrome bezel and the lens, the gallery's pictures passing through it, a play mark on glass in the middle.
+   ===================================================================== */
+
+/* the four pictures and the lens over the middle of them */
+.gal-peek { position: relative; isolation: isolate; }
+.gal-peek:focus-visible { outline: none; }
+.gal-peek:focus-visible .tune-bezel { box-shadow: 0 0 0 3px var(--red-text), 0 14px 40px -10px rgba(0, 0, 0, .9); }
+
+.tune {
+  position: absolute; left: 50%; top: 50%; z-index: 2; width: clamp(156px, 15vw, 224px); aspect-ratio: 1;
+  translate: -50% -50%; pointer-events: none; transition: scale .6s var(--ease-out);
+}
+.tune > * { position: absolute; }
+.tune-glow {
+  inset: -22%; z-index: -1; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(220, 20, 60, .55) 0%, rgba(220, 20, 60, .2) 46%, rgba(220, 20, 60, 0) 100%);
+  animation: tune-breathe 3.8s ease-in-out infinite;
+}
+/* the dark disc the dial and the words sit on, so they read over any picture */
+.tune::before {
+  content: ''; position: absolute; inset: 0; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(6, 6, 7, .92) 70%, rgba(6, 6, 7, .78) 88%, rgba(6, 6, 7, 0) 100%);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+.tune-dial, .tune-ring { inset: 0; width: 100%; height: 100%; overflow: visible; }
+.tune-dial line { stroke: rgba(242, 240, 236, .28); stroke-width: .8; stroke-linecap: round; }
+.tune-dial line.big { stroke: rgba(255, 77, 104, .85); stroke-width: 1.1; }
+.tune-ring text { font: 600 10.6px/1 var(--sans); letter-spacing: .02em; fill: var(--fg); }
+.tune-ring { animation: tune-turn 28s linear infinite; }
+.tune-dial { animation: tune-turn 90s linear infinite reverse; }
+
+/* the chrome bezel round the lens */
+.tune-bezel {
+  inset: 18%; border-radius: 50%;
+  background: conic-gradient(from 200deg, #f3f4f6, #7a7d83 14%, #dcdee2 30%, #4b4d52 46%, #eceef1 62%, #808389 78%, #f3f4f6);
+  box-shadow: 0 14px 40px -10px rgba(0, 0, 0, .9), 0 0 0 1px rgba(255, 255, 255, .12), 0 0 34px -4px rgba(220, 20, 60, .65);
+}
+/* the lens: the gallery passing by, one picture after another, each pushing in a little */
+.tune-lens { inset: 20.5%; border-radius: 50%; overflow: hidden; isolation: isolate; background: #0b0b0c; clip-path: circle(50%); }
+.tune-lens img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0;
+  animation: tune-pass 9s linear infinite; animation-delay: calc(var(--i) * 1.5s - 9s);
+}
+.tune-tint {
+  position: absolute; inset: 0; z-index: 1;
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0) 38%, rgba(0, 0, 0, .55) 100%), linear-gradient(160deg, rgba(220, 20, 60, .16), rgba(0, 0, 0, .1));
+}
+/* glass in the middle, and on it the play mark */
+.tune-play {
+  position: absolute; left: 50%; top: 50%; z-index: 2; display: grid; place-items: center; width: 40%; aspect-ratio: 1;
+  translate: -50% -50%; border-radius: 50%;
+  background: rgba(10, 10, 12, .34); -webkit-backdrop-filter: blur(8px) saturate(1.4); backdrop-filter: blur(8px) saturate(1.4);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .28), inset 0 1px 0 rgba(255, 255, 255, .35), 0 6px 18px -6px rgba(0, 0, 0, .8);
+  transition: scale .5s var(--ease-back), background-color .3s ease;
+}
+.tune-play svg { width: 46%; height: 46%; fill: #fff; translate: 4% 0; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .5)); }
+
+@keyframes tune-turn { to { rotate: 360deg; } }
+@keyframes tune-breathe { 50% { opacity: .55; scale: .93; } }
+/* six pictures, 1.5 s each: in, held while it pushes in, out as the next comes in */
+@keyframes tune-pass {
+  0% { opacity: 0; scale: 1.14; }
+  4% { opacity: 1; }
+  16.67% { opacity: 1; }
+  21% { opacity: 0; scale: 1.02; }
+  100% { opacity: 0; scale: 1.02; }
+}
+
+/* pointing at the pictures: the lens comes forward, the glass turns crimson */
+@media (hover: hover) {
+  .gal-peek:hover .tune { scale: 1.07; }
+  .gal-peek:hover .tune-play { scale: 1.1; background-color: rgba(200, 16, 52, .62); }
+  .gal-peek:hover .tune-glow { animation-duration: 1.9s; }
+}
+.gal-peek:active .tune { scale: .96; transition-duration: .15s; }
+
+/* phones: the four pictures two by two, the lens where their corners meet */
+@media (max-width: 699px) {
+  .tune { width: clamp(140px, 42vw, 168px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tune-ring, .tune-dial, .tune-glow { animation: none; }
+  .tune-lens img { animation: none; }
+  .tune-lens img:first-child { opacity: 1; }
+}
+
+/* ---------- Into the gallery through the lens ----------
+   The press (GalleryTune.astro): the words and the dial spin up, the light flares, the glass turns crimson. Then the
+   gallery opens out of the lens: the new page is revealed through a circle growing from the lens, coming forward as
+   it opens, while the page you leave falls into the lens, darkening. Browsers that animate between pages do it as a
+   view transition of the type "lens" (Base.astro's first script sets the type and the lens's place); the others
+   close a dark circle over the lens before leaving and open it again on arrival. */
+.gal-peek.tuning .tune { scale: 1.1; transition: scale .35s var(--ease-out); }
+.gal-peek.tuning .tune-ring { animation: tune-turn .55s cubic-bezier(.5, 0, .3, 1) infinite; }
+.gal-peek.tuning .tune-dial { animation: tune-turn .8s linear infinite reverse; }
+.gal-peek.tuning .tune-dial line { stroke: rgba(255, 77, 104, .95); }
+.gal-peek.tuning .tune-glow { animation: none; opacity: 1; scale: 1.35; transition: scale .35s var(--ease-out); }
+.gal-peek.tuning .tune-play { scale: .82; background-color: rgba(220, 20, 60, .9); }
+/* the ring of light round the lens: lit by the press, and the thing that flies out (its own part of the passage) */
+.tune-halo {
+  inset: 17.2%; border-radius: 50%; opacity: 0; transition: opacity .25s ease;
+  border: 2px solid rgba(255, 226, 232, .95);
+  box-shadow: 0 0 18px 3px rgba(255, 40, 80, .85), 0 0 46px 8px rgba(220, 20, 60, .55), inset 0 0 18px 2px rgba(255, 40, 80, .6);
+}
+.gal-peek.tuning .tune-halo { opacity: 1; view-transition-name: lens-halo; }
+
+/* the new page opens inside the ring as it flies out; the page you leave falls into the lens */
+html:active-view-transition-type(lens) { --lens-ease: cubic-bezier(.7, 0, .18, 1); }
+html:active-view-transition-type(lens)::view-transition-old(root),
+html:active-view-transition-type(lens)::view-transition-new(root) { mix-blend-mode: normal; transform-origin: var(--lens-x, 50%) var(--lens-y, 50%); }
+html:active-view-transition-type(lens)::view-transition-old(root) { animation: lens-fall 1.2s var(--lens-ease) both; }
+html:active-view-transition-type(lens)::view-transition-new(root) { animation: lens-open 1.2s var(--lens-ease) both; }
+html:active-view-transition-type(lens)::view-transition-old(lens-halo) { animation: lens-fly 1.2s var(--lens-ease) both; }
+@keyframes lens-fall { to { scale: 3.2; filter: blur(14px) brightness(.15); } }
+@keyframes lens-open {
+  from { clip-path: circle(var(--lens-r, 70px) at var(--lens-x, 50%) var(--lens-y, 50%)); scale: 1.12; filter: brightness(1.8) saturate(1.4); }
+  to { clip-path: circle(var(--lens-rf, 150vmax) at var(--lens-x, 50%) var(--lens-y, 50%)); scale: 1; filter: none; }
+}
+@keyframes lens-fly {
+  0% { scale: 1; opacity: 1; }
+  70% { opacity: .9; }
+  100% { scale: var(--lens-blast, 14); opacity: 0; }
+}
+
+/* without page transitions: a dark circle closes over the lens (on the way out) and opens again (on arrival) */
+.lens-veil {
+  position: fixed; inset: 0; z-index: 300; pointer-events: none; background: #000;
+  clip-path: circle(var(--lens-r, 70px) at var(--lens-x, 50%) var(--lens-y, 50%));
+  animation: lens-veil-close .6s cubic-bezier(.65, 0, .2, 1) forwards;
+}
+@keyframes lens-veil-close { to { clip-path: circle(150vmax at var(--lens-x, 50%) var(--lens-y, 50%)); } }
+@property --lens-hole { syntax: '<length>'; inherits: false; initial-value: 0px; }
+html.lens-in:not(.lens-vt) body::after {
+  content: ''; position: fixed; inset: 0; z-index: 300; pointer-events: none; background: #000;
+  -webkit-mask: radial-gradient(circle at var(--lens-x, 50%) var(--lens-y, 50%), transparent var(--lens-hole), #000 calc(var(--lens-hole) + 1px));
+  mask: radial-gradient(circle at var(--lens-x, 50%) var(--lens-y, 50%), transparent var(--lens-hole), #000 calc(var(--lens-hole) + 1px));
+  animation: lens-veil-open 1s cubic-bezier(.65, 0, .2, 1) .08s forwards;
+}
+@keyframes lens-veil-open { to { --lens-hole: 150vmax; visibility: hidden; } }
+
+/* ---------- The gallery in passing (GalleryReel.astro, home page) ----------
+   A strip of the gallery's pictures drifting across the whole width, dim, fading out at both ends; the lens over the
+   middle of it. Each picture carries its own gap (margin), so half the strip is exactly one set and it loops clean. */
+.gal-band-sec { padding: var(--sec-y) 0; background: #000; overflow: clip; }
+.gal-peek.gal-band { display: block; }
+.gal-reel {
+  display: block; overflow: hidden;
+  -webkit-mask: linear-gradient(90deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
+  mask: linear-gradient(90deg, transparent 0%, #000 16%, #000 84%, transparent 100%);
+}
+.gal-reel-track { display: flex; width: max-content; animation: gal-reel 70s linear infinite; }
+.gal-reel img {
+  flex: none; height: clamp(170px, 18vw, 290px); aspect-ratio: 3 / 4; margin-right: clamp(10px, 1.1vw, 18px);
+  object-fit: cover; border-radius: clamp(10px, .9vw, 14px); filter: brightness(.46) saturate(.9);
+  transition: filter .6s ease;
+}
+@keyframes gal-reel { to { translate: -50% 0; } }
+@media (hover: hover) {
+  .gal-band:hover .gal-reel-track { animation-play-state: paused; }
+  .gal-band:hover .gal-reel img { filter: brightness(.62) saturate(1); }
+}
+.gal-band .tune { width: clamp(168px, 16vw, 236px); }
+@media (max-width: 699px) {
+  .gal-reel img { height: 168px; }
+  .gal-band .tune { width: 158px; }
+}
+@media (prefers-reduced-motion: reduce) { .gal-reel-track { animation: none; } }
+
+/* ---------- The way back (GalleryNext.astro, the end of the gallery) ----------
+   One quiet line and a silver button that goes straight on to the part of the page they came from. */
+.gnext { padding: var(--sec-y) 0; background: #000; }
+.gnext-in { display: grid; justify-items: center; gap: 18px; text-align: center; }
+.gnext-kick { font: 400 clamp(16px, 1.2vw, 18px)/1.5 var(--sans); color: var(--fg-2); }
+.gnext-go { gap: 12px; height: 60px; padding: 0 26px 0 32px; font-size: 17px; }
+.gnext-arrow { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; transition: translate .4s var(--ease-out); }
+@media (hover: hover) { .gnext-go:hover .gnext-arrow { translate: 4px 0; } }

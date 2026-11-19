@@ -1,0 +1,24 @@
+---
+import { WORDMARK_VIEW } from '../data/brand';
+// HOTLAND lily and wordmark, the club's own marks from its brand pack. Both are filled with polished
+// silver (#g-metal, defined once in Base.astro) and turn ink on the metal plate (CSS var --emblem). Their outlines
+// are written once per page (Base.astro, #hl-lily and #hl-word) and only referenced here.
+interface Props {
+  variant?: 'mark' | 'inline' | 'stacked';
+  size?: number; // emblem size in px
+  tagline?: boolean;
+  class?: string;
+}
+const { variant = 'inline', size = 32, tagline = false, class: cls = '' } = Astro.props;
+---
+<span class:list={['logo', `logo-${variant}`, cls]}>
+  <svg class="emblem" width={size} height={size} viewBox="0 0 256 256" aria-hidden="true">
+    <use href="#hl-lily" />
+  </svg>
+  {variant !== 'mark' && (
+    <span class="logo-text">
+      <svg class="wordmark" viewBox={WORDMARK_VIEW} role="img" aria-label="HOTLAND"><use href="#hl-word" /></svg>
+      {tagline && <span class="tagline">Just between us</span>}
+    </span>
+  )}
+</span>

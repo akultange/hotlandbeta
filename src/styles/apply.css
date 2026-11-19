@@ -1,0 +1,127 @@
+/* =====================================================================
+   The job application (Apply.astro): a full-screen page of its own over the site. Desktop: a backstage picture
+   on the left (shown whole, no fade), the three steps on the right: the step's number and the cross at the top,
+   a crimson line filling as you go, the step in the middle, its buttons at the foot. Phones: the steps fill the
+   screen, the buttons pinned at its foot. The role tiles, fields, pills and consent are the booking form's.
+   ===================================================================== */
+
+html.apl-lock { overflow: hidden; }
+.apl {
+  position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0;
+  border: 0; background: #050405; color: var(--fg); overflow: hidden;
+}
+.apl::backdrop { background: #000; }
+.apl[open] { animation: apl-in .5s var(--ease-out); }
+.apl.apl-out { animation: apl-out .26s ease-in forwards; }
+@keyframes apl-in { from { opacity: 0; scale: .985; } }
+@keyframes apl-out { to { opacity: 0; scale: .99; } }
+
+.apl-in { display: grid; height: 100%; grid-template-columns: minmax(0, 1fr); }
+.apl-pic { display: none; margin: 0; position: relative; overflow: hidden; background: #0b0b0c; }
+.apl-pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+
+/* the steps' page: the top bar, the line, the step, the buttons */
+.apl-box {
+  position: relative; display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto; height: 100%; min-height: 0;
+  padding: clamp(18px, 2.6vw, 40px) clamp(20px, 5vw, 88px) clamp(18px, 2.6vw, 36px);
+  background: radial-gradient(90% 60% at 70% 0%, rgba(143, 11, 38, .22), rgba(143, 11, 38, 0) 70%), #050405;
+}
+.apl-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.apl-count { display: flex; align-items: baseline; gap: 8px; margin: 0; font: 500 14px/1 var(--sans); color: var(--muted); font-variant-numeric: tabular-nums; }
+.apl-count b {
+  font: 800 30px/1 var(--display); font-stretch: 62.5%; font-variant-numeric: tabular-nums lining-nums;
+  background-image: var(--metal-read); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+}
+.apl-x {
+  display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; color: var(--fg-2);
+  background: rgba(242, 240, 236, .06); box-shadow: inset 0 0 0 1px rgba(242, 240, 236, .1); transition: background-color .2s ease, color .2s ease;
+}
+.apl-x:hover { color: var(--fg); background: rgba(242, 240, 236, .12); }
+.apl-x svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+/* the line: a third of it for each step, crimson */
+.apl-line { position: relative; display: block; height: 2px; margin-top: clamp(14px, 1.8vw, 22px); border-radius: 2px; background: rgba(242, 240, 236, .12); overflow: hidden; }
+.apl-line i { position: absolute; inset: 0; border-radius: inherit; background: var(--red); transform-origin: 0 50%; transform: scaleX(var(--apl-p, .3333)); transition: transform .6s var(--ease-out); }
+.apl-ending .apl-count { visibility: hidden; }
+
+/* the step, in the middle of the space, at a comfortable reading width */
+.apl-steps { display: grid; align-items: center; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: clamp(24px, 3vw, 44px) 0; }
+.apl-step { display: grid; gap: clamp(16px, 1.8vw, 24px); width: 100%; max-width: 720px; min-width: 0; margin: 0; padding: 0; border: 0; }
+.apl-step:not([hidden]) { animation: apl-step .5s var(--ease-out) both; }
+@keyframes apl-step { from { opacity: 0; translate: 0 12px; } }
+.apl-h {
+  float: none; width: 100%; margin: 0; padding: 0;
+  font: 700 clamp(36px, 4.4vw, 68px)/.98 var(--display); font-stretch: 75%; letter-spacing: .004em; text-wrap: balance;
+}
+.apl-h:focus { outline: none; }
+.apl-lead { margin: 0; max-width: 46ch; font: 400 17px/1.55 var(--sans); color: var(--fg-2); text-wrap: pretty; }
+
+/* 1: the roles, as the booking form's tiles */
+.apl-roles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 6px; }
+.apl-roles span { min-height: 148px; font-size: 16px; }
+
+/* 2: the chosen role, the two fields, where to reply */
+.apl-chosen { margin: 0; font: 400 15px/1.4 var(--sans); color: var(--muted); }
+.apl-chosen b { font-weight: 600; color: var(--fg); }
+.apl-change { margin-left: 6px; padding: 0; font: inherit; color: var(--fg-2); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(242, 240, 236, .3); cursor: pointer; }
+.apl-change:hover { color: var(--fg); }
+.apl-fields { margin-top: 8px; gap: 28px var(--gap); }
+.apl-fields .field input { font-size: 20px; }
+.apl-via { display: grid; gap: 12px; margin-top: 6px; }
+.apl-via-l { margin: 0; font: 400 14px/1.4 var(--sans); color: var(--muted); }
+.apl-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.apl-pill { position: relative; }
+.apl-pill input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.apl-pill span {
+  display: inline-flex; align-items: center; height: 48px; padding: 0 22px; border-radius: 999px;
+  font: 500 16px/1 var(--sans); color: var(--fg-2); background: rgba(242, 240, 236, .05); box-shadow: inset 0 0 0 1px rgba(242, 240, 236, .12);
+  transition: color .25s ease, background-color .25s ease;
+}
+.apl-pill:hover input:not(:checked) + span { color: var(--fg); background: rgba(242, 240, 236, .09); }
+/* the chosen one: the steel of every chosen state on the site */
+.apl-pill input:checked + span {
+  color: var(--ink); background-color: #d3d5d9; background-image: var(--steel-pill);
+  background-size: 100% 100%, cover; background-position: 0 0, center; background-blend-mode: soft-light, multiply; box-shadow: var(--steel-pill-edge);
+}
+.apl-pill input:focus-visible + span { outline: 2px solid var(--red-text); outline-offset: 3px; }
+
+/* 3: a few words, the pointer to Telegram, the consent */
+.apl-step .field textarea { min-height: 140px; font-size: 18px; }
+.apl-hint { margin: 0; font: 400 15px/1.5 var(--sans); color: var(--muted); }
+.apl-hint a { color: var(--fg-2); text-decoration: underline; text-underline-offset: 3px; }
+.apl-hint a:hover { color: var(--fg); }
+
+/* the end: sent (a crimson tick), or not sent (WhatsApp) */
+.apl-end { justify-items: start; }
+.apl-mark { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(180deg, #c21a3c, #8f0f2a); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), 0 10px 30px -10px rgba(220, 20, 60, .9); }
+.apl-mark svg { width: 28px; height: 28px; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* the buttons: back on the left, on (or send) on the right, the message between */
+.apl-foot { display: flex; align-items: center; gap: 16px; padding-top: 16px; border-top: 1px solid var(--rule); }
+.apl-foot .apl-next, .apl-foot .apl-send { margin-left: auto; }
+.apl-err { flex: 1; margin: 0; font: 400 14px/1.4 var(--sans); color: var(--red-text); text-align: right; }
+.apl-ending .apl-foot { display: none; }
+
+/* ---------- Desktop: the picture on the left ---------- */
+@media (min-width: 900px) {
+  .apl-in { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+  .apl-pic { display: block; }
+}
+
+/* ---------- Phones: the steps fill the screen, the buttons at its foot ---------- */
+@media (max-width: 599px) {
+  .apl-box { padding: calc(12px + env(safe-area-inset-top)) 20px calc(14px + env(safe-area-inset-bottom)); }
+  .apl-x { width: 44px; height: 44px; }
+  .apl-steps { align-items: start; padding: 26px 0 20px; }
+  .apl-roles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .apl-roles span { min-height: 120px; font-size: 15px; }
+  .apl-fields { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+  .apl-pill span { padding: 0 17px; }   /* (the three on one row) */
+  .apl-foot .btn { flex: 1; justify-content: center; }
+  .apl-foot:has(.apl-back:not([hidden])) .apl-back { flex: 0 0 auto; }
+  .apl-err { position: absolute; left: 20px; right: 20px; bottom: calc(76px + env(safe-area-inset-bottom)); text-align: left; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .apl[open], .apl.apl-out, .apl-step:not([hidden]) { animation: none; }
+  .apl-line i { transition: none; }
+}

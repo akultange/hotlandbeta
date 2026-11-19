@@ -1,0 +1,150 @@
+---
+import Base from '../../layouts/Base.astro';
+import Hero from '../../components/Hero.astro';
+import HeroPreload from '../../components/HeroPreload.astro';
+import Parties from '../../components/Parties.astro';
+import Photo from '../../components/Photo.astro';
+import PosterCard from '../../components/PosterCard.astro';
+import ShowTabs from '../../components/ShowTabs.astro';
+import Models from '../../components/Models.astro';
+import ModelsStage from '../../components/ModelsStage.astro';
+import VariantSwitch from '../../components/VariantSwitch.astro';
+import { choosing, show } from '../../data/variants';
+import MemberCards from '../../components/MemberCards.astro';
+import CastingCall from '../../components/CastingCall.astro';
+import GalleryPeek from '../../components/GalleryPeek.astro';
+import { type Lang, tr, langPaths } from '../../data/i18n';
+import { keepShort } from '../../data/format';
+import { site, price } from '../../data/site';
+import { events, kitchen, bar, entryShows, vip, barMenu, eventsLead, media } from '../../data/content';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const ru = lang === 'ru';
+const p = (s: string) => `/${lang}/${s}/`;
+
+// the bar at a glance: tartare, oysters, ribeye, Red Velvet, the two house cocktails, Negroni
+const menuItems = [kitchen[0], kitchen[1], kitchen[4], kitchen[6], bar[1].items[0], bar[1].items[1], bar[1].items[2]];
+const entry = entryShows[0];
+/** A dish's name for the narrow column beside the bar's picture on phones: a short word stays with the next one,
+ *  a number with its unit ("из говядины", "300 г"). */
+const dish = (s: string) => s.replace(/(^|\s)(из|в|во|на|с|со|и|по|под) /gi, '$1$2\u00a0').replace(/(\d) (г|кг|мл|л|шт)/g, '$1\u00a0$2');
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'NightClub',
+  name: site.name,
+  slogan: site.tagline,
+  address: site.address[lang],
+  url: new URL(`/${lang}/`, Astro.site).href,
+  openingHoursSpecification: site.hours.map((h, i) => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][i],
+    opens: h.open,
+    closes: h.close,
+  })),
+};
+---
+<Base lang={lang} description={ru ? 'HOTLAND, ночное кабаре в Москве: шоу-балет, бурлеск, ужин и бар до утра. Только между нами. 18+' : 'HOTLAND, a late-night cabaret in Moscow: show ballet, burlesque, dinner and the bar until morning. Just between us. 18+'} schema={schema}>
+
+  <HeroPreload slot="head" />
+  <Hero lang={lang} />
+
+  <!-- WHAT'S ON: the weekend's three nights as large posters, full width under the heading. On phones the row
+       holds still while the page scrolls on and slides from one poster to the next (PosterCard.astro) -->
+  <section class="sec" id="program">
+    <div class="wrap">
+      <div class="bighead bh-line">
+        <h2 class="t-l">{ru ? 'Афиша' : 'Events'}</h2>
+        <div class="bighead-side">
+          <p class="body" set:html={keepShort(tr(eventsLead, lang), lang)} />
+          <a class="lnk" href={p('program')}>{ru ? 'Вся афиша' : 'All events'}</a>
+        </div>
+      </div>
+      <div class="prow" data-prow>
+        <div class="prow-pin">
+          <div class="posters in-wrap" data-events data-lenis-prevent-horizontal>
+            {events.map((e) => <PosterCard e={e} lang={lang} />)}
+          </div>
+          <p class="body" data-events-empty hidden>{ru ? 'Новые особые вечера скоро. А шоу-балет каждую ночь в 23:30 и 01:30.' : 'New special nights are coming. The show ballet is on every night at 23:30 and 01:30.'}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The page's first screens, in the client's order: the hero, the posters, the gallery, the artists; the rest after -->
+
+  <!-- THE GALLERY in brief: a strip of its pictures, and the way in (GalleryPeek; its end leads back to the artists) -->
+  <GalleryPeek lang={lang} />
+
+  <!-- ARTISTS: the faces of HOTLAND (stand-ins until the club sends photos and names). Two takes (data/variants.ts
+       'models'): v1 the row of portraits (Models.astro), v2 the spotlight stage (ModelsStage.astro), settled on v2.
+       The one shown is #models (the gallery's way back lands on it) -->
+  <div class:list={['mdl-takes', { 'vx-host': choosing('models') }]}>
+    <VariantSwitch name="models" />
+    {show('models', 'row') && <div class="vx-part" data-v="models:row"><Models lang={lang} /></div>}
+    {show('models', 'stage') && <div class="vx-part" data-v="models:stage"><ModelsStage lang={lang} id={show('models', 'row') ? 'models-stage' : 'models'} /></div>}
+  </div>
+
+  <!-- THE SHOW: what the artists do, the six kinds of number as tabs, the chosen one's film beside them (ShowTabs) -->
+  <ShowTabs lang={lang} />
+
+  <!-- VIP: membership cards in metal -->
+  <section class="sec" id="vip">
+    <div class="wrap">
+      <MemberCards lang={lang}>
+        <div slot="head" class="bighead bh-line">
+          <h2 class="t-l">{tr(vip.title, lang)}</h2>
+          <div class="bighead-side">
+            <p class="body">{tr(vip.lead, lang)}</p>
+            <a class="lnk" href={p('vip')}>{ru ? 'VIP и праздники' : 'VIP & parties'}</a>
+          </div>
+        </div>
+      </MemberCards>
+    </div>
+  </section>
+
+  <!-- THE BAR, at a glance: the heading row (as every section's, with the link to the menu), then the list beside
+       its picture (on phones the picture is set into the list, top right, with the first dishes running down beside
+       it). The list and the picture start at the same height, under the section's own air. -->
+  <section class="sec soot" id="kitchen">
+    <div class="wrap g12" style="align-items: start">
+      <div class="menu-glance" style="grid-column: 1 / span 6">
+        <div class="bighead bh-line">
+          <h2 class="t-l" set:html={tr(barMenu.title, lang)} />
+          <div class="bighead-side">
+            <p class="body">{tr(barMenu.lead, lang)}</p>
+            <a class="lnk" href={p('menu')}>{ru ? 'Всё меню' : 'The whole menu'}</a>
+          </div>
+        </div>
+        <div class="menu-peek">
+          <div class="menu-peek-shot">
+            <Photo src={media(barMenu.shots.bar.img)} loop={barMenu.shots.bar.loop && media(barMenu.shots.bar.loop)} alt={tr(barMenu.shots.bar.alt, lang)} ratio="2/3" />
+          </div>
+          {menuItems.map((it, i) => (
+            <div class:list={['mrow', { 'mrow-by': i < 4 }]}><span class="nm">{dish(tr(it.name, lang))}</span><span class="dots"></span><span class="pr">{price(it.price!)}</span></div>
+          ))}
+          <div class="mrow"><span class="nm">{tr(entry.name, lang)}</span><span class="dots"></span><span class="pr">{price(entry.price!)}</span></div>
+        </div>
+        <p class="label menu-peek-foot">{tr(barMenu.note, lang)}</p>
+      </div>
+      <div class="menu-peek-side" style="grid-column: 8 / span 5">
+        <Photo src={media(barMenu.shots.bar.img)} loop={barMenu.shots.bar.loop && media(barMenu.shots.bar.loop)} autoplay alt={tr(barMenu.shots.bar.alt, lang)} ratio="4/5" />
+      </div>
+    </div>
+  </section>
+
+  {/* BOTTLE SETS (TableSets.astro) are hidden at the client's request (2026-11-13); the component stays: to bring
+      them back, import it and put <TableSets lang={lang} /> here */}
+
+  <Parties lang={lang} />
+
+  <!-- THE CASTING CALL: last, after the whole guests' part (the show, VIP, the bar, the sets, parties): the way to
+       join the club's first company, just before the closing invitation. -->
+  <CastingCall lang={lang} />
+
+  {/* «Как нас найти» (Visit.astro) is off the home page at the client's request (2026-11-12); it stays on About
+      (#contacts). To bring it back here: import Visit from '../../components/Visit.astro' and put <Visit lang={lang} />
+      after the casting call. */}
+</Base>
+

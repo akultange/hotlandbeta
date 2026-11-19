@@ -1,0 +1,66 @@
+---
+import Base from '../../layouts/Base.astro';
+import Photo from '../../components/Photo.astro';
+import PageTitle from '../../components/PageTitle.astro';
+import { site } from '../../data/site';
+import { type Lang, ui, tr, langPaths } from '../../data/i18n';
+import { careers, media, g } from '../../data/content';
+
+export const getStaticPaths = langPaths;
+const lang = Astro.params.lang as Lang;
+const t = ui[lang];
+const ru = lang === 'ru';
+const backstage = g(2);
+---
+<Base lang={lang} title={t.footer.careers} description={tr(careers.lead, lang)} closing={false}>
+  <PageTitle
+    crumbs={[{ href: `/${lang}/`, label: 'HOTLAND' }, { label: t.footer.careers }]}
+    title={t.footer.careers}
+    sub={tr(careers.title, lang)}
+    lead={tr(careers.lead, lang)}
+    img={media(careers.shot.img)}
+    imgAlt={tr(careers.shot.alt, lang)}
+  >
+    <!-- the main action is the form, as in the casting call on the other pages; Telegram is the second one -->
+    <a class="btn btn-crimson" href="#apply" data-apply>{ru ? 'Отправить анкету' : 'Apply'}</a>
+    <a class="btn btn-line" href={site.telegramCasting} target="_blank" rel="noopener">{tr(careers.cta, lang)}</a>
+  </PageTitle>
+
+  <!-- 01 Roles -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="g12" style="align-items: start">
+        <div class="cr-pic" style="grid-column: 1 / span 5"><Photo src={media(backstage.img)} alt={tr(backstage.alt, lang)} ratio="3/4" /></div>
+        <div class="stack" style="grid-column: 7 / span 6; gap: var(--head-gap)">
+          <h2 class="t-l" set:html={ru ? 'Кого <em>мы ищем</em>' : 'Who <em>we’re looking for</em>'} />
+          <div class="rows">
+            {careers.roles.map((r, i) => (
+              <a class="row num" href="#apply" data-apply data-apply-role={i}><span class="n">0{i + 1}</span><span class="k">{tr(r, lang)}</span><span class="label">{ru ? 'Откликнуться' : 'Apply'} →</span></a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 Application: the full-screen dialog (Apply.astro), three short steps; the second way is Telegram -->
+  <section class="sec" id="apply">
+    <div class="wrap">
+      <div class="stack cr-apply">
+        <h2 class="t-l" set:html={ru ? 'Отправить <em>анкету</em>' : 'Apply <em>in private</em>'} />
+        <p class="body">{ru ? 'Три коротких шага: роль, контакты и пара слов о\u00a0себе. Ответим в\u00a0течение двух дней.' : 'Three short steps: the role, how to reach you and a few words about yourself. We reply within two days.'}</p>
+        <div class="btns">
+          <a class="btn btn-crimson" href="#apply" data-apply>{ru ? 'Заполнить анкету' : 'Fill in the application'}</a>
+          <a class="btn btn-line" href={site.telegramCasting} target="_blank" rel="noopener">{tr(careers.cta, lang)}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* the backstage picture (3:4) is the section's last thing on a computer, so the section ends at the middle of its
+     fall into the black, a tenth of its height sooner (global.css, Photos) */
+  @media (min-width: 900px) { .cr-pic { margin-bottom: -13.33%; } }
+  .cr-apply { max-width: 640px; }
+</style>

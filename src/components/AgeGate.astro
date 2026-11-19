@@ -1,0 +1,53 @@
+---
+import { type Lang, ui, altPath } from '../data/i18n';
+import Logo from './Logo.astro';
+const { lang } = Astro.props as { lang: Lang };
+const t = ui[lang];
+const path = Astro.url.pathname;
+---
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title" tabindex="-1" data-lenis-prevent>
+  <div class="gate-box">
+    <Logo variant="stacked" size={52} tagline />
+    <div class="gate-seal" aria-hidden="true">
+      <img src="/img/metal/rosette.svg" alt="" />
+      <p class="gate-18">18<span class="plus">+</span></p>
+    </div>
+    <h2 id="gate-title" class="t-m">{t.gate.title}</h2>
+    <p class="body">{t.gate.text}</p>
+    <div class="gate-actions">
+      <button class="btn btn-crimson" type="button" data-gate-yes>{t.gate.yes}</button>
+      <a class="btn btn-line" href={`/${lang}/goodbye/`}>{t.gate.no}</a>
+    </div>
+    <div class="gate-foot">
+      <a class="label" href={altPath(path, 'ru')}>RU</a>
+      <a class="label" href={altPath(path, 'en')}>EN</a>
+      <a class="label" href={`/${lang}/privacy/`}>{t.footer.privacy}</a>
+    </div>
+  </div>
+</div>
+<script>
+  // While the question shows, the page behind it is out of reach (inert: the keyboard and screen readers stay in the
+  // question; nothing changes on screen) and the question has the focus.
+  // Yes: remember the answer for this visit (Base.astro asks again on the next one), give the page back, let the
+  // curtain fade, and tell the page it may begin (motion.ts waits for this).
+  const root = document.documentElement;
+  const gate = document.getElementById('gate');
+  const behind = gate && !root.classList.contains('age-ok')
+    ? Array.from(document.body.children).filter((el): el is HTMLElement => el !== gate && el instanceof HTMLElement && !el.matches('script, .svg-defs'))
+    : [];
+  behind.forEach((el) => { el.inert = true; });
+  if (behind.length && !gate!.contains(document.activeElement)) gate!.focus({ preventScroll: true });
+  document.querySelector('[data-gate-yes]')?.addEventListener('click', () => {
+    behind.forEach((el) => { el.inert = false; });
+    try { sessionStorage.setItem('age_ok', String(Date.now())); } catch {}
+    const begin = () => dispatchEvent(new Event('hotland:gate'));
+    if (gate && root.classList.contains('motion')) {
+      gate.classList.add('out');
+      setTimeout(begin, 250);
+      setTimeout(() => root.classList.add('age-ok'), 750);
+    } else {
+      root.classList.add('age-ok');
+      begin();
+    }
+  });
+</script>
