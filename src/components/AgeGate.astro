@@ -26,6 +26,10 @@ const path = Astro.url.pathname;
 const nm = nameHalves();
 // the big word's proportions (the header's HOTLAND): the skeleton places the name and the words around it
 const wr = 735 / line('HOTLAND').width;
+// a half's letters as one shape, for the band of light that crosses the steel once the name is lit: the band shows
+// only where there is a letter (a mask, gate.css .gate-glint)
+const shape = (h: { paths: string[]; width: number }) =>
+  `url("data:image/svg+xml,${`<svg xmlns='http://www.w3.org/2000/svg' viewBox='${nm.box(h.width)}'><path d='${h.paths.join(' ')}'/></svg>`.replace(/</g, '%3C').replace(/>/g, '%3E').replace(/#/g, '%23')}")`;
 ---
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title" aria-describedby="gate-text" tabindex="-1" data-lenis-prevent
   style={`--wr:${wr.toFixed(5)};--wl:${nm.land.width};--ngu:${nm.gap}`}>
@@ -46,10 +50,12 @@ const wr = 735 / line('HOTLAND').width;
       <span class="gate-half gate-half-l" style={`--hw:${nm.hot.width}`}>
         <svg class="gate-spill" viewBox={nm.box(nm.hot.width)} focusable="false" style="--i:0"><path d={nm.hot.paths[nm.hot.paths.length - 1]} /></svg>
         {nm.hot.paths.map((d, i) => <svg viewBox={nm.box(nm.hot.width)} focusable="false" style={`--i:${nm.hot.paths.length - 1 - i}`}><path d={d} /></svg>)}
+        <span class="gate-glint" style={`--m:${shape(nm.hot)}`}><i></i></span>
       </span>
       <span class="gate-half gate-half-r" style={`--hw:${nm.land.width}`}>
         <svg class="gate-spill" viewBox={nm.box(nm.land.width)} focusable="false" style="--i:0"><path d={nm.land.paths[0]} /></svg>
         {nm.land.paths.map((d, i) => <svg viewBox={nm.box(nm.land.width)} focusable="false" style={`--i:${i}`}><path d={d} /></svg>)}
+        <span class="gate-glint" style={`--m:${shape(nm.land)}`}><i></i></span>
       </span>
     </div>
     <div class="hv-copy gate-copy">

@@ -99,6 +99,13 @@ html.js:not(.age-ok) { background-color: var(--gate-end); }
 .gate-name .gate-half svg.gate-spill { fill: var(--light); filter: blur(2px); opacity: .55; }
 .gate-half-l .gate-spill { left: 2.5px; }
 .gate-half-r .gate-spill { left: -2.5px; }
+/* The steel catches the light: once the name is lit, one narrow band of light crosses each half, from the line
+   outward, and is gone (Arriving, below). The band is a plain strip moved by transform; the letters' own shapes
+   are its mask (--m, AgeGate.astro), so it shows only on the steel. At rest it is not there. */
+.gate-glint { position: absolute; inset: 0; overflow: hidden; pointer-events: none; -webkit-mask: var(--m) 0 0 / 100% 100% no-repeat; mask: var(--m) 0 0 / 100% 100% no-repeat; }
+.gate-glint i { position: absolute; top: -20%; bottom: -20%; width: 34%; opacity: 0; background: linear-gradient(90deg, rgba(255, 255, 255, 0), #fff 50%, rgba(255, 255, 255, 0)); }
+.gate-half-l .gate-glint i { right: 0; }
+.gate-half-r .gate-glint i { left: 0; }
 
 /* ---------- The light ----------
    The line is the two slabs' lit edges, side by side: a thin core, white-hot where the name is (--ny), and its
@@ -176,25 +183,34 @@ html.js:not(.age-ok) { background-color: var(--gate-end); }
 }
 
 /* ---------- Arriving (motion only) ----------
-   The line is struck in the joint: it catches, falters once and holds, growing to its length. The letters come out
-   of it one by one, to either side. Then the question. (Entrances start at 1% opacity, not 0, no difference to the
-   eye: browsers count what is fully transparent as not painted yet, and the door is the first thing a visitor
-   sees.) After that the light breathes, slowly. */
+   The line is struck in the joint: it catches, falters once and holds, growing to its length. Its light then
+   reaches the name: the letters come up out of the dark where they stand, the two at the line first and the rest
+   outward, a tenth of a second apart, each easing a few pixels away from the line as it does (a film title's slow
+   spread: the nearest letter moves half a step, the farthest three and a half; a step is a seventh of the
+   capitals' height). No letter travels: they used to fly in from 260px away, across each other and the line.
+   When the name stands, one band of light crosses the steel from the line outward. Then the question.
+   (Entrances start at 1% opacity, not 0, no difference to the eye: browsers count what is fully transparent as not
+   painted yet, and the door is the first thing a visitor sees.) After that the light breathes, slowly. */
 @keyframes gate-strike { 0% { opacity: .01; scale: 1 .16; } 7% { opacity: 1; } 12% { opacity: .3; } 19% { opacity: 1; } 100% { scale: 1 1; } }
 @keyframes gate-breathe { 50% { opacity: .72; } }
-@keyframes gate-letter { from { opacity: .01; translate: var(--from) 0; } }
+@keyframes gate-lit { from { opacity: .01; } }
+@keyframes gate-spread { from { translate: var(--from) 0; } }
+@keyframes gate-glint-l { 0% { translate: 105% 0; opacity: 0; } 14%, 80% { opacity: .9; } 100% { translate: -300% 0; opacity: 0; } }
+@keyframes gate-glint-r { 0% { translate: -105% 0; opacity: 0; } 14%, 80% { opacity: .9; } 100% { translate: 300% 0; opacity: 0; } }
 @keyframes gate-rise { from { opacity: .01; translate: 0 18px; } }
 @keyframes gate-fade { from { opacity: .01; } }
 @keyframes gate-unwash { from { opacity: 1; } }
 html.motion .gate-face::after { animation: gate-unwash 1.3s var(--ease-out) .14s backwards; }
 html.motion .gate-edge i { animation: gate-strike 1.5s var(--ease-out) .12s backwards, gate-breathe 5.5s ease-in-out 1.8s infinite; }
-html.motion .gate-half-l svg { --from: 260px; }
-html.motion .gate-half-r svg { --from: -260px; }
-html.motion .gate-half svg { animation: gate-letter 1.1s var(--ease-out) calc(.3s + var(--i) * 75ms) backwards; }
-html.motion .gate-copy > * { animation: gate-rise .9s var(--ease-out) .5s backwards; }
-html.motion .gate-copy > :nth-child(2) { animation-delay: .57s; }
-html.motion .gate-copy > :nth-child(3) { animation-delay: .64s; }
-html.motion .gate-foot { animation: gate-fade 1s ease .85s backwards; }
+html.motion .gate-half svg { --step: calc(var(--nh) * .14); --at: calc(.4s + var(--i) * 100ms); animation: gate-lit .95s cubic-bezier(.3, .6, .3, 1) var(--at) backwards, gate-spread 1.9s cubic-bezier(.16, 1, .3, 1) var(--at) backwards; }
+html.motion .gate-half-l svg { --from: calc((var(--i) + .5) * var(--step)); }
+html.motion .gate-half-r svg { --from: calc((var(--i) + .5) * var(--step) * -1); }
+html.motion .gate-half-l .gate-glint i { animation: gate-glint-l 1.05s cubic-bezier(.45, .05, .35, 1) 1.5s backwards; }
+html.motion .gate-half-r .gate-glint i { animation: gate-glint-r 1.05s cubic-bezier(.45, .05, .35, 1) 1.5s backwards; }
+html.motion .gate-copy > * { animation: gate-rise .9s var(--ease-out) .75s backwards; }
+html.motion .gate-copy > :nth-child(2) { animation-delay: .82s; }
+html.motion .gate-copy > :nth-child(3) { animation-delay: .89s; }
+html.motion .gate-foot { animation: gate-fade 1s ease 1.05s backwards; }
 .gate.out { pointer-events: none; }
 .gate.out .gate-edge i { animation: none; }
 /* "Yes" pressed before the question has finished arriving: its lines stop where they are and go from there (they
@@ -203,7 +219,7 @@ html.motion .gate-foot { animation: gate-fade 1s ease .85s backwards; }
 /* The door again after its own language link (.door-still, set in the page's head and kept): the same door in the
    other language, simply there. The wall, the light and the name are not struck a second time; the light only
    breathes. */
-html.door-still .gate-face::after, html.door-still .gate-half svg, html.door-still .gate-copy > *, html.door-still .gate-foot { animation: none !important; }
+html.door-still .gate-face::after, html.door-still .gate-half svg, html.door-still .gate-glint i, html.door-still .gate-copy > *, html.door-still .gate-foot { animation: none !important; }
 html.door-still.motion .gate:not(.out) .gate-edge i { animation: gate-breathe 5.5s ease-in-out .6s infinite; }
 
 /* ---------- While the door opens ----------
