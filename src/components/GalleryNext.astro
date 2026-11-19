@@ -37,10 +37,12 @@ const { lang } = Astro.props;
       } catch { from = null; }
       if (from) history.replaceState({ ...(history.state || {}), hlFrom: from }, '');
     }
-    const lang = document.documentElement.lang;
-    if (!from || typeof from.path !== 'string' || !from.path.startsWith(`/${lang}/`) || !/^[a-z0-9-]*$/.test(from.next || '')) return;
-
+    // the button's own address is this language's home page (/ru/, or /hotlandbeta/ru/ on GitHub Pages): only a page
+    // under it counts
     const link = sec.querySelector<HTMLAnchorElement>('[data-gnext-go]')!;
+    const home = new URL(link.getAttribute('href')!, location.href).pathname;
+    if (!from || typeof from.path !== 'string' || !from.path.startsWith(home) || !/^[a-z0-9-]*$/.test(from.next || '')) return;
+
     link.href = from.path + (from.next ? `#${from.next}` : '');
     sec.querySelector('.gnext-kick')!.textContent = from.kick;
     sec.querySelector('.gnext-name')!.textContent = from.label;

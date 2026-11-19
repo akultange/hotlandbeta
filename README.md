@@ -21,10 +21,12 @@ new photo in `public/media/` gets its copies on the next build.
 
 ## Code and hosting
 
-- **Code:** private GitHub repository `gilavi/hotland`. Push with the gilavi account.
+- **Code:** this repository, `akultange/hotlandbeta`, is Luka's and Gio's working copy, copied from `gilavi/hotland` (private) on 19 November 2026. It is public: nothing secret goes in it.
+- **Our copy online:** every push to `main` publishes it on GitHub Pages, https://akultange.github.io/hotlandbeta/ru/ (Settings → Pages → Source: GitHub Actions). The workflow, `.github/workflows/pages.yml`, runs `npm run build:github`: the preview build, after which `tools/build/github-pages.mjs` moves the site's addresses under the `/hotlandbeta/` folder and leaves out the Cloudflare and Timeweb files. Pages has no server, so the forms there send nothing. A run takes a few minutes; the Actions tab shows each one.
+- **The club's versions** are the Cloudflare preview (built from `gilavi/hotland`) and the Timeweb copy, both below. They change only when we take the work there: a Timeweb upload built from here, and a push to `gilavi/hotland` for the Cloudflare link.
 - **Site:** Cloudflare (Gio's account): https://hotland.club-site.workers.dev. The pages are static files in `dist/`. A small server function (`worker/index.ts`) handles only `/api/booking`, `/api/careers` and `/api/event`. `npm run deploy` builds the preview with `noindex` and publishes both. The first time on a machine, run `npx wrangler login`.
-- **Deploys happen on push.** Cloudflare builds every push to `main` and publishes it to the preview within a minute or two. It runs `npm run build:preview`, then `npx wrangler deploy`, from the Worker's Settings → Builds, connected to `gilavi/hotland`. Build logs are on the Worker's Deployments tab. Other branches and pull requests get their own preview link, which shows up with the build. `npm run deploy` still works for a deploy by hand.
-- **Pushing.** Everyone with write access (gilavi, akultange) can push straight to `main`. A pull request is optional, for when you want a second look first.
+- **Cloudflare deploys on push** to `gilavi/hotland`: it builds every push to that repository's `main` and publishes it to the preview within a minute or two. It runs `npm run build:preview`, then `npx wrangler deploy`, from the Worker's Settings → Builds, connected to `gilavi/hotland`. Build logs are on the Worker's Deployments tab. Other branches and pull requests get their own preview link, which shows up with the build. `npm run deploy` still works for a deploy by hand.
+- **Pushing.** Here: akultange, and Gio once he is added under Settings → Collaborators. A pull request is optional, for when you want a second look first.
 - **Versions side by side.** Where a part has more than one version, the preview shows them all with a small switch, and production shows only the default.
   - The hero has v1, v2 and v3, chosen in `src/components/Hero.astro` (`DEFAULT`).
   - The footer and the contact links are listed in `src/data/variants.ts` (`def`, and `opts` for the versions).

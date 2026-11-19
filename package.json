@@ -8,6 +8,7 @@
     "preview": "astro preview",
     "build:preview": "SITE_URL=${SITE_URL:-https://hotland.club-site.workers.dev} PUBLIC_NOINDEX=1 astro build",
     "build:timeweb": "SITE_URL=${SITE_URL:-https://cp482107.tw1.ru} PUBLIC_NOINDEX=1 astro build",
+    "build:github": "SITE_URL=${SITE_URL:-https://akultange.github.io} PUBLIC_NOINDEX=1 astro build && node tools/build/github-pages.mjs",
     "build:prod": "astro build",
     "deploy": "npm run build:preview && wrangler deploy",
     "check": "astro check && tsc -p worker"
