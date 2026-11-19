@@ -90,7 +90,9 @@ const film = {
 const copy = {
   tag: ru ? 'Только <em>между нами</em>' : 'Just <em>between us</em>',
   // (no-break spaces keep a short word with the one after it, so no line ends on "в", "с" or "The")
-  lead: ru ? 'Премиальный мужской клуб в Москве. Шоу, ужин и бар каждую ночь с 22:00 до 06:00.' : 'A premium gentlemen’s club in Moscow. The show, dinner and the bar, every night from 22:00 to 06:00.',
+  // (2026-11-19: the club found the second sentence, «Шоу, ужин и бар каждую ночь с 22:00 до 06:00», one too many: the
+  // line under the motto only says what the place is; the hours are in the menu sheet, the footer and «О нас»)
+  lead: ru ? 'Премиальный мужской клуб в Москве' : 'A premium gentlemen’s club in Moscow',
   book: t.bookTable,
 };
 // Before the first paint: which take shows (dev and preview builds only).

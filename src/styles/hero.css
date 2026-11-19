@@ -114,7 +114,8 @@ html[data-hero]:not([data-hero="v3"]) .hv3 { display: none; }
   --wd: var(--word); --ed: var(--edge); --exx: var(--ex); --eyy: var(--ey);
   /* laid out the way v2 is: the word as wide as the page's column, the words centred under it, and the free
      room split two to one above the word and below the words. --copy-h is a close guess at the words' height
-     (the line, the lead and the buttons: 167 to 187px), so the window can be placed before anything is measured;
+     (the motto, the one line under it and the two buttons: 148 to 189px), so the window can be placed before anything
+     is measured;
      the words themselves always sit exactly --hv-gap under the word. */
   --mw: calc(100cqw - 2 * var(--inl));
   --mh: calc(var(--mw) * var(--wr));
@@ -221,7 +222,9 @@ html[data-hero]:not([data-hero="v3"]) .hv3 { display: none; }
   /* the hero ends where the phone's action dock begins: what lies under the dock is already the next section,
      so once the page moves there is no empty band between the name and Афиша */
   .hv { height: calc(100svh - var(--dock)); min-height: 520px; --hv-pb: 24px; --hv-gap: 22px; }
-  .hero-tag { font-size: clamp(31px, 8.6vw, 42px); }
+  .hero-tag { font-size: clamp(27px, 8.6vw, 42px); }
+  /* the line under the motto stays one line down to the narrowest phone (17px from 370 wide up) */
+  .hv-lead { font-size: min(17px, 4.6vw); }
   .hv-copy { gap: 10px; }
   .hv-act { gap: 10px; margin-top: 8px; }
   .hv-act .btn { height: 50px; padding: 0 22px; }
@@ -237,6 +240,15 @@ html[data-hero]:not([data-hero="v3"]) .hv3 { display: none; }
   .hv3 { --fog: blur(16px) brightness(.4) saturate(1.25); }
   .hv3 > .vid-toggle { top: calc(var(--hdr) + 14px); right: var(--inl); bottom: auto; }
 }
+/* narrower phones (360 and 375 wide are common): the two buttons still share one row, their wide-set capitals a step
+   tighter; the narrowest (320), another step */
+@media (max-width: 389px) {
+  .hv-act { gap: 8px; }
+  .hv-act .btn { padding: 0 15px; font-size: 12px; letter-spacing: .11em; }
+}
+@media (max-width: 339px) {
+  .hv-act .btn { padding: 0 11px; font-size: 11.5px; letter-spacing: .07em; }
+}
 /* the gap's edges and the name across it belong to the upright phone's take only */
 .hv3-gap, .hv3-name { display: none; }
 /* v3 on a phone held upright: the door's line of light, grown into a gap. A tall slit down the middle of the frost,
@@ -247,9 +259,12 @@ html[data-hero]:not([data-hero="v3"]) .hv3 { display: none; }
 @media (max-width: 899px) and (orientation: portrait) {
   .hv3 {
     --wd: var(--word-m);
-    --copy-h: 176px;
+    /* the words' height: the motto and the one line under it (their sizes here, each on one line), the buttons' row,
+       and the gaps between them */
+    --copy-h: calc(clamp(27px, 8.6vw, 42px) * 1.05 + min(17px, 4.6vw) * 1.6 + 78px);
     --mw: clamp(56px, 17.5cqw, 88px);
-    --mh: calc(100cqh - var(--copy-h) - var(--hv-pb));
+    /* the gap runs from the top of the screen to just behind the motto, where it has frosted over */
+    --mh: calc(100cqh - var(--hv-pb) - var(--copy-h) + 28px);
     --cx: 50cqw;
     --cy: calc(var(--mh) / 2);
     --ny: calc(var(--mh) * .5);
@@ -382,7 +397,7 @@ html[data-hero="v3"] .hx-switch [data-hero-set="v3"] { background: linear-gradie
   .hv3 {
     --wd: var(--word); --ed: var(--edge); --exx: var(--ex); --eyy: var(--ey);
     --mw: min(calc(100cqw - 2 * var(--inl)), calc(34cqh / var(--wr))); --mh: calc(var(--mw) * var(--wr));
-    --copy-h: 124px;
+    --copy-h: 116px;
     --cx: 50cqw;
     --cy: calc(var(--hdr) + max(0px, 100cqh - var(--hdr) - var(--mh) - var(--hv-gap) - var(--copy-h)) * 2 / 3 + var(--mh) / 2);
     --fog: blur(16px) brightness(.44) saturate(1.3);
