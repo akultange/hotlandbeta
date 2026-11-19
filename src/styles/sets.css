@@ -99,9 +99,7 @@
 .ts-name { font: 500 clamp(27px, 2.25vw, 36px)/1.05 var(--display); letter-spacing: -.005em; transition: color .3s; }
 .ts-price {
   font: 450 clamp(28px, 2.44vw, 40px)/1.05 var(--display); font-variant-numeric: lining-nums;
-  white-space: nowrap; padding-right: .04em;
-  background-image: var(--red-chrome); background-size: 100% 100%;
-  -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+  white-space: nowrap; padding-right: .04em; color: var(--fg);
 }
 .ts-what { margin-top: 10px; font: 400 16px/1.55 var(--sans); color: var(--fg-2); max-width: 38ch; text-wrap: pretty; }
 .ts-perks { margin-top: 12px; gap: 5px; line-height: 1.5; align-self: start; color: var(--fg); text-wrap: pretty; }

@@ -56,7 +56,7 @@ html:not(.motion) :is(.cc-bulb, .cc-spill) { opacity: 1; }
   min-height: min(56.25vw, 100svh); padding-top: clamp(72px, 8vw, 128px); padding-bottom: clamp(72px, 8vw, 128px);
 }
 .cc-txt { display: grid; justify-items: start; gap: clamp(18px, 1.8vw, 26px); width: min(600px, 48%); }
-.cc-txt .t-l { margin: 0; }
+.cc-txt .t-l { margin: 0; text-wrap: balance; }
 .cc-txt .body { max-width: 46ch; font-size: clamp(16px, 1.15vw, 18px); color: rgba(230, 231, 233, .82); }
 /* the roles, each a link with its 3D icon: three across (two below a laptop's width), the icon beside the name. Each
    column is as wide as its widest name and the gap between columns is the same, so the roles stand evenly spaced
@@ -71,7 +71,8 @@ html:not(.motion) :is(.cc-bulb, .cc-spill) { opacity: 1; }
 .cc-roles .cc-role span { white-space: nowrap; }
 @media (max-width: 1099px) { .cc-roles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .cc-role {
-  display: inline-flex; align-items: center; gap: 10px; padding: 2px 0;
+  /* (the padding and the margin that takes it back: a 44px touch area round one line of text) */
+  display: inline-flex; align-items: center; gap: 10px; padding: 12px 0; margin: -9px 0;
   font: 500 16px/1.25 var(--sans); color: var(--fg);
   transition: color .25s ease;
 }
@@ -92,8 +93,11 @@ html:not(.motion) :is(.cc-bulb, .cc-spill) { opacity: 1; }
      photo; under the buttons, the band's own air (--sec-y) and no more */
   .cc-in { min-height: 0; margin-top: -16px; padding-top: 0; padding-bottom: 0; }
   .cc-txt { width: auto; }
-  .cc-roles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 16px; }
-  .cc-role { font-size: 15px; gap: 8px; }
+  /* (rows 44px apart: each role's 44px touch area is its own, not shared with the row above) */
+  .cc-roles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 16px; }
+  .cc-role { gap: 8px; }
+  /* the two buttons one width, the wider one's */
+  .cc-txt .btns { display: grid; justify-items: stretch; width: max-content; max-width: 100%; }
   .cc-role-ic { width: 38px; height: 38px; }
 }
 @media (prefers-reduced-motion: reduce) { .cc-dark, .cc-spill { transition: none; } }

@@ -34,13 +34,8 @@
   color: transparent; -webkit-text-fill-color: transparent;
   padding-right: .02em;
 }
-.vs-city {
-  font-style: normal; font-weight: 450; letter-spacing: -.01em; padding-right: .08em;
-  background-image: var(--red-chrome); background-size: 100% 100%;
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-box-decoration-break: clone; box-decoration-break: clone;
-  color: transparent; -webkit-text-fill-color: transparent;
-}
+/* the city is the address's quiet half, said as a title's second half is: the same face and weight, concrete grey */
+.vs-city { color: var(--quiet); }
 
 /* ---------- The facts: a label, then the answer, one per line ---------- */
 .vs-facts { display: grid; width: 100%; margin: clamp(22px, 2.4vw, 34px) 0 0; }
@@ -104,10 +99,13 @@
   .vs-facts { margin-top: 26px; }
 }
 @media (max-width: 699px) {
-  /* the street on one line, the city under it; the street never breaks (no-break spaces, Visit.astro), so it is
-     set no larger than fits the screen: --len letters at about .57em each */
-  .vs-addr { font-size: min(clamp(32px, 10vw, 48px), calc((100vw - 2 * var(--pad)) / (var(--len, 18) * .57))); line-height: .98; }
+  /* the street on one line, the city under it (two lines of an address, so the comma between them goes); the
+     street never breaks (no-break spaces, Visit.astro), so it is set no larger than fits the screen: --len letters
+     at about .57em each. The lines stand far enough apart that the street's tails (у, р, the comma inside it)
+     clear the city's capitals. */
+  .vs-addr { font-size: min(clamp(32px, 10vw, 48px), calc((100vw - 2 * var(--pad)) / (var(--len, 18) * .57))); line-height: 1.08; }
   .vs-city { display: block; }
+  .vs-sep { display: none; }
   .vs { --vs-lens: min(64vw, 300px); }
   .vs-fact { grid-template-columns: 6.6em minmax(0, 1fr); gap: 12px; padding: 12px 0; }
   .vs-fact dd { font-size: 16.5px; }

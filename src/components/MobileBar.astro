@@ -7,8 +7,11 @@ import { site } from '../data/site';
 const { lang } = Astro.props as { lang: Lang };
 const t = ui[lang];
 import { show } from '../data/variants';
+// The home page opens on its header, whose own "Book a table" stands just above the dock: there the dock's button
+// starts as the quiet plate (the script below keeps it so only while that button is on screen).
+const home = Astro.url.pathname.replace(/\/$/, '') === `/${lang}`;
 ---
-<nav class="mbar" aria-label={lang === 'ru' ? 'Быстрые действия' : 'Quick actions'}>
+<nav class:list={['mbar', { calm: home }]} aria-label={lang === 'ru' ? 'Быстрые действия' : 'Quick actions'}>
   {show('contact', 'luka') && (
   <button class="mbar-act" type="button" data-contact="callback" data-v="contact:luka" aria-label={lang === 'ru' ? 'Заказать звонок' : 'Request a call'}>
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.4 3.6 9.9 7c.3.7.1 1.5-.5 2l-1.3 1.1a11.6 11.6 0 0 0 5.8 5.8l1.1-1.3c.5-.6 1.3-.8 2-.5l3.4 1.5c.7.3 1.1 1.1.9 1.9l-.5 2.1c-.2.8-.9 1.4-1.8 1.4C10.6 21 3 13.4 3 4.9c0-.9.6-1.6 1.4-1.8l2.1-.5c.8-.2 1.6.2 1.9 1z" /></svg>
@@ -31,3 +34,19 @@ import { show } from '../data/variants';
   </a>
   <a class="btn btn-crimson mbar-book" href={`/${lang}/booking/`}>{t.book}</a>
 </nav>
+
+<script>
+  // One burgundy button on a screen: while the home header's own "Book a table" is in view, the dock's is quiet.
+  const bar = document.querySelector('.mbar');
+  const own = Array.from(document.querySelectorAll('.hero .hv-act .btn-crimson'));
+  if (bar && own.length && 'IntersectionObserver' in window) {
+    const seen = new Set<Element>();
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => (e.isIntersecting ? seen.add(e.target) : seen.delete(e.target)));
+      bar.classList.toggle('calm', seen.size > 0);
+    }, { threshold: 0.5 });
+    own.forEach((el) => io.observe(el));
+  } else {
+    bar?.classList.remove('calm');
+  }
+</script>

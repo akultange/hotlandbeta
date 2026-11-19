@@ -1,14 +1,15 @@
 ---
-// The club's zones (VIP page; styles in styles/zones.css): a look through the keyhole. The rooms are named down
-// the left in large type, outlined until one is chosen; the chosen room shows through a tall keyhole, its light
-// spilling round the keyhole's edge, and its colour washes the whole section behind, blurred. The names and the
-// keyhole stay on screen with their heading (it holds still with them, right above the names, as close as every
-// section's heading is to what it heads), while the page scrolls on: each stretch of scrolling opens the next room
-// (the hall, the box by the stage, the VIP room, karaoke, the hookah lounge), a thin crimson line under the open
-// one showing how far through it you are, and after the last room the page moves on. Tapping or tabbing to a
-// name scrolls to that room. Each room's link names what you book there (`cta`: the table, the box, the room,
-// the lounge) and opens the booking form with its own choice made (`book`). A film plays in the keyhole for
-// the rooms that have one. Without scripts the section is simply the first room open.
+// The club's zones (membership page; styles in styles/zones.css): a look through the doorway. The rooms are named
+// in large type, dim until one is chosen; the chosen room stands bright behind a short upright line of red light,
+// shows through a tall doorway with a round head, and its colour washes the wall behind, blurred. The names and
+// the doorway stay on screen with their heading while the page scrolls on: each stretch of scrolling opens the next
+// room (the hall, the box by the stage, the private room, karaoke, the hookah lounge), a thin line of red light
+// under the open one showing how far through it you are, and after the last room the page moves on. Tapping or
+// tabbing to a name scrolls to that room. Each room has one line of text and a link that opens the booking form
+// with its own choice made (`book`). A film plays in the doorway for the rooms that have one. Without scripts the
+// section is simply the first room open.
+// Where things stand (zones.css): a wide screen has the names on the left and the doorway on the right; a phone
+// held upright has the doorway first, with the names under it one to a line.
 import { photo } from '../data/images';
 import { type Lang, tr } from '../data/i18n';
 import { zones, media } from '../data/content';
@@ -25,8 +26,9 @@ const FOCUS = ['47% 50%', '50% 46%', '100% 50%', '42% 42%', '50% 42%'];
 const ZOOM: [number, string][] = [[1, '50% 50%'], [1, '50% 50%'], [1.45, '100% 100%'], [1, '50% 50%'], [1, '50% 50%']];
 // the opening the room is seen through: a doorway with a round head (viewBox 0 0 100 160). Until 2026-11-19 it was a
 // keyhole; the club asked for a gentlemen's club's language, and the site's own picture is the door. (The names in
-// the code and the styles still say "keyhole".)
-const KEY = 'M9 157L9 48A41 41 0 0 1 91 48L91 157Z';
+// the code and the styles still say "keyhole".) The doorway fills its box edge to edge, so its sides and its foot
+// line up with whatever the layout sets it against (the page's right edge, the foot of the words beside it).
+const KEY = 'M0 160L0 50A50 50 0 0 1 100 50L100 160Z';
 const keyMask = `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 160' preserveAspectRatio='none'><path d='${KEY}'/></svg>`)}")`;
 const ambient = await Promise.all(zones.map((z) => photo(media(z.img), '100vw')));
 ---
@@ -36,15 +38,13 @@ const ambient = await Promise.all(zones.map((z) => photo(media(z.img), '100vw'))
   <div class="zn-amb" aria-hidden="true">
     {zones.map((z, i) => <img class:list={['zn-amb-i', { on: i === 0 }]} data-i={i} src={media(z.img)} {...ambient[i]} alt="" loading="lazy" decoding="async" />)}
   </div>
-  <div class="wrap">
-    <h2 class="t-l zn-h" id="zones-h">{ru ? 'Зоны клуба' : 'Inside the club'}</h2>
-  </div>
   <div class="wrap zn-in">
     <div class="zn-grid">
+      <h2 class="t-l zn-h" id="zones-h">{ru ? 'Зоны клуба' : 'Inside the club'}</h2>
       <ol class="zn-list">
         {zones.map((z, i) => (
           <li class:list={['zn-item', { on: i === 0 }]} data-i={i}>
-            <button class="zn-name" type="button" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`zn-d${i}`}>{tr(z.title, lang)}</button>
+            <button class="zn-name" type="button" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`zn-d${i}`}><span class="zn-nm">{tr(z.title, lang)}</span></button>
             <div class="zn-detail" id={`zn-d${i}`}>
               <div>
                 <p class="zn-text" set:html={keepShort(tr(z.text, lang), lang)} />
@@ -56,7 +56,6 @@ const ambient = await Promise.all(zones.map((z) => photo(media(z.img), '100vw'))
         ))}
       </ol>
       <div class="zk" aria-hidden="true">
-        <div class="zk-glow"></div>
         <div class="zk-win" style={`-webkit-mask-image:${keyMask};mask-image:${keyMask}`}>
           {zones.map((z, i) => (
             <div class:list={['zk-shot', { on: i === 0 }]} data-i={i}>

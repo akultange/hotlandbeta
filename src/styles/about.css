@@ -89,7 +89,7 @@ html.motion [data-rise]:not(.is-in) { opacity: 0; }
 .ab-way {
   display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: 0; align-content: start; justify-items: start;
   width: 100%; padding: 18px 20px 20px; text-align: left;
-  border-radius: 3px; color: var(--fg);
+  border-radius: 2px; color: var(--fg);
   background: rgba(230, 231, 233, .05);
   box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .08), inset 0 1px 0 rgba(255, 255, 255, .05);
   transition: background-color .3s ease, box-shadow .3s ease, scale .2s ease;
@@ -107,14 +107,17 @@ html.motion [data-rise]:not(.is-in) { opacity: 0; }
   .ab-way:hover .ab-way-v { color: var(--fg); }
 }
 
+/* two by two: the two rows of buttons share their heights too (the third track of each, the line under the name, is
+   as tall as the tallest of the four), so one line that takes two never makes its row taller than the other */
 @media (max-width: 899px) {
-  .ab-ways { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ab-ways { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, auto auto 1fr); }
 }
-/* phones: two by two; the names a touch smaller on the narrowest screens, so "Заказать звонок" keeps to one line */
+/* phones: two by two; the names at 16px, the size at which the longest, «Заказать звонок» (8 times its font size
+   wide), keeps to one line in a tile down to a 360px screen */
 @media (max-width: 599px) {
-  .ab-way { padding: 14px 14px 16px; border-radius: 3px; }
+  .ab-way { padding: 14px 14px 16px; }
   .ab-way-ic { margin-bottom: 10px; }
-  .ab-way-k { font-size: min(20px, 4.9vw); }
+  .ab-way-k { font-size: 16px; }
   .ab-way-v { font-size: 13.5px; }
 }
 

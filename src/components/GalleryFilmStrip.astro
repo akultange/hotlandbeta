@@ -1,15 +1,15 @@
 ---
 // The gallery in brief, take two (the home page's «Галерея», data/variants.ts 'gallery': v2; styles in
 // styles/filmstrip.css): the pictures as a strip of real film. A length of half-frame 35 mm film (upright frames,
-// as a half-frame camera makes them) over a faint warm light: the dark base, a little see-through, with its grain
-// and sheen; the sprocket holes cut clean through it along both edges (four to a frame, as on the real thing), so
-// the page shows through them, and the film's thickness shows as a thin edge inside each hole and along the
-// strip's foot; the frame numbers printed in amber along the edge; in each frame a different photograph. The strip
-// is turned a little away from you about its top edge, which stays level, so it starts the heading gap under the
-// heading row along its whole width (only its foot runs lower where it comes nearer); it casts a soft shadow, and
-// fades into the dark at the screen's sides; as the page scrolls it slides sideways past you (with reduced motion
-// it stays, and a finger or a trackpad can move it). Under the mouse a frame comes up brighter and plays its film
-// if it has one (on phones, the frame that settles in view plays). Each frame opens the gallery.
+// as a half-frame camera makes them) lying flat and level on the wall, in the site's cold materials: a base of
+// near-black graphite with its grain and a cold sheen; the sprocket holes cut clean through it along both edges
+// (four to a frame, as on the real thing), so the page shows through them, and the film's thickness shows as a
+// thin steel edge inside each hole and along the strip's foot; the frame numbers and the film's name printed in
+// quiet concrete grey along the edges; in each frame a different photograph, square-cut. It runs off the screen
+// at both sides. As the page scrolls it slides sideways past you, from its first frames to its last, and a finger
+// laid on it moves it too (with reduced motion it stays, a row to scroll by hand). Under the mouse a frame comes
+// up brighter and plays its film if it has one (on phones, the frame that settles in view plays). Each frame opens
+// the gallery.
 import { photo } from '../data/images';
 import { type Lang } from '../data/i18n';
 import { galleryPhotos } from '../data/gallery';
@@ -30,7 +30,6 @@ const FIRST = 7;
 const sets = await Promise.all(frames.map((s) => photo(s.thumb ?? s.src, '(max-width: 899px) 40vw, 16vw')));
 ---
 <div class="gfs" data-gfs>
-  <div class="gfs-light" aria-hidden="true"></div>
   <div class="gfs-run" data-lenis-prevent-horizontal>
     <div class="gfs-body" data-gfs-strip>
     <!-- under the strip: its soft shadow, and its thickness (the same film, cut the same, a hair lower and lighter) -->
@@ -61,28 +60,82 @@ const sets = await Promise.all(frames.map((s) => photo(s.thumb ?? s.src, '(max-w
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
   gsap.registerPlugin(ScrollTrigger);
 
-  // As the strip passes through the screen, it slides sideways: from its first frames just in from the left to
-  // its last ones just in from the right. Not for reduced motion (the strip then simply scrolls sideways by hand).
+  // With motion (.is-live): as the strip passes through the screen it slides sideways, from its first frames just
+  // in from the left to its last ones just in from the right, at about the page's own pace (a phone's strip is
+  // eight frames long so that it gets there: filmstrip.css). A finger laid on it moves it too: a sideways drag adds
+  // to where the scroll has brought it, between its two ends, and it glides on a little when let go; an
+  // up-and-down drag stays the page's own scroll (touch-action: pan-y; the browser then cancels ours).
+  // Without motion nothing here runs: the strip is a row to scroll by hand (filmstrip.css).
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.querySelectorAll<HTMLElement>('[data-gfs]').forEach((box) => {
+    const run = box.querySelector<HTMLElement>('.gfs-run');
     const strip = box.querySelector<HTMLElement>('[data-gfs-strip]');
-    if (!strip) return;
-    if (still || !document.documentElement.classList.contains('motion')) {
-      box.classList.add('by-hand');
-      return;
-    }
-    // On a phone the whole strip went by in one short pass of the narrow, tall screen, about twice as fast as the
-    // page (2026-11-13, the client: too fast). There it slides no faster than the page scrolls (0.85 of it): the
-    // first frames pass slowly, and the rest wait in the gallery.
-    const phone = matchMedia('(max-width: 699px)');
-    const travel = () => {
-      const all = Math.max(0, strip.scrollWidth - box.clientWidth * 0.8);
-      return phone.matches ? Math.min(all, (innerHeight + box.offsetHeight) * 0.85 - box.clientWidth * 0.06) : all;
+    if (!run || !strip) return;
+    if (still || !document.documentElement.classList.contains('motion')) return;
+    box.classList.add('is-live');
+
+    // where the strip stands: `at`, where the page's scroll has brought it, plus `off`, what a finger has added
+    const st = { at: 0, off: 0 };
+    let first = 0, last = 0; // its two ends: the first frames just in from the left, the last ones just in from the right
+    const measure = () => {
+      first = box.clientWidth * 0.06;
+      last = Math.min(first, box.clientWidth * 0.8 - strip.scrollWidth);
     };
-    gsap.fromTo(strip, { x: () => box.clientWidth * 0.06 }, {
-      x: () => -travel(),
+    const draw = () => {
+      const x = Math.min(first, Math.max(last, st.at + st.off));
+      // (what would run past an end is let go, so the strip answers at once when the scroll or the finger turns back)
+      st.off = x - st.at;
+      gsap.set(strip, { x });
+    };
+    measure();
+    st.at = first;
+    draw();
+    gsap.fromTo(st, { at: () => { measure(); return first; } }, {
+      at: () => { measure(); return last; },
       ease: 'none',
-      scrollTrigger: { trigger: box, start: 'top bottom', end: 'bottom top', scrub: 0.6, invalidateOnRefresh: true },
+      onUpdate: draw,
+      scrollTrigger: { trigger: box, start: 'top bottom', end: 'bottom top', scrub: 0.6, invalidateOnRefresh: true, onRefresh: draw },
     });
+
+    // the finger (and a pen; a mouse has the scroll, and the frames are links to click)
+    let held: { id: number; x: number; moved: boolean } | null = null;
+    let glide: gsap.core.Tween | null = null;
+    let trail: { t: number; x: number }[] = [];
+    let dragEnded = 0;
+    run.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' || !e.isPrimary) return;
+      glide?.kill();
+      held = { id: e.pointerId, x: e.clientX, moved: false };
+      trail = [{ t: e.timeStamp, x: e.clientX }];
+    });
+    run.addEventListener('pointermove', (e) => {
+      if (!held || e.pointerId !== held.id) return;
+      const dx = e.clientX - held.x;
+      if (!held.moved && Math.abs(dx) < 6) return; // (a tap wobbles a little: not a drag yet)
+      held.moved = true;
+      held.x = e.clientX;
+      st.off += dx;
+      draw();
+      trail.push({ t: e.timeStamp, x: e.clientX });
+      if (trail.length > 6) trail.shift();
+    });
+    const letGo = (e: PointerEvent) => {
+      if (!held || e.pointerId !== held.id) return;
+      const was = held;
+      held = null;
+      if (!was.moved) return;
+      dragEnded = e.timeStamp;
+      if (e.type === 'pointercancel' || trail.length < 2) return;
+      // it glides on by its last speed, slowing to a stop (nothing springs back)
+      const a = trail[0], b = trail[trail.length - 1];
+      const v = e.timeStamp - b.t > 90 ? 0 : (b.x - a.x) / Math.max(16, b.t - a.t); // px a millisecond
+      if (Math.abs(v) > 0.08) glide = gsap.to(st, { off: st.off + v * 260, duration: 0.8, ease: 'power3.out', onUpdate: draw });
+    };
+    run.addEventListener('pointerup', letGo);
+    run.addEventListener('pointercancel', letGo);
+    // a drag is not a tap: the frame under the finger does not open the gallery
+    run.addEventListener('click', (e) => {
+      if (e.timeStamp - dragEnded < 400) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
   });
 </script>

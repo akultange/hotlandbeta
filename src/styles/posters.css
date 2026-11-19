@@ -2,7 +2,8 @@
    Event posters (the Афиша). Loaded after global.css (Base.astro); the card is PosterCard.astro.
    Each night is a printed poster, framed and resting on the page: tall (9:16), rounded corners, a quiet
    light edge, the photograph edge to edge and, at the bottom left, the date in white: the day in heavy
-   condensed figures with the month beside it, reading upwards. With a mouse it leans toward the pointer (Luka's tilt).
+   condensed figures with the month beside it, reading upwards. (It used to lean toward the pointer and catch a
+   glare: removed with the other shine, 2026-11-20; under a mouse the picture comes a little closer, no more.)
    Under the poster: the weekday and doors time in a pill with the entry price, the night's name in bold and
    one short line. Three in a row (the weekend), one swipe row on phones. The whole card is one link; hover plays the night's film.
    ===================================================================== */
@@ -27,12 +28,15 @@
   .posters, .posters.three {
     grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: 78vw; gap: 12px;
     /* room above and below for the focus ring, which the scrolling row would otherwise cut */
-    margin: -8px 0; padding: 8px var(--pad); scroll-padding-inline: var(--pad);
+    margin: -8px 0; padding: 8px calc(var(--pad) + 60px) 8px var(--pad); scroll-padding-inline: var(--pad);
     overflow: auto hidden; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none;
+    /* the next poster and its words fade into the black at the screen's edge (never sliced mid-word); the row's
+       end padding lets the last poster come clear of the fade */
+    -webkit-mask-image: var(--peek-fade); mask-image: var(--peek-fade);
   }
   .posters::-webkit-scrollbar { display: none; }
   .poster { scroll-snap-align: start; }
-  .posters.in-wrap { margin: -8px calc(-1 * var(--pad)); padding: 8px var(--pad); }
+  .posters.in-wrap { margin: -8px calc(-1 * var(--pad)); padding: 8px calc(var(--pad) + 60px) 8px var(--pad); }
   /* the home page's weekend: the row holds still on the screen (above the dock) while the page scrolls on,
      sliding from one poster to the next and resting on each; PosterCard.astro switches it on and makes .prow as
      tall as the screen plus the slide. The posters are sized so one, with its lines, fits. The row sits in the
@@ -58,18 +62,8 @@
 .poster-link { display: grid; align-content: start; color: var(--fg); -webkit-tap-highlight-color: transparent; }
 .poster-frame {
   position: relative; display: block; aspect-ratio: 9 / 16; overflow: hidden; isolation: isolate;
-  container-type: inline-size; border-radius: 3px; background: #0b0b0c;
-  /* held up to the light: with a mouse it leans toward the pointer (PosterCard.astro sets --rx/--ry) */
-  transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .9s var(--ease-out);
+  container-type: inline-size; border-radius: 2px; background: #0b0b0c;
 }
-.poster-frame.is-tilting { transition: transform .15s linear; }
-.poster-glare {
-  position: absolute; inset: 0; z-index: 2; border-radius: inherit; pointer-events: none; opacity: 0; mix-blend-mode: soft-light;
-  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 30%), rgba(255, 255, 255, .55), rgba(255, 255, 255, 0) 55%);
-  transition: opacity .5s ease;
-}
-.poster-frame.is-tilting .poster-glare { opacity: 1; }
-@media (prefers-reduced-motion: reduce) { .poster-frame { transform: none; transition: none; } }
 /* the photograph and its film, edge to edge */
 .poster-shot { position: absolute; inset: 0; z-index: 0; background: #0b0b0c; }
 /* a poster whose shot is framed wider than the rest comes closer and lower (content.ts, `zoom` and `drop`), photo and
@@ -114,11 +108,11 @@
 .poster-price { font: 600 16px/1 var(--sans); color: var(--fg); white-space: nowrap; font-variant-numeric: lining-nums; }
 .poster-price span { font-weight: 400; color: var(--fg-2); }
 .poster-title {
-  margin-top: 14px; font: 450 clamp(23px, 1.97vw, 28px)/1.05 var(--display); letter-spacing: -.01em;
+  margin-top: 14px; font: 450 var(--sub)/1.05 var(--display); letter-spacing: -.01em;
   overflow-wrap: break-word; transition: color .3s ease;
 }
 .poster-line {
-  margin-top: 8px; max-width: 40ch; font: 400 15px/1.5 var(--sans); color: var(--fg-2);
+  margin-top: 8px; max-width: 40ch; font: 400 16px/1.5 var(--sans); color: var(--fg-2);
   display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
 }
 /* A narrow poster (four across on a small laptop, a small phone) has no room for the price beside the pill:
@@ -156,22 +150,21 @@ html.motion .poster.is-in .poster-date { animation: poster-date-in 1s var(--ease
 .poster-here { font: 600 14px/1 var(--sans); color: var(--red-text); white-space: nowrap; }
 .poster.is-here .poster-frame::after { box-shadow: inset 0 0 0 1px rgba(255, 43, 61, .75), inset 0 1px 0 rgba(255, 255, 255, .07); }
 
-/* ---------- With a mouse: over a poster the pointer is a small metal disc reading "Бронь" (PosterCard.astro) ---------- */
-/* the real pointer hides only while the disc stands in for it (PosterCard.astro sets html.poster-disc) */
-@media (hover: hover) and (pointer: fine) { html.poster-disc .poster-frame { cursor: none; } }
-/* the holder moves with the pointer (GSAP); the disc inside grows in and out (CSS), so neither undoes the other */
+/* ---------- With a mouse: over a poster a small plate beside the pointer says what a click does, "Бронь"
+   (PosterCard.astro). A plate of the header's dark glass, in the controls' wide capitals; the pointer itself stays
+   as it is. (It was a round white disc that took the pointer's place.) ---------- */
+/* the holder moves with the pointer (GSAP); the plate inside comes and goes (CSS), so neither undoes the other */
 .poster-cursor { position: fixed; left: 0; top: 0; z-index: 60; width: 0; height: 0; pointer-events: none; }
 .poster-cursor > span {
-  position: absolute; left: -33px; top: -33px; width: 66px; height: 66px;
-  display: grid; place-items: center; border-radius: 50%;
-  font: 600 13px/1 var(--sans); color: #141416; white-space: nowrap;
-  background: radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, .95) 0%, rgba(255, 255, 255, 0) 60%), var(--metal-read);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95), inset 0 -1px 1px rgba(0, 0, 0, .22), 0 0 0 1px rgba(255, 255, 255, .14), 0 14px 30px -12px rgba(0, 0, 0, .95);
-  opacity: 0; scale: .3; transition: opacity .25s ease, scale .5s var(--ease-out);
+  position: absolute; left: 16px; top: 18px; height: 30px; padding: 0 12px;
+  display: grid; place-items: center; border-radius: 2px;
+  font: 500 11px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--fg); white-space: nowrap;
+  background: rgba(12, 12, 14, .82); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .16), 0 10px 24px -12px rgba(0, 0, 0, .9);
+  opacity: 0; translate: 0 4px; transition: opacity .2s ease, translate .3s var(--ease-out);
 }
-.poster-cursor.on > span { opacity: 1; scale: 1; }
-.poster-cursor.on.down > span { scale: .86; }
-@media (prefers-reduced-motion: reduce) { .poster-cursor > span { transition: opacity .2s ease; scale: 1; } }
+.poster-cursor.on > span { opacity: 1; translate: 0 0; }
+@media (prefers-reduced-motion: reduce) { .poster-cursor > span { transition: opacity .2s ease; translate: none; } }
 
 /* ---------- Nights that have been (the events page) ----------
    The same posters, a size smaller (the row keeps the width of four, so three take three quarters of it), in

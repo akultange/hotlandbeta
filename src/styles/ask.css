@@ -1,64 +1,110 @@
 /* =====================================================================
-   "Request a call" and "Ask a question" (Ask.astro): one dialog for the whole site, since the club's number is
-   never shown. A dark glass card in the middle of the screen (a sheet rising from the bottom on phones), a switch
-   between the two at the top, then the fields of the booking form, one under the other.
+   "Request a call" and "Ask a question" (Ask.astro): one window for the whole site, since the club's number is
+   never shown. A card in the middle of the screen (a sheet rising from the bottom on phones). It speaks the booking
+   window's language (apply.css: the plates, steel for what is chosen, the fields, the consent, the message at the
+   foot, the sign that it is sent). At the top the two ways in, as two plates, and the cross; then the fields, which
+   scroll if the screen is short; at the foot the button, always in sight (above a phone's keyboard too).
    ===================================================================== */
 
+html.ask-lock { overflow: hidden; }
 .ask {
   width: min(520px, calc(100vw - 24px)); max-width: none; max-height: none; padding: 0; margin: auto;
-  border: 0; border-radius: 3px; background: transparent; color: var(--fg); overflow: visible;
+  border: 0; border-radius: 2px; background: transparent; color: var(--fg); overflow: visible;
 }
 .ask::backdrop { background: rgba(0, 0, 0, .7); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
 .ask-box {
-  position: relative; display: grid; gap: 22px; max-height: calc(100svh - 32px); overflow: auto; overscroll-behavior: contain;
-  padding: 18px clamp(20px, 3vw, 32px) clamp(24px, 3vw, 32px); border-radius: inherit;
+  --ask-pad: clamp(20px, 3vw, 32px);
+  position: relative; display: flex; flex-direction: column; gap: 22px; max-height: calc(100vh - 32px); padding: 18px var(--ask-pad) var(--ask-pad); border-radius: inherit;
   background: radial-gradient(120% 70% at 50% 0%, #1c1315 0%, #111112 62%);
-  box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .1), inset 0 1px 0 rgba(255, 255, 255, .06), 0 40px 90px -24px rgba(0, 0, 0, .95), 0 0 70px -30px rgba(168, 24, 46, .55);
+  box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .1), inset 0 1px 0 rgba(255, 255, 255, .06), 0 40px 90px -24px rgba(0, 0, 0, .95);
 }
-.ask[open] .ask-box { animation: ask-in .5s var(--ease-out); }
-@keyframes ask-in { from { opacity: 0; translate: 0 22px; scale: .98; } }
+/* (the screen's height as it is now, so the card ends above a phone's keyboard) */
+@supports (height: 100dvh) { .ask-box { max-height: calc(100dvh - 32px); } }
+/* The card and the dark behind it come together and go together: the card rises a little as it arrives and sinks
+   as it leaves (Ask.astro adds .ask-out, then closes the window when the dark has gone). */
+.ask[open] .ask-box { animation: ask-in .3s var(--ease-out); }
+.ask[open]::backdrop { animation: ask-veil .3s ease-out; }
+.ask.ask-out .ask-box { animation: ask-out .2s ease-in forwards; }
+.ask.ask-out::backdrop { animation: ask-unveil .2s ease-in forwards; }
+@keyframes ask-in { from { opacity: 0; translate: 0 14px; } }
+@keyframes ask-out { to { opacity: 0; translate: 0 8px; } }
+@keyframes ask-veil { from { opacity: 0; } }
+@keyframes ask-unveil { to { opacity: 0; } }
 
+/* the top: the two ways in and the cross on one row; where a narrow phone has no room for both, the cross takes a
+   row of its own above */
+.ask-top { display: flex; flex-wrap: wrap-reverse; align-items: center; gap: 8px; }
+.ask-switch { display: flex; flex: 0 1 auto; gap: 8px; min-width: 0; }
+.ask-switch button {
+  flex: 1 1 auto; height: 48px; padding: 0 20px; border-radius: 2px; font: 500 16px/1 var(--sans); color: var(--fg-2); white-space: nowrap;
+  background: var(--plate); box-shadow: var(--plate-edge); transition: background-color .25s ease, color .25s ease;
+}
+@media (hover: hover) { .ask-switch button[aria-pressed="false"]:hover { color: var(--fg); background: var(--plate-lit); } }
+/* the one you are in: the steel of every chosen state on the site */
+.ask-switch button[aria-pressed="true"] { color: var(--ink); background: var(--steel-pill), #d3d5d9; box-shadow: var(--steel-pill-edge); }
 .ask-x {
-  position: absolute; top: 18px; right: 18px; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
-  color: var(--fg-2); background: rgba(230, 231, 233, .06); transition: background-color .2s ease, color .2s ease;
+  display: grid; place-items: center; flex: none; width: 48px; height: 48px; margin-left: auto; border-radius: 2px; color: var(--fg-2);
+  background: var(--plate); box-shadow: var(--plate-edge); transition: background-color .2s ease, color .2s ease;
 }
-.ask-x:hover { color: var(--fg); background: rgba(230, 231, 233, .12); }
-.ask-x svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.ask-x:hover { color: var(--fg); background: var(--plate-lit); }
+.ask-x svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; }
 
-/* the two ways in, as one switch */
-.ask-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-right: 52px; padding: 4px; border-radius: 2px; background: rgba(230, 231, 233, .06); box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .06); }
-.ask-switch button { height: 40px; padding: 0 10px; border-radius: 2px; font: 500 14px/1 var(--sans); color: var(--fg-2); white-space: nowrap; transition: background-color .3s ease, color .3s ease, box-shadow .3s ease; }
-.ask-switch button:hover { color: var(--fg); }
-.ask-switch button[aria-pressed="true"] { color: var(--fg); background: linear-gradient(180deg, #7d1325, #560c18); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), 0 6px 18px -8px rgba(168, 24, 46, .9); }
-.ask-switch button:focus-visible, .ask-x:focus-visible { outline: 1.5px solid var(--light); outline-offset: 2px; }
-
+/* the middle: the heading, the fields, the consent (it scrolls when the card can't be as tall as it needs; the
+   room around is for a focus ring at the edge, and under the consent for its link's unseen finger room, so that
+   room never makes a card that fits scroll) */
+.ask-body {
+  flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+  margin: -12px calc(-1 * var(--ask-pad)) -22px; padding: 12px var(--ask-pad) 22px;
+  scrollbar-width: thin; scrollbar-color: rgba(230, 231, 233, .2) transparent;
+}
 .ask-form { display: grid; gap: 22px; }
 .ask-head { display: grid; gap: 8px; }
-.ask-h { margin: 0; font: 500 clamp(25px, 2.46vw, 31px)/1.05 var(--display); letter-spacing: -.01em; }
+.ask-h { margin: 0; font: 500 clamp(25px, 2.46vw, 31px)/1.05 var(--display); letter-spacing: -.01em; text-wrap: balance; }
+.ask-h:focus { outline: none; }
 .ask-lead { margin: 0; font: 400 15px/1.55 var(--sans); color: var(--fg-2); text-wrap: pretty; }
-.ask .fields { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px 18px; }
+.ask-fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px 18px; }
 .ask .field textarea { min-height: 84px; }
-.ask .consent { font-size: 13px; }
+.ask .apl-via { margin-top: 0; }
+
+/* the foot: what is wrong, in a row of its own, then the button */
+.ask-foot { display: grid; gap: 12px; padding-top: 16px; border-top: 1px solid var(--rule); }
 .ask-send { width: 100%; justify-content: center; }
 
-/* sent */
-.ask-done { display: grid; justify-items: center; gap: 12px; padding: 22px 0 4px; text-align: center; }
-.ask-done .ask-lead { max-width: 34ch; }
-.ask-done .btn { margin-top: 10px; }
-.ask-done-mark { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: radial-gradient(circle at 50% 35%, #86182a, #4c0a15); box-shadow: 0 0 40px -6px rgba(168, 24, 46, .8), inset 0 1px 0 rgba(255, 255, 255, .25); }
-.ask-done-mark svg { width: 28px; height: 28px; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-.ask-fail { padding: 22px; }
+/* sent, or not sent: the words and the ways on, in place of the form. The two ways in and the foot go, and the
+   cross keeps its corner without a row of its own: the sign that it is sent (or the heading) stands level with it. */
+.ask-done, .ask-fail { display: grid; gap: 12px; padding-bottom: 4px; }
+.ask-box:not([data-state="form"]) .ask-top { position: absolute; z-index: 1; top: 18px; right: var(--ask-pad); }
+.ask-fail .ask-h { min-height: 48px; padding-right: 60px; align-content: center; }
+/* (on the card the three ways on are one plate across and two side by side: in a row the third fell to a line of its own) */
+@media (min-width: 600px) {
+  .ask-fail .btns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; width: 100%; }
+  .ask-fail .btns > :first-child { grid-column: 1 / -1; }
+  .ask-fail .btns .btn { padding-inline: 14px; }
+}
+:is(.ask-done, .ask-fail) .ask-lead { max-width: 40ch; }
+:is(.ask-done, .ask-fail) .btns { margin-top: 10px; }
 
 /* phones: a sheet from the bottom, under the thumb */
 @media (max-width: 599px) {
-  .ask { width: 100%; margin: auto 0 0; border-radius: 3px 3px 0 0; }
-  .ask-box { max-height: 92svh; padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
-  .ask[open] .ask-box { animation-name: ask-up; }
-  .ask .fields { grid-template-columns: minmax(0, 1fr); gap: 16px; }
-  .ask-switch button { font-size: 13.5px; }
+  .ask { width: 100%; margin: auto 0 0; border-radius: 2px 2px 0 0; }
+  .ask-box { max-height: calc(100vh - 12px); padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
+  @supports (height: 100dvh) { .ask-box { max-height: calc(100dvh - 12px); } }
+  .ask[open] .ask-box { animation-name: ask-up; animation-duration: .34s; }
+  .ask.ask-out .ask-box { animation-name: ask-down; }
+  .ask-switch { flex: 1 1 auto; }
+  .ask-switch button { height: 44px; padding: 0 14px; font-size: 14px; }
+  .ask-x { width: 44px; height: 44px; }
+  .ask-fail .ask-h { min-height: 44px; padding-right: 56px; }
+  .ask-fields { grid-template-columns: minmax(0, 1fr); gap: 16px; }
 }
+@media (max-width: 374px) { .ask-switch button { padding: 0 10px; font-size: 13px; } }
 @keyframes ask-up { from { translate: 0 100%; } }
-@media (prefers-reduced-motion: reduce) { .ask[open] .ask-box { animation: none; } }
+@keyframes ask-down { to { translate: 0 100%; } }
+/* less motion: the card and the dark still come and go in a short fade, but nothing moves */
+@media (prefers-reduced-motion: reduce) {
+  .ask[open] .ask-box, .ask[open]::backdrop { animation: ask-veil .15s ease-out; }
+  .ask.ask-out .ask-box, .ask.ask-out::backdrop { animation: ask-unveil .15s ease-in forwards; }
+}
 
 /* the buttons that open it, where the number used to be: they read as the links around them */
 .ask-link { font: inherit; color: inherit; text-align: left; cursor: pointer; }

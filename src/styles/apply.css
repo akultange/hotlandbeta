@@ -1,28 +1,44 @@
 /* =====================================================================
-   The job application (Apply.astro): a full-screen page of its own over the site. Desktop: a backstage picture
-   on the left (shown whole, no fade), the three steps on the right: the step's number and the cross at the top,
-   a crimson line filling as you go, the step in the middle, its buttons at the foot. Phones: the steps fill the
-   screen, the buttons pinned at its foot. The role tiles, fields, pills and consent are the booking form's.
+   The windows that open over the site. This file is the job application's (Apply.astro) and the booking's
+   (Book.astro; book.css has the little the booking adds): a full-screen page of its own. Desktop: a picture on the
+   left (shown whole, no fade), the three steps on the right: the step's number and the cross at the top, a line of
+   red light filling as you go, the step under it, its buttons at the foot. Phones: the steps fill the screen, the
+   buttons at its foot (above the keyboard, when it is up).
+   The controls here are the windows' one language, the call-back window's too (ask.css): every control a square
+   2px plate (the cross, a kind, a pill, the minus and the plus), steel for what is chosen, burgundy only for the
+   one main button; the consent's box; how a field shows it is wrong; the line of light that says "sent".
    ===================================================================== */
 
-html.apl-lock { overflow: hidden; }
+/* While a window is open the page behind is held still. (Its ground then is the window's own black: where a
+   computer keeps a strip at the right for the page's scrollbar, the strip no longer shows a lighter black.) */
+html.apl-lock { overflow: hidden; background: #050405; }
+/* a control at rest: a plate a shade lighter than the wall with a hairline edge; a shade lighter again under the
+   pointer. What is chosen turns to steel (--steel-pill, nav.css). */
+.apl, .ask { --plate: rgba(230, 231, 233, .05); --plate-lit: rgba(230, 231, 233, .1); --plate-edge: inset 0 0 0 1px rgba(230, 231, 233, .12); }
+
 .apl {
   position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0;
   border: 0; background: #050405; color: var(--fg); overflow: hidden;
 }
-.apl::backdrop { background: #000; }
-.apl[open] { animation: apl-in .5s var(--ease-out); }
-.apl.apl-out { animation: apl-out .26s ease-in forwards; }
-@keyframes apl-in { from { opacity: 0; scale: .985; } }
-@keyframes apl-out { to { opacity: 0; scale: .99; } }
+/* (the screen's height as it is now: when a phone's keyboard comes up, the window ends above it, buttons and all) */
+@supports (height: 100dvh) { .apl { height: 100dvh; } }
+/* The window covers the screen, so it is its own ground and nothing stands behind it: it comes over the page in
+   one fade and leaves it in one (a black backdrop cut the page to black at once, and let it pop back at the end).
+   The step inside rises as it comes (apl-step, below). */
+.apl::backdrop { background: transparent; }
+.apl[open] { animation: apl-in .28s var(--ease-out); }
+.apl.apl-out { animation: apl-out .2s ease-in forwards; }
+@keyframes apl-in { from { opacity: 0; } }
+@keyframes apl-out { to { opacity: 0; } }
 
 .apl-in { display: grid; height: 100%; grid-template-columns: minmax(0, 1fr); }
 .apl-pic { display: none; margin: 0; position: relative; overflow: hidden; background: #0b0b0c; }
 .apl-pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
 
-/* the steps' page: the top bar, the line, the step, the buttons */
+/* the steps' page: the top bar, the line, the step, the buttons (one column that never grows past the screen,
+   however long a button's words are) */
 .apl-box {
-  position: relative; display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto; height: 100%; min-height: 0;
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto minmax(0, 1fr) auto; height: 100%; min-height: 0;
   padding: clamp(18px, 2.6vw, 40px) clamp(20px, 5vw, 88px) clamp(18px, 2.6vw, 36px);
   background: radial-gradient(90% 60% at 70% 0%, rgba(84, 11, 24, .22), rgba(84, 11, 24, 0) 70%), #050405;
 }
@@ -33,18 +49,27 @@ html.apl-lock { overflow: hidden; }
   background-image: var(--metal-read); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
 }
 .apl-x {
-  display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; color: var(--fg-2);
-  background: rgba(230, 231, 233, .06); box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .1); transition: background-color .2s ease, color .2s ease;
+  display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: 2px; color: var(--fg-2);
+  background: var(--plate); box-shadow: var(--plate-edge); transition: background-color .2s ease, color .2s ease;
 }
-.apl-x:hover { color: var(--fg); background: rgba(230, 231, 233, .12); }
-.apl-x svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
-/* the line: a third of it for each step, crimson */
-.apl-line { position: relative; display: block; height: 2px; margin-top: clamp(14px, 1.8vw, 22px); border-radius: 2px; background: rgba(230, 231, 233, .12); overflow: hidden; }
-.apl-line i { position: absolute; inset: 0; border-radius: inherit; background: var(--red); transform-origin: 0 50%; transform: scaleX(var(--apl-p, .3333)); transition: transform .6s var(--ease-out); }
+.apl-x:hover { color: var(--fg); background: var(--plate-lit); }
+.apl-x svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+/* the line: a third of it for each step, in red light */
+.apl-line { position: relative; display: block; height: 2px; margin-top: clamp(14px, 1.8vw, 22px); background: rgba(230, 231, 233, .12); overflow: hidden; }
+.apl-line i { position: absolute; inset: 0; background: var(--light); transform-origin: 0 50%; transform: scaleX(var(--apl-p, .3333)); transition: transform .6s var(--ease-out); }
+/* at the end the count and the line have done their work and go: the one light left is the sign that it is sent */
+.apl-line { transition: opacity .3s ease; }
 .apl-ending .apl-count { visibility: hidden; }
+.apl-ending .apl-line { opacity: 0; }
 
-/* the step, in the middle of the space, at a comfortable reading width */
-.apl-steps { display: grid; align-items: center; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: clamp(24px, 3vw, 44px) 0; }
+/* The step, at a comfortable reading width, from the top of its space: its title stands at one height from step to
+   step (set in the middle, it jumped with each step's length). The space scrolls if a step is ever taller than the
+   screen; the room either side is for a focus ring, or the sent sign's glow, at the step's own edge. */
+.apl-steps {
+  display: grid; align-items: start; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+  margin-inline: -16px; padding: clamp(28px, calc((100vh - 700px) * .45), 108px) 16px 24px;
+  scrollbar-width: thin; scrollbar-color: rgba(230, 231, 233, .2) transparent;
+}
 .apl-step { display: grid; gap: clamp(16px, 1.8vw, 24px); width: 100%; max-width: 720px; min-width: 0; margin: 0; padding: 0; border: 0; }
 .apl-step:not([hidden]) { animation: apl-step .5s var(--ease-out) both; }
 @keyframes apl-step { from { opacity: 0; translate: 0 12px; } }
@@ -55,28 +80,42 @@ html.apl-lock { overflow: hidden; }
 .apl-h:focus { outline: none; }
 .apl-lead { margin: 0; max-width: 46ch; font: 400 17px/1.55 var(--sans); color: var(--fg-2); text-wrap: pretty; }
 
-/* 1: the roles, as the booking form's tiles */
-.apl-roles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 6px; }
-.apl-roles span { min-height: 148px; font-size: 16px; }
+/* 1: the kinds (the roles), each a plate with its name in the title face, three to a row; a tap chooses one and
+   moves on. (They were sized for the icons they once carried; now a plate is as tall as its name needs.) */
+.apl-roles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 6px; }
+.apl-roles label { position: relative; display: grid; -webkit-tap-highlight-color: transparent; }
+.apl-roles input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.apl-roles span {
+  display: flex; align-items: center; min-height: 76px; padding: 12px 20px; border-radius: 2px;
+  font: 500 18px/1.15 var(--display); color: var(--fg); background: var(--plate); box-shadow: var(--plate-edge);
+  transition: background-color .25s ease, color .25s ease, scale .2s ease;
+}
+@media (hover: hover) { .apl-roles label:hover input:not(:checked) + span { background: var(--plate-lit); } }
+.apl-roles label:active span { scale: .985; }
+.apl-roles input:checked + span { color: var(--ink); background: var(--steel-pill), #d3d5d9; box-shadow: var(--steel-pill-edge); }
+.apl-roles input:focus-visible + span { outline: 1.5px solid var(--light); outline-offset: 3px; }
 
 /* 2: the chosen role, the two fields, where to reply */
 .apl-chosen { margin: 0; font: 400 15px/1.4 var(--sans); color: var(--muted); }
 .apl-chosen b { font-weight: 600; color: var(--fg); }
-.apl-change { margin-left: 6px; padding: 0; font: inherit; color: var(--fg-2); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(230, 231, 233, .3); cursor: pointer; }
+/* («изменить» is a word in a line, but a finger's height to tap: the extra is unseen, takes no room, and leaves the
+   focus ring round the word itself; the same for the two links in a sentence, below) */
+.apl-change { position: relative; margin-left: 6px; padding: 0; font: inherit; color: var(--fg-2); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(230, 231, 233, .3); cursor: pointer; }
 .apl-change:hover { color: var(--fg); }
+:is(.apl-change, .apl-hint a)::before { content: ''; position: absolute; inset: -13px -6px; }
 .apl-fields { margin-top: 8px; gap: 28px var(--gap); }
 .apl-fields .field input { font-size: 20px; }
 .apl-via { display: grid; gap: 12px; margin-top: 6px; }
 .apl-via-l { margin: 0; font: 400 14px/1.4 var(--sans); color: var(--muted); }
 .apl-pills { display: flex; flex-wrap: wrap; gap: 8px; }
-.apl-pill { position: relative; }
-.apl-pill input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.apl-pill { position: relative; -webkit-tap-highlight-color: transparent; }
+.apl-pill input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
 .apl-pill span {
-  display: inline-flex; align-items: center; height: 48px; padding: 0 22px; border-radius: 2px;
-  font: 500 16px/1 var(--sans); color: var(--fg-2); background: rgba(230, 231, 233, .05); box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .12);
+  display: flex; align-items: center; justify-content: center; height: 48px; padding: 0 22px; border-radius: 2px;
+  font: 500 16px/1 var(--sans); color: var(--fg-2); white-space: nowrap; background: var(--plate); box-shadow: var(--plate-edge);
   transition: color .25s ease, background-color .25s ease;
 }
-.apl-pill:hover input:not(:checked) + span { color: var(--fg); background: rgba(230, 231, 233, .09); }
+@media (hover: hover) { .apl-pill:hover input:not(:checked) + span { color: var(--fg); background: var(--plate-lit); } }
 /* the chosen one: the steel of every chosen state on the site */
 .apl-pill input:checked + span {
   color: var(--ink); background: var(--steel-pill), #d3d5d9; box-shadow: var(--steel-pill-edge);
@@ -86,41 +125,110 @@ html.apl-lock { overflow: hidden; }
 /* 3: a few words, the pointer to Telegram, the consent */
 .apl-step .field textarea { min-height: 140px; font-size: 18px; }
 .apl-hint { margin: 0; font: 400 15px/1.5 var(--sans); color: var(--muted); }
-.apl-hint a { color: var(--fg-2); text-decoration: underline; text-underline-offset: 3px; }
+.apl-hint a { position: relative; color: var(--fg-2); text-decoration: underline; text-underline-offset: 3px; }
 .apl-hint a:hover { color: var(--fg); }
 
-/* the end: sent (a crimson tick), or not sent (WhatsApp) */
-.apl-end { justify-items: start; }
-.apl-mark { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(180deg, #7d1325, #560c18); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), 0 10px 30px -10px rgba(168, 24, 46, .9); }
-.apl-mark svg { width: 28px; height: 28px; fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+/* ---------- The fields, in every window ----------
+   What is typed stands in bone white, so what is only suggested is the wall's grey; the caret is the light. A box
+   for a few words keeps its size (no corner to drag) and grows with what is written where the browser can. */
+:is(.apl, .ask) .field :is(input, textarea) { caret-color: var(--light); }
+:is(.apl, .ask) .field ::placeholder { color: var(--muted); opacity: 1; }
+:is(.apl, .ask) .field textarea { resize: none; field-sizing: content; max-height: 40vh; }
+/* a field that is wrong says so itself: its own line turns to light and its name to the colour of the message at
+   the window's foot (the scripts add .is-bad and aria-invalid, and take them away once it is put right) */
+:is(.apl, .ask) .field.is-bad label { color: var(--error); }
+:is(.apl, .ask) .field.is-bad :is(input, textarea) { border-bottom-color: var(--light); }
 
-/* the buttons: back on the left, on (or send) on the right, the message between */
-.apl-foot { display: flex; align-items: center; gap: 16px; padding-top: 16px; border-top: 1px solid var(--rule); }
+/* ---------- The consent, in every window ----------
+   A square box and the sentence. A tap anywhere on the sentence ticks the box (only the policy's name is a link,
+   kept whole on one line); ticked, the box is a steel plate with an ink tick. A finger's height all along. */
+:is(.apl, .ask) .consent {
+  align-items: flex-start; gap: 12px; padding-block: 11px; margin-block: -11px;
+  font-size: 14px; line-height: 22px; cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+:is(.apl, .ask) .consent input {
+  appearance: none; -webkit-appearance: none; flex: none; width: 22px; height: 22px; margin: 0; border: 0; border-radius: 2px;
+  background: transparent; box-shadow: inset 0 0 0 1px var(--rule-2); cursor: pointer;
+}
+@media (hover: hover) { :is(.apl, .ask) .consent:hover input:not(:checked) { box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .38); } }
+:is(.apl, .ask) .consent input:checked {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'%3E%3Cpath d='M5.5 11.4l3.7 3.7 7.3-8.2' fill='none' stroke='%230b0b0c' stroke-width='2'/%3E%3C/svg%3E") 50% 50% / 22px 22px no-repeat, var(--steel-pill), #d3d5d9;
+  box-shadow: var(--steel-pill-edge);
+}
+:is(.apl, .ask) .consent.is-bad input { box-shadow: inset 0 0 0 1px var(--light); }
+/* (the link answers to a finger a little above and well below its words: under it there is nothing else to hit,
+   above it is the sentence that ticks the box) */
+:is(.apl, .ask) .consent a { position: relative; white-space: nowrap; }
+:is(.apl, .ask) .consent a::before { content: ''; position: absolute; inset: -5px 0 -22px; }
+
+/* the end: sent (the brand's own sign, a short line of red light, over the words), or not sent (WhatsApp) */
+.apl-end { justify-items: start; }
+.apl-mark {
+  display: block; width: 2px; height: 56px; margin-bottom: 4px;
+  background: linear-gradient(180deg, rgba(255, 43, 61, 0), var(--light) 26%, var(--light) 74%, rgba(255, 43, 61, 0));
+  filter: drop-shadow(0 0 10px rgba(255, 43, 61, .55));
+}
+/* (the light comes on from its middle, as the door's seam opens) */
+:is(.apl-step, .ask-done):not([hidden]) .apl-mark { animation: apl-mark .7s var(--ease-out) .12s both; }
+@keyframes apl-mark { from { opacity: 0; scale: 1 0; } }
+
+/* the foot: what is wrong, said in a row of its own under the rule; then back on the left, on (or send) on the
+   right. The first step has no buttons (a tap on a kind moves on), so it has no foot. */
+.apl-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; padding-top: 16px; border-top: 1px solid var(--rule); }
 .apl-foot .apl-next, .apl-foot .apl-send { margin-left: auto; }
-.apl-err { flex: 1; margin: 0; font: 400 14px/1.4 var(--sans); color: var(--error); text-align: right; }
-.apl-ending .apl-foot { display: none; }
+.apl-err { flex: 1 0 100%; margin: 0; font: 400 14px/1.4 var(--sans); color: var(--error); }
+.apl-box[data-step="1"] .apl-foot, .apl-ending .apl-foot { display: none; }
 
 /* ---------- Desktop: the picture on the left ---------- */
 @media (min-width: 900px) {
   .apl-in { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
   .apl-pic { display: block; }
 }
+/* a low screen (a laptop): the bars draw in and the rows stand closer, so the longest step is whole without a scroll */
+@media (min-width: 600px) and (max-height: 860px) {
+  .apl-box { padding-block: 20px 22px; }
+  .apl-line { margin-top: 16px; }
+  .apl-step { gap: 18px; }
+}
 
 /* ---------- Phones: the steps fill the screen, the buttons at its foot ---------- */
 @media (max-width: 599px) {
   .apl-box { padding: calc(12px + env(safe-area-inset-top)) 20px calc(14px + env(safe-area-inset-bottom)); }
   .apl-x { width: 44px; height: 44px; }
-  .apl-steps { align-items: start; padding: 26px 0 20px; }
-  .apl-roles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .apl-roles span { min-height: 120px; font-size: 15px; }
+  .apl-steps { padding-block: 26px 22px; }
+  /* the kinds one under another, each a row a thumb can't miss (taller on a taller phone), its name on the left */
+  .apl-roles { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .apl-roles span { min-height: clamp(56px, 8svh, 68px); }
   .apl-fields { grid-template-columns: minmax(0, 1fr); gap: 22px; }
-  .apl-pill span { padding: 0 17px; }   /* (the three on one row) */
-  .apl-foot .btn { flex: 1; justify-content: center; }
+  /* the pills share the row's width in equal plates: three ways to reply on one row, the occasions two by two */
+  .apl-pills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .apl-pills:has(> :nth-child(3):last-child) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .apl-pill span { padding: 0 6px; font-size: 15px; }
+  /* not sent: the three ways on, one under another at the row's full width (side by side they wrapped as their
+     words fell); sent: the one button keeps its own width */
+  .apl-end .btns { display: grid; width: 100%; gap: 10px; }
+  .apl-end .btns > :only-child { justify-self: start; }
+  /* the buttons: back keeps its width, on (or send) takes the rest; their sides draw in on a narrow phone, so
+     «Отправляем…» still fits beside «Назад» at 320px */
+  .apl-foot .btn { flex: 1; min-width: 0; padding-inline: clamp(14px, 5.5vw, 26px); }
   .apl-foot:has(.apl-back:not([hidden])) .apl-back { flex: 0 0 auto; }
-  .apl-err { position: absolute; left: 20px; right: 20px; bottom: calc(76px + env(safe-area-inset-bottom)); text-align: left; }
+}
+/* the smallest phones: a little less air, so the five kinds still stand whole on a 320x568 screen, and the three
+   ways to reply keep clear of their plates' edges */
+@media (max-width: 599px) and (max-height: 600px) {
+  .apl-steps { padding-block: 20px 10px; }
+  .apl-step { gap: 14px; }
+  .apl-roles { gap: 6px; }
+}
+@media (max-width: 339px) {
+  .apl-lead { font-size: 16px; line-height: 1.5; }
+  .apl-pill span { font-size: 14px; }
 }
 
+/* less motion: the window still comes and goes in a short fade, but nothing moves */
 @media (prefers-reduced-motion: reduce) {
-  .apl[open], .apl.apl-out, .apl-step:not([hidden]) { animation: none; }
+  .apl[open], .apl.apl-out { animation-duration: .15s; }
+  .apl-step:not([hidden]), :is(.apl-step, .ask-done):not([hidden]) .apl-mark { animation: none; }
   .apl-line i { transition: none; }
+  .apl-roles span { transition: none; }
 }

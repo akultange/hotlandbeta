@@ -1,24 +1,40 @@
 ---
 import Base from '../layouts/Base.astro';
 import Icon3d from '../components/Icon3d.astro';
+// (a missing page offers the ways back in, not a table: without the closing «Ваш стол уже ждёт»)
 ---
-<Base lang="ru" title="404" noindex>
-  <section class="thanks">
+<Base lang="ru" title="404" noindex closing={false}>
+  <section class="thanks thanks-lost">
     <div class="wrap stack center">
       <Icon3d name="keyhole" size={240} class="moment-ic" eager />
       <h1 class="t-xl">Эта дверь <em>закрыта</em></h1>
-      <p class="lead">Такой страницы нет. Остальные открыты. <br />This door is closed. The others are open.</p>
-      {/* the page serves both languages: each button says its words in both, one over the other */}
-      <div class="btns lost-btns" style="justify-content: center">
-        <a class="btn btn-crimson" href="/ru/booking/"><span>Забронировать стол</span><span lang="en">Book a table</span></a>
-        <a class="btn btn-line" href="/ru/program/"><span>Афиша</span><span lang="en">Events</span></a>
-        <a class="btn btn-line" href="/ru/"><span>Главная</span><span lang="en">Home</span></a>
+      {/* the page serves both languages: the line in Russian, and the same in English, more quietly, under it
+          (each sentence keeps to one line, so the line can break only between the two) */}
+      <p class="lead lost-lead">
+        <span><span class="lost-nw">Такой страницы нет.</span> <span class="lost-nw">Остальные открыты.</span></span>
+        <span class="lost-en" lang="en"><span class="lost-nw">This door is closed.</span> <span class="lost-nw">The others are open.</span></span>
+      </p>
+      <div class="btns">
+        <a class="btn btn-crimson" href="/ru/booking/">Забронировать стол</a>
+        <a class="btn btn-line" href="/ru/program/">Афиша</a>
+        <a class="btn btn-line" href="/ru/">Главная</a>
       </div>
     </div>
   </section>
 </Base>
 
-<style>
-  .lost-btns .btn { flex-direction: column; gap: 7px; height: 64px; }
-  .lost-btns .btn span:last-child { font-size: 10.5px; letter-spacing: .16em; opacity: .7; }
+<style is:global>
+  /* A page that isn't there, set as the thank-you page is (pages/[lang]/booking/thanks.astro): the line of light,
+     the two words, one line about it and the ways back in, one under another on the page's middle line. */
+  .thanks-lost .stack { gap: clamp(20px, 2vw, 28px); }
+  .thanks-lost .t-xl { text-wrap: balance; }
+  .lost-lead { display: grid; justify-items: center; gap: 6px; }
+  .lost-nw { white-space: nowrap; }
+  .lost-en { font-size: 15px; line-height: 1.5; color: var(--muted); }
+  /* the three ways back: a phone gets one column of plates of one width, a wider screen one row */
+  .thanks-lost .btns { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; width: min(100%, 320px); margin-top: 8px; }
+  @media (min-width: 600px) {
+    .thanks-lost .btns { display: flex; flex-wrap: nowrap; justify-content: center; gap: 14px; width: auto; }
+  }
+  @media (max-width: 599px) { .thanks-lost { padding-top: calc(var(--hdr) + 40px); } }
 </style>

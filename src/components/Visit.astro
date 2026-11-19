@@ -21,11 +21,12 @@ const { lang, id = 'visit', facts: factCount = visit.rows.length, call = true } 
 const t = ui[lang];
 const ru = lang === 'ru';
 
-// The address: the street, then the city after its last comma ("ул. Примерная, 00," + "Москва").
+// The address: the street, then the city after its last comma ("ул. Примерная, 00" + "Москва"). The comma between
+// the two is set apart (.vs-sep): on a phone the city stands on its own line, and a line's end needs no comma.
 const addr = site.address[lang];
 const cut = addr.lastIndexOf(',');
-// No-break spaces keep the house number with its street and "ул." with the name ("ул. Примерная, 00," / "00 Sample").
-const street = (cut > 0 ? addr.slice(0, cut + 1) : addr)
+// No-break spaces keep the house number with its street and "ул." with the name ("ул. Примерная, 00" / "00 Sample").
+const street = (cut > 0 ? addr.slice(0, cut) : addr)
   .replace(/(^|\s)(ул\.|пр\.|пер\.|д\.)\s/g, '$1$2\u00a0')
   .replace(/,\s(?=\d)/g, ',\u00a0')
   .replace(/^(\d+)\s/, '$1\u00a0');
@@ -50,7 +51,7 @@ const door = await photo(media(visit.shot.img), '(max-width: 899px) 74vw, 38vw')
   <div class="wrap vs-wrap">
     <div class="vs-head">
       <h2 class="t-l" id={`${id}-h`} set:html={tr(visit.title, lang)} />
-      <p class="vs-addr" style={`--len:${street.length}`}><span class="vs-street">{street}</span>{city && <> <span class="vs-city">{city}</span></>}</p>
+      <p class="vs-addr" style={`--len:${street.length}`}><span class="vs-street">{street}{city && <span class="vs-sep">,</span>}</span>{city && <> <span class="vs-city">{city}</span></>}</p>
     </div>
     <figure class="vs-peep">
       <button class="vs-lens" type="button" data-peep data-pause={ru ? 'Остановить видео' : 'Pause the video'} data-play={ru ? 'Включить видео' : 'Play the video'} aria-label={ru ? 'Остановить видео' : 'Pause the video'}>

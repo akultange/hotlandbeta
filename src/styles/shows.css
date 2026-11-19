@@ -7,7 +7,9 @@
 .shw { --shw-rest: 300px; }
 .shw-body {
   --shw-h: clamp(400px, calc(100svh - var(--shw-rest)), 640px);
-  display: grid; grid-template-columns: minmax(0, 1fr) calc(var(--shw-h) * .8);
+  /* (the names take five parts of the width and the picture seven: with the picture a narrow 4:5 at the far right,
+     640px of bare rules ran between the two) */
+  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   grid-template-areas: "list stage" "text stage"; grid-template-rows: minmax(0, 1fr) auto;
   column-gap: clamp(32px, 5vw, 96px); height: var(--shw-h);
 }
@@ -20,11 +22,11 @@
   transition: color .35s ease;
 }
 .shw-tab::before {
-  content: ''; position: absolute; left: 0; bottom: -1px; width: 100%; height: 1px; background: var(--red);
+  content: ''; position: absolute; left: 0; bottom: -1px; width: 100%; height: 1.5px; background: var(--light);
   transform: scaleX(0); transform-origin: 0 50%; transition: transform .6s var(--ease-out);
 }
 .shw-ic { width: clamp(38px, 3.4vw, 52px); opacity: .5; filter: grayscale(.7); transition: opacity .35s ease, filter .35s ease, transform .6s var(--ease-back); }
-.shw-name { font: 450 clamp(21px, 2.13vw, 34px)/1.05 var(--display); letter-spacing: -.01em; }
+.shw-name { font: 450 var(--sub)/1.05 var(--display); letter-spacing: -.01em; }
 .shw-tab[aria-selected="true"] { color: var(--fg); }
 .shw-tab[aria-selected="true"]::before { transform: scaleX(1); }
 .shw-tab[aria-selected="true"] .shw-ic { opacity: 1; filter: none; transform: scale(1.08) rotate(-4deg); }
@@ -32,7 +34,7 @@
   .shw-tab:not([aria-selected="true"]):hover { color: rgba(230, 231, 233, .78); }
   .shw-tab:not([aria-selected="true"]):hover .shw-ic { opacity: .85; filter: none; }
 }
-.shw-tab:focus-visible { outline: 1.5px solid var(--light); outline-offset: 4px; border-radius: 4px; }
+.shw-tab:focus-visible { outline: 1.5px solid var(--light); outline-offset: 4px; }
 /* Taking turns (ShowTabs.astro adds .auto, and .run while the section is on screen): the chosen number's crimson
    line fills from the left in --shw-dur, and when it is full the next number comes up. It waits, half filled,
    while the section is off screen. Once the visitor presses a tab the classes go and the line simply marks the
@@ -42,14 +44,18 @@
 .shw.auto.run .shw-tab[aria-selected="true"]::before { animation-play-state: running; }
 @keyframes shw-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
-.shw-panels { grid-area: text; align-self: end; padding-top: clamp(16px, 2vh, 24px); }
+/* the six texts share one cell, so the block is as tall as the longest of them whichever one shows: the section
+   keeps its height when the tabs take their turns (it used to breathe by a line, and the page under it jumped) */
+.shw-panels { grid-area: text; align-self: end; display: grid; padding-top: clamp(16px, 2vh, 24px); }
+.shw-panel { grid-area: 1 / 1; }
+.shw-panel[hidden] { display: block; visibility: hidden; }
 .shw-panel .body { margin: 0; font-size: 18px; max-width: 34em; color: var(--fg-2); text-wrap: pretty; }
-.shw-panel:focus-visible { outline: 1.5px solid var(--light); outline-offset: 6px; border-radius: 4px; }
+.shw-panel:focus-visible { outline: 1.5px solid var(--light); outline-offset: 6px; }
 .shw-panel:not([hidden]) { animation: shw-in .5s var(--ease-out) both; }
 @keyframes shw-in { from { opacity: 0; translate: 0 8px; } }
 
 .shw-stage { grid-area: stage; }
-.shw-photo { height: var(--shw-h); aspect-ratio: 4 / 5; border-radius: 3px; -webkit-mask-image: none; mask-image: none; }
+.shw-photo { width: 100%; height: var(--shw-h); aspect-ratio: auto; border-radius: 2px; }
 .shw-shot { position: absolute; inset: 0; opacity: 0; transition: opacity .6s ease; }
 .shw-shot.on { opacity: 1; }
 /* Every girl's face at one height, whatever the frame's shape (tall on a desktop, about square on a phone, wide on a
@@ -78,6 +84,8 @@
   .shw-list {
     display: flex; gap: 8px; margin: 0 calc(-1 * var(--pad)); padding: 2px var(--pad) 14px; border: 0;
     overflow-x: auto; scrollbar-width: none; scroll-padding-inline: var(--pad);
+    /* (the row's end padding lets the last tab come clear of the fade at the screen's edge) */
+    padding-inline-end: calc(var(--pad) + 60px);
     -webkit-mask-image: var(--peek-fade); mask-image: var(--peek-fade);
   }
   .shw-list::-webkit-scrollbar { display: none; }
@@ -91,7 +99,7 @@
   .shw.auto .shw-tab[aria-selected="true"]::before { display: block; bottom: 0; height: 2px; }
   .shw-tab[aria-selected="true"] { background: rgba(230, 231, 233, .1); border-color: rgba(230, 231, 233, .36); color: var(--fg); }
   .shw-ic { width: 30px; }
-  .shw-name { font: 600 15px/1.2 var(--sans); font-stretch: normal; letter-spacing: 0; white-space: nowrap; }
+  .shw-name { font: 500 16px/1.2 var(--sans); font-stretch: normal; letter-spacing: 0; white-space: nowrap; }
   .shw-photo { height: auto; width: 100%; aspect-ratio: 1 / 1; max-height: 42svh; }
   .shw-panels { padding-top: 14px; }
   .shw-panel .body { font-size: 16px; }

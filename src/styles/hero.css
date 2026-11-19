@@ -25,11 +25,11 @@ html[data-hero]:not([data-hero="v3"]) .hv3 { display: none; }
 .vid-toggle {
   position: absolute; z-index: 3;
   display: inline-flex; align-items: center; gap: 10px; padding-bottom: 4px; border-bottom: 1px solid var(--rule-2);
-  font: 500 14px/1 var(--sans); color: var(--fg); white-space: nowrap;
+  font: 500 12px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--fg); white-space: nowrap;
 }
-.vid-toggle:hover { border-color: var(--red); }
+.vid-toggle:hover { border-color: var(--light); }
 .vid-toggle i { color: var(--red-text); width: 8px; height: 10px; border-left: 2px solid currentColor; border-right: 2px solid currentColor; }
-@media (pointer: coarse) { .vid-toggle::after { content: ''; position: absolute; inset: -14px -10px -12px; } }
+@media (pointer: coarse) and (min-width: 900px) { .vid-toggle::after { content: ''; position: absolute; inset: -14px -10px -12px; } }
 .vid-toggle.paused i { width: 0; height: 0; border-left: 8px solid currentColor; border-right: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
 
 /* ---------- v1: the film falling into black, the words where it darkens, the name at the foot ---------- */
@@ -175,8 +175,10 @@ html[data-hero]:not([data-hero="v3"]) .hv3 { display: none; }
 .hv3-seam {
   position: absolute; z-index: 2; pointer-events: none;
   left: calc(var(--zx) + var(--zw) * var(--sxn) - 90px); width: 180px;
-  top: calc(var(--zy) - var(--zh) * .7); height: calc(var(--zh) * 1.92);
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 36%, #000 88%, transparent 100%); mask-image: linear-gradient(180deg, transparent 0%, #000 36%, #000 88%, transparent 100%);
+  /* (it rises well above the word and ends just under it, clear of the motto: it used to end on the motto's own
+     first word) */
+  top: calc(var(--zy) - var(--zh) * .7); height: calc(var(--zh) * 1.8);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 38%, #000 90%, transparent 100%); mask-image: linear-gradient(180deg, transparent 0%, #000 38%, #000 90%, transparent 100%);
 }
 .hv3-seam::before {
   content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; margin-left: -1px;
@@ -201,6 +203,14 @@ html[data-hero]:not([data-hero="v3"]) .hv3 { display: none; }
   .hv2 .hv-stage { grid-template-rows: minmax(0, 3fr) auto auto minmax(var(--hv-pb), 1fr); }
   .hv3 { --fog: blur(16px) brightness(.4) saturate(1.25); }
   .hv3 > .vid-toggle { top: calc(var(--hdr) + 14px); right: var(--inl); bottom: auto; }
+  /* the film's pause switch: a small plate of the header's glass under the Menu plate, its sign only (the words
+     stay for screen readers); it was the one control on the first screen that was an underlined line of text */
+  .hv > .vid-toggle {
+    top: calc(var(--hdr) + 8px); width: 44px; height: 44px; padding: 0; gap: 0; justify-content: center; border: 0; border-radius: 2px;
+    background-color: var(--nav-glass); -webkit-backdrop-filter: var(--nav-blur); backdrop-filter: var(--nav-blur); box-shadow: var(--nav-edge);
+  }
+  .hv > .vid-toggle span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .hv > .vid-toggle i { color: var(--fg); }
 }
 /* the gap's edges and the name across it belong to the upright phone's take only */
 .hv3-gap, .hv3-name { display: none; }
@@ -265,6 +275,10 @@ html.motion .hv1-glint { animation: hv1-glint 11s var(--ease-io) 2.4s infinite; 
 html.motion:is(.age-ok, :has(.gate.out)) .hv3-film { animation: hv-fade .5s ease backwards; }
 html.motion:is(.age-ok, :has(.gate.out)) .hv3-film video { animation: hv-settle 3.4s var(--ease-out) backwards; }
 html.motion.hero-again:is(.age-ok, :has(.gate.out)) .hv3-film { animation-duration: .4s; }
+/* behind the 18+ door as it opens (AgeGate.astro marks the page .gate-keep or .gate-plain): the film stays dark until
+   the opening is wide enough to see into, then comes up inside it. It used to be at full brightness behind the shut
+   door, so the first few pixels of the opening showed as stray bright specks. */
+html.motion:is(.gate-keep, .gate-plain):is(.age-ok, :has(.gate.out)) .hv3-film { animation: hv-fade .9s ease .5s backwards; }
 @keyframes hv3-drift { from { translate: -12% 14%; } to { translate: 14% -6%; } }
 @keyframes hv3-run { 0% { transform: translateX(-130%) skewX(-18deg); } 18%, 100% { transform: translateX(820%) skewX(-18deg); } }
 html.motion .hv3-glow { animation: hv3-drift 20s ease-in-out infinite alternate; }

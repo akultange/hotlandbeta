@@ -1,7 +1,7 @@
 ---
 // The gallery's films: a dark strip where the film in the middle plays. Each film stands in a frame, like a
-// screen (rounded, a fine edge of light, a play mark, a crimson line along its foot as it plays), so the section
-// reads at once as films, not more photographs.
+// screen (square-cut, a fine edge of light, a play mark on a plate of glass, a line of red light along its foot as
+// it plays), so the section reads at once as films, not more photographs.
 // Desktop with motion: the strip stays on screen and slides sideways as you scroll; the film nearest the
 // middle plays, its neighbours wait dimmed on their first frame. Phones: a row you swipe, and only the film
 // on screen plays. Reduced motion: the posters only. A click opens the film full screen (GalleryViewer).
@@ -16,6 +16,9 @@ const ru = lang === 'ru';
 const n = galleryFilms.length;
 const pad = (i: number) => String(i).padStart(2, '0');
 const num = (r: string) => { const [a, b] = r.split('/').map(Number); return (a / b).toFixed(4); };
+// the last film's shape on a phone: the row keeps room after it, so it too can rest on the left edge (gallery.css)
+const lastFilm = galleryFilms[n - 1];
+const rpl = num(lastFilm.ratioPhone ?? lastFilm.ratio);
 ---
 <section class="gxf" id="films" aria-labelledby="gxf-h" data-gxf>
   <div class="gxf-pin">
@@ -24,7 +27,7 @@ const num = (r: string) => { const [a, b] = r.split('/').map(Number); return (a 
       <h2 class="t-l" id="gxf-h">{tr(galleryText.films, lang)}</h2>
       <p class="gxf-lead" set:html={keepShort(tr(galleryText.filmsLead, lang), lang)} />
     </div>
-    <ul class="gxf-rail" role="list">
+    <ul class="gxf-rail" role="list" style={`--rpl:${rpl}`}>
       {galleryFilms.map((f, i) => {
         const rp = f.ratioPhone ?? f.ratio;
         const cap = tr(f.cap, lang);
@@ -36,7 +39,7 @@ const num = (r: string) => { const [a, b] = r.split('/').map(Number); return (a 
                   {f.posterPhone && <source media="(max-width: 899px)" srcset={f.posterPhone} />}
                   <img src={f.poster} alt="" loading="lazy" decoding="async" />
                 </picture>
-                <span class="gxf-play" aria-hidden="true"></span>
+                <span class="gxf-play glass" aria-hidden="true"></span>
               </span>
             </button>
             <p class="gxf-cap" aria-hidden="true">

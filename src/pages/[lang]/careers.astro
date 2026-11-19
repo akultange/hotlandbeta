@@ -30,7 +30,7 @@ const backstage = g(2);
   <section class="sec">
     <div class="wrap">
       <div class="g12" style="align-items: start">
-        <div class="cr-pic" style="grid-column: 1 / span 5"><Photo src={media(backstage.img)} alt={tr(backstage.alt, lang)} ratio="3/4" /></div>
+        <div style="grid-column: 1 / span 5"><Photo src={media(backstage.img)} alt={tr(backstage.alt, lang)} ratio="3/4" /></div>
         <div class="stack" style="grid-column: 7 / span 6; gap: var(--head-gap)">
           <h2 class="t-l" set:html={ru ? 'Кого <em>мы ищем</em>' : 'Who <em>we’re looking for</em>'} />
           <div class="rows">
@@ -59,8 +59,7 @@ const backstage = g(2);
 </Base>
 
 <style>
-  /* the backstage picture (3:4) is the section's last thing on a computer, so the section ends at the middle of its
-     fall into the black, a tenth of its height sooner (global.css, Photos) */
-  @media (min-width: 900px) { .cr-pic { margin-bottom: -13.33%; } }
+  /* (the backstage picture is cut hard now, as every photograph is (global.css, Photos): the section ends at its
+     foot, with no margin taken back for a fall into the black) */
   .cr-apply { max-width: 640px; }
 </style>

@@ -1,72 +1,109 @@
 /* =====================================================================
-   The club's zones (Zones.astro, VIP page): a look through the keyhole.
-   The section is one dark room. Its rooms are named down the left, outlined until chosen; the chosen one is
-   seen through a tall keyhole on the right, its light leaking round the keyhole's steel edge, and its colour
-   washing the whole section from behind, blurred. On phones the names are on the left, the keyhole beside them.
-   With scripts (Zones.astro) the heading, the names and the keyhole hold still on the screen while the page
-   scrolls through the rooms, one stretch each, then move on with the page. The heading sits as close over the
-   names as every section's heading over its content, and as far below the section above as every heading.
+   The club's zones (Zones.astro, membership page): a look through the doorway.
+   The section is one dark wall. Its rooms are named in large type, dim until chosen; the chosen one stands bright
+   behind a short upright line of red light, is seen through a tall doorway, and its colour washes the wall from
+   behind, blurred, falling to the page's own black at the edges.
+   With scripts (Zones.astro) the stage (the heading, the names, the doorway) holds still, exactly a screen tall,
+   while the page scrolls through the rooms, one stretch each, then moves on with the page.
+   Where things stand:
+   - a wide screen: the heading and the names on the left, the doorway on the right from the heading's head down,
+     the chosen room's line and link under its name;
+   - a phone held upright: the doorway first, as tall as the screen leaves it, and the names under it, one to a
+     line, each row a finger's height. A tall screen opens the chosen room's line and link under its name. A
+     shorter one has no room for that under five such rows, so there the heading and the room's words stand
+     beside the doorway, the words on its foot;
+   - a phone held sideways: as a wide screen, smaller.
+   Nothing changes the stage's height from room to room.
    ===================================================================== */
 
-.zn { --zn-h: 100svh; --zn-step: 40svh; position: relative; isolation: isolate; overflow: clip; padding: var(--sec-y) 0 0; background: var(--black); }
-/* the stage: the colour wash, the names and the keyhole */
+.zn {
+  --zn-h: 100svh; --zn-step: 40svh;
+  /* the header's room, kept clear above the heading while the stage is held */
+  --zn-hroom: calc(var(--hdr) + 12px);
+  /* a name's own air above it and under it (less on a low screen, so five names always stand beside the doorway),
+     and how far the chosen name steps in to stand behind its line of light */
+  --zn-pt: clamp(8px, min(1.1vw, 1.6svh), 16px); --zn-pb: clamp(4px, min(1.3vw - 6px, 1.4svh), 12px); --zn-in: clamp(10px, 1.2vw, 20px);
+  /* the doorway, the tallest thing on the stage: as tall as the screen leaves it under the header, 680px at most */
+  --zk-h: min(67.2vw, 680px, calc(var(--zn-h) - var(--zn-hroom) - 24px));
+  /* held, the stage is a screen tall with the doorway in the middle of it, but never under the header: the air
+     above the doorway (and the heading beside its head) and the air under it */
+  --zn-top: max(var(--zn-hroom), calc((var(--zn-h) - var(--zk-h)) / 2));
+  --zn-bot: max(0px, calc(var(--zn-h) - var(--zk-h) - var(--zn-top)));
+  /* (no fill of its own: the page's concrete runs on behind the section) */
+  position: relative; isolation: isolate; overflow: clip; padding: var(--sec-y) 0 0;
+}
+/* the stage: the colour wash, the heading, the names and the doorway */
 .zn-stage { position: relative; isolation: isolate; padding-bottom: var(--sec-y); }
-/* held on screen: the track is a screen tall plus a stretch for each room, the stage stays at the top of the
-   screen through it: the heading just under the header, the names and the keyhole under it. The stage keeps the
-   header's room clear above the heading, so the section's own air above is less by as much: the heading still
-   starts --sec-y under the section above, and the section after starts --sec-y under the keyhole. */
-.zn.pinned { padding: max(0px, calc(var(--sec-y) - var(--hdr) - 12px)) 0 var(--sec-y); }
+/* held on screen: the track is a screen tall plus a stretch for each room, and the stage, a screen tall itself,
+   stays at the top of the screen through it. The stage keeps its own air above the heading and under the
+   doorway, so the section's is less by as much: the heading still starts --sec-y under the section above, and the
+   section after starts --sec-y under the doorway. */
+.zn.pinned { padding: max(0px, calc(var(--sec-y) - var(--zn-top))) 0 max(0px, calc(var(--sec-y) - var(--zn-bot))); }
 .zn.pinned .zn-track { height: calc(var(--zn-h) + var(--n, 5) * var(--zn-step)); }
-.zn.pinned .zn-stage { position: sticky; top: 0; display: grid; align-content: start; padding: calc(var(--hdr) + 12px) 0 0; overflow: clip; }
-/* the chosen room's colour, behind everything */
-.zn-amb { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.zn.pinned .zn-stage { position: sticky; top: 0; display: grid; align-content: start; min-height: var(--zn-h); padding: var(--zn-top) 0 0; overflow: clip; }
+/* the chosen room's colour, behind everything: brightest behind the doorway, gone before the stage's edges, so
+   the wall around it is the page's own black (a mask, not black paint: no band where the stage ends) */
+.zn-amb {
+  --zn-wash: radial-gradient(120% 90% at 72% 50%, #000 0%, rgba(0, 0, 0, .3) 62%, transparent 100%);
+  --zn-wash-y: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  -webkit-mask-image: var(--zn-wash), var(--zn-wash-y); -webkit-mask-composite: source-in;
+  mask-image: var(--zn-wash), var(--zn-wash-y); mask-composite: intersect;
+}
 .zn-amb-i {
   position: absolute; inset: -12%; width: 124%; height: 124%; object-fit: cover;
   filter: blur(54px) saturate(1.35) brightness(.55); opacity: 0; scale: 1.06; transition: opacity 1.4s ease, scale 6s var(--ease-out);
 }
 .zn-amb-i.on { opacity: .62; scale: 1; }
-.zn-amb::after { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 90% at 72% 50%, rgba(0, 0, 0, .08) 0%, rgba(0, 0, 0, .7) 62%, var(--black) 100%), linear-gradient(180deg, var(--black) 0%, rgba(0, 0, 0, 0) 18%, rgba(0, 0, 0, 0) 82%, var(--black) 100%); }
 
-.zn-h { margin: 0 0 var(--head-gap); }
-/* (the names start at the top, under the heading, as the keyhole does: not centred against the tall keyhole, which
-   would leave a band of black between the heading and the first name) */
-.zn-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: clamp(32px, 6vw, 120px); }
+/* two columns: the heading with the names under it, and the doorway beside both, its head at the heading's
+   (the names are not centred against the tall doorway: that would leave a band of black under the heading) */
+.zn-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "h zk" "list zk"; grid-template-rows: auto minmax(0, 1fr); align-items: start; column-gap: clamp(32px, 6vw, 120px); }
+.zn-h { grid-area: h; margin: 0 0 var(--head-gap); }
+/* (the zones take no part in the page's scroll entrances, scripts/motion.ts: the heading is simply there;
+   global.css, "Headlines rise out of a mask", leaves .zn alone) */
 
 /* ---------- the names ---------- */
-/* (the first name's own padding is taken back, so the name itself starts the heading gap under the heading) */
-.zn-list { list-style: none; margin: calc(-1 * clamp(10px, 1.1vw, 16px)) 0 0; padding: 0; counter-reset: zn; }
-.zn-item { position: relative; padding: clamp(10px, 1.1vw, 16px) 0 clamp(12px, 1.3vw, 18px); }
+/* (the first name's own air is taken back, so the name itself starts the heading gap under the heading) */
+.zn-list { grid-area: list; list-style: none; margin: calc(-1 * var(--zn-pt)) 0 0; padding: 0; }
+.zn-item { position: relative; padding-bottom: var(--zn-pb); }
+/* a name: solid and dim until its room is on show (no outline: a stroke shows the joints inside the letters).
+   The button is the row's own tap area and keeps still; the name inside it steps in when chosen (the room it
+   steps into is kept at the button's right, so the focus ring always holds the whole name). */
 .zn-name {
-  display: block; padding: 0; text-align: left; cursor: pointer;
-  font: 450 clamp(30px, 3.55vw, 62px)/1.05 var(--display); letter-spacing: -.01em;
-  color: transparent; -webkit-text-stroke: 1px rgba(230, 231, 233, .38);
-  transition: color .45s ease, -webkit-text-stroke-color .45s ease, translate .6s var(--ease-out);
+  position: relative; display: block; padding: var(--zn-pt) var(--zn-in) 6px 0; text-align: left; cursor: pointer;
+  font: 450 clamp(30px, min(3.55vw, 6.2svh), 62px)/1.05 var(--display); letter-spacing: -.01em;
+  color: rgba(230, 231, 233, .38); transform-origin: 0 50%; -webkit-tap-highlight-color: transparent;
+  transition: color .45s ease, scale .2s ease;
 }
-.zn-item:hover .zn-name { -webkit-text-stroke-color: rgba(230, 231, 233, .75); }
-.zn-item.on .zn-name { color: var(--fg); -webkit-text-stroke-color: transparent; translate: clamp(10px, 1.2vw, 20px) 0; }
-.zn-name:focus-visible { outline: 1.5px solid var(--light); outline-offset: 6px; border-radius: 4px; }
-/* a crimson mark before the chosen name */
-.zn-item::before {
-  content: ''; position: absolute; left: 0; top: calc(clamp(10px, 1.1vw, 16px) + .46 * clamp(40px, 4.8vw, 84px) - 3px);
-  width: 6px; height: 6px; border-radius: 50%; background: var(--red); box-shadow: 0 0 14px 2px rgba(168, 24, 46, .6);
-  opacity: 0; scale: .2; transition: opacity .4s ease, scale .5s var(--ease-back);
+.zn-nm { display: block; transition: translate .6s var(--ease-out); }
+@media (hover: hover) { .zn-item:not(.on):hover .zn-name { color: rgba(230, 231, 233, .7); } }
+.zn-item.on .zn-name { color: var(--fg); }
+.zn-item.on .zn-nm { translate: var(--zn-in) 0; }
+.zn-name:active { scale: .98; }
+.zn-name:focus-visible { outline: 1.5px solid var(--light); outline-offset: 4px; border-radius: 0; }
+/* where you are: a short upright line of the red light before the chosen name, in the room the name leaves as it
+   steps in (so the line never stands on a letter, with or without motion) */
+.zn-name::before {
+  content: ''; position: absolute; left: 0; top: calc(var(--zn-pt) + .19em); width: 2px; height: .7em;
+  background: var(--light); box-shadow: 0 0 6px rgba(255, 43, 61, .5);
+  opacity: 0; scale: 1 0; transition: opacity .3s ease, scale .45s var(--ease-out);
 }
-.zn-item.on::before { opacity: 1; scale: 1; }
-/* its line and its link open under it */
-.zn-detail { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .55s var(--ease-out); }
-.zn-detail > div { overflow: hidden; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 24px; padding-left: clamp(10px, 1.2vw, 20px); }
-.zn-item.on .zn-detail { grid-template-rows: 1fr; }
-.zn-text { margin: 12px 0 0; font: 400 clamp(16px, 1.2vw, 19px)/1.5 var(--sans); color: rgba(230, 231, 233, .78); }
-.zn-detail .lnk { margin-top: 12px; }
-/* the hairline under each name; under the one on show, a crimson line for how far through its stretch the page is */
+.zn-item.on .zn-name::before { opacity: 1; scale: 1 1; }
+/* its line and its link open under it (and are out of reach of the Tab key while shut) */
+.zn-detail { display: grid; grid-template-rows: 0fr; visibility: hidden; transition: grid-template-rows .55s var(--ease-out), visibility 0s .55s; }
+.zn-detail > div { overflow: hidden; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 24px; padding-left: var(--zn-in); }
+.zn-item.on .zn-detail { grid-template-rows: 1fr; visibility: visible; transition-delay: 0s; }
+.zn-text { margin: 6px 0 0; font: 400 clamp(16px, 1.2vw, 19px)/1.5 var(--sans); color: rgba(230, 231, 233, .78); }
+.zn-detail .lnk { margin-top: 6px; white-space: nowrap; }
+/* the hairline under each name; under the one on show, a line of the red light for how far through its stretch
+   the page is */
 .zn-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: rgba(230, 231, 233, .1); overflow: hidden; }
-.zn-bar i { display: block; width: 100%; height: 100%; background: linear-gradient(90deg, var(--red-deep), var(--red)); transform-origin: 0 50%; scale: 0 1; }
+.zn-bar i { display: block; width: 100%; height: 100%; background: var(--light); transform-origin: 0 50%; scale: 0 1; }
 .zn.pinned .zn-item.on .zn-bar i { scale: var(--zp, 0) 1; }
 
-/* ---------- the keyhole ---------- */
-.zk { position: relative; width: min(42vw, calc(min(76svh, 680px) * .625)); aspect-ratio: 100 / 160; }
-/* the room's light leaking round the keyhole */
-.zk-glow { position: absolute; inset: -14% -22%; border-radius: 50%; background: radial-gradient(50% 50% at 50% 46%, rgba(168, 24, 46, .3) 0%, rgba(168, 24, 46, .1) 40%, rgba(168, 24, 46, 0) 70%); pointer-events: none; }
+/* ---------- the doorway ---------- */
+.zk { grid-area: zk; position: relative; height: var(--zk-h); aspect-ratio: 100 / 160; }
 .zk-win {
   position: absolute; inset: 0; overflow: hidden; background: #000;
   -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
@@ -78,36 +115,100 @@
 .zk-shot.on img { scale: var(--zs, 1); }
 .zk-shot video { opacity: 0; transition: opacity .8s ease; }
 .zk-shot video.on { opacity: 1; }
-/* the dark at the keyhole's edge, so the room seems to lie behind a door */
+/* the dark at the doorway's edge, so the room seems to lie behind a door */
 .zk-shade { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(70% 46% at 50% 26%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, .55) 100%), linear-gradient(180deg, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, .5) 100%); }
+/* its steel edge, and the room's light leaking round it */
 .zk-rim { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; filter: drop-shadow(0 0 10px rgba(200, 44, 66, .35)); }
 
-/* ---------- phones: the names on the left, the keyhole beside them, both held above the call bar ---------- */
+/* ---------- narrower than a laptop: the stage is held above the call bar ---------- */
 @media (max-width: 899px) {
-  .zn { --zn-h: calc(100svh - var(--dock)); }
-  .zn-grid { grid-template-columns: minmax(0, 1fr) 38%; align-items: start; gap: 18px; }
-  .zk { width: 100%; position: sticky; top: calc(var(--hdr) + 18px); margin-top: 6px; }
-  .zn.pinned .zk { position: relative; top: auto; }
-  .zn-name { font-size: clamp(27px, 7.8vw, 36px); line-height: 1; }
-  .zn-item::before { top: calc(clamp(10px, 1.1vw, 16px) + .46 * clamp(27px, 7.8vw, 36px) - 3px); }
-  .zn-item.on .zn-name { translate: 12px 0; }
-  .zn-detail > div { padding-left: 12px; }
+  .zn { --zn-h: calc(100svh - var(--dock)); --zn-in: 12px; --zk-h: min(60vw, calc(var(--zn-h) - var(--zn-hroom) - 24px)); }
+  .zn-grid { column-gap: 18px; }
+  .zn-name { font-size: clamp(24px, 4.4vw, 36px); line-height: 1; }
   .zn-text { font-size: 15px; }
-  .zn-amb::after { background: radial-gradient(130% 60% at 70% 34%, rgba(0, 0, 0, .1) 0%, rgba(0, 0, 0, .74) 60%, var(--black) 100%), linear-gradient(180deg, var(--black) 0%, rgba(0, 0, 0, 0) 14%, rgba(0, 0, 0, 0) 86%, var(--black) 100%); }
 }
+
+/* ---------- a phone (or a tablet) held upright: the doorway first, the names under it across the screen.
+   The stage is exactly as tall as the screen between the header and the call bar, and the doorway takes what the
+   names leave of it, so the stage is full on every phone and never changes its height. ---------- */
+@media (max-width: 899px) and (orientation: portrait) {
+  .zn {
+    --zn-row: 45px;    /* a name's row: what a finger needs (44px) and the hairline under it */
+    --zn-foot: 12px;   /* air between the last name and the call bar */
+    --zn-top: var(--zn-hroom); --zn-bot: var(--zn-foot);
+  }
+  .zn-stage, .zn.pinned .zn-stage { display: block; height: var(--zn-h); min-height: 0; padding-bottom: var(--zn-foot); }
+  .zn:not(.pinned) { padding-bottom: calc(var(--sec-y) - var(--zn-foot)); }   /* (without scripts: the section's own air under the stage) */
+  .zn-in, .zn-grid { height: 100%; }
+  .zn-h { margin: 0; text-wrap: balance; }
+  .zn-list { margin: 0; }
+  .zn-item { padding: 0; }
+  .zn-name { display: flex; align-items: center; width: 100%; min-height: calc(var(--zn-row) - 1px); padding: 0; font-size: clamp(21px, 6.7vw, 24px); }
+  .zn-name::before { top: calc(50% - .37em); }
+  .zn-name:focus-visible { outline-offset: -3px; }
+  .zn-text { margin: 0; line-height: 1.45; text-wrap: balance; }
+}
+
+/* a tall phone: one column. The heading, the doorway in the middle of the wall, the names; the chosen room's line
+   and link open under its name, in a room of one height for every room, so the names under it never jump */
+@media (max-width: 599px) and (orientation: portrait) and (min-height: 800px) {
+  .zn { --zn-open: 88px; }   /* the chosen room's words at their longest: two lines (44px), the link (10px + 22px), the air under it (12px) */
+  .zn-amb { --zn-wash: radial-gradient(110% 62% at 50% 34%, #000 0%, rgba(0, 0, 0, .3) 60%, transparent 100%); --zn-wash-y: linear-gradient(180deg, transparent 0%, #000 14%, #000 86%, transparent 100%); }
+  /* the doorway's row is what the heading and the names leave of the screen, and the doorway fills it, less 14px
+     of air over the names */
+  .zn-grid { grid-template-columns: minmax(0, 1fr); grid-template-areas: "h" "zk" "list"; grid-template-rows: auto minmax(0, 1fr) auto; row-gap: 0; }
+  .zn-h { margin-bottom: 16px; }
+  .zk { justify-self: center; height: calc(100% - 14px); max-width: 100%; }
+  /* the room's words open to one height whatever their length (a line or two, then the link; what a shorter
+     line leaves is air over the next hairline), so the five rows and the open one always add up the same */
+  .zn-detail { display: block; height: 0; overflow: hidden; transition: height .55s var(--ease-out), visibility 0s .55s; }
+  .zn-item.on .zn-detail { height: var(--zn-open); }
+  .zn-detail > div { display: block; overflow: visible; }
+  .zn-detail .lnk { margin-top: 10px; }
+}
+
+/* a shorter phone, and a tablet held upright: the heading and the chosen room's line and link stand beside the
+   doorway (the heading at its head, the words on its foot); the names fill the rest, a row each */
+@media (max-width: 899px) and (orientation: portrait) and (max-height: 799px), (min-width: 600px) and (max-width: 899px) and (orientation: portrait) {
+  .zn {
+    /* the doorway: what the screen leaves over the names, and never so wide that the words beside it are squeezed */
+    --zk-h: min(calc(var(--zn-h) - var(--zn-hroom) - 14px - var(--n, 5) * var(--zn-row) - var(--zn-foot)), calc((100vw - 2 * var(--pad) - 166px) * 1.6));
+  }
+  .zn-amb { --zn-wash: radial-gradient(130% 60% at 74% 30%, #000 0%, rgba(0, 0, 0, .28) 60%, transparent 100%); --zn-wash-y: linear-gradient(180deg, transparent 0%, #000 14%, #000 86%, transparent 100%); }
+  .zn-grid { position: relative; grid-template-areas: "h zk" "list list"; grid-template-rows: auto minmax(0, 1fr); column-gap: 16px; row-gap: 14px; }
+  /* (where the doorway stops short of the screen's height, held by its width, the rows share what is left) */
+  .zn-list { align-self: stretch; display: grid; grid-auto-rows: minmax(0, 1fr); }
+  .zn-item { position: static; display: grid; grid-template-rows: minmax(0, 1fr) auto; }
+  .zn-bar { position: static; display: block; }
+  /* each room's words wait in the same place, beside the doorway, and only the chosen room's show */
+  .zn-detail {
+    position: absolute; left: 0; top: 0; width: calc(100% - var(--zk-h) * .625 - 16px); height: var(--zk-h);
+    grid-template-rows: none; align-content: end; opacity: 0; transition: opacity .2s ease, visibility 0s .2s;
+  }
+  .zn-item.on .zn-detail { grid-template-rows: none; opacity: 1; transition: opacity .45s ease .18s, visibility 0s; }
+  .zn-detail > div { display: block; overflow: visible; padding: 0; }
+  .zn-detail .lnk { margin-top: 12px; }
+}
+@media (min-width: 600px) and (max-width: 899px) and (orientation: portrait) {
+  .zn { --zn-row: 59px; }
+  .zn-name { font-size: 30px; }
+  .zn-text { font-size: 17px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .zn-amb-i, .zk-shot img { transition: opacity .3s ease; scale: 1; }
-  .zn-name { transition: color .2s ease; translate: none !important; }
+  /* (the chosen name still stands behind its line: it just doesn't slide there) */
+  .zn-name, .zn-name::before { transition: color .2s ease, opacity .2s ease; }
+  .zn-nm { transition: none; }
+  .zn-detail, .zn-item.on .zn-detail { transition: none; }
 }
 
 /* ---------- A phone held sideways (or any screen as short): see landscape.css ---------- */
 @media (orientation: landscape) and (max-height: 500px) {
-  /* ---------- The VIP rooms: the names smaller, the keyhole as tall as the screen allows ---------- */
-  .zn { --zn-h: 100svh; }
-  .zn-grid { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: clamp(24px, 5vw, 64px); }
-  /* (the header tucks away on the way down: the held heading needs little room above it) */
-  .zn.pinned { padding-top: max(0px, calc(var(--sec-y) - 12px)); }
-  .zn.pinned .zn-stage { padding-top: 12px; }
-  .zk { width: calc((100svh - 64px - 10svh - 16px) * .625); position: relative; top: auto; margin-top: 0; } /* (less the heading over them) */
+  /* the names smaller and closer; the heading over both columns, and the doorway under it, as tall as the screen
+     allows less the heading. (The header tucks away on the way down, so the held heading needs little room above
+     it; on the way back up the header covers the heading alone, not the doorway's head.) */
+  .zn { --zn-h: 100svh; --zn-hroom: 12px; --zn-top: 12px; --zn-bot: 0px; --zn-pt: 8px; --zn-pb: 4px; --zk-h: calc(100svh - 64px - 10svh - 16px); }
+  .zn-grid { grid-template-areas: "h h" "list zk"; align-items: center; column-gap: clamp(24px, 5vw, 64px); }
   .zn-name { font-size: clamp(24px, 7.4svh, 32px); }
 }

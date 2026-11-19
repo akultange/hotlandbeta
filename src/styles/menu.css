@@ -5,12 +5,14 @@
    one screen: the list is set large and with air, and the tabs stay pinned under the header while you read, so
    you can switch at any point. Each tab is as long as its own list.
    Desktop: the tabs and the list on the left (the bar's groups and the kitchen's dishes in two columns), the
-   picture on the right (4:5), staying in view while the list scrolls. Phones: the picture, the pinned tabs, the
-   list in one column.
+   picture on the right (4:5), staying in view while the list scrolls; the tabs stand where they are (the header's
+   plates float over the page with nothing behind them, so nothing may be pinned under them). Phones: the picture,
+   the tabs, pinned under the header once the page reaches them, the list in one column.
    The order the eye reads in: the page's name; the tabs; each group's name over a fine rule; the dishes and
    drinks, one to a row between fine rules, their prices on the right a step quieter (the rouble sign and «от»
-   quieter still); the volumes and the few words under a name quieter again. The house cocktails are marked in
-   crimson. The price note closes the list.
+   quieter still); the volumes, in a column of their own before the prices, and the few words under a name
+   quieter again. The house's own cocktails are marked in steel. The price note closes the list. The hookah
+   lounge's prices under the card are set in the same rows: one price list on the page.
    ===================================================================== */
 
 /* ---------- The card ---------- */
@@ -20,6 +22,8 @@ section.bm, .ptitle + section.bm { padding-top: var(--head-gap); }
 .bm-in { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "media" "tabs" "panels" "note"; }
 .bm-media { grid-area: media; }
 .bm-tabs { grid-area: tabs; }
+/* (a mark with no size standing where the tabs start: menu.astro watches it to know when the tabs are stuck) */
+.bm-pin { grid-area: tabs; align-self: start; height: 0; pointer-events: none; }
 .bm-panels { grid-area: panels; min-width: 0; }
 .bm-note { grid-area: note; }
 
@@ -32,11 +36,9 @@ section.bm, .ptitle + section.bm { padding-top: var(--head-gap); }
 }
 .photo.bm-shot.on { opacity: 1; scale: 1; }
 
-/* the tabs, pinned under the header while the list scrolls under them (solid black, the list sliding in under a
-   short soft edge); when the header hides, they move up into its place */
-.bm-tabs { position: sticky; top: var(--hdr); z-index: 5; padding: 12px 0; background: var(--black); transition: top .45s var(--ease-out); }
-.bm-tabs::after { content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 20px; pointer-events: none; background: linear-gradient(180deg, var(--black), rgba(0, 0, 0, 0)); }
-html.hdr-hide .bm-tabs { top: 0; }
+/* the tabs: on a phone they stay under the header while the list scrolls (see "Phones" below); on a wide screen
+   they simply stand over the list */
+.bm-tabs { position: relative; z-index: 5; }
 
 /* without scripts: no tabs, the three lists one after another, each under its own heading */
 .bm-panel-h { margin: 0 0 18px; font: 500 clamp(26px, 2.46vw, 39px)/1.05 var(--display); }
@@ -61,19 +63,26 @@ html.hdr-hide .bm-tabs { top: 0; }
 /* the kitchen's and the door's lists have no group names: a fine rule opens them all the same */
 .bm :is(#kitchen .bm-cols, #entry .mrows) { margin-top: 0; border-top: 1px solid var(--rule-2); }
 
-/* a row: the name (and its volume) on the left, the price on the right; the few words under the name run the
-   whole width of the row; a fine rule under each row carries the eye across to its price (no dotted leaders) */
-.bm .mrow { gap: 16px; padding: 13px 0 14px; border-bottom: 1px solid var(--rule); container-type: inline-size; }
-.bm .mrow .dots { visibility: hidden; min-width: 16px; }
-.bm .mrow .nm { font-size: 18px; line-height: 1.35; }
-.bm .mrow .nm small { width: 100cqw; margin: 5px -100cqw 0 0; font-size: 15px; line-height: 1.45; }
-.bm .mrow .nm small .own { color: var(--red-text); }
-.bm .mrow .nm small .desc + .own::before { content: '·'; margin: 0 .45em; color: var(--muted); }
-.bm .mrow .vol { margin-left: 0; font-size: 14px; }
-/* the space before a volume is a little wider; a volume that doesn't fit goes under the name, flush left */
-.bm .mrow .vgap { word-spacing: 3px; }
-.bm .mrow .pr { font-size: 19px; font-weight: 450; letter-spacing: -.01em; }
+/* a row: the name on the left, the price on the right, and for a drink its volume in a column of its own before
+   the price; the few words under a name run the whole width of the row; a fine rule under each row carries the eye
+   across to its price (no dotted leaders). The hookah lounge's rows are the same rows. */
+:is(.bm, .hk-offers) .mrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 12px; align-items: baseline; padding: 13px 0 14px; border-bottom: 1px solid var(--rule); }
+:is(.bm, .hk-offers) .mrow .nm { font-size: 18px; line-height: 1.35; }
+:is(.bm, .hk-offers) .mrow .ds { grid-column: 1 / -1; margin-top: 5px; font: 400 15px/1.45 var(--sans); color: var(--muted); }
+.bm .mrow .ds .own { color: var(--red-text); }
+.bm .mrow .ds .desc + .own::before { content: '·'; margin: 0 .45em; color: var(--muted); }
+:is(.bm, .hk-offers) .mrow .pr { justify-self: end; font-size: 19px; font-weight: 450; letter-spacing: -.01em; }
 .bm .mrow .pr.req { font-size: 15px; font-weight: 400; letter-spacing: 0; color: var(--muted); }
+.hk-offers { border-top: 1px solid var(--rule-2); }
+/* a group of the bar is one grid, and its rows share the group's columns: the volumes line up, right-aligned,
+   whatever the widths of the prices after them, and a volume never drops under its name */
+.bm .mgroup { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; column-gap: 12px; }
+.bm .mgroup > .mgroup-h { grid-column: 1 / -1; }
+.bm .mgroup > .mrow { grid-column: 1 / -1; grid-template-columns: subgrid; }
+.bm .mgroup > .mrow .vol { grid-column: 2; justify-self: end; margin-left: 0; font-size: 14px; }
+.bm .mgroup > .mrow .pr { grid-column: 3; }
+/* (a browser without shared columns: a fixed column for the volume in every row) */
+@supports not (grid-template-columns: subgrid) { .bm .mgroup > .mrow { grid-template-columns: minmax(0, 1fr) 56px auto; } }
 /* every price on the page (the card's and the hookah's): «от» small and quiet before the figure, the rouble sign a
    little smaller and dimmer after it */
 .mrow .pr .pr-from { margin-right: .35em; font: 400 14px/1 var(--sans); letter-spacing: 0; color: var(--muted); }
@@ -98,21 +107,34 @@ html.hdr-hide .bm-tabs { top: 0; }
     column-gap: clamp(44px, 5.5vw, 96px);
   }
   .bm-media { align-self: start; position: sticky; top: calc(var(--hdr) + 24px); }
-  .bm-tabs { margin-top: -12px; }   /* (its pinned padding is the bar's room, not air under the page's header) */
   .bm-panels { margin-top: clamp(22px, 2.6vw, 40px); }
 }
 
-/* ---------- Phones: the picture, then the tabs pinned across the screen, then the list ---------- */
+/* ---------- Phones: the picture, then the tabs across the screen, then the list ----------
+   The tabs stay under the header while the list scrolls. Only while they are stuck there (.is-stuck, set by
+   menu.astro) do they stand on the page's black, with the same black reaching up under the header's row, so
+   the header and the band read as one surface and the list slides in under a short soft edge. Before that the
+   band is clear and the picture above it is whole. When the header tucks away the band rides up with it, as one
+   piece: a transform with the header's own time and easing, not a change of where it sticks. */
 @media (max-width: 899px) {
   .bm-media { margin-bottom: 6px; }
-  /* the pinned tabs span the screen, solid black, with black reaching up under the header */
-  .bm-tabs { margin: 0 calc(-1 * var(--pad)); padding: 10px var(--pad); box-shadow: 0 calc(-1 * var(--hdr)) 0 0 #000; }
+  .bm-tabs { position: sticky; top: var(--hdr); margin: 0 calc(-1 * var(--pad)); padding: 6px var(--pad); transition: translate .4s var(--ease-out); }
+  .bm-tabs::after { content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 20px; pointer-events: none; opacity: 0; background: linear-gradient(180deg, var(--black), rgba(13, 14, 15, 0)); }
+  .bm-tabs.is-stuck { background: var(--black); box-shadow: 0 calc(-1 * var(--hdr)) 0 0 var(--black); }
+  .bm-tabs.is-stuck::after { opacity: 1; }
+  html.hdr-hide .bm-tabs.is-stuck { translate: 0 calc(-1 * var(--hdr)); }
   .bm .mgroup-h { padding-bottom: 12px; }
-  .bm .mrow { padding: 12px 0 13px; }
-  .bm .mrow .nm { font-size: 17px; }
-  .bm .mrow .nm small { font-size: 14px; }
-  .bm .mrow .pr { font-size: 19px; }
+  :is(.bm, .hk-offers) .mrow { gap: 0 10px; padding: 12px 0 13px; }
+  .bm .mgroup { column-gap: 10px; }
+  :is(.bm, .hk-offers) .mrow .nm { font-size: 17px; }
+  :is(.bm, .hk-offers) .mrow .ds { font-size: 14px; }
 }
+/* the narrowest phones: a size down and closer, so a drink's name, its volume and a long price share one line */
+@media (max-width: 374px) {
+  :is(.bm, .hk-offers) .mrow .nm { font-size: 16px; }
+  :is(.bm, .hk-offers) .mrow, .bm .mgroup { column-gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { .bm-tabs { transition: none; } }
 
 /* ---------- A phone held sideways, or any screen as short (landscape.css): the picture no taller than the
    screen ---------- */

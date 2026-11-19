@@ -43,13 +43,15 @@ const tabs = [
         <div class="bm-stack">
           {tabs.map((x, i) => (
             <div class:list={['photo', 'bm-shot', { on: i === 0 }]} data-for={x.id}>
-              <img src={media(x.shot.img)} alt="" loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+              {/* (only the first tab's picture is fetched on arrival; the others' when the page is idle or their tab is chosen: the script below) */}
+              <img src={i === 0 ? media(x.shot.img) : undefined} data-src={i === 0 ? undefined : media(x.shot.img)} alt="" decoding="async" />
               {x.shot.loop && <video class="loop" muted loop playsinline preload="none" data-src={media(x.shot.loop)}></video>}
             </div>
           ))}
         </div>
       </div>
 
+      <i class="bm-pin" aria-hidden="true"></i>
       <div class="bm-tabs">
         <div class="tabs" role="tablist" aria-label={ru ? 'Разделы меню' : 'Menu sections'}>
           <span class="tabs-ink" aria-hidden="true"></span>
@@ -68,9 +70,10 @@ const tabs = [
                 <h3 class="mgroup-h">{tr(c.title, lang)}</h3>
                 {c.items.map((it) => (
                   <div class="mrow">
-                    <span class="nm">{tr(it.name, lang)}{it.vol && <><span class="vgap">{' '}</span><span class="vol">{tr(it.vol, lang)}</span></>}{(it.desc || it.own) && <small>{it.desc && <span class="desc">{tr(it.desc, lang)}</span>}{it.own && <span class="own">{own}</span>}</small>}</span>
-                    <span class="dots"></span>
+                    <span class="nm">{tr(it.name, lang)}</span>
+                    {it.vol && <span class="vol">{tr(it.vol, lang)}</span>}
                     <span class:list={['pr', { req: it.price === null }]} set:html={cost(it)} />
+                    {(it.desc || it.own) && <small class="ds">{it.desc && <span class="desc">{tr(it.desc, lang)}</span>}{it.own && <span class="own">{own}</span>}</small>}
                   </div>
                 ))}
               </div>
@@ -82,7 +85,7 @@ const tabs = [
           <h2 class="bm-panel-h">{tabs[1].label}</h2>
           <div class="bm-cols">
             {kitchen.map((it) => (
-              <div class="mrow"><span class="nm">{tr(it.name, lang)}{it.desc && <small>{tr(it.desc, lang)}</small>}</span><span class="dots"></span><span class:list={['pr', { req: it.price === null }]} set:html={cost(it)} /></div>
+              <div class="mrow"><span class="nm">{tr(it.name, lang)}</span><span class:list={['pr', { req: it.price === null }]} set:html={cost(it)} />{it.desc && <small class="ds">{tr(it.desc, lang)}</small>}</div>
             ))}
           </div>
         </div>
@@ -91,7 +94,7 @@ const tabs = [
           <h2 class="bm-panel-h">{tabs[2].label}</h2>
           <div class="mrows" style="margin-top: 0">
             {entryShows.map((it) => (
-              <div class="mrow"><span class="nm">{tr(it.name, lang)}{it.desc && <small>{tr(it.desc, lang)}</small>}</span><span class="dots"></span><span class:list={['pr', { req: it.price === null }]} set:html={cost(it)} /></div>
+              <div class="mrow"><span class="nm">{tr(it.name, lang)}</span><span class:list={['pr', { req: it.price === null }]} set:html={cost(it)} />{it.desc && <small class="ds">{tr(it.desc, lang)}</small>}</div>
             ))}
           </div>
         </div>
@@ -115,10 +118,12 @@ const tabs = [
       // the chosen tab's film plays while the picture is on screen (an iPhone in Low Power Mode refuses to start it
       // without a touch: the next tap starts it)
       let refused = false;
+      // (a film is fetched only once the page itself has loaded, so it never competes with the first screen)
+      let loaded = document.readyState === 'complete';
       const films = () => shots.forEach((s) => {
         const v = s.querySelector('video');
         if (!v) return;
-        if (s.classList.contains('on') && inView && !still && !saveData) {
+        if (s.classList.contains('on') && inView && loaded && !still && !saveData) {
           if (!v.getAttribute('src')) v.src = v.dataset.src;
           v.play()
             .then(() => { refused = false; s.classList.add('looping'); })
@@ -129,6 +134,19 @@ const tabs = [
         }
       });
       addEventListener('touchend', () => { if (refused) films(); }, { passive: true });
+      // a tab's picture is fetched when its tab is first chosen, or sooner, in a quiet moment after the page has
+      // loaded, so the change of tab still shows its picture at once
+      const picture = (s) => {
+        const im = s.querySelector('img[data-src]');
+        if (im) { im.src = im.dataset.src; im.removeAttribute('data-src'); }
+      };
+      const settled = () => {
+        loaded = true;
+        films();
+        const rest = () => shots.forEach(picture);
+        if ('requestIdleCallback' in window) requestIdleCallback(rest, { timeout: 4000 }); else setTimeout(rest, 1500);
+      };
+      if (loaded) settled(); else addEventListener('load', settled, { once: true });
       const moveInk = () => {
         const t = tabs.find((x) => x.getAttribute('aria-selected') === 'true');
         if (!t || !ink) return;
@@ -143,7 +161,7 @@ const tabs = [
           panels[i].hidden = !on;
         });
         const id = tab.getAttribute('aria-controls');
-        shots.forEach((s) => s.classList.toggle('on', s.dataset.for === id));
+        shots.forEach((s) => { if (s.dataset.for === id) picture(s); s.classList.toggle('on', s.dataset.for === id); });
         if (focus) tab.focus();
         moveInk();
         films();
@@ -186,6 +204,19 @@ const tabs = [
       if (document.fonts) document.fonts.ready.then(moveInk);
       if ('IntersectionObserver' in window) {
         new IntersectionObserver(([e]) => { inView = e.isIntersecting; films(); }, { threshold: 0.3 }).observe(bm.querySelector('.bm-stack'));
+        // Stuck or not: the tabs are stuck once the mark standing where they start has gone up under the header.
+        // Only then do they carry the black behind them and under the header (menu.css, .is-stuck).
+        const pin = bm.querySelector('.bm-pin');
+        let watch = null;
+        const watchPin = () => {
+          if (watch) watch.disconnect();
+          const h = hdrHeight();
+          watch = new IntersectionObserver(([e]) => bar.classList.toggle('is-stuck', !e.isIntersecting && e.boundingClientRect.top < h + 1), { rootMargin: `-${h + 1}px 0px 0px 0px` });
+          watch.observe(pin);
+        };
+        watchPin();
+        let w = innerWidth;
+        addEventListener('resize', () => { if (innerWidth !== w) { w = innerWidth; watchPin(); } });
       }
     })();
   </script>
@@ -208,7 +239,7 @@ const tabs = [
         </div>
         <div class="mrows hk-offers" style="width: 100%; margin-top: 0">
           {hookah.offers.map((it) => (
-            <div class="mrow"><span class="nm">{tr(it.name, lang)}{it.desc && <small>{tr(it.desc, lang)}</small>}</span><span class="dots"></span><span class="pr" set:html={cost(it)} /></div>
+            <div class="mrow"><span class="nm">{tr(it.name, lang)}</span><span class="pr" set:html={cost(it)} />{it.desc && <small class="ds">{tr(it.desc, lang)}</small>}</div>
           ))}
         </div>
         <a class="btn btn-crimson" href={`/${lang}/booking/?type=lounge`}>{tr(hookah.cta, lang)}</a>
@@ -219,13 +250,14 @@ const tabs = [
 
 <style>
   /* The bar card's tabs, a size up from the usual ones: they lead into the list, they don't outweigh it. On phones
-     the three share the width. */
+     the three share the width, a finger's height each, in a band kept low so that the header, the band and the
+     call bar together leave the list most of a small screen. */
   .bm-tabs .tabs { padding: 5px; }
-  .bm-tabs .tabs :global(.tabs-ink) { top: 5px; bottom: 5px; }
   .bm-tabs .tabs button { display: inline-flex; align-items: center; justify-content: center; height: 52px; padding: 0 30px; font: 500 13px/1.15 var(--sans); letter-spacing: .14em; text-transform: uppercase; }
   @media (max-width: 599px) {
-    .bm-tabs .tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; }
-    .bm-tabs .tabs button { height: 50px; padding: 0 4px; font-size: 11.5px; letter-spacing: .1em; white-space: normal; text-align: center; }
+    .bm-tabs .tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; padding: 4px; }
+    .bm-tabs .tabs :global(.tabs-ink) { top: 4px; bottom: 4px; }
+    .bm-tabs .tabs button { height: 44px; padding: 0 4px; font-size: 11.5px; letter-spacing: .1em; white-space: normal; text-align: center; }
   }
   /* a dish never splits between the two columns (the kitchen list has no groups to hold it together) */
   .bm-cols > .mrow { break-inside: avoid; }

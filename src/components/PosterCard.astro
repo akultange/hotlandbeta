@@ -4,10 +4,8 @@
 // month beside it reading upwards. With a mouse the poster plays its film while the pointer is on it; on a
 // phone the poster plays as soon as it is on screen, and the next as it is swiped in (scripts/site.ts). Under the poster: the weekday and doors time,
 // the entry price, the night's name and one short line about it. The whole card books that night: the booking page
-// opens with "Особый вечер" and the night's date already chosen. With a mouse, a small metal disc reading "Бронь"
-// is the cursor over the poster.
-// With a mouse the poster also leans toward the pointer like a card held up to the light, a soft glare
-// following it (after Luka's version); never for reduced motion. On a phone the home page's row of posters is a
+// opens with "Особый вечер" and the night's date already chosen. With a mouse, a small glass plate reading "Бронь"
+// follows beside the pointer over the poster. On a phone the home page's row of posters is a
 // row to swipe (its hold while the page scrolled on, sliding from poster to poster, is switched off: holdRow).
 import { photo } from '../data/images';
 import { type Lang, tr, ui } from '../data/i18n';
@@ -61,7 +59,6 @@ const shot = await photo(media(e.img), '(max-width: 899px) 100vw, 36vw');
   <a class="poster-link" href={past ? `/${lang}/gallery/` : `/${lang}/booking/?type=ticket&date=${e.date}`} aria-current={here ? 'page' : undefined} aria-label={past ? `${lang === 'ru' ? 'Фото вечера' : 'Photos of the night'}: ${title}, ${fullDate(e.date, lang)}` : `${lang === 'ru' ? 'Забронировать вечер' : 'Book the night'}: ${title}, ${fullDate(e.date, lang)}, ${doors}. ${t.entry} ${entry}`} aria-describedby={lineId}>
     <span class="poster-frame">
       <span class="poster-shot" data-loop={e.loop ? media(e.loop) : undefined} style={shotStyle}><img src={media(e.img)} {...shot} alt={tr(e.alt, lang)} width="1100" height="1956" loading="lazy" decoding="async" /></span>
-      <span class="poster-glare" aria-hidden="true"></span>
       <span class="poster-date" aria-hidden="true"><span class="poster-day">{d}</span><span class="poster-month" style={`--em:${monthEm[lang][m - 1]}`}>{month}</span></span>
     </span>
     <span class="poster-row" aria-hidden="true">
@@ -76,12 +73,10 @@ const shot = await photo(media(e.img), '(max-width: 899px) 100vw, 36vw');
 <script>
   import { gsap } from 'gsap';
 
-  // With a mouse: over a poster the pointer becomes a small metal disc reading "Бронь" (the card books that night).
-  // It glides after the pointer; for reduced motion it simply sits on it. The real pointer is hidden only while
-  // the disc is showing (html.poster-disc, styles/posters.css), so there is always one or the other: when a
-  // scroll sends the disc away, the pointer is back at once, and the next move over a poster brings the disc back.
+  // With a mouse: over a poster a small plate beside the pointer reads "Бронь" (the card books that night). It
+  // glides after the pointer; for reduced motion it simply sits by it. When a scroll moves the poster from under a
+  // still pointer the plate goes, and the next move over a poster brings it back.
   if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    const root = document.documentElement;
     const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const disc = document.createElement('div');
     disc.className = 'poster-cursor';
@@ -92,8 +87,6 @@ const shot = await photo(media(e.img), '(max-width: 899px) 100vw, 36vw');
     const yTo = gsap.quickTo(disc, 'y', { duration: still ? 0 : 0.42, ease: 'power3' });
     const show = (on: boolean) => {
       disc.classList.toggle('on', on);
-      if (!on) disc.classList.remove('down');
-      root.classList.toggle('poster-disc', on);
     };
     let px = -1, py = -1, rq = 0;
     const appear = (e: PointerEvent) => {
@@ -116,8 +109,6 @@ const shot = await photo(media(e.img), '(max-width: 899px) 100vw, 36vw');
         yTo(e.clientY);
       });
       frame.addEventListener('pointerleave', () => show(false));
-      frame.addEventListener('pointerdown', () => disc.classList.add('down'));
-      frame.addEventListener('pointerup', () => disc.classList.remove('down'));
     });
     // the page moved under a still pointer (smooth scrolling): the disc stays while a poster is still under the
     // pointer and goes the moment none is, rather than float over the wrong thing
@@ -140,27 +131,6 @@ const shot = await photo(media(e.img), '(max-width: 899px) 100vw, 36vw');
       setTimeout(() => { if (film.paused && !shot.classList.contains('looping')) film.currentTime = 0; }, 700);
     }, true);
   });
-
-  // Posters lean toward the pointer (rotate at most 5° and 4°) and a glare follows it; back at rest on leave.
-  if (matchMedia('(hover: hover) and (pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    document.querySelectorAll<HTMLElement>('.poster-frame').forEach((card) => {
-      card.addEventListener('pointermove', (e) => {
-        const r = card.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width;
-        const y = (e.clientY - r.top) / r.height;
-        card.classList.add('is-tilting');
-        card.style.setProperty('--ry', `${((x - 0.5) * 10).toFixed(2)}deg`);
-        card.style.setProperty('--rx', `${((0.5 - y) * 8).toFixed(2)}deg`);
-        card.style.setProperty('--gx', `${(x * 100).toFixed(1)}%`);
-        card.style.setProperty('--gy', `${(y * 100).toFixed(1)}%`);
-      });
-      card.addEventListener('pointerleave', () => {
-        card.classList.remove('is-tilting');
-        card.style.setProperty('--rx', '0deg');
-        card.style.setProperty('--ry', '0deg');
-      });
-    });
-  }
 
   // Phones, home page: the weekend's posters could hold still in the middle of the screen while the page scrolls
   // on, sliding from one night to the next and resting on each (holdRow, below). Switched off on 2026-11-13: the

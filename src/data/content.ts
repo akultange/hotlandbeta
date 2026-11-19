@@ -241,7 +241,7 @@ export const barMenu = {
   intro: { ru: 'Коктейли, шампанское и классика бара.', en: 'Cocktails, champagne and the bar classics.' } as L,
   note: { ru: 'Цены в рублях, обслуживание включено.', en: 'Prices in roubles, service included.' } as L,
   onRequest: { ru: 'по запросу', en: 'on request' } as L,
-  tabs: { bar: { ru: 'Бар', en: 'Bar' } as L, kitchen: { ru: 'Кухня', en: 'Kitchen' } as L, entry: { ru: 'Вход и шоу', en: 'Entry & show' } as L },
+  tabs: { bar: { ru: 'Бар', en: 'Bar' } as L, kitchen: { ru: 'Кухня', en: 'Kitchen' } as L, entry: { ru: 'Вход и шоу', en: 'Entry' } as L },
   shots: {
     bar: { img: 'bar-menu-bar.webp', loop: 'bar-menu-bar-loop.mp4', alt: { ru: 'Бар: артистка с голубыми волосами и татуировками, в чёрном кружеве и чулках, сидит на стойке и льёт шампанское из бутылки', en: 'The bar: a blue-haired, tattooed artist in black lace and stockings sits on the bar and pours champagne from the bottle' } } as Shot,
     kitchen: { img: 'bar-menu-kitchen.webp', loop: 'bar-menu-kitchen-loop.mp4', alt: { ru: 'Кухня: артистка с голубыми волосами в чёрном атласе на красном бархатном диване ест клубнику в шоколаде; торт, свечи и бокалы', en: 'The kitchen: a blue-haired artist in black satin on a red velvet banquette eats a chocolate strawberry; cake, candles and coupes' } },

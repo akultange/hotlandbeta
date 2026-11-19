@@ -9,6 +9,7 @@
 import { type Lang, ui, altPath } from '../data/i18n';
 import { site } from '../data/site';
 import Name from './Name.astro';
+import Ic from './FooterIcon.astro';
 interface Props { lang: Lang; solid?: boolean }
 const { lang } = Astro.props;
 const t = ui[lang];
@@ -77,10 +78,11 @@ import { show } from '../data/variants';
       <div class="mnav-visit" style="--i:9">
         <p>{site.address[lang]}</p>
         <p>{ru ? 'Каждую ночь' : 'Nightly'} {hours}</p>
-        {show('contact', 'luka') && <p class="mnav-ask" data-v="contact:luka"><button class="ask-link" type="button" data-contact="callback">{ru ? 'Заказать звонок' : 'Request a call'}</button><span aria-hidden="true">·</span><button class="ask-link" type="button" data-contact="question">{ru ? 'Задать вопрос' : 'Ask a question'}</button></p>}
         {show('contact', 'gio') && <a class="mnav-phone" data-v="contact:gio" href={site.phoneHref}>{site.phone}</a>}
       </div>
       <div class="mnav-msg" style="--i:10">
+        {show('contact', 'luka') && <button class="glass" type="button" data-contact="callback" data-v="contact:luka"><Ic name="phone" />{ru ? 'Заказать звонок' : 'Request a call'}</button>}
+        {show('contact', 'luka') && <button class="glass" type="button" data-contact="question" data-v="contact:luka"><Ic name="ask" />{ru ? 'Задать вопрос' : 'Ask a question'}</button>}
         <a class="glass" href={site.whatsapp} target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 20.5 4.8 16A8.6 8.6 0 1 1 8 19.3z" /><path d="M9.3 8.3c.3-.4.9-.4 1.2 0l.8 1.5c.2.3.1.7-.1 1l-.5.5c.6 1.2 1.5 2.1 2.7 2.7l.5-.5c.3-.2.7-.3 1-.1l1.5.8c.4.3.4.9 0 1.2-.6.6-1.5.9-2.4.7-2.4-.6-4.3-2.5-4.9-4.9-.2-.9.1-1.8.7-2.4z" /></svg>
           {t.whatsapp}

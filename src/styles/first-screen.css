@@ -23,7 +23,7 @@
 
 /* ---------- The words: a line in the title's face, a line of text, two buttons ---------- */
 .hv-copy { position: relative; z-index: 1; display: grid; justify-items: start; gap: clamp(10px, 1vw, 14px); }
-.hero-tag { font: 450 clamp(34px, 3.4vw, 54px)/1.05 var(--display); letter-spacing: -.012em; color: var(--fg); padding-right: .08em; }
+.hero-tag { font: 450 clamp(34px, 3.4vw, 54px)/1.05 var(--display); letter-spacing: -.012em; color: var(--fg); }
 .hv-lead { max-width: 36ch; color: #cfd0d3; text-wrap: pretty; }
 .hv-act { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 14px; margin-top: clamp(10px, 1.2vw, 18px); }
 
@@ -52,22 +52,25 @@
 /* ---------- The name as the wall carries it ----------
    HOT and LAND in fine steel capitals set wide, one outline per letter (data/wordmark.ts, nameHalves), either side
    of a line of light: the T stands one letter-space (--ngu, in the outlines' units) before the line, and the L
-   begins on it. Lit from the upper left, as the wall is: each letter's light edge is its upper left, and its shadow
-   falls down and to the right. Where the two halves stand is the door's and the header's own business. */
+   begins on it. Lit from the upper left, as the wall is: the steel's own gradient is its light edge, and its shadow
+   falls down and to the right (a white edge drawn up and to the left of each letter read as a grey ghost of it).
+   Where the two halves stand is the door's and the header's own business. */
 .wall-name {
   --ng: calc(var(--nh) * var(--ngu) / 735);
   position: absolute; z-index: 2; left: 0; right: 0; top: var(--ny); height: 0; pointer-events: none;
 }
 .wall-name svg {
   position: absolute; top: 0; height: var(--nh); width: auto; translate: 0 -50%; overflow: visible; fill: url(#g-steel);
-  filter: drop-shadow(-.5px -.6px 0 rgba(255, 255, 255, .32)) drop-shadow(1px 1.5px 1px rgba(0, 0, 0, .85)) drop-shadow(2px 6px 10px rgba(0, 0, 0, .55));
+  filter: drop-shadow(1px 1.5px 1px rgba(0, 0, 0, .85)) drop-shadow(2px 6px 10px rgba(0, 0, 0, .55));
 }
 
 /* ---------- Phones ---------- */
 @media (max-width: 899px) {
   /* the screen ends where the phone's action dock begins: what lies under the dock is already the next section,
      so once the page moves there is no empty band between the name and Афиша */
-  .hv, .gate-in { height: calc(100svh - var(--dock)); min-height: 520px; --hv-pb: 24px; --hv-gap: 22px; }
+  /* (never shorter than 480px: on a 320 x 568 phone the screen's 496px above the dock then hold it all, and the
+     buttons keep their air above the dock) */
+  .hv, .gate-in { height: calc(100svh - var(--dock)); min-height: 480px; --hv-pb: 24px; --hv-gap: 22px; }
   .hero-tag { font-size: clamp(27px, 8.6vw, 42px); }
   /* the line under the motto stays one line down to the narrowest phone (17px from 370 wide up) */
   .hv-lead { font-size: min(17px, 4.6vw); }
@@ -100,7 +103,9 @@
     --cx: 50cqw;
     --cy: calc(var(--mh) / 2);
     /* the name: as tall as LAND (--wl wide, in the outlines' units) can be between the gap and the screen's edge */
-    --nh: min(34px, calc((50cqw - var(--mw) / 2 - var(--inl)) * 735 / var(--wl)));
+    /* (LAND starts 2.5px past the gap's edge: that much less room, so its D ends inside the page's column) */
+    /* (a tablet held upright has the room for a taller name: up to 48px) */
+    --nh: min(clamp(34px, 5.6cqw, 48px), calc((50cqw - var(--mw) / 2 - var(--inl) - 3px) * 735 / var(--wl)));
     --ny: calc(var(--mh) / 2);
   }
   .hv3 .hv-copy, .gate-in .hv-copy { top: auto; bottom: var(--hv-pb); }

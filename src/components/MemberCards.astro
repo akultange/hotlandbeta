@@ -1,33 +1,42 @@
 ---
 // The club's three cards (membership; styles in styles/vip.css), in a field of concrete with bordeaux light rising
-// from below. Each card carries the name as the wall does (steel capitals set wide, the red light between the T
-// and the L): brushed steel, black concrete and bordeaux lacquer. Under each card: its name, what it is, what comes
-// with it, a request button and the price. The buttons follow the one rule for a row of cards (the bottle sets in
-// TableSets.astro too): steel-edged under the first cards and bordeaux under the last, the top one.
+// from below. Each is set as a real club card, after the brand board's own: the name where the wall has it, a
+// hairline of the red light down the card's whole height at the L, the card's name in small capitals at the foot
+// and a member's number beside it. Three finishes: brushed steel, black concrete and bordeaux lacquer. Under each
+// card: its name, what it is, what comes with it, a request button and the price. The buttons follow the one rule
+// for a row of cards (the bottle sets in TableSets.astro too): steel-edged under the first cards and bordeaux
+// under the last, the top one.
 // From 1024px: the cards are dealt out of one stack as the field arrives, then tilt under the pointer and
-// catch the light. Tablets and phones: a row to swipe, with a meter under it. Nothing moves for reduced motion.
-// A page can set its heading inside the field (without it the field holds just the cards):
+// catch the light. Tablets and phones: a row to swipe, with a meter under it; only the card in front shows its
+// words, the next one is a clean edge of its plate. Nothing moves for reduced motion.
+// A page can set a heading over the field (it stands on the page's own left edge, as every section's heading):
 //   <MemberCards lang={lang}><div slot="head" class="bighead bh-line">…</div></MemberCards>
 import { type Lang, ui, tr } from '../data/i18n';
 import { keepShort } from '../data/format';
 import { tiers, vip } from '../data/content';
+import { nameHalves } from '../data/wordmark';
 import Name from './Name.astro';
 import '../styles/vip.css';
 const { lang } = Astro.props as { lang: Lang };
 const finish = ['silver', 'black', 'bordeaux'];
 const hasHead = Astro.slots.has('head');
 const pad2 = (n: number) => String(n).padStart(2, '0');
-/** The tiers' names: under the field's own heading when it has one, else straight under the page's title. */
+/** The tiers' names: under the section's own heading when it has one, else straight under the page's title. */
 const Title = hasHead ? 'h3' : 'h2';
+// where the L begins, as a share of the name's width: the card's line of light stands there (Name.astro's blade does)
+const { hot, gap, width } = nameHalves();
+const seam = ((hot.width + gap - 30) / width).toFixed(4);
 ---
-<div class:list={['vfield', { 'has-head': hasHead }]}>
-  {hasHead && <div class="vfield-head"><slot name="head" /></div>}
+{hasHead && <slot name="head" />}
+<div class="vfield">
   <div class="vdeck" data-deal data-lenis-prevent-horizontal>
     {tiers.map((p, i) => (
       <article class:list={['vtier', `vtier-${finish[i % finish.length]}`]}>
         <div class="vcard" aria-hidden="true">
-          <div class="vcard-in">
-            <Name class="vcard-name" />
+          <div class="vcard-in" style={`--seam:${seam}`}>
+            <Name class="vcard-name" seam={false} />
+            <span class="vcard-seam"></span>
+            <span class="vcard-foot"><span class="vcard-tier">{p.name}</span><span class="vcard-no">№&nbsp;0001</span></span>
             <span class="vcard-glint"></span>
             <span class="vcard-glare"></span>
           </div>
@@ -89,7 +98,10 @@ const Title = hasHead ? 'h3' : 'h2';
       const p = max > 0 ? deck.scrollLeft / max : 0;
       thumb.style.setProperty('--w', `${(seen * 100).toFixed(2)}%`);
       thumb.style.setProperty('--x', `${(seen < 1 ? ((1 - seen) / seen) * p * 100 : 0).toFixed(2)}%`);
-      count.textContent = `${pad2(frontNow() + 1)} / ${pad2(tiers.length)}`;
+      const now = frontNow();
+      count.textContent = `${pad2(now + 1)} / ${pad2(tiers.length)}`;
+      // (only the card in front shows its words: vip.css)
+      tiers.forEach((t, i) => t.classList.toggle('is-front', i === now));
     };
     const queue = () => { if (!queued) queued = requestAnimationFrame(measure); };
     deck.addEventListener('scroll', () => {
@@ -154,21 +166,24 @@ const Title = hasHead ? 'h3' : 'h2';
             transformOrigin: '50% 85%',
           });
           // the hand rises into the middle, then the outer cards are dealt to their places
-          tl.to(cards, { opacity: 1, y: 0, duration: 0.45, ease: 'power3.out' }, 0)
-            .to(cards, { x: 0, rotation: 0, scale: 1, duration: 1, ease: 'expo.out', stagger: { each: 0.05, from: 'center' } }, 0.22)
-            .to(bodies, { opacity: 1, y: 0, duration: 0.85, ease: 'expo.out', stagger: 0.08 }, 0.5);
+          tl.to(cards, { opacity: 1, y: 0, duration: 0.35, ease: 'power3.out' }, 0)
+            .to(cards, { x: 0, rotation: 0, scale: 1, duration: 0.8, ease: 'expo.out', stagger: { each: 0.04, from: 'center' } }, 0.14)
+            .to(bodies, { opacity: 1, y: 0, duration: 0.6, ease: 'expo.out', stagger: 0.06 }, 0.3);
         } else {
+          // (the row to swipe: only the card in front has words to bring in; the others' wait unseen, vip.css)
           gsap.set(cards, { y: 34 });
-          tl.to(cards, { opacity: 1, y: 0, duration: 1, ease: 'expo.out', stagger: 0.08 }, 0)
-            .to(bodies, { opacity: 1, y: 0, duration: 0.9, ease: 'expo.out', stagger: 0.08 }, 0.18);
+          tl.to(cards, { opacity: 1, y: 0, duration: 0.7, ease: 'expo.out', stagger: 0.06 }, 0)
+            .to(bodies.slice(0, 1), { opacity: 1, y: 0, duration: 0.6, ease: 'expo.out' }, 0.12);
         }
-        tl.fromTo(glints, { backgroundPosition: '105% 0%' }, { backgroundPosition: '-5% 0%', duration: 1.15, ease: 'power2.inOut', stagger: 0.09 }, wide ? 0.7 : 0.4);
+        tl.fromTo(glints, { backgroundPosition: '105% 0%' }, { backgroundPosition: '-5% 0%', duration: 1.05, ease: 'power2.inOut', stagger: 0.08 }, wide ? 0.45 : 0.3);
       });
+      // (as soon as a sliver of the row is on screen: a reader who stops with the field just in view must not
+      // look at an empty one)
       const io = new IntersectionObserver((entries) => {
         if (!entries.some((e) => e.isIntersecting)) return;
         io.disconnect();
         play();
-      }, { rootMargin: wide ? '0px 0px -22% 0px' : '0px 0px -14% 0px' });
+      }, { rootMargin: '0px 0px -6% 0px' });
       let live = true;
       whenSettled(() => live && io.observe(deck));
       return () => { live = false; io.disconnect(); };

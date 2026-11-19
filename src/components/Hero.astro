@@ -360,7 +360,9 @@ const starter = `(function (v) { v.poster = matchMedia('${PHONE}').matches ? v.d
           .fromTo(words, { autoAlpha: 1, y: 0 }, { autoAlpha: 0, y: 30, duration: 0.18, ease: 'power1.in' }, 0)
           // the L's stem grows until it covers the screen, so the film opens like a door (as v2)
           .fromTo(el, { '--z': 1 }, { '--z': 30, duration: 1, ease: 'power3.in' }, 0)
-          .fromTo(edges, { opacity: 1 }, { opacity: 0, duration: 0.2 }, 0.05)
+          // (the chrome edge stays on the letters until they are several times their size: gone at the start, it
+          // left a murky blob on the glass for the first stretch of the scroll)
+          .fromTo(edges, { opacity: 1 }, { opacity: 0, duration: 0.25 }, 0.45)
           .fromTo(frost, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.08 }, 0.92);
       });
       // phones and tablets: as before, the film sinks a little behind the glass, and the glass dims

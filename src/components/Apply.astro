@@ -2,8 +2,8 @@
 // The job application, as a full-screen page of its own over the site (styles/apply.css). The client: "the
 // current UX is shit, a full-page popup would be better": instead of a trip to the careers page and a form at
 // its foot, the application opens where you are, in three short steps.
-//   1. «Кем вы будете в HOTLAND?»: the five roles as tiles with their 3D icons (the booking form's tiles); a tap
-//      chooses one and moves on.
+//   1. «Кем вы будете в HOTLAND?»: the five roles as plates with their names (the booking's own); a tap chooses
+//      one and moves on.
 //   2. «Как с вами связаться?»: name, phone, and where to reply (WhatsApp, Telegram or a call).
 //   3. «Пару слов о себе»: a few words (optional), a pointer to Telegram for photos and films, the consent.
 // Then thanks; or, if sending fails, the same application again (nothing typed is lost), or WhatsApp with it
@@ -17,14 +17,12 @@ import { photo } from '../data/images';
 import { type Lang, ui, tr } from '../data/i18n';
 import { site } from '../data/site';
 import { careers } from '../data/content';
-import Icon3d from './Icon3d.astro';
 import { keepShort } from '../data/format';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ru = lang === 'ru';
 const f = ui[lang].form;
-const roleIcons = ['stiletto', 'keyhole', 'coupe', 'cherries', 'key'] as const;
 const L = ru
   ? {
       title: 'Анкета', close: 'Закрыть', back: 'Назад', next: 'Дальше', send: 'Отправить',
@@ -49,6 +47,11 @@ const L = ru
       hello: 'Hello! I’d like to work at HOTLAND.',
     };
 const vias = ['WhatsApp', 'Telegram', f.call];
+// The consent's sentence is i18n's; only the policy's own name in it is the link, so a tap on the rest ticks the box
+// (were the sentence ever reworded without that name, its last two words would be the link). «18 лет» stays together.
+const [, consentA, consentLink, consentB] =
+  f.consent.match(/^(.*?)(политику конфиденциальности|the privacy policy)(.*)$/) ?? f.consent.match(/^(.*\s)(\S+\s+\S+)()$/) ?? ['', '', f.consent, ''];
+const unit = (t: string) => t.replace(/(\d) (?=\p{L})/gu, '$1\u00a0');
 const pic = await photo('/media/gal-06-dressing-room.webp', '42vw');
 ---
 <dialog class="apl" id="apply-dlg" aria-labelledby="apl-title" data-lenis-prevent data-wa={site.whatsapp} data-l={JSON.stringify({ needContact: L.needContact, needConsent: L.needConsent, hello: L.hello })}>
@@ -69,9 +72,9 @@ const pic = await photo('/media/gal-06-dressing-room.webp', '42vw');
         <fieldset class="apl-step" data-s="1" aria-labelledby="apl-h1">
           <h3 class="apl-h" id="apl-h1" tabindex="-1">{L.h1}</h3>
           <p class="apl-lead" set:html={keepShort(L.lead1, lang)} />
-          <div class="choice choice-tiles apl-roles">
+          <div class="apl-roles">
             {careers.roles.map((r, i) => (
-              <label><input type="radio" name="role" value={tr(r, lang)} data-i={i} /><span><Icon3d name={roleIcons[i] ?? 'emblem'} size={120} class="choice-ic" />{tr(r, lang)}</span></label>
+              <label><input type="radio" name="role" value={tr(r, lang)} data-i={i} /><span>{tr(r, lang)}</span></label>
             ))}
           </div>
         </fieldset>
@@ -100,12 +103,12 @@ const pic = await photo('/media/gal-06-dressing-room.webp', '42vw');
           <div class="field full"><label for="apl-about">{L.about}</label><textarea id="apl-about" name="about" rows="5" maxlength="800" placeholder={L.aboutPh}></textarea></div>
           <p class="apl-hint">{L.tg} <a href={site.telegramCasting} target="_blank" rel="noopener">{L.tgLink}</a></p>
           <div class="hp" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off" /></label></div>
-          <label class="consent"><input type="checkbox" name="consent" required /><span>{f.consent}</span></label>
+          <label class="consent"><input type="checkbox" name="consent" required /><span>{unit(consentA)}<a href={`/${lang}/privacy/`} target="_blank" rel="noopener">{consentLink}</a>{consentB}</span></label>
         </fieldset>
 
         <!-- sent -->
         <div class="apl-step apl-end" data-s="done" role="status" hidden>
-          <span class="apl-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12.5 4.4 4.3L19 7.5" /></svg></span>
+          <span class="apl-mark" aria-hidden="true"></span>
           <p class="apl-h" tabindex="-1">{L.doneH}</p>
           <p class="apl-lead">{L.doneText}</p>
           <div class="btns"><button class="btn btn-crimson" type="button" data-apl-close>{L.ok}</button></div>
@@ -124,8 +127,8 @@ const pic = await photo('/media/gal-06-dressing-room.webp', '42vw');
       </div>
 
       <footer class="apl-foot">
+        <p class="apl-err" id="apl-err" role="alert" hidden></p>
         <button class="btn btn-line apl-back" type="button" data-apl-back>{L.back}</button>
-        <p class="apl-err" role="alert" hidden></p>
         <button class="btn btn-crimson apl-next" type="button" data-apl-next>{L.next}</button>
         <button class="btn btn-crimson apl-send" type="submit" data-sending={f.sending} hidden>{L.send}</button>
       </footer>
@@ -156,6 +159,32 @@ const pic = await photo('/media/gal-06-dressing-room.webp', '42vw');
     let auto = 0;
 
     const say = (text = '') => { err.textContent = text; err.hidden = !text; };
+    // What can be wrong (the name and the phone on step 2, the consent on step 3), and how each is right. A field
+    // that is wrong shows it itself (apply.css: .is-bad, its line in light) and says so to a screen reader; put
+    // right, its mark goes, and the message with the last of them.
+    const checks: [HTMLInputElement, () => boolean][] = [
+      [name, () => Boolean(name.value.trim())],
+      [phone, () => phone.value.replace(/\D/g, '').length >= 6],
+      [consent, () => consent.checked],
+    ];
+    function mark(el: HTMLInputElement, bad: boolean) {
+      el.closest('.field, .consent')?.classList.toggle('is-bad', bad);
+      if (bad) { el.setAttribute('aria-invalid', 'true'); el.setAttribute('aria-describedby', err.id); }
+      else { el.removeAttribute('aria-invalid'); el.removeAttribute('aria-describedby'); }
+    }
+    /** The first of these that is wrong: marked, named at the window's foot, and the cursor in it. */
+    function wrong(els: HTMLInputElement[], text: string) {
+      const bad = checks.filter(([el, ok]) => els.includes(el) && !ok()).map(([el]) => el);
+      els.forEach((el) => mark(el, bad.includes(el)));
+      if (!bad.length) return false;
+      say(text);
+      bad[0].focus();
+      return true;
+    }
+    form.addEventListener('input', () => {
+      checks.forEach(([el, ok]) => { if (el.hasAttribute('aria-invalid') && ok()) mark(el, false); });
+      if (!form.querySelector('[aria-invalid]')) say();
+    });
     /** Show a step: its number above, the line filling, the buttons it needs; the eye (and the keyboard) on it. */
     function show(s: string, focus = true) {
       step = s;
@@ -169,6 +198,7 @@ const pic = await photo('/media/gal-06-dressing-room.webp', '42vw');
       next.hidden = s !== '2';
       send.hidden = s !== '3';
       form.classList.toggle('apl-ending', ending);
+      checks.forEach(([el]) => mark(el, false));
       say();
       if (focus) {
         const target = s === '2' && !name.value ? name : dlg!.querySelector<HTMLElement>(`[data-s="${s}"] .apl-h`);
@@ -197,16 +227,23 @@ const pic = await photo('/media/gal-06-dressing-room.webp', '42vw');
       show(step);
       track('careers_open');
     }
+    /** Close it: the window leaves in a short fade (apply.css: apl-out), and only then closes, so the page is never
+     *  cut to. (The timer is for a browser that never says the fade has ended.) */
     function close() {
-      if (!dlg!.open) return;
-      dlg!.classList.add('apl-out');
-      const end = () => {
+      if (!dlg!.open || dlg!.classList.contains('apl-out')) return;
+      let closed = false;
+      const end = (e?: Event) => {
+        if (closed || (e && e.target !== dlg)) return; // (a step's own entrance ending inside is not the window's)
+        closed = true;
+        dlg!.removeEventListener('animationend', end);
         dlg!.classList.remove('apl-out');
         if (typeof dlg!.close === 'function') dlg!.close();
         else dlg!.removeAttribute('open');
+        root.classList.remove('apl-lock');
       };
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches) end();
-      else setTimeout(end, 260);
+      dlg!.addEventListener('animationend', end);
+      dlg!.classList.add('apl-out');
+      setTimeout(end, 400);
     }
     dlg.addEventListener('close', () => root.classList.remove('apl-lock'));
     // Esc: the same closing as the cross
@@ -236,9 +273,8 @@ const pic = await photo('/media/gal-06-dressing-room.webp', '42vw');
     });
     dlg.querySelector('[data-apl-goto="1"]')?.addEventListener('click', () => show('1'));
     back.addEventListener('click', () => show(step === '3' ? '2' : '1'));
-    const contactOk = () => Boolean(name.value.trim()) && phone.value.replace(/\D/g, '').length >= 6;
     function toThree() {
-      if (!contactOk()) { say(L.needContact); (name.value.trim() ? phone : name).focus(); return; }
+      if (wrong([name, phone], L.needContact)) return;
       show('3');
     }
     next.addEventListener('click', toThree);
@@ -249,8 +285,8 @@ const pic = await photo('/media/gal-06-dressing-room.webp', '42vw');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      if (step !== '3') return;
-      if (!consent.checked) { say(L.needConsent); consent.focus(); return; }
+      if (step !== '3' || send.disabled) return;
+      if (wrong([consent], L.needConsent)) return;
       const fd = new FormData(form);
       const data = Object.fromEntries(['role', 'name', 'phone', 'messenger', 'about', 'website'].map((k) => [k, String(fd.get(k) || '')]));
       const label = send.textContent || '';

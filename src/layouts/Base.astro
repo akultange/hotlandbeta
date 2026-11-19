@@ -19,7 +19,7 @@ import Apply from '../components/Apply.astro';
 import Book from '../components/Book.astro';
 import { site } from '../data/site';
 import { type Lang, altPath, ui } from '../data/i18n';
-import { TEST as VTEST, chooser as vChooser, hideRules as vHide } from '../data/variants';
+import { TEST as VTEST, chooser as vChooser, hideRules as vHide, show as showV } from '../data/variants';
 import fonts from '../data/fonts.json';
 import { LILY, WORDMARK, WORDMARK_BOX } from '../data/brand';
 
@@ -29,6 +29,9 @@ interface Props {
   description?: string;
   /** No header, footer or age gate (goodbye page). */
   bare?: boolean;
+  /** The 18+ door (default: on). Off on the documents the door itself links to: the privacy policy has to be
+   *  readable before the question is answered. Every other page asks. */
+  gate?: boolean;
   /** Header starts solid instead of transparent. */
   solidHeader?: boolean;
   schema?: Record<string, unknown>;
@@ -38,7 +41,7 @@ interface Props {
   /** The footer's "your table is waiting" block. Off on pages that end in their own form. */
   closing?: boolean;
 }
-const { lang, title, description = '', bare = false, solidHeader = false, schema, noindex: noindexPage = false, waContext, closing = true } = Astro.props;
+const { lang, title, description = '', bare = false, gate = true, solidHeader = false, schema, noindex: noindexPage = false, waContext, closing = true } = Astro.props;
 // Preview builds (GitHub Pages) are kept out of search engines.
 const noindex = noindexPage || import.meta.env.PUBLIC_NOINDEX === '1';
 const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · ${lang === 'ru' ? 'Только между нами' : site.tagline}`;
@@ -53,13 +56,18 @@ const preload = lang === 'ru'
   : [fonts['geologica-sharp-lat'], fonts['geologica-lat']];
 ---
 <!doctype html>
-<html lang={lang}>
+<html lang={lang} data-door={!bare && !gate ? 'none' : undefined}>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    {/* Page changes cross-fade (the rules are in global.css and nav.css). The opt-in stands here, first in the head:
+        read late, in a stylesheet, the browser had sometimes not seen it when the next page was asked for. */}
+    <style is:inline>@media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto; } }</style>
+    {/* (interactive-widget: when the phone's keyboard opens, the page's own height shrinks with it, so a window's
+        buttons stay above the keyboard) */}
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
     <title>{fullTitle}</title>
     {description && <meta name="description" content={description} />}
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#0d0e0f" />
     {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={abs(path)} />
     <link rel="alternate" hreflang="ru" href={abs(altPath(path, 'ru'))} />
@@ -77,6 +85,7 @@ const preload = lang === 'ru'
     <meta property="og:image:alt" content={lang === 'ru' ? 'HOTLAND. Только между нами' : 'HOTLAND. Just between us'} />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     {preload.map((href) => <link rel="preload" as="font" type="font/woff2" href={href} crossorigin />)}
 
     {/* the concrete of the 18+ door and of the page itself, found otherwise only after the stylesheet */}
@@ -98,6 +107,9 @@ const preload = lang === 'ru'
           var ok = Number(sessionStorage.getItem('age_ok'));
           if (ok && Date.now() - ok < 30 * 60 * 1000) { r.classList.add('age-ok'); sessionStorage.setItem('age_ok', String(Date.now())); }
         } catch (e) {}
+        // A page that carries a header but no door (a document the door links to) is simply open: nothing is noted,
+        // so the next page still asks.
+        if (r.getAttribute('data-door') === 'none') r.classList.add('age-ok');
         // The home page entrance plays in full once per session (global.css, Home hero).
         try { if (/^\/(ru|en)\/?$/.test(location.pathname)) { if (sessionStorage.getItem('hl-hero-seen')) r.classList.add('hero-again'); sessionStorage.setItem('hl-hero-seen', '1'); } } catch (e) {}
         // While a page change runs, the parts kept still (the lily, the sections, the dock) trade their glass blur for a
@@ -152,6 +164,8 @@ const preload = lang === 'ru'
           if (sw && Date.now() - sw.t < 8000 && sw.to === location.pathname) {
             window.__hlLang = sw;
             r.classList.add('lang-in');
+            // (and if the 18+ door still stands, it stands as it did: styles/gate.css)
+            r.classList.add('door-still');
             if (sw.i >= 0) {
               var hold = document.createElement('link');
               hold.rel = 'expect';
@@ -181,14 +195,16 @@ const preload = lang === 'ru'
           <stop offset=".5" stop-color="#d0d1d4" />
           <stop offset="1" stop-color="#96989d" />
         </linearGradient>
-        {/* the lily and the wordmark, written once and referenced wherever they show (Logo.astro and the like) */}
-        <symbol id="hl-lily" viewBox="0 0 256 256"><path fill-rule="evenodd" d={LILY} /></symbol>
-        <symbol id="hl-word" viewBox={WORDMARK_BOX}><path fill-rule="evenodd" d={WORDMARK} /></symbol>
+        {/* the lily and the old wordmark, written once and referenced where they show: only the footer's hidden
+            version v5 uses them now (FooterNight.astro), so they are in the page only when that version is */}
+        {showV('footer', 'v5') && <symbol id="hl-lily" viewBox="0 0 256 256"><path fill-rule="evenodd" d={LILY} /></symbol>}
+        {showV('footer', 'v5') && <symbol id="hl-word" viewBox={WORDMARK_BOX}><path fill-rule="evenodd" d={WORDMARK} /></symbol>}
       </defs>
     </svg>
-    {!bare && <AgeGate lang={lang} />}
+    {!bare && gate && <AgeGate lang={lang} />}
+    {!bare && <a class="skip" href="#main">{lang === 'ru' ? 'К содержанию' : 'Skip to content'}</a>}
     {!bare && <Header lang={lang} solid={solidHeader} />}
-    <main id="main"><slot /></main>
+    <main id="main" tabindex="-1"><slot /></main>
     {!bare && <Footer lang={lang} cta={closing} />}
     {!bare && <MobileBar lang={lang} />}
     {!bare && <Ask lang={lang} />}

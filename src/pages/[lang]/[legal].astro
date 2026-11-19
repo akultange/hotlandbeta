@@ -28,25 +28,49 @@ export function getStaticPaths() {
 const lang = Astro.params.lang as Lang;
 const page = pages[Astro.params.legal as Key][lang];
 const ru = lang === 'ru';
+// The page's name is set at one size on all three pages (the style below), small enough on a phone for the longest
+// word of the three, «конфиденциальности», to stay whole. Only on a screen narrower than any phone's (a folded
+// phone's cover, 280px) may it break, here: the soft hyphen wakes up there alone (.legal-shy), or every phone would
+// break the word at it to fill the first line.
+const name = page.title.replace('конфиденциальности', 'конфиден<span class="legal-shy">&shy;</span>циальности');
+// (a document ends with its text: no closing «Ваш стол уже ждёт» under it; and it opens without the 18+ door, which
+// links to the privacy policy: the policy has to be readable before the question is answered)
 ---
-<Base lang={lang} title={page.title}>
+<Base lang={lang} title={page.title} closing={false} gate={false}>
   <PageTitle
     crumbs={[{ href: `/${lang}/`, label: 'HOTLAND' }, { label: page.title }]}
-    title={page.title}
+    title={name}
     label={ru ? 'Документ' : 'Document'}
     lead={ru ? 'Черновик-заглушка. Окончательный текст должен подготовить юрист.' : 'Placeholder draft. The final text must be written by a lawyer.'}
   />
-  <section class="sec-t">
-    <div class="wrap g12">
-      <div class="prose" style="grid-column: 4 / span 7">
+  <section class="sec-t legal">
+    <div class="wrap">
+      <div class="prose">
         {page.parts.map((h) => (
           <Fragment>
             <h2>{h}</h2>
             <p>{ru ? 'Текст раздела. Будет добавлен позже.' : 'Section text, to be added.'}</p>
           </Fragment>
         ))}
-        <p class="label" style="margin-top: 32px">{site.name} · {site.email}</p>
+        <p class="label legal-sign">{site.name} · {site.email}</p>
       </div>
     </div>
   </section>
 </Base>
+
+<style is:global>
+  /* A document's name: one size on all three pages (it used to follow each name's longest word: 30, 45 and 64px on
+     a phone), its lines a full line apart, so two lines of Cyrillic never touch. 8.2vw keeps «конфиденциальности»
+     (10.55em wide) whole from 320px up, with a little to spare. */
+  main:has(> .legal) .ptitle-name { font-size: clamp(26px, 8.2vw, 64px); line-height: 1; text-wrap: balance; }
+  .legal-shy { display: none; }
+  @media (max-width: 319px) { .legal-shy { display: inline; } }
+  /* the first part's heading gets the air every part's heading has above it (the text's own 18px and the heading's
+     24px), not the closer gap a page's first line of content keeps under the page's name */
+  main:has(> .legal) .ptitle + .sec-t.legal { padding-top: 42px; }
+  /* the text starts on the name's own left edge and runs in lines of a reading width; a part's heading that takes
+     two lines breaks them evenly, never leaving one word alone */
+  .legal .prose { max-width: 640px; }
+  .legal .prose h2 { text-wrap: balance; }
+  .legal-sign { margin-top: 32px; }
+</style>

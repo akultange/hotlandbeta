@@ -14,7 +14,8 @@
   --steel-pill-edge: inset 0 1px 0 rgba(255, 255, 255, .85), inset 0 -1px 0 rgba(0, 0, 0, .2), 0 8px 20px -10px rgba(0, 0, 0, .85);
   /* what is chosen in the header (the page, the language) stands over a line of the red light */
   --nav-on: linear-gradient(90deg, transparent, var(--light) 18%, var(--light) 82%, transparent) 50% 100% / calc(100% - 20px) 1.5px no-repeat;
-  --nav-glass: rgba(20, 21, 23, .62);
+  /* (dense: text that scrolls under a plate must not be read through it; the blur alone left it legible) */
+  --nav-glass: rgba(15, 16, 18, .86);
   --nav-edge: inset 0 0 0 1px rgba(230, 231, 233, .1), inset 0 1px 0 rgba(255, 255, 255, .07);
   --nav-lift: 0 14px 34px -18px rgba(0, 0, 0, .9);
   --nav-blur: blur(20px) saturate(1.5);
@@ -42,6 +43,9 @@
 .hdr::after { content: none; }
 
 .hdr-in {
+  /* (as wide as the page's own column: on a very wide screen the plates stand over the content's edges, not out
+     in the screen's corners) */
+  max-width: var(--max); margin-inline: auto;
   height: var(--hdr-row); padding: 0 var(--pad);
   display: grid; grid-template-columns: minmax(max-content, 1fr) auto minmax(max-content, 1fr);
   align-items: center; column-gap: 14px;
@@ -125,6 +129,13 @@
   .hdr-nav { gap: 0; }
   .hdr-nav a { padding: 0 8px; font-size: 11px; letter-spacing: .1em; }
 }
+/* the narrowest desktop (a tablet on its side): every plate a step tighter, so none touches its neighbour */
+@media (min-width: 900px) and (max-width: 959px) {
+  .hdr-name { padding: 0 12px; }
+  .hdr-nav a { padding: 0 6px; }
+  .seg a { min-width: 32px; padding: 0 6px; }
+  .hdr-book { padding: 0 12px; }
+}
 
 @media (max-width: 899px) {
   .hdr-in { display: flex; justify-content: space-between; column-gap: 12px; }
@@ -143,7 +154,7 @@
 /* ---------- Phone menu: a full-screen sheet ---------- */
 .mnav {
   position: fixed; inset: 0; z-index: 70; overflow-y: auto; overscroll-behavior: contain;
-  background-color: var(--black); background-image: radial-gradient(120% 52% at 100% 0%, rgba(168, 24, 46, .12), rgba(168, 24, 46, 0) 62%), var(--stone); background-size: auto, var(--stone-size); background-blend-mode: normal, overlay, overlay;
+  background-color: var(--black); background-image: radial-gradient(120% 52% at 100% 0%, rgba(101, 8, 31, .3), rgba(101, 8, 31, 0) 62%), var(--stone); background-size: auto, var(--stone-size); background-blend-mode: normal, overlay, overlay;
   color: var(--fg);
 }
 .mnav-top {
@@ -152,7 +163,8 @@
 }
 .mnav-top-r { display: flex; align-items: center; gap: 8px; }
 .mnav-top .hdr-menu { display: inline-flex; }
-.mnav-top .seg a { min-width: 38px; height: 34px; }
+.mnav-top .seg { padding: 0; }
+.mnav-top .seg a { min-width: 44px; height: 44px; }
 /* a phone: the name, the language and the cross fit one row (the word "Close" stays for screen readers) */
 @media (max-width: 479px) {
   .mnav-top { gap: 8px; }
@@ -181,14 +193,13 @@
 }
 .mnav-visit { display: grid; gap: 2px; font: 400 17px/1.55 var(--sans); color: var(--fg-2); }
 .mnav-phone { margin-top: 10px; font: 600 22px/1.25 var(--sans); color: var(--fg); font-variant-numeric: lining-nums; } /* Gio's contact variant */
-.mnav-ask { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-top: 10px; font: 600 19px/1.3 var(--sans); color: var(--fg); }
-.mnav-ask span { color: var(--muted); font-weight: 400; }
-.mnav-msg { display: flex; flex-wrap: wrap; gap: 10px; }
-.mnav-msg a {
-  display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 18px 0 14px; border-radius: 2px;
-  font: 500 15px/1 var(--sans); color: var(--fg); transition: scale .2s ease, background-color .25s ease;
+/* the ways to reach the club: four plates, two to a row (one to a row where two would not fit their words) */
+.mnav-msg { display: grid; grid-template-columns: repeat(auto-fit, minmax(168px, 1fr)); gap: 10px; width: 100%; max-width: 460px; }
+.mnav-msg :is(a, button) {
+  display: flex; align-items: center; gap: 10px; min-width: 0; height: 48px; padding: 0 14px; border-radius: 2px;
+  font: 500 15px/1 var(--sans); color: var(--fg); white-space: nowrap; transition: scale .2s ease, background-color .25s ease;
 }
-.mnav-msg a:active { scale: .97; background-color: rgba(44, 44, 48, .7); }
+.mnav-msg :is(a, button):active { scale: .97; background-color: rgba(44, 44, 48, .7); }
 .mnav-msg svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .mnav-careers { display: inline-flex; align-items: center; gap: 10px; padding: 6px 0; font: 500 16px/1 var(--sans); color: var(--fg-2); }
 .mnav-careers span { color: var(--red-text); }
@@ -219,15 +230,18 @@ html.motion .mnav.closing { animation: nav-curtain-out .32s cubic-bezier(.5, 0, 
 .mbar .mbar-act {
   display: grid; justify-items: center; align-content: center; gap: 6px; min-width: 0; height: 52px; padding: 0;
   border: 0; border-radius: 2px; background: none; box-shadow: none; filter: none;
-  font: 400 11px/1 var(--sans); letter-spacing: .02em; text-transform: none; color: var(--fg-2); white-space: nowrap;
+  font: 400 12px/1 var(--sans); letter-spacing: .01em; text-transform: none; color: var(--fg-2); white-space: nowrap;
 }
 .mbar .mbar-act:active { background-color: rgba(230, 231, 233, .1); filter: none; color: var(--fg); }
 .mbar-act svg { width: 21px; height: 21px; color: var(--fg); fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
-.mbar a.mbar-book { height: 52px; padding: 0 15px; font-size: 12px; letter-spacing: .12em; transition: filter .2s, scale .2s ease; }
+.mbar a.mbar-book { height: 52px; padding: 0 14px; font-size: 12px; letter-spacing: .12em; transition: filter .2s, scale .2s ease, background .35s ease, border-color .35s ease, box-shadow .35s ease; }
+/* while the home header's own "Book a table" is on screen just above it, the dock's is the quiet plate: one
+   burgundy button on a screen, not two (MobileBar.astro sets .calm) */
+.mbar.calm a.mbar-book { background: rgba(230, 231, 233, .05); border-color: rgba(230, 231, 233, .32); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06); }
 /* smaller phones: the labels keep their room (the dock never cuts a word) */
 @media (max-width: 389px) {
-  .mbar a.mbar-book { padding: 0 12px; font-size: 11.5px; letter-spacing: .1em; }
-  .mbar .mbar-act { font-size: 10.5px; }
+  .mbar a.mbar-book { padding: 0 11px; font-size: 11.5px; letter-spacing: .1em; }
+  .mbar .mbar-act { font-size: 11.5px; letter-spacing: 0; }
 }
 /* the smallest phones: icons only, the words stay for screen readers */
 @media (max-width: 359px) {
@@ -244,19 +258,18 @@ html.motion .mnav.closing { animation: nav-curtain-out .32s cubic-bezier(.5, 0, 
   }
 }
 
-/* ---------- Between pages: the steel pill glides to the new section (cross-document view transitions) ----------
+/* ---------- Between pages: the line of light glides to the new section (cross-document view transitions) ----------
    The capsule itself holds still (it is its own part of the change, shown at once, never faded with the page), so
-   the sections don't blink; only the pill and the chosen section's name glide across it. While the page changes
+   the sections don't blink; only the line under the current section glides across it. (The section's name used to
+   glide with it: for a moment the old name and the new one crossed in mid-air, «ГЛАВНФИША».) While the page changes
    the capsule is a picture of itself, which can't blur what passes behind it: a darker fill stands in for the
    glass for that moment. */
 .hdr-nav { view-transition-name: hdr-nav; }
 ::view-transition-group(hdr-nav) { animation: none; border-radius: 2px; background: rgba(18, 19, 21, .9); }
 ::view-transition-old(hdr-nav), ::view-transition-new(hdr-nav) { animation: none; mix-blend-mode: normal; }
 .hdr-nav .hdr-pill { view-transition-name: hdr-pill; }
-.hdr-nav a.on .hdr-tx { view-transition-name: hdr-on; }
-::view-transition-group(hdr-pill), ::view-transition-group(hdr-on) { animation-duration: .4s; animation-timing-function: var(--ease-nav); }
+::view-transition-group(hdr-pill) { animation-duration: .4s; animation-timing-function: var(--ease-nav); }
 ::view-transition-old(hdr-pill), ::view-transition-new(hdr-pill) { height: 100%; }
-::view-transition-old(hdr-on), ::view-transition-new(hdr-on) { width: auto; height: 100%; left: 50%; translate: -50% 0; }
 
 @media (prefers-reduced-motion: reduce) {
   .hdr-hl { transition: opacity .2s ease; }
@@ -268,8 +281,10 @@ html.motion .mnav.closing { animation: nav-curtain-out .32s cubic-bezier(.5, 0, 
    its glass can blur what is under it) */
 .hdr-name { view-transition-name: hdr-chip; }
 .hdr-r { view-transition-name: hdr-r; }
-/* small desktops and laptops: the capsule centred in the free middle, not pushed against the language pill (with
-   seven sections, Gallery included, the capsule only fits centred on the page from 1440px) */
-@media (min-width: 900px) and (max-width: 1439px) { .hdr-in { grid-template-columns: auto minmax(0, 1fr) auto; } .hdr-nav { justify-self: center; } }
+/* (the phone menu's sheet carries a name plate of its own: two parts with one name cancel the whole page change,
+   and every link tapped in the sheet cut hard to the next page) */
+.mnav .hdr-name { view-transition-name: none; }
+/* (small desktops and laptops: the capsule stays on the page's axis as long as both sides have room, and gives way
+   to the wider side only when it must: the grid's own columns, .hdr-in) */
 /* phones: anything scrolled into view (a focused button, an #anchor) stops above the dock */
 @media (max-width: 899px) { html { scroll-padding-bottom: calc(var(--dock) + 16px); } }

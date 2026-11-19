@@ -12,12 +12,12 @@ const ru = lang === 'ru';
 // booking button under it)
 ---
 <Base lang={lang} title={ru ? 'Заявка принята' : 'Request received'} noindex closing={false}>
-  <section class="thanks">
+  <section class="thanks thanks-sent">
     <div class="wrap stack center">
       <Icon3d name="peach" size={240} class="moment-ic" eager />
       <h1 class="t-xl" set:html={ru ? 'Заявка <em>принята</em>' : 'Request <em>received</em>'} />
       <p class="lead" set:html={keepShort(ru ? 'Менеджер перезвонит и подтвердит бронь, обычно в течение 15 минут. Если срочно, напишите нам.' : 'Your manager will call to confirm, usually within 15 minutes. If it’s urgent, message us.', lang)} />
-      <div class="btns" style="justify-content: center">
+      <div class="btns">
         <a class="btn btn-crimson" href={`/${lang}/program/`}>{ru ? 'Смотреть афишу' : 'See the events'}</a>
         <a class="btn btn-line" href={site.whatsapp} target="_blank" rel="noopener">WhatsApp</a>
         <a class="btn btn-line" href={`/${lang}/`}>{ru ? 'На главную' : 'Home'}</a>
@@ -25,3 +25,20 @@ const ru = lang === 'ru';
     </div>
   </section>
 </Base>
+
+<style is:global>
+  /* The moment after a booking: the line of light, the two words, what happens next and where to go from here,
+     one under another on the page's middle line. (The 404 is set the same way: pages/404.astro.) */
+  .thanks-sent .stack { gap: clamp(20px, 2vw, 28px); }
+  .thanks-sent .t-xl { text-wrap: balance; }
+  /* (the lead's lines even, so the last is never a word or two) */
+  .thanks-sent .lead { text-wrap: balance; }
+  /* the three ways on: a phone gets one column of plates of one width, a wider screen one row (never one plate
+     over two, as the row wrapped by itself) */
+  .thanks-sent .btns { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; width: min(100%, 320px); margin-top: 8px; }
+  @media (min-width: 600px) {
+    .thanks-sent .btns { display: flex; flex-wrap: nowrap; justify-content: center; gap: 14px; width: auto; }
+  }
+  /* phones: the block starts a little higher, so the first plate is on the first screen of the smallest phone */
+  @media (max-width: 599px) { .thanks-sent { padding-top: calc(var(--hdr) + 40px); } }
+</style>

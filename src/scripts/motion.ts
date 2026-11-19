@@ -34,8 +34,9 @@ declare const __RISE__: string;
 const RISE = __RISE__;
 /** Photographs that open like a curtain. */
 const FRAMES = '.photo, .pt-frame, .ptitle-media';
-/** Parts with an entrance of their own. */
-const OWN = '.hero, .gate, .mnav';
+/** Parts with an entrance of their own, or none: the windows (dialogs) bring their steps in themselves, and the
+ *  club's zones open under the reader's hand. (The same list ends the two :not(…) in global.css, Motion.) */
+const OWN = '.hero, .gate, .mnav, dialog, .zn';
 
 /** Run one part; if it fails, show the page as it is rather than leave anything hidden. */
 function safely(part: () => void) {
@@ -58,8 +59,10 @@ function afterGate(fn: () => void) {
 const fontsReady = () =>
   Promise.race([document.fonts ? document.fonts.ready : Promise.resolve(), new Promise((r) => setTimeout(r, 900))]);
 
-/* ---------- Scroll reveals: .is-in starts each element's entrance (styles in global.css) ---------- */
-function reveals() {
+/* ---------- Scroll reveals: .is-in starts each element's entrance (styles in global.css) ----------
+   Getting ready (finding what rises and what to watch it through) and starting to watch are two steps: the first
+   is done while the 18+ door still stands, the second is the returned function, called once the door opens. */
+function reveals(): () => void {
   const targets = Array.from(document.querySelectorAll<HTMLElement>(`${RISE}, ${FRAMES}, .ft .mast`)).filter(
     (el) => !el.closest(OWN) && !(el.matches(FRAMES) && el.closest('.reel')),
   );
@@ -82,14 +85,14 @@ function reveals() {
     watched.set(watch, [...(watched.get(watch) || []), el]);
   });
   let first = true; // the first screen waits a moment for its headline
-  const io = new IntersectionObserver(
-    (entries) => {
+  const seen: IntersectionObserverCallback = (entries, by) => {
       const now = entries.filter((e) => e.isIntersecting).flatMap((e) => {
-        io.unobserve(e.target);
+        by.unobserve(e.target);
         return watched.get(e.target) || [];
       });
       if (!now.length) return;
-      const base = first ? 0.25 : 0;
+      // (the pause is for a page opened at its top; a section the reader has scrolled to simply comes)
+      const base = first && scrollY < 4 ? 0.25 : 0;
       if (first && arriving) {
         first = false;
         now.forEach((el) => el.classList.add('is-in', 'is-now'));
@@ -102,10 +105,29 @@ function reveals() {
         el.classList.add('is-in');
         if (el.classList.contains('fact') && !el.closest('.facts-sm')) countUp(el, d); // an event's times and prices stay still
       });
-    },
-    { threshold: 0.12 },
-  );
-  watched.forEach((_, el) => io.observe(el));
+  };
+  const io = new IntersectionObserver(seen, { threshold: 0.12 });
+  // In a row that is swiped sideways (a phone's posters, parties, cards) the next item only peeks in at the screen's
+  // edge, by less than that 12%: it stood there as an empty box until swiped to. There, any part of it on screen
+  // counts, once the row itself is well into view.
+  const peek = new IntersectionObserver(seen, { threshold: 0, rootMargin: '0px 0px -12% 0px' });
+  const sideways = new Map<Element, boolean>();
+  const inRow = (el: Element) => {
+    for (let p = el.parentElement; p && p !== document.body; p = p.parentElement) {
+      let row = sideways.get(p);
+      if (row === undefined) { row = p.scrollWidth > p.clientWidth + 40 && /auto|scroll/.test(getComputedStyle(p).overflowX); sideways.set(p, row); }
+      if (row) return true;
+    }
+    return false;
+  };
+  // The keyboard reaches a link or a button before its entrance has played (Tab scrolls it into view): whatever
+  // holds the focus is simply there, at once.
+  document.addEventListener('focusin', (e) => {
+    for (let el = e.target instanceof Element ? e.target.closest<HTMLElement>(RISE) : null; el; el = el.parentElement?.closest<HTMLElement>(RISE) ?? null) {
+      if (!el.classList.contains('is-in') && !el.closest(OWN)) el.classList.add('is-in', 'is-now');
+    }
+  });
+  return () => watched.forEach((_, el) => (inRow(el) ? peek : io).observe(el));
 }
 
 /* ---------- Numbers count up (100+, 20+, 7, 22—06) ---------- */
@@ -130,9 +152,10 @@ function countUp(fact: HTMLElement, delay: number) {
 // SplitText collapses white space with /\s+/, which also turns a no-break space into a plain one, so "и&nbsp;контакты"
 // could break apart. Collapse only ordinary white space ourselves and keep the no-break spaces where the copy put them.
 const KEEP_NBSP = { reduceWhiteSpace: false, prepareText: (t: string) => t.replace(/[ \t\n\r\f\v]+/g, ' ') };
-function headlines() {
+function headlines(ahead: boolean) {
   // Splitting measures every line, so only the headings within about a screen and a half are split at once; the rest
-  // follow in the page's idle moments, or straight away should one come near before then.
+  // are split as they come near. While the 18+ door stands (ahead) there is time to spare, and the rest are split
+  // in the page's idle moments too; with no door they are not: that work would land on the reader's first scrolls.
   const later: HTMLElement[] = [];
   document.querySelectorAll<HTMLElement>('.t-xxl, .t-xl, .t-l').forEach((h) => {
     if (h.closest(OWN) || h.closest('.has-ic')) return; // headings with an icon simply rise (see RISE)
@@ -149,6 +172,7 @@ function headlines() {
   };
   const near = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && now(e.target as HTMLElement)), { rootMargin: '100% 0px' });
   later.forEach((h) => near.observe(h));
+  if (!ahead) return;
   const idle = (fn: (d?: IdleDeadline) => void) => ('requestIdleCallback' in window ? requestIdleCallback(fn, { timeout: 1200 }) : setTimeout(fn, 60));
   const step = (d?: IdleDeadline) => {
     let n = 0;
@@ -410,27 +434,6 @@ function header() {
   hdr.addEventListener('focusin', show);
 }
 
-/* ---------- Metal cards tilt under the pointer and catch the light ---------- */
-function tilt() {
-  document.querySelectorAll<HTMLElement>('.mem-card').forEach((card) => {
-    card.addEventListener('pointerenter', () => card.classList.add('tilt'));
-    card.addEventListener('pointermove', (e) => {
-      const r = card.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width;
-      const py = (e.clientY - r.top) / r.height;
-      card.style.setProperty('--rx', `${((0.5 - py) * 12).toFixed(2)}deg`);
-      card.style.setProperty('--ry', `${((px - 0.5) * 16).toFixed(2)}deg`);
-      card.style.setProperty('--mx', `${(px * 100).toFixed(1)}%`);
-      card.style.setProperty('--my', `${(py * 100).toFixed(1)}%`);
-    });
-    card.addEventListener('pointerleave', () => {
-      card.classList.remove('tilt');
-      card.style.removeProperty('--rx');
-      card.style.removeProperty('--ry');
-    });
-  });
-}
-
 /* ---------- Start ---------- */
 if (motion) {
   // Arriving from the other language: the entrances of whatever is on screen (a row of portraits, the VIP cards
@@ -443,21 +446,33 @@ if (motion) {
   if (mouse) import('lenis').then(({ default: L }) => safely(() => smooth(L)), (err) => console.error(err));
   // else afterGate(() => safely(restOnTouch)); // (resting places: switched off, above)
   safely(header);
-  if (mouse) safely(tilt);
   // (The home hero's entrance is pure CSS; see styles/hero.css.)
   // Each part of the set-up as a task of its own, so the page can answer a tap in between (as one it took most of
   // a second on a slow phone), and one refresh at the end.
   const pause = () => new Promise<void>((r) => setTimeout(r, 0));
+  // While the 18+ door stands, the set-up is done behind it, so that nothing heavy is left for the moment it opens
+  // (splitting headlines measures every line, the scroll triggers measure the page; done at the click, they made the
+  // door stutter). Nothing may start before the door opens: GSAP's clock is held until then, and the reveals are
+  // prepared but not yet watching. "Yes" then only lets go: one cheap step.
+  const door = document.getElementById('gate');
+  const shut = !!door && !root.classList.contains('age-ok') && !door.classList.contains('out');
+  if (shut) gsap.globalTimeline.pause();
+  let watch: (() => void) | null = null;
+  let opened = !shut;
+  fontsReady().then(async () => {
+    safely(() => headlines(shut));
+    await pause();
+    safely(statements);
+    await pause();
+    safely(() => { watch = reveals(); });
+    await pause();
+    safely(depth);
+    ScrollTrigger.refresh();
+    if (opened) watch?.();
+  });
   afterGate(() => {
-    fontsReady().then(async () => {
-      safely(headlines);
-      await pause();
-      safely(statements);
-      await pause();
-      safely(reveals);
-      await pause();
-      safely(depth);
-      ScrollTrigger.refresh();
-    });
+    opened = true;
+    gsap.globalTimeline.resume();
+    watch?.();
   });
 }

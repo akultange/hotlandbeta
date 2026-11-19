@@ -4,6 +4,9 @@
 // keyboard focus stays inside while it is open and goes back where it came from. With motion the picture
 // flies out of the page into place and back again. With reduced motion a film waits with its own controls:
 // it takes the focus, and its keys (space, the arrows) are its own while it has it.
+// A photograph stands in the middle of the screen, between the controls; a film's words (its name and a line
+// about it) go with it, close under its foot. While a photograph's full file is on its way, the copy the page
+// already shows stands in for it.
 import { type Lang, tr } from '../data/i18n';
 import { galleryPhotos, galleryFilms } from '../data/gallery';
 import '../styles/gallery.css';
@@ -11,12 +14,15 @@ import '../styles/gallery.css';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ru = lang === 'ru';
+// Russian typesetting: in the line under a film's name a short word stays with the word after it. (The line is set
+// as plain text, so a no-break space does it, not format.ts's span.)
+const tie = (s: string) => (ru ? s.replace(/(?<=^|\s)(в|во|на|за|до|по|с|со|к|ко|и|а|о|у|не|ни|из|от|для|без|под)\s/gi, '$1\u00a0') : s);
 const data = {
   // the photographs carry no words in the viewer either (their alt text stays on the picture for screen readers)
-  photos: galleryPhotos.map((p) => ({ src: p.src, ratio: p.ratio, cap: tr(p.cap, lang), alt: tr(p.alt, lang), bare: true })),
+  photos: galleryPhotos.map((p) => ({ src: p.src, thumb: p.thumb, ratio: p.ratio, cap: tr(p.cap, lang), alt: tr(p.alt, lang), bare: true })),
   films: galleryFilms.map((f) => ({
     src: f.src, srcPhone: f.srcPhone, poster: f.poster, posterPhone: f.posterPhone, ratio: f.ratio, ratioPhone: f.ratioPhone,
-    cap: f.time ? `${f.time} · ${tr(f.cap, lang)}` : tr(f.cap, lang), alt: tr(f.alt, lang),
+    cap: f.time ? `${f.time} · ${tr(f.cap, lang)}` : tr(f.cap, lang), alt: tr(f.alt, lang), line: tie(tr(f.alt, lang)),
   })),
 };
 const label = { photos: ru ? 'Фото на весь экран' : 'Photo, full screen', films: ru ? 'Фильм на весь экран' : 'Film, full screen' };
@@ -41,7 +47,7 @@ const label = { photos: ru ? 'Фото на весь экран' : 'Photo, full 
 <script>
   import { gsap } from 'gsap';
 
-  type Entry = { src: string; srcPhone?: string; poster?: string; posterPhone?: string; ratio: string; ratioPhone?: string; cap: string; alt: string; bare?: boolean };
+  type Entry = { src: string; thumb?: string; srcPhone?: string; poster?: string; posterPhone?: string; ratio: string; ratioPhone?: string; cap: string; alt: string; line?: string; bare?: boolean };
   type Kind = 'photos' | 'films';
 
   const root = document.documentElement;
@@ -57,6 +63,7 @@ const label = { photos: ru ? 'Фото на весь экран' : 'Photo, full 
     const nAll = lb.querySelector<HTMLElement>('.gxv-n span')!;
     const tEl = lb.querySelector<HTMLElement>('.gxv-t')!;
     const dEl = lb.querySelector<HTMLElement>('.gxv-d')!;
+    const capEl = lb.querySelector<HTMLElement>('.gxv-cap')!;
     const closeB = lb.querySelector<HTMLButtonElement>('.gxv-close')!;
     const prevB = lb.querySelector<HTMLButtonElement>('.gxv-prev')!;
     const nextB = lb.querySelector<HTMLButtonElement>('.gxv-next')!;
@@ -79,18 +86,41 @@ const label = { photos: ru ? 'Фото на весь экран' : 'Photo, full 
       const [a, b] = ((uprightQ.matches && e.ratioPhone) || e.ratio).split('/').map(Number);
       return a / b;
     };
-    /** The biggest box of this shape that fits between the controls. */
-    function fit(r: number) {
-      const vw = innerWidth, vh = innerHeight, ph = phoneQ.matches, sh = shortQ.matches;
-      const top = sh ? 10 : ph ? 70 : 88, bottom = sh ? 10 : ph ? 168 : 132;
-      const side = sh ? Math.max(84, vw * 0.11) : ph ? 12 : Math.max(104, vw * 0.075);
-      const mw = vw - side * 2, mh = vh - top - bottom;
-      let w = mw, h = w / r;
-      if (h > mh) { h = mh; w = h * r; }
-      return { left: (vw - w) / 2, top: top + (mh - h) / 2, width: w, height: h };
+    /** Where an entry stands: the biggest box of its shape that fits between the controls (measured where they
+     *  stand: «Закрыть» above; on a phone the arrows and the count below, on a computer the arrows at the sides).
+     *  A photograph has no words and takes the middle of the screen. A film's words go with it: they take the room
+     *  they need under its foot (measured, so three lines on a narrow phone never run into the film), and the two
+     *  are centred together. `cap` is where the words start; null on a phone held sideways, where the picture
+     *  takes the full height and the film's name lies over its foot (gallery.css). */
+    function fit(e: Entry) {
+      const r = ratioOf(e);
+      const vw = lb.clientWidth || innerWidth, vh = lb.clientHeight || innerHeight, ph = phoneQ.matches, sh = shortQ.matches;
+      let top = 10, bottom = 10, side = Math.max(84, vw * 0.11), gap = 0, words = 0;
+      if (!sh) {
+        const closeEnd = closeB.offsetTop + closeB.offsetHeight;
+        const row = ph ? vh - (prevB.hidden ? vh - 68 : prevB.offsetTop) : 0; // the bottom row, with the margin under it
+        side = ph ? 0 : Math.max(114, vw * 0.08);
+        if (e.bare) top = bottom = ph ? Math.max(closeEnd, row) + 16 : closeEnd + 26;
+        else {
+          gap = ph ? 16 : 24;
+          words = capEl.offsetHeight;
+          top = closeEnd + (ph ? 16 : 26);
+          bottom = ph ? row + 20 : 40;
+        }
+      }
+      const room = vh - top - bottom - (words ? words + gap : 0);
+      let w = vw - side * 2, h = w / r;
+      if (h > room) { h = Math.max(120, room); w = h * r; }
+      const y = top + Math.max(0, (room - h) / 2);
+      return { left: (vw - w) / 2, top: y, width: w, height: h, cap: sh || !words ? null : y + h + gap };
     }
-    const place = (el: HTMLElement, b: { left: number; top: number; width: number; height: number }) =>
+    /** Put a picture, and the words that go with it, where the entry stands. */
+    function seat(el: HTMLElement, e: Entry) {
+      const b = fit(e);
       Object.assign(el.style, { left: `${b.left}px`, top: `${b.top}px`, width: `${b.width}px`, height: `${b.height}px` });
+      if (b.cap === null) capEl.style.removeProperty('--cap-top');
+      else capEl.style.setProperty('--cap-top', `${b.cap.toFixed(1)}px`);
+    }
     /** The film on screen, when it has its own controls (reduced motion). */
     const player = () => media?.querySelector<HTMLVideoElement>('video[controls]') ?? null;
     /** The walk is running (the page under the viewer is the 3D room, not the rows). */
@@ -100,11 +130,20 @@ const label = { photos: ru ? 'Фото на весь экран' : 'Photo, full 
       const d = document.createElement('div');
       d.className = 'gxv-media';
       if (kind === 'photos') {
+        // the page's own copy of this picture (the one just looked at, so it is here already) stands in, as the
+        // box's ground, until the full file has come; a picture the page has not loaded yet gets its small copy
+        const small = document.querySelectorAll<HTMLElement>('.gxd-item')[at]?.querySelector('img');
+        const standIn = (small?.complete && small.naturalWidth && small.currentSrc) || e.thumb;
+        if (standIn) d.style.backgroundImage = `url("${standIn}")`;
         const img = new Image();
         img.decoding = 'async';
         img.src = e.src;
         img.alt = e.alt;
         img.draggable = false;
+        if (!img.complete) {
+          img.classList.add('wait');
+          img.addEventListener('load', () => img.classList.remove('wait'), { once: true });
+        }
         d.append(img);
       } else {
         const v = document.createElement('video');
@@ -119,15 +158,16 @@ const label = { photos: ru ? 'Фото на весь экран' : 'Photo, full 
         d.append(v);
         if (!reduce) v.play().catch(() => {});
       }
-      place(d, fit(ratioOf(e)));
+      seat(d, e);
       return d;
     }
+    // (the words are set before the picture is made: it is seated by their height)
     function caption() {
       const e = list[at];
       nNow.textContent = pad2(at + 1);
       nAll.textContent = ` / ${pad2(list.length)}`;
       tEl.textContent = e.bare ? '' : e.cap;
-      dEl.textContent = e.bare ? '' : e.alt;
+      dEl.textContent = e.bare ? '' : e.line ?? e.alt;
       const one = list.length < 2;
       prevB.hidden = one;
       nextB.hidden = one;
@@ -177,9 +217,9 @@ const label = { photos: ru ? 'Фото на весь экран' : 'Photo, full 
       root.classList.add('gx-lock');
       document.dispatchEvent(new CustomEvent('gx:viewer', { detail: { open: true } }));
       stage.replaceChildren();
+      caption();
       media = make(list[at]);
       stage.append(media);
-      caption();
       warm();
       if (anim) {
         const r = sourceOf(at);
@@ -236,9 +276,9 @@ const label = { photos: ru ? 'Фото на весь экран' : 'Photo, full 
       const old = media;
       const hadFocus = !!old && old.contains(document.activeElement);
       at = (at + d + list.length) % list.length;
+      caption();
       media = make(list[at]);
       stage.append(media);
-      caption();
       warm();
       if (anim && old) {
         gsap.fromTo(media, { x: d * 80, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7, ease: 'expo.out' });
@@ -311,6 +351,6 @@ const label = { photos: ru ? 'Фото на весь экран' : 'Photo, full 
     };
     stage.addEventListener('pointerup', endDrag);
     stage.addEventListener('pointercancel', endDrag);
-    addEventListener('resize', () => { if (isOpen && media) { gsap.set(media, { clearProps: 'transform' }); place(media, fit(ratioOf(list[at]))); } });
+    addEventListener('resize', () => { if (isOpen && media) { gsap.set(media, { clearProps: 'transform' }); seat(media, list[at]); } });
   }
 </script>
