@@ -153,6 +153,12 @@
 .mnav-top-r { display: flex; align-items: center; gap: 8px; }
 .mnav-top .hdr-menu { display: inline-flex; }
 .mnav-top .seg a { min-width: 38px; height: 34px; }
+/* a phone: the name, the language and the cross fit one row (the word "Close" stays for screen readers) */
+@media (max-width: 479px) {
+  .mnav-top { gap: 8px; }
+  .mnav-top .hdr-menu { gap: 0; padding: 0 13px; }
+  .mnav-top .hdr-menu span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
 
 .mnav-body { display: grid; gap: 30px; padding: 14px var(--pad) calc(40px + env(safe-area-inset-bottom)); }
 .mnav-links { display: grid; }
