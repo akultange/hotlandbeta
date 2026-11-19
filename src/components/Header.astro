@@ -1,14 +1,14 @@
 ---
-// Header. Desktop: the lily alone in a round glass chip on the left; the seven sections in a floating glass
-// capsule in the middle, in the footer's order with Home first (the current page is a brushed-steel pill, and a soft
-// highlight snaps from link to link under the mouse); language and "Book" on the right. Nothing sits on a bar: the header is transparent and
-// the page fades out softly beneath it once you scroll.
-// Phones: the lily and a glass "Menu" pill. The menu is a full-screen sheet: the sections in big type, each
-// with its 3D icon, then language, booking, address, hours and contacts.
+// Header. Desktop: the name on the left (steel capitals set wide, the red light between the T and the L); the
+// sections in a plate of smoked glass in the middle, in the footer's order with Home first (the current page
+// stands over a line of the red light, and a soft highlight snaps from link to link under the mouse); language and
+// "Book" on the right. Nothing sits on a bar: the header is transparent and the page fades out softly beneath it
+// once you scroll.
+// Phones: the name and a "Menu" plate. The menu is a full-screen sheet: the sections in big type, then language,
+// booking, address, hours and contacts.
 import { type Lang, ui, altPath } from '../data/i18n';
 import { site } from '../data/site';
-import Logo from './Logo.astro';
-import Icon3d from './Icon3d.astro';
+import Name from './Name.astro';
 interface Props { lang: Lang; solid?: boolean }
 const { lang } = Astro.props;
 const t = ui[lang];
@@ -18,8 +18,6 @@ const path = Astro.url.pathname;
 // (the show page, /artists/, is hidden at the client's request: pages/[lang]/_artists.astro)
 const keys = ['program', 'vip', 'menu', 'gallery', 'about'] as const;
 const items = keys.map((k) => ({ k, href: `/${lang}/${k}/`, label: t.nav[k] }));
-// the gallery gets the crimson lips: a kiss blown from the photographs
-const menuIcons = { program: 'pole', artists: 'stiletto', vip: 'key', menu: 'cherries', gallery: 'lips', about: 'keyhole' } as const;
 const active = (href: string) => path.startsWith(href);
 const home = path === `/${lang}/`;
 const hours = `${site.hours[0].open}–${site.hours[0].close}`;
@@ -32,7 +30,7 @@ import { show } from '../data/variants';
 ---
 <header class="hdr" id="hdr">
   <div class="hdr-in">
-    <a class="hdr-chip glass" href={`/${lang}/`} aria-label={homeLabel}><Logo variant="mark" size={26} /></a>
+    <a class="hdr-name glass" href={`/${lang}/`} aria-label={homeLabel}><Name /></a>
     <nav class="hdr-nav glass" aria-label={ru ? 'Разделы' : 'Sections'}>
       <span class="hdr-hl" aria-hidden="true"></span>
       <a href={`/${lang}/`} class:list={{ on: home }} aria-current={home ? 'page' : undefined}>
@@ -56,7 +54,7 @@ import { show } from '../data/variants';
 
 <div class="mnav" id="mnav" hidden data-lenis-prevent role="dialog" aria-modal="true" aria-label={t.menuOpen}>
   <div class="mnav-top">
-    <a class="hdr-chip glass" href={`/${lang}/`} aria-label={homeLabel}><Logo variant="mark" size={26} /></a>
+    <a class="hdr-name glass" href={`/${lang}/`} aria-label={homeLabel}><Name /></a>
     <div class="mnav-top-r">
       <div class="seg glass" role="group" aria-label={ru ? 'Язык' : 'Language'}>
         {langs.map((l) => <a href={l.href} class:list={{ on: lang === l.code }} hreflang={l.code} lang={l.code} aria-current={lang === l.code ? 'true' : undefined}>{l.label}</a>)}
@@ -66,10 +64,10 @@ import { show } from '../data/variants';
   </div>
   <div class="mnav-body">
     <nav class="mnav-links" aria-label={ru ? 'Разделы' : 'Sections'}>
-      <a href={`/${lang}/`} class:list={{ on: home }} aria-current={home ? 'page' : undefined} style="--i:0"><Icon3d name="emblem" size={96} class="mnav-ic" /><span>{ru ? 'Главная' : 'Home'}</span></a>
+      <a href={`/${lang}/`} class:list={{ on: home }} aria-current={home ? 'page' : undefined} style="--i:0"><span>{ru ? 'Главная' : 'Home'}</span></a>
       {items.map((i, n) => (
         <a href={i.href} class:list={{ on: active(i.href) }} aria-current={active(i.href) ? 'page' : undefined} style={`--i:${n + 1}`}>
-          <Icon3d name={menuIcons[i.k]} size={96} class="mnav-ic" /><span>{i.label}</span>
+          <span>{i.label}</span>
         </a>
       ))}
     </nav>

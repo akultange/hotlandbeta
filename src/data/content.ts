@@ -1,6 +1,7 @@
 // All page content in Russian and English. The facts (prices, sets, events, photos and films in /public/media)
 // come from the club's own content pack (HOTLAND-site, sixth version); nothing here comes from another club.
-// The words were rewritten on 2026-11-11 in the club's own voice: a late-night cabaret, theatre rather than a strip
+// The words were rewritten on 2026-11-11 in the club's own voice (since 2026-11-19 the club calls itself a premium
+// gentlemen's club, not a cabaret, and speaks of membership, not VIP): theatre rather than a strip
 // club, never compared with another venue by name. Plain enough to read at a glance, with a wink.
 // Dates, prices, inclusions and the address are PLACEHOLDERS until the club confirms them.
 import type { L } from './i18n';
@@ -58,7 +59,7 @@ export const night = {
     {
       time: '06:00',
       title: { ru: 'До утра', en: 'Until morning' },
-      text: { ru: 'Караоке, VIP-комнаты и бар, пока над Москвой не рассветёт. Такси вызовем мы.', en: 'Karaoke, the VIP rooms and the bar, until the sun is up over Moscow. We’ll call your car.' },
+      text: { ru: 'Караоке, приватные комнаты и бар, пока над Москвой не рассветёт. Такси вызовем мы.', en: 'Karaoke, the private rooms and the bar, until the sun is up over Moscow. We’ll call your car.' },
       img: 'night-4-0600-till-morning.webp', imgPhone: 'night-4-0600-till-morning-phone.webp', film: 'night-4-0600-till-morning.mp4', filmPhone: 'night-4-0600-till-morning-phone.mp4',
       alt: { ru: 'До утра: девушка в пайетках у бара, туфли в одной руке, шампанское в другой, за окном рассвет', en: 'Till morning: a woman in sequins at the bar, heels in one hand and champagne in the other, dawn in the window' },
     },
@@ -91,7 +92,7 @@ export const galleryTitle: L = { ru: 'Галерея', en: 'Gallery' };
 export const gallery: (Shot & { ratio: string })[] = [
   { img: 'gallery-01-velvet-wall.webp', ratio: '2/3', alt: { ru: 'Артистка в чёрном боди с кристаллами у бархатной стены', en: 'An artist in a black crystal bodysuit by a velvet wall' } },
   { img: 'gallery-02-backstage-mirror.webp', ratio: '3/4', alt: { ru: 'За кулисами: артистка красит губы у зеркала с лампами', en: 'Backstage: an artist puts on lipstick at a mirror lined with bulbs' } },
-  { img: 'gallery-03-vip-sofa.webp', ratio: '3/4', alt: { ru: 'VIP-комната: девушка в атласном платье на багровом бархатном диване', en: 'The VIP room: a woman in a satin dress on a crimson velvet sofa' } },
+  { img: 'gallery-03-vip-sofa.webp', ratio: '3/4', alt: { ru: 'Приватная комната: девушка в атласном платье на багровом бархатном диване', en: 'The private room: a woman in a satin dress on a crimson velvet sofa' } },
   { img: 'gallery-04-pole-spin.webp', ratio: '2/3', alt: { ru: 'Артистка на пилоне в движении, волосы в полёте, багровый свет', en: 'An artist spinning on the pole, hair flying, crimson light' } },
   { img: 'gallery-05-three-fans.webp', ratio: '16/9', alt: { ru: 'Шоу-балет: три артистки с веерами из перьев на сцене', en: 'Show ballet: three artists with feather fans on stage' } },
   { img: 'gallery-06-light-stripe.webp', ratio: '3/4', alt: { ru: 'Портрет: полоса багрового света на глазах', en: 'Portrait: a stripe of crimson light across the eyes' } },
@@ -175,26 +176,26 @@ export const pastEvents: (Omit<Event, 'loop'> & { loop?: string })[] = [
   },
 ];
 
-/* ---------- VIP: three cards, five zones ---------- */
+/* ---------- Membership: three cards, five zones (the object keeps its old name, vip) ---------- */
 
 export const vip = {
-  title: { ru: 'Три карты VIP', en: 'Three VIP cards' } as L,
-  lead: { ru: 'Четыре VIP-зоны и три караоке-зала. Выберите карту, остальное менеджер возьмёт на себя.', en: 'Four VIP zones and three karaoke rooms. Pick a card; your host takes care of the rest.' } as L,
+  title: { ru: 'Членство <em>в клубе</em>', en: 'Club <em>membership</em>' } as L,
+  lead: { ru: 'Три карты, четыре приватные зоны и три караоке-зала. Выберите карту, остальное менеджер возьмёт на себя.', en: 'Three cards, four private zones and three karaoke rooms. Pick a card; your host takes care of the rest.' } as L,
   request: { ru: 'Запросить карту', en: 'Request this card' } as L,
 };
 
 export const tiers: { name: string; sub: L; items: L[] }[] = [
   { name: 'Silver', sub: { ru: 'Стол в главном зале', en: 'A table in the main hall' }, items: [{ ru: 'Бутылка на выбор и закуски', en: 'A bottle of your choice and snacks' }, { ru: 'Места с видом на сцену', en: 'Seats facing the stage' }, { ru: 'Встреча у входа без очереди', en: 'Met at the door, no queue' }] },
   { name: 'Black', sub: { ru: 'Ложа у сцены', en: 'A box by the stage' }, items: [{ ru: 'Ужин-сет на каждого гостя', en: 'A dinner set for every guest' }, { ru: 'Две бутылки на выбор', en: 'Two bottles of your choice' }, { ru: 'Номер для виновника торжества прямо у ложи', en: 'A number for the guest of honour, right at your box' }] },
-  { name: 'Crimson', sub: { ru: 'VIP-комната на всю ночь', en: 'A VIP room for the whole night' }, items: [{ ru: 'Ужин от шефа и шампанское без счёта', en: 'Chef’s dinner, and champagne nobody counts' }, { ru: 'Своё шоу в вашей комнате', en: 'A show of your own in your room' }, { ru: 'Личный менеджер на весь вечер', en: 'Your own host for the whole night' }] },
+  { name: 'Bordeaux', sub: { ru: 'Приватная комната на всю ночь', en: 'A private room for the whole night' }, items: [{ ru: 'Ужин от шефа и шампанское без счёта', en: 'Chef’s dinner, and champagne nobody counts' }, { ru: 'Своё шоу в вашей комнате', en: 'A show of your own in your room' }, { ru: 'Личный менеджер на весь вечер', en: 'Your own host for the whole night' }] },
 ];
 
-/** The club's zones (VIP page). `book`: the booking form's choice that a zone's link opens with; `cta`: that link's
+/** The club's zones (the membership page). `book`: the booking form's choice that a zone's link opens with; `cta`: that link's
  *  words, naming what you book (a zone may be a room, not a table). */
 export const zones: ({ title: L; text: L; book: 'table' | 'vip' | 'lounge'; cta: L } & Shot)[] = [
   { book: 'table', cta: { ru: 'Забронировать стол', en: 'Book a table' }, title: { ru: 'Стол в зале', en: 'A table in the hall' }, text: { ru: 'Главный зал и вся сцена перед вами', en: 'The main hall, the whole stage in front of you' }, img: 'gallery-05-three-fans.webp', alt: { ru: 'Шоу-балет: три артистки с веерами из перьев на сцене', en: 'Show ballet: three artists with feather fans on stage' } },
   { book: 'table', cta: { ru: 'Забронировать ложу', en: 'Book the box' }, title: { ru: 'Ложа у сцены', en: 'A box by the stage' }, text: { ru: 'Ближе к сцене только артистки', en: 'Only the artists are closer to the stage' }, img: 'night-3-0130-second-show.webp', alt: { ru: 'Артистка в кристаллах на краю сцены у пилона', en: 'An artist in crystals on the edge of the stage by the pole' } },
-  { book: 'vip', cta: { ru: 'Забронировать комнату', en: 'Book the room' }, title: { ru: 'VIP-комната', en: 'VIP room' }, text: { ru: 'Дверь закрывается, а вечер продолжается', en: 'The door closes; the night doesn’t' }, img: 'gallery-03-vip-sofa.webp', alt: { ru: 'VIP-комната: девушка в атласном платье на багровом бархатном диване', en: 'The VIP room: a woman in a satin dress on a crimson velvet sofa' } },
+  { book: 'vip', cta: { ru: 'Забронировать комнату', en: 'Book the room' }, title: { ru: 'Приватная комната', en: 'Private room' }, text: { ru: 'Дверь закрывается, а вечер продолжается', en: 'The door closes; the night doesn’t' }, img: 'gallery-03-vip-sofa.webp', alt: { ru: 'Приватная комната: девушка в атласном платье на багровом бархатном диване', en: 'The private room: a woman in a satin dress on a crimson velvet sofa' } },
   { book: 'vip', cta: { ru: 'Забронировать зал', en: 'Book the room' }, title: { ru: 'Караоке-зал', en: 'Karaoke room' }, text: { ru: 'Свой зал, свой плейлист и никаких свидетелей', en: 'Your own room, your own playlist, no witnesses' }, img: 'gallery-09-singer.webp', alt: { ru: 'Певица в платье с пайетками у винтажного микрофона', en: 'A singer in a sequin gown at a vintage microphone' } },
   { book: 'lounge', cta: { ru: 'Забронировать кальянную', en: 'Book the lounge' }, title: { ru: 'Кальянная', en: 'Hookah lounge' }, text: { ru: 'Диваны, кальян и пауза между актами', en: 'Sofas, a hookah and a pause between acts' }, img: 'hookah-lounge.webp', loop: 'hookah-lounge-loop.mp4', alt: { ru: 'Кальянный лаунж: девушка в чёрном атласе выдыхает дым на бархатном диване', en: 'Hookah lounge: a woman in black satin exhales smoke on a velvet banquette' } },
 ];
@@ -219,7 +220,7 @@ export const occasions: Occasion[] = [
   { slug: 'birthday', title: { ru: 'День рождения', en: 'Birthday' }, text: { ru: 'Торт выносят на сцену, артистки поздравляют виновника, музыку выбираете вы. Возраст называть не обязательно.', en: 'The cake comes out on stage, the artists toast the guest of honour and you choose the music. Nobody asks your age.' }, img: 'party-1-birthday.webp', alt: { ru: 'День рождения: шоколадный торт с одной бенгальской свечой на чёрном мраморе', en: 'Birthday: a dark chocolate cake with one sparkler on black marble' }, more: ['gallery-07-glove-champagne.webp', 'gallery-11-champagne-tower.webp', 'gallery-05-three-fans.webp'] },
   { slug: 'bachelor', title: { ru: 'Мальчишник', en: 'Bachelor party' }, text: { ru: 'Отдельная зона, программа для жениха и машина до дома. Что было на мальчишнике, остаётся между нами.', en: 'A private zone, a programme for the groom and a car home. What happens at the bachelor party stays between us.' }, img: 'party-2-bachelor.webp', alt: { ru: 'Мальчишник: мужские руки в чёрных костюмах чокаются бокалами для виски', en: 'Bachelor party: hands in black suits raising crystal whisky tumblers' }, more: ['set-3-crimson.webp', 'gallery-04-pole-spin.webp', 'party-2-whisky.webp'] },
   { slug: 'corporate', title: { ru: 'Корпоратив', en: 'Corporate night' }, text: { ru: 'Закрытый зал, банкет и шоу для команды. Счёт на компанию, подробности между нами.', en: 'A private hall, a banquet and a show for the team. The bill goes to the company; the details stay between us.' }, img: 'party-3-corporate.webp', alt: { ru: 'Корпоратив: длинный банкетный стол, серебро, хрусталь, бархатные кресла', en: 'Corporate night: a long banquet table, silver, crystal, velvet chairs' }, more: ['gallery-11-champagne-tower.webp', 'gallery-05-three-fans.webp', 'gallery-09-singer.webp'] },
-  { slug: 'hire', title: { ru: 'Клуб целиком', en: 'The whole club' }, text: { ru: 'Весь HOTLAND только для ваших гостей: сцена, бар, VIP-комнаты и своя программа. Для остальных в этот вечер закрыто.', en: 'All of HOTLAND for your guests only: the stage, the bar, the VIP rooms and a programme of your own. Closed to everyone else that night.' }, img: 'party-4-whole-club.webp', alt: { ru: 'Клуб целиком: пустая сцена, бархатный занавес, один луч', en: 'Private hire: an empty stage, a velvet curtain, a single silver spotlight' }, more: ['gallery-10-aerial-silks.webp', 'gallery-03-vip-sofa.webp', 'gallery-12-staircase.webp'] },
+  { slug: 'hire', title: { ru: 'Клуб целиком', en: 'The whole club' }, text: { ru: 'Весь HOTLAND только для ваших гостей: сцена, бар, приватные комнаты и своя программа. Для остальных в этот вечер закрыто.', en: 'All of HOTLAND for your guests only: the stage, the bar, the private rooms and a programme of your own. Closed to everyone else that night.' }, img: 'party-4-whole-club.webp', alt: { ru: 'Клуб целиком: пустая сцена, бархатный занавес, один луч', en: 'Private hire: an empty stage, a velvet curtain, a single silver spotlight' }, more: ['gallery-10-aerial-silks.webp', 'gallery-03-vip-sofa.webp', 'gallery-12-staircase.webp'] },
 ];
 
 /* ---------- Bar menu ---------- */
@@ -304,7 +305,7 @@ export const entryShows: Item[] = [
   it('Вход', 'Entry', 1000, { desc: d('Любая ночь, кроме особых вечеров', 'Any night except special nights') }),
   it('Особый вечер', 'Special night', 3000, { from: true, desc: d('Courchevel, Velvet, Ritual: смотрите афишу', 'Courchevel, Velvet, Ritual: see Events') }),
   it('Номер у вашего стола', 'A number at your table', 5000, { from: true, desc: d('Сколько длится и где, подскажет менеджер', 'How long and where: ask your host') }),
-  it('VIP и караоке', 'VIP & karaoke', null, { desc: d('Карты Silver, Black и Crimson', 'Silver, Black and Crimson cards') }),
+  it('Членство и караоке', 'Membership & karaoke', null, { desc: d('Карты Silver, Black и Bordeaux', 'Silver, Black and Bordeaux cards') }),
 ];
 
 /* ---------- Bottle sets ---------- */
@@ -316,7 +317,7 @@ export const sets = {
   items: [
     { name: { ru: 'Классика', en: 'Classic' }, what: { ru: 'Водка премиум 0,7 л, шесть энергетиков, лёд и лимон', en: 'Premium vodka 0.7 l, six energy drinks, ice and lemon' }, perks: [{ ru: 'Номер артистки у вашего стола', en: 'An artist’s number at your table' }, { ru: '10 купюр HOTLAND, чтобы благодарить артисток', en: '10 HOTLAND notes to thank the artists with' }], price: 25000, img: 'set-1-classic.webp', alt: { ru: 'Сет «Классика»: чёрное ведро со льдом, водка и энергетики', en: 'Classic set: a black ice bucket, vodka and energy drinks' } },
     { name: { ru: 'Премьер', en: 'Premier' }, what: { ru: 'Водка люкс 1 л, девять энергетиков, фруктовая тарелка', en: 'Luxury vodka 1 l, nine energy drinks, a fruit platter' }, perks: [{ ru: 'Два номера у вашего стола', en: 'Two numbers at your table' }, { ru: '20 купюр HOTLAND, чтобы благодарить артисток', en: '20 HOTLAND notes to thank the artists with' }, { ru: 'Выносим с огнём', en: 'Brought out on fire' }], price: 45000, img: 'set-2-premier.webp', alt: { ru: 'Сет «Премьер»: светящаяся ладья со льдом, водка и девять энергетиков', en: 'Premier set: a glowing ice boat, vodka and nine energy drinks' } },
-    { name: { ru: 'Crimson', en: 'Crimson' }, what: { ru: 'Шампанское 1,5 л и водка люкс 1 л, двенадцать миксеров, икра и фрукты', en: 'Champagne 1.5 l and luxury vodka 1 l, twelve mixers, caviar and fruit' }, perks: [{ ru: 'Своё шоу в VIP-комнате', en: 'A show of your own in a VIP room' }, { ru: '50 купюр HOTLAND, чтобы благодарить артисток', en: '50 HOTLAND notes to thank the artists with' }, { ru: 'Выносим с огнём под вашу музыку', en: 'Brought out on fire, to your music' }], price: 95000, img: 'set-3-crimson.webp', loop: 'set-3-crimson-loop.mp4', alt: { ru: 'Сет «Кримсон»: медная чаша в багровом свете, магнум с бенгальским огнём', en: 'Crimson set: a copper bowl in crimson light, a magnum with a sparkler' } },
+    { name: { ru: 'Bordeaux', en: 'Bordeaux' }, what: { ru: 'Шампанское 1,5 л и водка люкс 1 л, двенадцать миксеров, икра и фрукты', en: 'Champagne 1.5 l and luxury vodka 1 l, twelve mixers, caviar and fruit' }, perks: [{ ru: 'Своё шоу в приватной комнате', en: 'A show of your own in a private room' }, { ru: '50 купюр HOTLAND, чтобы благодарить артисток', en: '50 HOTLAND notes to thank the artists with' }, { ru: 'Выносим с огнём под вашу музыку', en: 'Brought out on fire, to your music' }], price: 95000, img: 'set-3-crimson.webp', loop: 'set-3-crimson-loop.mp4', alt: { ru: 'Сет «Бордо»: медная чаша в багровом свете, магнум с бенгальским огнём', en: 'Bordeaux set: a copper bowl in crimson light, a magnum with a sparkler' } },
   ] as ({ name: L; what: L; perks: L[]; price: number } & Shot)[],
 };
 
@@ -384,7 +385,7 @@ export const bookingFine: L = { ru: 'Депозит и минимальный с
 
 export const bookingTypes: { id: string; label: L }[] = [
   { id: 'table', label: { ru: 'Стол', en: 'Table' } },
-  { id: 'vip', label: { ru: 'VIP-карта', en: 'VIP card' } },
+  { id: 'vip', label: { ru: 'Карта клуба', en: 'Club card' } },
   { id: 'set', label: { ru: 'Сет для стола', en: 'Bottle set' } },
   { id: 'lounge', label: { ru: 'Кальянная', en: 'Hookah lounge' } },
   { id: 'event', label: { ru: 'Праздник', en: 'A party' } },

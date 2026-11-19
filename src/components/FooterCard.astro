@@ -1,12 +1,12 @@
 ---
 // Footer v4, «Визитка» (styles in styles/footers.css): the last screen as the club's calling card. On the left a
-// black card printed in silver foil, set at a slight angle: the lily, the HOTLAND wordmark, "just between us",
+// black card printed in silver foil, set at a slight angle: the name as the wall carries it, "just between us",
 // and at its foot the address and the hours with the way there. On the right the sections in large type, and
 // under them the ways to reach the club as glass pills. Along the bottom the small print and the smaller links.
 // Phones: the card first, then the sections in two columns, the pills, the small print.
 import { type Lang, ui } from '../data/i18n';
 import { site } from '../data/site';
-import { WORDMARK_VIEW } from '../data/brand';
+import Name from './Name.astro';
 import { footerLinks } from '../data/footer';
 import FooterReach from './FooterReach.astro';
 import Ic from './FooterIcon.astro';
@@ -21,9 +21,8 @@ const hours = `${site.hours[0].open}–${site.hours[0].close}`;
   <div class="fv4-main">
     <div class="fv4-stage">
       <div class="fv4-card">
-        <svg class="fv4-lily" viewBox="0 0 256 256" aria-hidden="true"><use href="#hl-lily" /></svg>
         <div class="fv4-name">
-          <svg class="fv4-wm" viewBox={WORDMARK_VIEW} role="img" aria-label="HOTLAND"><use href="#hl-word" /></svg>
+          <Name label class="fv4-wm" />
           <p class="fv4-tag">{ru ? 'Только между нами' : 'Just between us'}</p>
         </div>
         <div class="fv4-foot">

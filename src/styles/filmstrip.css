@@ -30,7 +30,7 @@
 /* the dark at the screen's sides, which the strip comes out of and goes into */
 .gfs::after {
   content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none;
-  background: linear-gradient(90deg, #000 0%, rgba(0, 0, 0, 0) 13%, rgba(0, 0, 0, 0) 87%, #000 100%);
+  background: linear-gradient(90deg, var(--black) 0%, rgba(0, 0, 0, 0) 13%, rgba(0, 0, 0, 0) 87%, var(--black) 100%);
 }
 /* (the turn's centre is on the strip's top edge, so that edge keeps its place and stays level; no tilt in the plane
    of the page, which would drop the strip away from the title on the left) */
@@ -115,5 +115,5 @@
 @media (max-width: 699px) {
   .gfs { --sh: clamp(250px, 74vw, 330px); }
   .gfs-run { transform: perspective(900px) rotateY(-12deg) rotateX(4deg); }
-  .gfs::after { background: linear-gradient(90deg, #000 0%, rgba(0, 0, 0, 0) 9%, rgba(0, 0, 0, 0) 91%, #000 100%); }
+  .gfs::after { background: linear-gradient(90deg, var(--black) 0%, rgba(0, 0, 0, 0) 9%, rgba(0, 0, 0, 0) 91%, var(--black) 100%); }
 }

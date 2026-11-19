@@ -35,7 +35,7 @@
   position: absolute; inset: 0; pointer-events: none;
   background:
     linear-gradient(90deg, rgba(0, 0, 0, .78) 0%, rgba(0, 0, 0, .3) 34%, rgba(0, 0, 0, 0) 52%),
-    linear-gradient(180deg, rgba(0, 0, 0, .55) 0%, rgba(0, 0, 0, 0) 22%, rgba(0, 0, 0, 0) 62%, rgba(0, 0, 0, .85) 88%, #000 100%);
+    linear-gradient(180deg, rgba(0, 0, 0, .55) 0%, rgba(0, 0, 0, 0) 22%, rgba(0, 0, 0, 0) 62%, rgba(0, 0, 0, .85) 88%, var(--black) 100%);
 }
 .st-in { position: relative; display: grid; gap: clamp(16px, 2vw, 28px); padding-top: calc(var(--hdr) + clamp(28px, 4vw, 64px)); padding-bottom: clamp(40px, 5vw, 84px); }
 .st-name { text-shadow: 0 2px 30px rgba(0, 0, 0, .55); }
@@ -50,7 +50,7 @@
   .st { min-height: max(600px, 92svh); }
   .st-frame { --fx: .5; --fy: .42; }
   .st-shade {
-    background: linear-gradient(180deg, rgba(0, 0, 0, .55) 0%, rgba(0, 0, 0, 0) 20%, rgba(0, 0, 0, 0) 46%, rgba(0, 0, 0, .82) 72%, #000 100%);
+    background: linear-gradient(180deg, rgba(0, 0, 0, .55) 0%, rgba(0, 0, 0, 0) 20%, rgba(0, 0, 0, 0) 46%, rgba(0, 0, 0, .82) 72%, var(--black) 100%);
   }
 }
 @media (prefers-reduced-motion: reduce) { .st-spot, .st-beam { transition: none; } }

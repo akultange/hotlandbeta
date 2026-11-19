@@ -81,8 +81,8 @@ import '../../styles/about.css';
   lang={lang}
   title={t.nav.about}
   description={ru
-    ? `HOTLAND: ночное кабаре, где каждый танец поставлен как спектакль. Правила дома, адрес, часы и как с нами связаться. Каждую ночь ${hours}.`
-    : `HOTLAND, a late-night cabaret where every dance is staged like a play. House rules, the address, the hours and how to reach us. Every night ${hours}.`}
+    ? `HOTLAND: премиальный мужской клуб, где каждый танец поставлен как спектакль. Правила дома, адрес, часы и как с нами связаться. Каждую ночь ${hours}.`
+    : `HOTLAND, a premium gentlemen’s club where every dance is staged like a play. House rules, the address, the hours and how to reach us. Every night ${hours}.`}
   schema={schema}
 >
   <PageTitle
@@ -105,8 +105,8 @@ import '../../styles/about.css';
       <div class="ab-centre">
         <h2 class="t-l ab-centre-h" id="club-h" set:html={ru ? 'Театр <em>после полуночи</em>' : 'Theatre <em>after midnight</em>'} />
         <p class="lead">{keep(ru
-          ? 'Ночное кабаре, где каждый танец поставлен как спектакль: свет, хореография и костюмы, в которых ткани ровно столько, сколько нужно номеру.'
-          : 'A late-night cabaret where every dance is staged like a play: light, choreography and costumes with exactly as much fabric as the number needs.')}</p>
+          ? 'Премиальный мужской клуб, где каждый танец поставлен как спектакль: свет, хореография и костюмы, в которых ткани ровно столько, сколько нужно номеру.'
+          : 'A premium gentlemen’s club where every dance is staged like a play: light, choreography and costumes with exactly as much fabric as the number needs.')}</p>
         <p class="body">{keep(tr(manifesto.text, lang))}</p>
       </div>
     </div>

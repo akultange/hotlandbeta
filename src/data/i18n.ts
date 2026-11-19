@@ -12,7 +12,7 @@ export function altPath(path: string, lang: Lang) {
 
 export const ui = {
   ru: {
-    nav: { about: 'О нас', program: 'Афиша', artists: 'Шоу', vip: 'VIP и праздники', menu: 'Меню', gallery: 'Галерея' },
+    nav: { about: 'О нас', program: 'Афиша', artists: 'Шоу', vip: 'Членство и праздники', menu: 'Меню', gallery: 'Галерея' },
     // the short form is only for the header pill and the phone dock; everywhere else the button says it in full
     book: 'Забронировать',
     bookTable: 'Забронировать стол',
@@ -27,7 +27,7 @@ export const ui = {
     priceOnRequest: 'Цена по запросу',
     gate: {
       title: 'Вам есть 18?',
-      text: 'За этой дверью кабаре для взрослых.',
+      text: 'За этой дверью мужской клуб. Только для взрослых.',
       yes: 'Да, мне есть 18',
       no: 'Нет',
       bye: 'Тогда ждём вас, когда исполнится 18. Мы никуда не денемся.',
@@ -60,7 +60,7 @@ export const ui = {
     waHello: 'Здравствуйте! Хочу забронировать в HOTLAND',
   },
   en: {
-    nav: { about: 'About us', program: 'Events', artists: 'The show', vip: 'VIP & parties', menu: 'Menu', gallery: 'Gallery' },
+    nav: { about: 'About us', program: 'Events', artists: 'The show', vip: 'Membership & parties', menu: 'Menu', gallery: 'Gallery' },
     book: 'Book',
     bookTable: 'Book a table',
     menuOpen: 'Menu',
@@ -74,7 +74,7 @@ export const ui = {
     priceOnRequest: 'Price on request',
     gate: {
       title: 'Are you 18 or over?',
-      text: 'Behind this door is a cabaret for adults.',
+      text: 'Behind this door is a gentlemen’s club. Adults only.',
       yes: 'Yes, I’m 18+',
       no: 'No',
       bye: 'Then we’ll see you when you’re 18. We’re not going anywhere.',

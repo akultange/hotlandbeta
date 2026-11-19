@@ -1,24 +1,23 @@
-/* VIP cards (MemberCards.astro): three metal cards on a crimson velvet field, after Luka's version of the site.
+/* The club's cards (MemberCards.astro): three cards in a field of concrete, bordeaux light rising from below.
    Loaded after global.css (Base.astro). The classes are the component's own (vfield, vdeck, vtier, vcard), so the
    older .mem-card tilt and sweep rules in global.css (Motion) don't reach them; the motion is in the component. */
 
-/* ---------- The field: deep crimson velvet rising out of the black, fine dots, rounded corners ---------- */
+/* ---------- The field: a recess in the wall, lit from below by the bordeaux ---------- */
 .vfield {
   --vf-x: clamp(20px, 3.9vw, 64px);
   position: relative; isolation: isolate; overflow: hidden; overflow: clip;
   /* the air above and below follows the screen's height too, so a wide, low laptop screen still holds the field */
   padding: clamp(28px, min(3.4vw, 5vh), 52px) var(--vf-x) clamp(30px, min(3.1vw, 4.6vh), 48px);
-  border-radius: clamp(20px, 2.2vw, 34px);
-  /* a soft stage light from above, the crimson glowing up from the lower corners */
-  background:
-    radial-gradient(42% 62% at 50% -6%, rgba(255, 214, 222, .1) 0%, rgba(255, 214, 222, 0) 72%),
-    radial-gradient(64% 86% at 0% 100%, rgba(170, 14, 46, .5) 0%, rgba(170, 14, 46, 0) 70%),
-    radial-gradient(64% 86% at 100% 100%, rgba(170, 14, 46, .5) 0%, rgba(170, 14, 46, 0) 70%),
-    linear-gradient(180deg, #120609 0%, #1b070d 42%, #2c0914 100%);
-}
-.vfield::before {
-  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Ccircle cx='2.5' cy='2.5' r='1' fill='%23fff' fill-opacity='.07'/%3E%3Ccircle cx='7.5' cy='7.5' r='1' fill='%23fff' fill-opacity='.07'/%3E%3C/svg%3E") 0 0 / 10px 10px;
+  border-radius: 3px;
+  background-color: #151517;
+  background-image:
+    radial-gradient(70% 90% at 0% 104%, rgba(116, 16, 31, .62) 0%, rgba(116, 16, 31, 0) 70%),
+    radial-gradient(70% 90% at 100% 104%, rgba(116, 16, 31, .62) 0%, rgba(116, 16, 31, 0) 70%),
+    radial-gradient(46% 60% at 50% -8%, rgba(255, 255, 255, .07) 0%, rgba(255, 255, 255, 0) 72%),
+    var(--stone);
+  background-size: auto, auto, auto, var(--stone-size);
+  background-blend-mode: normal, normal, normal, overlay, overlay;
+  box-shadow: inset 0 0 0 1px rgba(232, 231, 227, .06), inset 0 30px 60px -30px rgba(0, 0, 0, .8);
 }
 /* a page's own heading, set inside the field (slot "head"), close over the cards so the whole field fits a screen */
 .vfield.has-head { padding-top: clamp(32px, min(3.6vw, 5vh), 56px); }
@@ -45,11 +44,25 @@
   transition: transform .12s linear, box-shadow .3s ease;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), inset 0 0 0 1px rgba(255, 255, 255, .05), 0 46px 74px -30px rgba(0, 0, 0, .95), 0 8px 18px -8px rgba(0, 0, 0, .5);
 }
-.vtier-silver .vcard-in { background-image: url(/img/cards/card-silver.webp); color: rgba(28, 24, 24, .82); }
-.vtier-black .vcard-in { background-image: url(/img/cards/card-black.webp); color: var(--silver); }
-.vtier-crimson .vcard-in { background-image: url(/img/cards/card-crimson.webp); color: #fde9ef; }
-.vcard-wm { width: 36%; height: auto; fill: currentColor; }
-.vcard-lily { align-self: center; justify-self: end; width: 22%; height: auto; margin-bottom: -4%; fill: currentColor; opacity: .55; }
+/* the three finishes: brushed steel, black concrete, bordeaux lacquer */
+.vtier-silver .vcard-in { background-image: url(/img/cards/card-silver.webp); }
+.vtier-black .vcard-in {
+  background-color: #141516;
+  background-image: radial-gradient(90% 80% at 8% 0%, rgba(255, 255, 255, .12), rgba(255, 255, 255, 0) 60%), var(--stone);
+  background-size: auto, 900px auto, 320px auto; background-blend-mode: normal, overlay, overlay;
+}
+.vtier-bordeaux .vcard-in {
+  background-color: #6a0f1e;
+  background-image: linear-gradient(158deg, rgba(255, 255, 255, .2) 0%, rgba(255, 255, 255, 0) 38%, rgba(0, 0, 0, .42) 100%), var(--brushed);
+  background-size: auto, cover; background-blend-mode: normal, multiply;
+}
+/* the name on the card, as on the wall; cut into the steel on the silver one */
+.vcard-in { place-items: center; }
+.vcard-name.name { width: 72%; height: auto; filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .55)); }
+.vtier-silver .vcard-name .name-word { fill: rgba(22, 20, 20, .84); }
+.vtier-silver .vcard-name.name { filter: drop-shadow(0 1px 0 rgba(255, 255, 255, .55)); }
+.vtier-bordeaux .vcard-name .name-word { fill: #f1e6e7; }
+.vtier-bordeaux .vcard-name .name-seam { fill: #ffd5da; }
 /* a band of light crosses each card once as it lands: the band is the card's own background, swept from left to
    right (the component moves background-position), so it never reaches past the card's rounded edge. (Moving a
    band element across instead leaned on the card's clipping, which Safari on the iPhone drops for a tilted card:
@@ -76,7 +89,7 @@ html.motion .vfield:not(.vf-ready) :is(.vcard, .vtier-body) { opacity: 0; animat
 .vtier-body { display: flex; flex-direction: column; align-items: flex-start; margin-top: clamp(16px, 1.5vw, 22px); }
 .vtier-sub { margin-top: 4px; font: 400 16px/1.45 var(--sans); color: rgba(242, 240, 236, .8); }
 .vtier .lily-list { gap: 6px; margin-top: 12px; line-height: 1.5; color: rgba(242, 240, 236, .88); }
-.vtier .lily-list li::before { margin-top: .4em; color: #d6d8dc; } /* steel lilies on the velvet, as on the cards */
+.vtier .lily-list li::before { margin-top: .32em; }
 .vtier-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px clamp(12px, 1.3vw, 20px); margin-top: auto; padding-top: clamp(16px, 1.4vw, 20px); }
 .vtier-foot .btn { flex: none; }
 .vtier-price { font: 400 14px/1.45 var(--sans); color: rgba(242, 240, 236, .64); }
@@ -111,7 +124,7 @@ html.motion .vfield:not(.vf-ready) :is(.vcard, .vtier-body) { opacity: 0; animat
   html.js .vmeter { display: flex; }
 }
 @media (max-width: 699px) {
-  .vfield { --vf-x: 20px; padding-top: 24px; padding-bottom: 22px; border-radius: 22px; }
+  .vfield { --vf-x: 20px; padding-top: 24px; padding-bottom: 22px; border-radius: 3px; }
   .vfield.has-head { padding-top: 30px; }
   .vdeck { gap: 14px; }
 }

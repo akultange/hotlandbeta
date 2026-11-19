@@ -3,7 +3,6 @@ import Base from '../../layouts/Base.astro';
 import Hero from '../../components/Hero.astro';
 import HeroPreload from '../../components/HeroPreload.astro';
 import Parties from '../../components/Parties.astro';
-import Photo from '../../components/Photo.astro';
 import PosterCard from '../../components/PosterCard.astro';
 import ShowTabs from '../../components/ShowTabs.astro';
 import Models from '../../components/Models.astro';
@@ -13,22 +12,16 @@ import { choosing, show } from '../../data/variants';
 import MemberCards from '../../components/MemberCards.astro';
 import CastingCall from '../../components/CastingCall.astro';
 import GalleryPeek from '../../components/GalleryPeek.astro';
-import { type Lang, tr, langPaths } from '../../data/i18n';
+import { type Lang, tr, langPaths, ui } from '../../data/i18n';
 import { keepShort } from '../../data/format';
-import { site, price } from '../../data/site';
-import { events, kitchen, bar, entryShows, vip, barMenu, eventsLead, media } from '../../data/content';
+import { site } from '../../data/site';
+import { events, vip, eventsLead } from '../../data/content';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
+const t = ui[lang];
 const ru = lang === 'ru';
 const p = (s: string) => `/${lang}/${s}/`;
-
-// the bar at a glance: tartare, oysters, ribeye, Red Velvet, the two house cocktails, Negroni
-const menuItems = [kitchen[0], kitchen[1], kitchen[4], kitchen[6], bar[1].items[0], bar[1].items[1], bar[1].items[2]];
-const entry = entryShows[0];
-/** A dish's name for the narrow column beside the bar's picture on phones: a short word stays with the next one,
- *  a number with its unit ("из говядины", "300 г"). */
-const dish = (s: string) => s.replace(/(^|\s)(из|в|во|на|с|со|и|по|под) /gi, '$1$2\u00a0').replace(/(\d) (г|кг|мл|л|шт)/g, '$1\u00a0$2');
 
 const schema = {
   '@context': 'https://schema.org',
@@ -45,7 +38,7 @@ const schema = {
   })),
 };
 ---
-<Base lang={lang} description={ru ? 'HOTLAND, ночное кабаре в Москве: шоу-балет, бурлеск, ужин и бар до утра. Только между нами. 18+' : 'HOTLAND, a late-night cabaret in Moscow: show ballet, burlesque, dinner and the bar until morning. Just between us. 18+'} schema={schema}>
+<Base lang={lang} description={ru ? 'HOTLAND, премиальный мужской клуб в Москве: шоу-балет, бурлеск, ужин и бар до утра. Только между нами. 18+' : 'HOTLAND, a premium gentlemen’s club in Moscow: show ballet, burlesque, dinner and the bar until morning. Just between us. 18+'} schema={schema}>
 
   <HeroPreload slot="head" />
   <Hero lang={lang} />
@@ -89,57 +82,31 @@ const schema = {
   <!-- THE SHOW: what the artists do, the six kinds of number as tabs, the chosen one's film beside them (ShowTabs) -->
   <ShowTabs lang={lang} />
 
-  <!-- VIP: membership cards in metal -->
+  <!-- MEMBERSHIP: the club's three cards -->
   <section class="sec" id="vip">
     <div class="wrap">
       <MemberCards lang={lang}>
         <div slot="head" class="bighead bh-line">
-          <h2 class="t-l">{tr(vip.title, lang)}</h2>
+          <h2 class="t-l" set:html={tr(vip.title, lang)} />
           <div class="bighead-side">
             <p class="body">{tr(vip.lead, lang)}</p>
-            <a class="lnk" href={p('vip')}>{ru ? 'VIP и праздники' : 'VIP & parties'}</a>
+            <a class="lnk" href={p('vip')}>{t.nav.vip}</a>
           </div>
         </div>
       </MemberCards>
     </div>
   </section>
 
-  <!-- THE BAR, at a glance: the heading row (as every section's, with the link to the menu), then the list beside
-       its picture (on phones the picture is set into the list, top right, with the first dishes running down beside
-       it). The list and the picture start at the same height, under the section's own air. -->
-  <section class="sec soot" id="kitchen">
-    <div class="wrap g12" style="align-items: start">
-      <div class="menu-glance" style="grid-column: 1 / span 6">
-        <div class="bighead bh-line">
-          <h2 class="t-l" set:html={tr(barMenu.title, lang)} />
-          <div class="bighead-side">
-            <p class="body">{tr(barMenu.lead, lang)}</p>
-            <a class="lnk" href={p('menu')}>{ru ? 'Всё меню' : 'The whole menu'}</a>
-          </div>
-        </div>
-        <div class="menu-peek">
-          <div class="menu-peek-shot">
-            <Photo src={media(barMenu.shots.bar.img)} loop={barMenu.shots.bar.loop && media(barMenu.shots.bar.loop)} alt={tr(barMenu.shots.bar.alt, lang)} ratio="2/3" />
-          </div>
-          {menuItems.map((it, i) => (
-            <div class:list={['mrow', { 'mrow-by': i < 4 }]}><span class="nm">{dish(tr(it.name, lang))}</span><span class="dots"></span><span class="pr">{price(it.price!)}</span></div>
-          ))}
-          <div class="mrow"><span class="nm">{tr(entry.name, lang)}</span><span class="dots"></span><span class="pr">{price(entry.price!)}</span></div>
-        </div>
-        <p class="label menu-peek-foot">{tr(barMenu.note, lang)}</p>
-      </div>
-      <div class="menu-peek-side" style="grid-column: 8 / span 5">
-        <Photo src={media(barMenu.shots.bar.img)} loop={barMenu.shots.bar.loop && media(barMenu.shots.bar.loop)} autoplay alt={tr(barMenu.shots.bar.alt, lang)} ratio="4/5" />
-      </div>
-    </div>
-  </section>
+  {/* THE BAR at a glance (a short price list beside its picture) was taken off the home page at the club's request
+      (2026-11-19: nobody comes to the site to read a menu; the menu keeps its own page and its place in the
+      navigation) */}
 
   {/* BOTTLE SETS (TableSets.astro) are hidden at the client's request (2026-11-13); the component stays: to bring
       them back, import it and put <TableSets lang={lang} /> here */}
 
   <Parties lang={lang} />
 
-  <!-- THE CASTING CALL: last, after the whole guests' part (the show, VIP, the bar, the sets, parties): the way to
+  <!-- THE CASTING CALL: last, after the whole guests' part (the show, membership, parties): the way to
        join the club's first company, just before the closing invitation. -->
   <CastingCall lang={lang} />
 

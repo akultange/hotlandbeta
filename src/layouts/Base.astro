@@ -46,11 +46,11 @@ const path = Astro.url.pathname;
 const abs = (p: string) => new URL(p, Astro.site).href;
 // The fonts the first screen needs (styles/fonts.css, the site's own), fetched alongside the page instead of after its
 // stylesheet: the headings' and the text's letters in the page's language, and their digits, spaces and Latin.
+// One face, Geologica: the titles' sharp cut and the text's soft one, their Russian letters on a Russian page, and
+// their Latin, digits and signs.
 const preload = lang === 'ru'
-  ? [fonts['noto-display-cyr'], fonts['noto-display-lat'], fonts['golos-cyr'], fonts['golos-lat']]
-  : [fonts['noto-display-lat'], fonts['golos-lat']];
-// and while the 18+ question shows (the head script below knows): its tagline, "Just between us"
-const gateFonts = [fonts['noto-display-italic-lat']];
+  ? [fonts['geologica-sharp-cyr'], fonts['geologica-sharp-lat'], fonts['geologica-cyr'], fonts['geologica-lat']]
+  : [fonts['geologica-sharp-lat'], fonts['geologica-lat']];
 ---
 <!doctype html>
 <html lang={lang}>
@@ -79,8 +79,8 @@ const gateFonts = [fonts['noto-display-italic-lat']];
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     {preload.map((href) => <link rel="preload" as="font" type="font/woff2" href={href} crossorigin />)}
 
-    {/* the brushed metal of the 18+ question's buttons and numerals, found otherwise only after the stylesheet */}
-    {!bare && <link rel="preload" as="image" href="/img/metal/brushed.webp" />}
+    {/* the concrete of the 18+ door and of the page itself, found otherwise only after the stylesheet */}
+    {!bare && <link rel="preload" as="image" href="/img/concrete/concrete.webp" />}
     {/* what one page needs first (the home page's poster, HeroPreload.astro) */}
     <slot name="head" />
     {/* Dev and preview builds: which version of each contested part shows (Luka's or Gio's, data/variants.ts) */}
@@ -164,27 +164,22 @@ const gateFonts = [fonts['noto-display-italic-lat']];
         } catch (e) {}
       })(document.documentElement);
     </script>
-    {!bare && (
-      <script is:inline define:vars={{ gateFonts }}>
-        // the 18+ question's own fonts, only when it is going to show (the script above has decided)
-        if (!document.documentElement.classList.contains('age-ok')) gateFonts.forEach(function (href) {
-          var l = document.createElement('link');
-          l.rel = 'preload'; l.as = 'font'; l.type = 'font/woff2'; l.crossOrigin = 'anonymous'; l.href = href;
-          document.head.appendChild(l);
-        });
-      </script>
-    )}
     {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
   </head>
   <body class:list={{ bare }} data-wa-hello={ui[lang].waHello} data-wa-context={waContext}>
     <svg class="svg-defs" aria-hidden="true" focusable="false">
       <defs>
+        {/* steel, lit from above: a smooth fall of light, no band across the letters (the emblem, the wordmark) */}
         <linearGradient id="g-metal" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#fdfdfd" />
-          <stop offset=".44" stop-color="#b3b6bb" />
-          <stop offset=".5" stop-color="#6c6f75" />
-          <stop offset=".6" stop-color="#c9ccd0" />
-          <stop offset="1" stop-color="#f3f4f6" />
+          <stop offset="0" stop-color="#fafaf8" />
+          <stop offset=".55" stop-color="#d6d7d9" />
+          <stop offset="1" stop-color="#aeb0b4" />
+        </linearGradient>
+        {/* the same steel for the name on the wall, lit from the top left */}
+        <linearGradient id="g-steel" x1="0" y1="0" x2=".35" y2="1">
+          <stop offset="0" stop-color="#ffffff" />
+          <stop offset=".5" stop-color="#d0d1d4" />
+          <stop offset="1" stop-color="#96989d" />
         </linearGradient>
         {/* the lily and the wordmark, written once and referenced wherever they show (Logo.astro and the like) */}
         <symbol id="hl-lily" viewBox="0 0 256 256"><path fill-rule="evenodd" d={LILY} /></symbol>

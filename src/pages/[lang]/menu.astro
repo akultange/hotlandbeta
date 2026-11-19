@@ -1,6 +1,6 @@
 ---
 // The menu page: the page's header (as every page's), then the bar card: three tabs (bar, kitchen, entry and
-// shows), each marked with its 3D icon and pinned under the header while you read, the chosen list set large in
+// shows), pinned under the header while you read, the chosen list set large in
 // two columns, and beside it the tab's picture, which stays in view and plays its film (styles/menu.css).
 // Then the hookah lounge (the bottle sets are hidden for now). Without scripts the three lists simply
 // follow one another, each under its own heading.
@@ -217,28 +217,15 @@ const tabs = [
 </Base>
 
 <style>
-  /* The bar card's tabs, big: a coupe for the bar, the cherries for the kitchen, a stiletto for entry and shows,
-     each 3D icon beside a large label. The chosen tab's icon stands a little larger, with a shadow on the light
-     pill. On phones the three share the width, the icon above its label. (A step under the page's name and over
-     the lists' headings: they lead into the list, they don't outweigh it.) */
-  .bm-tabs .tabs { padding: 6px; }
-  .bm-tabs .tabs :global(.tabs-ink) { top: 6px; bottom: 6px; }
-  .bm-tabs .tabs button { display: inline-flex; align-items: center; gap: 12px; height: 66px; padding: 0 30px 0 12px; font: 600 20px/1 var(--sans); }
-  .bm-tabs :global(.tab-ic) { width: 50px; margin: -8px 0; filter: saturate(.8) brightness(.9); transition: scale .5s var(--ease-back), filter .4s; }
-  .bm-tabs [aria-selected="true"] :global(.tab-ic) { scale: 1.1; filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, .5)); }
-  @media (hover: hover) { .bm-tabs .tabs button:not([aria-selected="true"]):hover :global(.tab-ic) { filter: none; scale: 1.06; } }
-  @media (max-width: 899px) {
-    .bm-tabs .tabs button { gap: 10px; height: 60px; padding: 0 24px 0 10px; font-size: 18px; }
-    .bm-tabs :global(.tab-ic) { width: 44px; }
-  }
+  /* The bar card's tabs, a size up from the usual ones: they lead into the list, they don't outweigh it. On phones
+     the three share the width. */
+  .bm-tabs .tabs { padding: 5px; }
+  .bm-tabs .tabs :global(.tabs-ink) { top: 5px; bottom: 5px; }
+  .bm-tabs .tabs button { display: inline-flex; align-items: center; justify-content: center; height: 52px; padding: 0 30px; font: 500 13px/1.15 var(--sans); letter-spacing: .14em; text-transform: uppercase; }
   @media (max-width: 599px) {
-    .bm-tabs .tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; border-radius: 26px; }
-    .bm-tabs .tabs :global(.tabs-ink) { border-radius: 20px; }
-    .bm-tabs .tabs button { flex-direction: column; justify-content: center; gap: 6px; height: 96px; padding: 8px 4px; border-radius: 20px; font-size: 15.5px; line-height: 1.15; white-space: normal; text-align: center; }
-    .bm-tabs :global(.tab-ic) { width: 46px; margin: 0; }
+    .bm-tabs .tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; }
+    .bm-tabs .tabs button { height: 50px; padding: 0 4px; font-size: 11.5px; letter-spacing: .1em; white-space: normal; text-align: center; }
   }
-  /* (the smallest phones: the labels a step smaller, so each stays on one line and the three icons line up) */
-  @media (max-width: 379px) { .bm-tabs .tabs button { font-size: 14.5px; } }
   /* a dish never splits between the two columns (the kitchen list has no groups to hold it together) */
   .bm-cols > .mrow { break-inside: avoid; }
 </style>

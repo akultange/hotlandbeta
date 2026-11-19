@@ -1,10 +1,12 @@
 """The site's own web fonts (public/fonts), instead of Google Fonts.
 
 Google's stylesheet held up the first paint (another server to reach before anything shows) and the ruble sign
-alone pulled in a 300 KB "latin-ext" file. Here the same two families (Noto Sans Display for headings, Golos Text
-for text) come from the site itself; Noto Sans Display keeps only the weights the site uses (400 to 900, every
-width), a quarter lighter. The fonts are Google's own (the Fontsource packages mirror them), under the SIL Open Font
-License.
+alone pulled in a 300 KB "latin-ext" file. Here the site's one family comes from the site itself: Geologica
+(2026-11-19, the concrete-and-burgundy brand: geometric and a little wide like the HOTLAND wordmark, Cyrillic drawn
+as its own alphabet), for titles and text alike, as two families cut from it: Geologica for text (soft joints) and
+Geologica Sharp for titles (its sharpness axis at 100: the letters' joints cut to a point, the brand's sharp lily).
+Each keeps the weights the site uses; the cursive and slant axes are set to upright.
+The font is Google's own (the Fontsource package mirrors it), under the SIL Open Font License.
 
 Each face comes in two files per alphabet: a core with every letter and sign the pages use today (the Russian
 alphabet; plain Latin, the digits and the punctuation in use, and the ruble sign, moved in from Google's latin-ext
@@ -12,7 +14,7 @@ file), and the rest of that alphabet in a second file, fetched only by a page th
 bar menu's Moët). The core is what a page needs; at a third lighter, the first screen comes sooner.
 
 Run it again only to change the fonts:
-  cd tools/fonts && npm i @fontsource-variable/noto-sans-display @fontsource-variable/golos-text --no-save
+  cd tools/fonts && npm i @fontsource-variable/geologica --no-save
   python3 build.py        (needs fonttools and brotli: pip install fonttools brotli)
 It writes public/fonts/*.woff2 (named by their contents, so they can be cached for good) and
 src/styles/fonts.css, and the files to preload into src/data/fonts.json.
@@ -24,7 +26,9 @@ from fontTools import subset
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.normpath(os.path.join(HERE, '..', '..'))
-FS = os.path.join(HERE, 'node_modules', '@fontsource-variable')
+# the Fontsource package: installed here, or (npm's choice when this folder has no package.json) in the site's own
+FS = next((d for d in (os.path.join(HERE, 'node_modules', '@fontsource-variable'), os.path.join(ROOT, 'node_modules', '@fontsource-variable'))
+           if os.path.isdir(d)), os.path.join(HERE, 'node_modules', '@fontsource-variable'))
 OUT = os.path.join(ROOT, 'public', 'fonts')
 
 # Google's split (what each source file covers)
@@ -39,11 +43,12 @@ CORE = {
     'lat': 'U+0020-007E, U+00A0, U+00A9, U+00AB, U+00B7, U+00BB, U+2010-2015, U+2018-201E, U+2026, U+20BD, U+2212',
 }
 
-# family, style, source package and file stem, the site's own name for it
+# family, style, source package and file stem, the site's own name for it; the weights kept; axes set to one value.
+# Two families cut from the one font: the text's (soft joints, SHRP 0) and the titles' (cut sharp, SHRP 100), so a
+# rule only has to name its family; nothing depends on font-variation-settings, which the font shorthand resets.
 FACES = [
-    ('Noto Sans Display', 'normal', 'noto-sans-display', 'noto-sans-display-{}-standard-normal', 'noto-display'),
-    ('Noto Sans Display', 'italic', 'noto-sans-display', 'noto-sans-display-{}-standard-italic', 'noto-display-italic'),
-    ('Golos Text', 'normal', 'golos-text', 'golos-text-{}-wght-normal', 'golos'),
+    ('Geologica', 'normal', 'geologica', 'geologica-{}-full-normal', 'geologica', (300, 400, 600), {'CRSV': 0, 'slnt': 0, 'SHRP': 0}),
+    ('Geologica Sharp', 'normal', 'geologica', 'geologica-{}-full-normal', 'geologica-sharp', (300, 400, 700), {'CRSV': 0, 'slnt': 0, 'SHRP': 100}),
 ]
 
 
@@ -51,13 +56,15 @@ def load(pkg, stem, subset_name):
     return TTFont(os.path.join(FS, pkg, 'files', stem.format(subset_name) + '.woff2'))
 
 
-def trimmed(font):
-    """Only the weights the site uses (400 to 900), where the font goes lighter than that."""
+def trimmed(font, weights, pins):
+    """Only the weights the site uses, and the axes it doesn't use set to one value."""
     axes = {a.axisTag: a for a in font['fvar'].axes}
-    w = axes.get('wght')
-    if w and w.minValue < 400:
-        font = instancer.instantiateVariableFont(font, {'wght': instancer.AxisTriple(400, max(400, w.defaultValue), min(900, w.maxValue))})
-    return font
+    limits = {tag: value for tag, value in pins.items() if tag in axes}
+    if 'wght' in axes:
+        lo, default, hi = weights
+        w = axes['wght']
+        limits['wght'] = instancer.AxisTriple(max(lo, w.minValue), default, min(hi, w.maxValue))
+    return instancer.instantiateVariableFont(font, limits) if limits else font
 
 
 def codepoints(ranges):
@@ -133,9 +140,9 @@ def save(font, name):
     return file, len(data)
 
 
-def face(family, style, stretch, file, rng):
+def face(family, style, stretch, file, rng, weights=(400, 400, 900)):
     return ('@font-face {\n'
-            f"  font-family: '{family}';\n  font-style: {style};\n  font-weight: 400 900;\n"
+            f"  font-family: '{family}';\n  font-style: {style};\n  font-weight: {weights[0]} {weights[2]};\n"
             + (f'  font-stretch: {stretch};\n' if stretch else '')
             + f"  font-display: swap;\n  src: url('/fonts/{file}') format('woff2');\n  unicode-range: {rng};\n}}")
 
@@ -149,7 +156,7 @@ def main():
            '   Per face and alphabet: the core (what the pages use) and the rest (fetched only where a page uses it). */']
     rest = []
     files = {}
-    for family, style, pkg, stem, name in FACES:
+    for family, style, pkg, stem, name, weights, pins in FACES:
         stretch = '62.5% 100%' if pkg == 'noto-sans-display' else None
         for part, src_subset, rng in (('cyr', 'cyrillic', CYR), ('lat', 'latin', LAT)):
             whole = codepoints(rng)
@@ -157,7 +164,7 @@ def main():
             if part == 'lat':
                 source = with_ruble(source, load(pkg, stem, 'latin-ext'))
                 whole.add(RUB)
-            source = trimmed(source)
+            source = trimmed(source, weights, pins)
             have = set(source.getBestCmap()) & whole
             core = have & codepoints(CORE[part])
             for key, cps, out in ((f'{name}-{part}', core, css), (f'{name}-{part}-x', have - core, rest)):
@@ -167,7 +174,7 @@ def main():
                 file, size = save(font, key)
                 files[key] = f'/fonts/{file}'
                 print(f'{file:44} {size / 1024:6.1f} KB  {len(cps)} characters')
-                out.append(face(family, style, stretch, file, CORE[part] if out is css else as_range(cps)))
+                out.append(face(family, style, stretch, file, CORE[part] if out is css else as_range(cps), weights))
     with open(os.path.join(ROOT, 'src', 'styles', 'fonts.css'), 'w', encoding='utf-8', newline='\n') as f:
         f.write('\n'.join(css + rest) + '\n')
     with open(os.path.join(ROOT, 'src', 'data', 'fonts.json'), 'w', encoding='utf-8', newline='\n') as f:

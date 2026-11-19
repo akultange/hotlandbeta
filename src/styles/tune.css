@@ -16,7 +16,7 @@
 .tune > * { position: absolute; }
 .tune-glow {
   inset: -22%; z-index: -1; border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(220, 20, 60, .55) 0%, rgba(220, 20, 60, .2) 46%, rgba(220, 20, 60, 0) 100%);
+  background: radial-gradient(closest-side, rgba(168, 24, 46, .55) 0%, rgba(168, 24, 46, .2) 46%, rgba(168, 24, 46, 0) 100%);
   animation: tune-breathe 3.8s ease-in-out infinite;
 }
 /* the dark disc the dial and the words sit on, so they read over any picture */
@@ -27,7 +27,7 @@
 }
 .tune-dial, .tune-ring { inset: 0; width: 100%; height: 100%; overflow: visible; }
 .tune-dial line { stroke: rgba(242, 240, 236, .28); stroke-width: .8; stroke-linecap: round; }
-.tune-dial line.big { stroke: rgba(255, 77, 104, .85); stroke-width: 1.1; }
+.tune-dial line.big { stroke: rgba(214, 70, 92, .85); stroke-width: 1.1; }
 .tune-ring text { font: 600 10.6px/1 var(--sans); letter-spacing: .02em; fill: var(--fg); }
 .tune-ring { animation: tune-turn 28s linear infinite; }
 .tune-dial { animation: tune-turn 90s linear infinite reverse; }
@@ -36,7 +36,7 @@
 .tune-bezel {
   inset: 18%; border-radius: 50%;
   background: conic-gradient(from 200deg, #f3f4f6, #7a7d83 14%, #dcdee2 30%, #4b4d52 46%, #eceef1 62%, #808389 78%, #f3f4f6);
-  box-shadow: 0 14px 40px -10px rgba(0, 0, 0, .9), 0 0 0 1px rgba(255, 255, 255, .12), 0 0 34px -4px rgba(220, 20, 60, .65);
+  box-shadow: 0 14px 40px -10px rgba(0, 0, 0, .9), 0 0 0 1px rgba(255, 255, 255, .12), 0 0 34px -4px rgba(168, 24, 46, .65);
 }
 /* the lens: the gallery passing by, one picture after another, each pushing in a little */
 .tune-lens { inset: 20.5%; border-radius: 50%; overflow: hidden; isolation: isolate; background: #0b0b0c; clip-path: circle(50%); }
@@ -46,7 +46,7 @@
 }
 .tune-tint {
   position: absolute; inset: 0; z-index: 1;
-  background: radial-gradient(closest-side, rgba(0, 0, 0, 0) 38%, rgba(0, 0, 0, .55) 100%), linear-gradient(160deg, rgba(220, 20, 60, .16), rgba(0, 0, 0, .1));
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0) 38%, rgba(0, 0, 0, .55) 100%), linear-gradient(160deg, rgba(168, 24, 46, .16), rgba(0, 0, 0, .1));
 }
 /* glass in the middle, and on it the play mark */
 .tune-play {
@@ -72,7 +72,7 @@
 /* pointing at the pictures: the lens comes forward, the glass turns crimson */
 @media (hover: hover) {
   .gal-peek:hover .tune { scale: 1.07; }
-  .gal-peek:hover .tune-play { scale: 1.1; background-color: rgba(200, 16, 52, .62); }
+  .gal-peek:hover .tune-play { scale: 1.1; background-color: rgba(134, 18, 38, .62); }
   .gal-peek:hover .tune-glow { animation-duration: 1.9s; }
 }
 .gal-peek:active .tune { scale: .96; transition-duration: .15s; }
@@ -96,14 +96,14 @@
 .gal-peek.tuning .tune { scale: 1.1; transition: scale .35s var(--ease-out); }
 .gal-peek.tuning .tune-ring { animation: tune-turn .55s cubic-bezier(.5, 0, .3, 1) infinite; }
 .gal-peek.tuning .tune-dial { animation: tune-turn .8s linear infinite reverse; }
-.gal-peek.tuning .tune-dial line { stroke: rgba(255, 77, 104, .95); }
+.gal-peek.tuning .tune-dial line { stroke: rgba(214, 70, 92, .95); }
 .gal-peek.tuning .tune-glow { animation: none; opacity: 1; scale: 1.35; transition: scale .35s var(--ease-out); }
-.gal-peek.tuning .tune-play { scale: .82; background-color: rgba(220, 20, 60, .9); }
+.gal-peek.tuning .tune-play { scale: .82; background-color: rgba(168, 24, 46, .9); }
 /* the ring of light round the lens: lit by the press, and the thing that flies out (its own part of the passage) */
 .tune-halo {
   inset: 17.2%; border-radius: 50%; opacity: 0; transition: opacity .25s ease;
   border: 2px solid rgba(255, 226, 232, .95);
-  box-shadow: 0 0 18px 3px rgba(255, 40, 80, .85), 0 0 46px 8px rgba(220, 20, 60, .55), inset 0 0 18px 2px rgba(255, 40, 80, .6);
+  box-shadow: 0 0 18px 3px rgba(204, 40, 62, .85), 0 0 46px 8px rgba(168, 24, 46, .55), inset 0 0 18px 2px rgba(204, 40, 62, .6);
 }
 .gal-peek.tuning .tune-halo { opacity: 1; view-transition-name: lens-halo; }
 
@@ -144,7 +144,7 @@ html.lens-in:not(.lens-vt) body::after {
 /* ---------- The gallery in passing (GalleryReel.astro, home page) ----------
    A strip of the gallery's pictures drifting across the whole width, dim, fading out at both ends; the lens over the
    middle of it. Each picture carries its own gap (margin), so half the strip is exactly one set and it loops clean. */
-.gal-band-sec { padding: var(--sec-y) 0; background: #000; overflow: clip; }
+.gal-band-sec { padding: var(--sec-y) 0; background: var(--black); overflow: clip; }
 .gal-peek.gal-band { display: block; }
 .gal-reel {
   display: block; overflow: hidden;
@@ -154,7 +154,7 @@ html.lens-in:not(.lens-vt) body::after {
 .gal-reel-track { display: flex; width: max-content; animation: gal-reel 70s linear infinite; }
 .gal-reel img {
   flex: none; height: clamp(170px, 18vw, 290px); aspect-ratio: 3 / 4; margin-right: clamp(10px, 1.1vw, 18px);
-  object-fit: cover; border-radius: clamp(10px, .9vw, 14px); filter: brightness(.46) saturate(.9);
+  object-fit: cover; border-radius: 3px; filter: brightness(.46) saturate(.9);
   transition: filter .6s ease;
 }
 @keyframes gal-reel { to { translate: -50% 0; } }
@@ -171,7 +171,7 @@ html.lens-in:not(.lens-vt) body::after {
 
 /* ---------- The way back (GalleryNext.astro, the end of the gallery) ----------
    One quiet line and a silver button that goes straight on to the part of the page they came from. */
-.gnext { padding: var(--sec-y) 0; background: #000; }
+.gnext { padding: var(--sec-y) 0; background: var(--black); }
 .gnext-in { display: grid; justify-items: center; gap: 18px; text-align: center; }
 .gnext-kick { font: 400 clamp(16px, 1.2vw, 18px)/1.5 var(--sans); color: var(--fg-2); }
 .gnext-go { gap: 12px; height: 60px; padding: 0 26px 0 32px; font-size: 17px; }

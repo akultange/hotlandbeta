@@ -40,12 +40,12 @@
   /* the light: a soft white spot for the first two, the crimson spot for the top set */
   --beam: .55; --pool: .55; --bright: 1; --lift: 1;
   --beam-c: rgba(255, 242, 236, .13);
-  --pool-hot: rgba(255, 128, 148, .38); --pool-c: rgba(220, 20, 60, .2);
+  --pool-hot: rgba(204, 112, 126, .38); --pool-c: rgba(168, 24, 46, .2);
 }
 .ts-top {
   --beam: 1; --pool: 1;
-  --beam-c: rgba(255, 52, 88, .24);
-  --pool-hot: rgba(255, 92, 122, .7); --pool-c: rgba(220, 20, 60, .42);
+  --beam-c: rgba(190, 36, 60, .24);
+  --pool-hot: rgba(214, 84, 104, .7); --pool-c: rgba(168, 24, 46, .42);
 }
 
 /* ---------- The stage ---------- */
@@ -96,9 +96,9 @@
 
 /* ---------- The words under each bottle, set close ---------- */
 .ts-title { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 18px; margin-top: 2px; }
-.ts-name { font: 600 clamp(30px, 2.5vw, 40px)/1 var(--display); font-stretch: 87.5%; letter-spacing: -.005em; transition: color .3s; }
+.ts-name { font: 500 clamp(27px, 2.25vw, 36px)/1.05 var(--display); letter-spacing: -.005em; transition: color .3s; }
 .ts-price {
-  font: 800 clamp(38px, 3.3vw, 54px)/.9 var(--display); font-stretch: 62.5%; font-variant-numeric: lining-nums;
+  font: 450 clamp(28px, 2.44vw, 40px)/1.05 var(--display); font-variant-numeric: lining-nums;
   white-space: nowrap; padding-right: .04em;
   background-image: var(--red-chrome); background-size: 100% 100%;
   -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;

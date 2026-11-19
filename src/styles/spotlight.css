@@ -20,18 +20,18 @@
   touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab; outline: none;
 }
 .mst-stage.drag { cursor: grabbing; }
-.mst-stage:focus-visible .mst-a.on { outline: 2px solid var(--red-text); outline-offset: 8px; border-radius: 16px; }
+.mst-stage:focus-visible .mst-a.on { outline: 2px solid var(--red-text); outline-offset: 8px; border-radius: 3px; }
 
 /* her name, huge, in outline, behind the line */
 .mst-big {
   position: absolute; left: 0; right: 0; top: 2%; z-index: 0; margin: 0; text-align: center; white-space: nowrap; pointer-events: none;
-  font: 800 clamp(110px, 17vw, 300px)/.82 var(--display); font-stretch: 62.5%; letter-spacing: -.01em;
+  font: 450 clamp(81px, 12.58vw, 222px)/.9 var(--display); letter-spacing: -.01em;
   color: transparent; -webkit-text-stroke: 1.2px rgba(242, 240, 236, .15);
 }
 /* the pool of light on the floor under her, and the cone it falls from */
 .mst-floor {
   position: absolute; left: 50%; bottom: 6px; z-index: 0; width: calc(var(--mst-cw) * 2); height: 90px; translate: -50% 0; pointer-events: none;
-  border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 214, 180, .16), rgba(220, 20, 60, .06) 60%, rgba(0, 0, 0, 0));
+  border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 214, 180, .16), rgba(168, 24, 46, .06) 60%, rgba(0, 0, 0, 0));
 }
 .mst-cone {
   /* a soft beam from above her head, widening to the floor: no hard edges, strongest at its source */
@@ -46,7 +46,7 @@
 .mst-a {
   --e: 1;
   position: absolute; left: 50%; bottom: 24px; width: var(--mst-cw); height: var(--mst-ch); margin: 0;
-  overflow: hidden; border-radius: clamp(12px, 1vw, 16px);
+  overflow: hidden; border-radius: 3px;
   transform-origin: 50% 100%; will-change: transform, filter, opacity;
   /* in the light the picture shows whole; in the dark its edges dissolve, so a silhouette has no frame */
   -webkit-mask-image: linear-gradient(rgb(0 0 0 / calc(1 - var(--e))), rgb(0 0 0 / calc(1 - var(--e)))), radial-gradient(closest-side, #000 52%, transparent 100%);
@@ -93,7 +93,7 @@
   scrollbar-width: none; overscroll-behavior-x: contain;
 }
 .mst-names::-webkit-scrollbar { display: none; }
-.mst-n { position: relative; flex: none; padding: 4px 0; font: 700 clamp(19px, 1.6vw, 24px)/1 var(--display); font-stretch: 75%; letter-spacing: .01em; color: rgba(242, 240, 236, .38); cursor: pointer; transition: color .3s ease; }
+.mst-n { position: relative; flex: none; padding: 4px 0; font: 500 clamp(16px, 1.31vw, 20px)/1.05 var(--display); letter-spacing: -.01em; color: rgba(242, 240, 236, .38); cursor: pointer; transition: color .3s ease; }
 .mst-n:hover { color: var(--fg-2); }
 .mst-n.on span {
   background-image: var(--metal-read); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;

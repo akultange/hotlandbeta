@@ -1,9 +1,9 @@
 ---
-// The three VIP cards on a crimson velvet field (after Luka's version of the site; styles in styles/vip.css).
-// Polished, brushed metal cards in silver, black and crimson, with the HOTLAND wordmark at the top and the
-// lily at the side. Under each card: its name, what it is, what comes with it, a request button and the price.
-// The buttons follow the one rule for a row of cards (the bottle sets in TableSets.astro too): small pills, silver
-// under the first cards and crimson under the last, the top one.
+// The club's three cards (membership; styles in styles/vip.css), in a field of concrete with bordeaux light rising
+// from below. Each card carries the name as the wall does (steel capitals set wide, the red light between the T
+// and the L): brushed steel, black concrete and bordeaux lacquer. Under each card: its name, what it is, what comes
+// with it, a request button and the price. The buttons follow the one rule for a row of cards (the bottle sets in
+// TableSets.astro too): steel-edged under the first cards and bordeaux under the last, the top one.
 // From 1024px: the cards are dealt out of one stack as the field arrives, then tilt under the pointer and
 // catch the light. Tablets and phones: a row to swipe, with a meter under it. Nothing moves for reduced motion.
 // A page can set its heading inside the field (without it the field holds just the cards):
@@ -11,10 +11,10 @@
 import { type Lang, ui, tr } from '../data/i18n';
 import { keepShort } from '../data/format';
 import { tiers, vip } from '../data/content';
-import { WORDMARK_VIEW } from '../data/brand';
+import Name from './Name.astro';
 import '../styles/vip.css';
 const { lang } = Astro.props as { lang: Lang };
-const finish = ['silver', 'black', 'crimson'];
+const finish = ['silver', 'black', 'bordeaux'];
 const hasHead = Astro.slots.has('head');
 const pad2 = (n: number) => String(n).padStart(2, '0');
 /** The tiers' names: under the field's own heading when it has one, else straight under the page's title. */
@@ -27,8 +27,7 @@ const Title = hasHead ? 'h3' : 'h2';
       <article class:list={['vtier', `vtier-${finish[i % finish.length]}`]}>
         <div class="vcard" aria-hidden="true">
           <div class="vcard-in">
-            <svg class="vcard-wm" viewBox={WORDMARK_VIEW}><use href="#hl-word" /></svg>
-            <svg class="vcard-lily" viewBox="0 0 256 256"><use href="#hl-lily" /></svg>
+            <Name class="vcard-name" />
             <span class="vcard-glint"></span>
             <span class="vcard-glare"></span>
           </div>

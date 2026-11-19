@@ -23,8 +23,10 @@ const ru = lang === 'ru';
 // room's girl leans low on her sofa: her picture comes closer from its lower right corner, which lifts her into it.
 const FOCUS = ['47% 50%', '50% 46%', '100% 50%', '42% 42%', '50% 42%'];
 const ZOOM: [number, string][] = [[1, '50% 50%'], [1, '50% 50%'], [1.45, '100% 100%'], [1, '50% 50%'], [1, '50% 50%']];
-// the keyhole: a circle over a slot that widens to the floor (viewBox 0 0 100 160)
-const KEY = 'M35 74.9A38 38 0 1 1 65 74.9L83.6 149.4Q85.2 156 78.4 156L21.6 156Q14.8 156 16.4 149.4Z';
+// the opening the room is seen through: a doorway with a round head (viewBox 0 0 100 160). Until 2026-11-19 it was a
+// keyhole; the club asked for a gentlemen's club's language, and the site's own picture is the door. (The names in
+// the code and the styles still say "keyhole".)
+const KEY = 'M9 157L9 48A41 41 0 0 1 91 48L91 157Z';
 const keyMask = `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 160' preserveAspectRatio='none'><path d='${KEY}'/></svg>`)}")`;
 const ambient = await Promise.all(zones.map((z) => photo(media(z.img), '100vw')));
 ---
@@ -70,7 +72,7 @@ const ambient = await Promise.all(zones.map((z) => photo(media(z.img), '100vw'))
               <stop offset="0" stop-color="#fff" stop-opacity=".9" />
               <stop offset=".35" stop-color="#fff" stop-opacity=".28" />
               <stop offset=".6" stop-color="#fff" stop-opacity=".55" />
-              <stop offset="1" stop-color="#ff6b82" stop-opacity=".5" />
+              <stop offset="1" stop-color="#c05a6a" stop-opacity=".5" />
             </linearGradient>
           </defs>
           <path d={KEY} fill="none" stroke="url(#zk-steel)" stroke-width="1.4" vector-effect="non-scaling-stroke" />

@@ -58,7 +58,7 @@
 .poster-link { display: grid; align-content: start; color: var(--fg); -webkit-tap-highlight-color: transparent; }
 .poster-frame {
   position: relative; display: block; aspect-ratio: 9 / 16; overflow: hidden; isolation: isolate;
-  container-type: inline-size; border-radius: clamp(16px, 1.3vw, 20px); background: #0b0b0c;
+  container-type: inline-size; border-radius: 3px; background: #0b0b0c;
   /* held up to the light: with a mouse it leans toward the pointer (PosterCard.astro sets --rx/--ry) */
   transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .9s var(--ease-out);
 }
@@ -96,26 +96,25 @@
    length, from PosterCard.astro). */
 .poster-date { position: absolute; z-index: 2; top: 6cqw; right: 6.5cqw; display: flex; align-items: flex-end; gap: 1.2cqw; color: #fff; }
 .poster-day {
-  font: 900 34cqw/.78 var(--display); font-stretch: 62.5%; letter-spacing: -.02em;
+  font: 500 25.16cqw/.9 var(--display); letter-spacing: -.02em;
   font-variant-numeric: lining-nums proportional-nums; margin-left: -.035em;
 }
 .poster-month {
   writing-mode: vertical-rl; rotate: 180deg; white-space: nowrap;
-  font: 800 7.4cqw/.84 var(--display); font-size: min(7.4cqw, calc(24.5cqw / var(--em, 3.44)));
-  font-stretch: 62.5%; letter-spacing: .005em;
+  font: 450 5.48cqw/.9 var(--display); font-size: min(5.48cqw, calc(18.13cqw / var(--em, 3.44))); letter-spacing: -.01em;
 }
 
 /* ---------- Under the poster ---------- */
 .poster-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; margin-top: 18px; }
 .poster-when {
-  display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 999px;
+  display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 2px;
   background: rgba(242, 240, 236, .08); box-shadow: inset 0 0 0 1px rgba(242, 240, 236, .1);
   font: 500 14px/1 var(--sans); color: var(--fg); white-space: nowrap; font-variant-numeric: lining-nums;
 }
 .poster-price { font: 600 16px/1 var(--sans); color: var(--fg); white-space: nowrap; font-variant-numeric: lining-nums; }
 .poster-price span { font-weight: 400; color: var(--fg-2); }
 .poster-title {
-  margin-top: 14px; font: 800 clamp(28px, 2.4vw, 34px)/1.02 var(--display); font-stretch: 75%; letter-spacing: .004em;
+  margin-top: 14px; font: 450 clamp(23px, 1.97vw, 28px)/1.05 var(--display); letter-spacing: -.01em;
   overflow-wrap: break-word; transition: color .3s ease;
 }
 .poster-line {
@@ -155,7 +154,7 @@ html.motion .poster.is-in .poster-date { animation: poster-date-in 1s var(--ease
 
 /* the night whose page you are on: a crimson note in place of the price, and a crimson edge */
 .poster-here { font: 600 14px/1 var(--sans); color: var(--red-text); white-space: nowrap; }
-.poster.is-here .poster-frame::after { box-shadow: inset 0 0 0 1.5px rgba(255, 77, 104, .7), inset 0 1px 0 rgba(255, 255, 255, .07); }
+.poster.is-here .poster-frame::after { box-shadow: inset 0 0 0 1.5px rgba(214, 70, 92, .7), inset 0 1px 0 rgba(255, 255, 255, .07); }
 
 /* ---------- With a mouse: over a poster the pointer is a small metal disc reading "Бронь" (PosterCard.astro) ---------- */
 /* the real pointer hides only while the disc stands in for it (PosterCard.astro sets html.poster-disc) */

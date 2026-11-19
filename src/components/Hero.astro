@@ -7,6 +7,10 @@
 //   v3  the film across the whole screen behind frosted glass (blurred and dimmed), with HOTLAND cut clear out of
 //       the frost and edged in chrome, so the word is a window onto the night. The pointer, or a finger, wipes
 //       the fog away where it passes. It opens frosted, the word already clear, the film coming up out of the black.
+//       On a phone held upright (2026-11-19: the club didn't want the name split over two lines) the clear part is
+//       the door's line of light grown into a gap: a tall slit down the middle of the frost with the red light
+//       along its edges, the film sharp inside it, and the name on one line across it in fine steel capitals,
+//       HOT to its left and LAND to its right, as on the wall.
 // The dev server and preview builds (PUBLIC_NOINDEX=1) render all three, plus a small switch at the top left
 // (also ?hero=v1, v2 or v3; the choice is remembered in localStorage 'hl-hero'). A production build renders
 // only DEFAULT and no switch. Settled on v3 (2026-11-12): the client asked to keep v1 and v2 in the code but
@@ -14,7 +18,7 @@
 // SETTLED off to compare them again).
 import { type Lang, ui } from '../data/i18n';
 import { HERO_PHONE } from '../data/hero';
-import { place, line } from '../data/wordmark';
+import { place, line, spaced, GLYPHS } from '../data/wordmark';
 import '../styles/hero.css';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -35,8 +39,10 @@ const takes: Take[] = CHOOSING ? ['v1', 'v2', 'v3'] : [DEFAULT];
 const word = line('HOTLAND');
 const W = word.width;
 const box = `0 -725 ${W} 735`;
-// v2 opens around the middle of the L's stem (x 56 to 227 of the letter, y -714 to -146)
-const stemX = (word.at[3] + (56 + 227) / 2) / W;
+// the line of red light stands in the joint between the T and the L (v3): where that is across the word
+const seamX = (word.at[2] + GLYPHS.T[2] + word.at[3] + GLYPHS.L[1]) / 2 / W;
+// v2 opens around the middle of the L's stem (x 80 to 265 of the letter, y -710 to -150)
+const stemX = (word.at[3] + (80 + 265) / 2) / W;
 const stemY = (725 - 430) / 735;
 // v2 on phones: HOT over LAND, both lines the full width (HOT drawn larger), 0.12 em apart
 const hot = line('HOT');
@@ -62,8 +68,16 @@ const grown = (vb: string) => {
 const maskOf = (vb: string, paths: string[]) => svgUrl(vb, `<path d='${paths.join('')}'/>`);
 const edgeOf = (vb: string, sw: number, paths: string[]) =>
   svgUrl(grown(vb), `<path d='${paths.join('')}' fill='none' stroke='black' stroke-width='${sw}' stroke-linejoin='round'/>`);
+// v3 on a phone held upright: the gap. Its mask is one rectangle that takes whatever box it is given (the gap's
+// width and height are set in hero.css), clear down its length and frosting over again along its last fifth.
+const gapMask = `url("data:image/svg+xml,${encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 100' preserveAspectRatio='none'><defs><linearGradient id='f' x1='0' y1='0' x2='0' y2='1'><stop offset='0'/><stop offset='.78'/><stop offset='1' stop-opacity='0'/></linearGradient></defs><rect width='10' height='100' fill='url(#f)'/></svg>")}")`;
+// the name either side of the gap: fine capitals set wide (data/wordmark.ts), in the outlines' units
+const NAME_TRACK = 300;
+const nameHot = spaced('HOT', NAME_TRACK);
+const nameLand = spaced('LAND', NAME_TRACK);
+const nameBox = (w: number) => `0 -725 ${w} 735`;
 const glass = [
-  `--word:${maskOf(box, word.paths)}`, `--word-m:${maskOf(stackBox, stack)}`,
+  `--word:${maskOf(box, word.paths)}`, `--word-m:${gapMask}`,
   `--edge:${edgeOf(box, 4.5, word.paths)}`, `--edge-m:${edgeOf(stackBox, 8, stack)}`,
   `--ex:${(E / W).toFixed(5)}`, `--ey:${(E / 735).toFixed(5)}`, `--ex-m:${(E / land.width).toFixed(5)}`, `--ey-m:${(E / stackH).toFixed(5)}`,
 ].join(';');
@@ -76,7 +90,7 @@ const film = {
 const copy = {
   tag: ru ? 'Только <em>между нами</em>' : 'Just <em>between us</em>',
   // (no-break spaces keep a short word with the one after it, so no line ends on "в", "с" or "The")
-  lead: ru ? 'Ночное кабаре в Москве. Шоу, ужин и бар каждую ночь с 22:00 до 06:00.' : 'A late-night cabaret in Moscow. The show, dinner and the bar, every night from 22:00 to 06:00.',
+  lead: ru ? 'Премиальный мужской клуб в Москве. Шоу, ужин и бар каждую ночь с 22:00 до 06:00.' : 'A premium gentlemen’s club in Moscow. The show, dinner and the bar, every night from 22:00 to 06:00.',
   book: t.bookTable,
 };
 // Before the first paint: which take shows (dev and preview builds only).
@@ -90,8 +104,8 @@ const PHONE = HERO_PHONE;
 const starter = `(function (v) { v.poster = matchMedia('${PHONE}').matches ? v.dataset.posterPhone : v.dataset.poster; })(document.currentScript.previousElementSibling);`;
 ---
 {CHOOSING && <script is:inline set:html={chooser} />}
-<section class:list={['hero', { 'hv-test': CHOOSING }]} style={`--wr:${(735 / W).toFixed(5)};--wr-m:${(stackH / land.width).toFixed(5)};--ax:${(stemX * 100).toFixed(2)}%;--ay:${(stemY * 100).toFixed(2)}%;--axn:${stemX.toFixed(4)};--ayn:${stemY.toFixed(4)}`}>
-  <h1 class="sr-only">{ru ? 'HOTLAND, ночное кабаре в Москве' : 'HOTLAND, a late-night cabaret in Moscow'}</h1>
+<section class:list={['hero', { 'hv-test': CHOOSING }]} style={`--sxn:${seamX.toFixed(5)};--wr:${(735 / W).toFixed(5)};--wr-m:${(stackH / land.width).toFixed(5)};--ax:${(stemX * 100).toFixed(2)}%;--ay:${(stemY * 100).toFixed(2)}%;--axn:${stemX.toFixed(4)};--ayn:${stemY.toFixed(4)}`}>
+  <h1 class="sr-only">{ru ? 'HOTLAND, премиальный мужской клуб в Москве' : 'HOTLAND, a premium gentlemen’s club in Moscow'}</h1>
   {takes.map((take) => (
     <div class:list={['hv', `h${take}`]} data-take={take} style={take === 'v3' ? glass : undefined}>
       <div class:list={['hv-film', `h${take}-film`]}>
@@ -107,6 +121,14 @@ const starter = `(function (v) { v.poster = matchMedia('${PHONE}').matches ? v.d
           <div class="hv3-edge" aria-hidden="true"></div>
           <div class="hv3-shine" aria-hidden="true"><i></i></div>
           <div class="hv3-dim" aria-hidden="true"></div>
+          {/* the line of red light in the joint between the T and the L, as on the wall (wide screens) */}
+          <div class="hv3-seam" aria-hidden="true"></div>
+          {/* a phone held upright: the red light along the gap's two edges, and the name across it */}
+          <div class="hv3-gap" aria-hidden="true"><i></i><i></i></div>
+          <div class="hv3-name" aria-hidden="true" style={`--wl:${nameLand.width}`}>
+            <svg viewBox={nameBox(nameHot.width)} focusable="false"><path d={nameHot.paths.join('')} /></svg>
+            <svg viewBox={nameBox(nameLand.width)} focusable="false"><path d={nameLand.paths.join('')} /></svg>
+          </div>
         </Fragment>
       )}
       <div class="hv-stage">

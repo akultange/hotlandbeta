@@ -1,106 +1,66 @@
 /* The site's web fonts, served by the site itself (tools/fonts/build.py writes this file and public/fonts).
    Per face and alphabet: the core (what the pages use) and the rest (fetched only where a page uses it). */
 @font-face {
-  font-family: 'Noto Sans Display';
+  font-family: 'Geologica';
   font-style: normal;
-  font-weight: 400 900;
-  font-stretch: 62.5% 100%;
+  font-weight: 300 600;
   font-display: swap;
-  src: url('/fonts/noto-display-cyr.2136bb7b.woff2') format('woff2');
+  src: url('/fonts/geologica-cyr.951ee53d.woff2') format('woff2');
   unicode-range: U+0401, U+0410-044F, U+0451, U+2116;
 }
 @font-face {
-  font-family: 'Noto Sans Display';
+  font-family: 'Geologica';
   font-style: normal;
-  font-weight: 400 900;
-  font-stretch: 62.5% 100%;
+  font-weight: 300 600;
   font-display: swap;
-  src: url('/fonts/noto-display-lat.dbbabbbf.woff2') format('woff2');
+  src: url('/fonts/geologica-lat.40be35c7.woff2') format('woff2');
   unicode-range: U+0020-007E, U+00A0, U+00A9, U+00AB, U+00B7, U+00BB, U+2010-2015, U+2018-201E, U+2026, U+20BD, U+2212;
 }
 @font-face {
-  font-family: 'Noto Sans Display';
-  font-style: italic;
-  font-weight: 400 900;
-  font-stretch: 62.5% 100%;
+  font-family: 'Geologica Sharp';
+  font-style: normal;
+  font-weight: 300 700;
   font-display: swap;
-  src: url('/fonts/noto-display-italic-cyr.87805d1d.woff2') format('woff2');
+  src: url('/fonts/geologica-sharp-cyr.072ce389.woff2') format('woff2');
   unicode-range: U+0401, U+0410-044F, U+0451, U+2116;
 }
 @font-face {
-  font-family: 'Noto Sans Display';
-  font-style: italic;
-  font-weight: 400 900;
-  font-stretch: 62.5% 100%;
+  font-family: 'Geologica Sharp';
+  font-style: normal;
+  font-weight: 300 700;
   font-display: swap;
-  src: url('/fonts/noto-display-italic-lat.bdf28006.woff2') format('woff2');
+  src: url('/fonts/geologica-sharp-lat.2710ef41.woff2') format('woff2');
   unicode-range: U+0020-007E, U+00A0, U+00A9, U+00AB, U+00B7, U+00BB, U+2010-2015, U+2018-201E, U+2026, U+20BD, U+2212;
 }
 @font-face {
-  font-family: 'Golos Text';
+  font-family: 'Geologica';
   font-style: normal;
-  font-weight: 400 900;
+  font-weight: 300 600;
   font-display: swap;
-  src: url('/fonts/golos-cyr.c34429d1.woff2') format('woff2');
-  unicode-range: U+0401, U+0410-044F, U+0451, U+2116;
-}
-@font-face {
-  font-family: 'Golos Text';
-  font-style: normal;
-  font-weight: 400 900;
-  font-display: swap;
-  src: url('/fonts/golos-lat.a05c6e4e.woff2') format('woff2');
-  unicode-range: U+0020-007E, U+00A0, U+00A9, U+00AB, U+00B7, U+00BB, U+2010-2015, U+2018-201E, U+2026, U+20BD, U+2212;
-}
-@font-face {
-  font-family: 'Noto Sans Display';
-  font-style: normal;
-  font-weight: 400 900;
-  font-stretch: 62.5% 100%;
-  font-display: swap;
-  src: url('/fonts/noto-display-cyr-x.409e976b.woff2') format('woff2');
+  src: url('/fonts/geologica-cyr-x.bb033442.woff2') format('woff2');
   unicode-range: U+0301, U+0400, U+0402-040F, U+0450, U+0452-045F, U+0490-0491, U+04B0-04B1;
 }
 @font-face {
-  font-family: 'Noto Sans Display';
+  font-family: 'Geologica';
   font-style: normal;
-  font-weight: 400 900;
-  font-stretch: 62.5% 100%;
+  font-weight: 300 600;
   font-display: swap;
-  src: url('/fonts/noto-display-lat-x.4b81e3c5.woff2') format('woff2');
-  unicode-range: U+0000, U+000D, U+00A1-00A8, U+00AA, U+00AC-00B6, U+00B8-00BA, U+00BC-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2002, U+2009, U+200B, U+2022, U+2032-2033, U+2039-203A, U+2044, U+20AC, U+2122, U+FEFF, U+FFFD;
+  src: url('/fonts/geologica-lat-x.d164e07f.woff2') format('woff2');
+  unicode-range: U+000D, U+00A1-00A8, U+00AA, U+00AC-00B6, U+00B8-00BA, U+00BC-00FF, U+0131, U+0152-0153, U+02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+2022, U+2032-2033, U+2039-203A, U+2044, U+20AC, U+2122, U+2191, U+2193, U+2215;
 }
 @font-face {
-  font-family: 'Noto Sans Display';
-  font-style: italic;
-  font-weight: 400 900;
-  font-stretch: 62.5% 100%;
+  font-family: 'Geologica Sharp';
+  font-style: normal;
+  font-weight: 300 700;
   font-display: swap;
-  src: url('/fonts/noto-display-italic-cyr-x.38c4d242.woff2') format('woff2');
+  src: url('/fonts/geologica-sharp-cyr-x.3e5e724b.woff2') format('woff2');
   unicode-range: U+0301, U+0400, U+0402-040F, U+0450, U+0452-045F, U+0490-0491, U+04B0-04B1;
 }
 @font-face {
-  font-family: 'Noto Sans Display';
-  font-style: italic;
-  font-weight: 400 900;
-  font-stretch: 62.5% 100%;
-  font-display: swap;
-  src: url('/fonts/noto-display-italic-lat-x.e7d1fcdb.woff2') format('woff2');
-  unicode-range: U+0000, U+000D, U+00A1-00A8, U+00AA, U+00AC-00B6, U+00B8-00BA, U+00BC-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2002, U+2009, U+200B, U+2022, U+2032-2033, U+2039-203A, U+2044, U+20AC, U+2122, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Golos Text';
+  font-family: 'Geologica Sharp';
   font-style: normal;
-  font-weight: 400 900;
+  font-weight: 300 700;
   font-display: swap;
-  src: url('/fonts/golos-cyr-x.45e141c9.woff2') format('woff2');
-  unicode-range: U+0301, U+0402-040C, U+040E-040F, U+0452-045C, U+045E-045F, U+0490-0491, U+04B0-04B1;
-}
-@font-face {
-  font-family: 'Golos Text';
-  font-style: normal;
-  font-weight: 400 900;
-  font-display: swap;
-  src: url('/fonts/golos-lat-x.8aa3dd1f.woff2') format('woff2');
-  unicode-range: U+0000, U+000D, U+00A1-00A8, U+00AA, U+00AC-00B6, U+00B8-00BA, U+00BC-00FF, U+0131, U+0152-0153, U+02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+2009, U+2022, U+2039-203A, U+2044, U+20AC, U+2122, U+2191, U+2193, U+2215, U+FEFF;
+  src: url('/fonts/geologica-sharp-lat-x.a48c9514.woff2') format('woff2');
+  unicode-range: U+000D, U+00A1-00A8, U+00AA, U+00AC-00B6, U+00B8-00BA, U+00BC-00FF, U+0131, U+0152-0153, U+02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+2022, U+2032-2033, U+2039-203A, U+2044, U+20AC, U+2122, U+2191, U+2193, U+2215;
 }

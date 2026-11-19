@@ -1,14 +1,10 @@
 {
-  "noto-display-cyr": "/fonts/noto-display-cyr.2136bb7b.woff2",
-  "noto-display-cyr-x": "/fonts/noto-display-cyr-x.409e976b.woff2",
-  "noto-display-lat": "/fonts/noto-display-lat.dbbabbbf.woff2",
-  "noto-display-lat-x": "/fonts/noto-display-lat-x.4b81e3c5.woff2",
-  "noto-display-italic-cyr": "/fonts/noto-display-italic-cyr.87805d1d.woff2",
-  "noto-display-italic-cyr-x": "/fonts/noto-display-italic-cyr-x.38c4d242.woff2",
-  "noto-display-italic-lat": "/fonts/noto-display-italic-lat.bdf28006.woff2",
-  "noto-display-italic-lat-x": "/fonts/noto-display-italic-lat-x.e7d1fcdb.woff2",
-  "golos-cyr": "/fonts/golos-cyr.c34429d1.woff2",
-  "golos-cyr-x": "/fonts/golos-cyr-x.45e141c9.woff2",
-  "golos-lat": "/fonts/golos-lat.a05c6e4e.woff2",
-  "golos-lat-x": "/fonts/golos-lat-x.8aa3dd1f.woff2"
+  "geologica-cyr": "/fonts/geologica-cyr.951ee53d.woff2",
+  "geologica-cyr-x": "/fonts/geologica-cyr-x.bb033442.woff2",
+  "geologica-lat": "/fonts/geologica-lat.40be35c7.woff2",
+  "geologica-lat-x": "/fonts/geologica-lat-x.d164e07f.woff2",
+  "geologica-sharp-cyr": "/fonts/geologica-sharp-cyr.072ce389.woff2",
+  "geologica-sharp-cyr-x": "/fonts/geologica-sharp-cyr-x.3e5e724b.woff2",
+  "geologica-sharp-lat": "/fonts/geologica-sharp-lat.2710ef41.woff2",
+  "geologica-sharp-lat-x": "/fonts/geologica-sharp-lat-x.a48c9514.woff2"
 }

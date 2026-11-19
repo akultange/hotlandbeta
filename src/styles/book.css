@@ -34,7 +34,7 @@ html.bk-lock { overflow: hidden; }
 .bk-count input {
   box-sizing: border-box; width: calc(3ch + 10px); height: calc(1em + 10px); margin: 0; padding: 0 0 4px;
   border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: none; color: var(--fg); text-align: center;
-  font: 800 clamp(52px, 4.6vw, 72px)/1 var(--display); font-stretch: 62.5%; font-variant-numeric: tabular-nums lining-nums;
+  font: 450 clamp(38px, 3.4vw, 53px)/1.05 var(--display); font-variant-numeric: tabular-nums lining-nums;
   appearance: textfield; -moz-appearance: textfield; transition: border-color .3s ease;
 }
 .bk-count input::-webkit-inner-spin-button, .bk-count input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }

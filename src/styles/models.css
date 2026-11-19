@@ -45,12 +45,12 @@
   padding: 14px var(--edge);
 }
 .mdl-card {
-  flex: none; position: relative; min-width: 0; border-radius: 18px;
+  flex: none; position: relative; min-width: 0; border-radius: 3px;
   /* --mdl-per portraits across, the last one cut by the edge of the screen */
   width: calc((100cqw - var(--edge) - (var(--mdl-per) - .5) * var(--mdl-gap)) / var(--mdl-per));
   scroll-snap-align: start;
 }
-.mdl-card .photo { border-radius: clamp(12px, 1vw, 16px); }
+.mdl-card .photo { border-radius: 3px; }
 /* until the photos arrive: an empty spot on a dark stage (a warm pool of light at the top, steel words), not a
    red slab, so the page doesn't run red into the crimson VIP panel that follows */
 .mdl-card .photo.ph {
@@ -91,7 +91,7 @@ html.motion .mdl-card .photo.is-in, html.motion .mdl-card .photo.is-in > img { a
 /* ---------- Name, number, two lines ---------- */
 .mdl-cap { display: grid; gap: 10px; padding-top: 16px; }
 .mdl-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.mdl-name { min-width: 0; font: 700 clamp(24px, 2vw, 30px)/1.04 var(--display); font-stretch: 75%; letter-spacing: .004em; color: var(--fg); }
+.mdl-name { min-width: 0; font: 500 clamp(20px, 1.64vw, 25px)/1.05 var(--display); letter-spacing: -.01em; color: var(--fg); }
 .mdl-text {
   font: 400 15px/1.55 var(--sans); color: var(--fg-2); min-height: 3.1em;
   display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
@@ -104,7 +104,7 @@ html.motion .mdl-card .photo.is-in, html.motion .mdl-card .photo.is-in > img { a
 .mdl-count { display: inline-flex; align-items: baseline; gap: 8px; font: 500 14px/1 var(--sans); color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .mdl-now { display: inline-block; overflow: hidden; padding: .12em .04em; margin: -.12em -.04em; }
 .mdl-now b {
-  display: inline-block; font: 800 30px/1 var(--display); font-stretch: 62.5%; font-variant-numeric: tabular-nums lining-nums;
+  display: inline-block; font: 450 22px/1.05 var(--display); font-variant-numeric: tabular-nums lining-nums;
   background-image: var(--metal-read); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
 }
 /* without scripts the row still scrolls; there is nothing for the buttons and the counter to do */
@@ -139,7 +139,7 @@ html:not(.js) :is(.mdl-nav, .mdl-foot) { display: none; }
    It lifts and grows a little and leans toward the pointer, the photograph zooms and crimson light pools under it;
    the name turns to metal. The model in the light breathes: a slow zoom in and out. */
 .mdl-shot {
-  position: relative; border-radius: clamp(12px, 1vw, 16px);
+  position: relative; border-radius: 3px;
   transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
   transition: transform .9s var(--ease-out), translate .7s var(--ease-out), scale .7s var(--ease-out);
 }
@@ -148,7 +148,7 @@ html:not(.js) :is(.mdl-nav, .mdl-foot) { display: none; }
 .mdl-card.is-hover .photo img { scale: 1.06; }
 .mdl-shot::after {
   content: ''; position: absolute; left: 14%; right: 14%; bottom: -8%; height: 24%; z-index: -1; pointer-events: none;
-  border-radius: 50%; background: radial-gradient(closest-side, rgba(220, 20, 60, .65), rgba(220, 20, 60, 0));
+  border-radius: 50%; background: radial-gradient(closest-side, rgba(168, 24, 46, .65), rgba(168, 24, 46, 0));
   filter: blur(20px); opacity: 0; transition: opacity .7s var(--ease-out);
 }
 .mdl-card.is-hover .mdl-shot::after { opacity: 1; }
@@ -186,18 +186,18 @@ html.mdv-lock { overflow: hidden; }
 .mdv[hidden] { display: none; }
 .mdv-veil {
   position: absolute; inset: 0;
-  background: radial-gradient(55% 70% at var(--vx, 36%) 54%, rgba(143, 11, 38, .42) 0%, rgba(24, 6, 10, .92) 58%, #040304 100%), #040304;
+  background: radial-gradient(55% 70% at var(--vx, 36%) 54%, rgba(84, 11, 24, .42) 0%, rgba(24, 6, 10, .92) 58%, #040304 100%), #040304;
 }
 .mdv-big {
   /* her name in outline, as big as the space above the words allows (the script fits it: --bs) */
   position: absolute; left: var(--ix, 60%); top: var(--bt, 80px); z-index: 0; margin: 0; white-space: nowrap; pointer-events: none;
-  font: 800 var(--bs, 220px)/.8 var(--display); font-stretch: 62.5%; letter-spacing: -.01em;
+  font: 450 var(--bs, 163px)/.9 var(--display); letter-spacing: -.01em;
   color: transparent; -webkit-text-stroke: 1.2px rgba(242, 240, 236, .2);
 }
 .mdv-stage { position: absolute; inset: 0; z-index: 1; touch-action: none; user-select: none; -webkit-user-select: none; }
 .mdv-media {
-  position: absolute; overflow: hidden; border-radius: 16px; background: #0b0b0c; will-change: transform;
-  box-shadow: 0 50px 120px -50px rgba(220, 20, 60, .55), 0 30px 70px -30px rgba(0, 0, 0, .95);
+  position: absolute; overflow: hidden; border-radius: 3px; background: #0b0b0c; will-change: transform;
+  box-shadow: 0 50px 120px -50px rgba(168, 24, 46, .55), 0 30px 70px -30px rgba(0, 0, 0, .95);
 }
 .mdv-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 /* a phone's story: her second photograph over the first, brought in by the script a moment after she arrives */
@@ -220,7 +220,7 @@ html.mdv-lock { overflow: hidden; }
   display: flex; align-items: baseline; gap: 8px; font: 500 14px/1 var(--sans); color: var(--muted); font-variant-numeric: tabular-nums;
 }
 .mdv-n b {
-  font: 800 34px/1 var(--display); font-stretch: 62.5%; font-variant-numeric: tabular-nums lining-nums;
+  font: 450 25px/1.05 var(--display); font-variant-numeric: tabular-nums lining-nums;
   background-image: var(--metal-read); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
 }
 .mdv-btn {
@@ -245,7 +245,7 @@ html.mdv-lock { overflow: hidden; }
    name cut its last letters off; scripts/story.ts sets a long name smaller when the room is short) */
 .mdv-name {
   width: max-content;
-  margin: 0; font: 800 clamp(72px, 7.4vw, 132px)/.9 var(--display); font-stretch: 62.5%; letter-spacing: -.005em;
+  margin: 0; font: 450 clamp(53px, 5.48vw, 98px)/1.05 var(--display); letter-spacing: -.005em;
   background-image: var(--metal-read); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
   padding-bottom: .06em;
 }

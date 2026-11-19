@@ -1,0 +1,124 @@
+/* =====================================================================
+   The 18+ question: the club's door (AgeGate.astro).
+   Two slabs of concrete, the name across them in steel, red light in the joint. "Yes" opens them.
+   ===================================================================== */
+.gate { display: none; }
+html.js:not(.age-ok) .gate { display: grid; }
+.gate:focus { outline: none; } /* (it holds the focus while it shows; its buttons keep their ring) */
+.gate {
+  /* the name's height: as large as the half-screen beside the joint allows (LAND, the longer half, sets it) */
+  --gh: min(clamp(24px, 3.5vw, 50px), calc((50vw - 20px) * 735 / (var(--wl) + var(--gg))));
+  --gy: 31%; /* where the name stands on the wall */
+  position: fixed; inset: 0; z-index: 100; overflow: hidden;
+  grid-template-rows: minmax(0, 1fr); place-items: end center;
+  padding: var(--pad) var(--pad) max(clamp(28px, 7svh, 72px), env(safe-area-inset-bottom));
+  color: var(--fg);
+}
+
+/* ---------- the slabs ---------- */
+.gate-door { position: absolute; top: 0; bottom: 0; width: 50.05%; overflow: hidden; will-change: transform; }
+.gate-door-l { left: 0; }
+.gate-door-r { right: 0; }
+/* the wall, whole, on each slab: concrete lit from the top left, weathered from the top edge, falling into shadow */
+.gate-face {
+  position: absolute; top: 0; bottom: 0; width: 100vw;
+  background-color: #303134;
+  background-image:
+    radial-gradient(95% 62% at 10% 0%, rgba(255, 255, 255, .15), transparent 64%),
+    radial-gradient(125% 88% at 50% 40%, transparent 34%, rgba(0, 0, 0, .66) 100%),
+    url('/img/concrete/streaks.webp'), var(--stone);
+  background-size: auto, auto, 620px 1240px, var(--stone-size);
+  background-blend-mode: normal, normal, overlay, overlay, overlay;
+}
+.gate-door-l .gate-face { left: 0; }
+.gate-door-r .gate-face { right: 0; }
+/* the joint itself: the left slab's edge in shadow, the right one's catching a little light */
+.gate-door::after { content: ''; position: absolute; top: 0; bottom: 0; width: 1px; }
+.gate-door-l::after { right: 0; background: rgba(0, 0, 0, .7); }
+.gate-door-r::after { left: 0; background: linear-gradient(180deg, rgba(255, 255, 255, .1), rgba(255, 255, 255, .03)); }
+
+/* the name: steel capitals standing off the wall (their shadow falls down and to the right, away from the light) */
+.gate-word {
+  position: absolute; top: var(--gy); height: var(--gh); width: auto; translate: 0 -50%;
+  fill: url(#g-steel); overflow: visible;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, .22)) drop-shadow(1px 2px 1px rgba(0, 0, 0, .75)) drop-shadow(3px 7px 10px rgba(0, 0, 0, .55));
+}
+.gate-door-l .gate-word { right: calc(50% + var(--gh) * var(--gg) / 735); }
+.gate-door-r .gate-word { left: calc(50% + var(--gh) * var(--gg) / 735); }
+
+/* ---------- the light ---------- */
+/* behind the slabs: what the joint lets through, seen whole for a moment as they part */
+.gate-back {
+  position: absolute; inset: 0; opacity: 0;
+  background: radial-gradient(40% 80% at 50% 40%, rgba(255, 92, 110, .94), rgba(200, 30, 54, .72) 36%, rgba(100, 13, 30, .5) 66%, rgba(20, 5, 9, 0) 100%);
+}
+.gate-light { position: absolute; inset: 0; pointer-events: none; }
+/* the red on the wall around the joint */
+.gate-halo {
+  position: absolute; left: 50%; top: var(--gy); width: min(78vw, 560px); height: min(64svh, 620px); translate: -50% -50%;
+  background: radial-gradient(closest-side, rgba(196, 30, 54, .34), rgba(150, 18, 40, .16) 46%, transparent 100%);
+  mix-blend-mode: screen;
+}
+/* the line of light: a blade, widest at the name and drawn to a point above and below it */
+.gate-seam {
+  position: absolute; left: 50%; top: var(--gy); width: 5px; height: min(46svh, calc(var(--gh) * 9)); translate: -50% -50%;
+  filter: drop-shadow(0 0 5px rgba(255, 48, 69, .95)) drop-shadow(0 0 18px rgba(214, 34, 58, .8)) drop-shadow(0 0 46px rgba(168, 24, 46, .7));
+}
+.gate-seam::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, #ff3045 0%, #ffc9cf 42%, #fff 50%, #ffc9cf 58%, #ff3045 100%);
+  clip-path: polygon(50% 0, 78% 34%, 100% 50%, 78% 66%, 50% 100%, 22% 66%, 0 50%, 22% 34%);
+}
+
+/* ---------- the question ---------- */
+.gate-box { position: relative; width: 100%; max-width: 520px; display: grid; justify-items: center; gap: 14px; text-align: center; }
+.gate-q { font: 450 clamp(26px, 3vw, 38px)/1.1 var(--display); letter-spacing: -.012em; color: var(--fg); }
+.gate-text { max-width: 30ch; font: 400 16px/1.55 var(--sans); color: #c3c2be; text-wrap: balance; }
+.gate-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 12px; }
+.gate-actions .btn-line { background: rgba(13, 14, 15, .34); }
+.gate-foot { display: flex; gap: 22px; margin-top: 10px; }
+.gate-foot a { padding: 8px 2px; font: 400 12px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: #a3a29e; transition: color .3s; }
+.gate-foot a:hover { color: var(--fg); }
+
+/* a phone on its side, or any short screen: the name higher and smaller, the question tighter */
+@media (max-height: 560px) {
+  .gate { --gy: 21%; --gh: min(clamp(20px, 6.4svh, 34px), calc((50vw - 20px) * 735 / (var(--wl) + var(--gg)))); padding-bottom: max(14px, env(safe-area-inset-bottom)); }
+  .gate-seam { height: min(36svh, calc(var(--gh) * 7)); }
+  .gate-box { gap: 8px; }
+  .gate-q { font-size: 24px; }
+  .gate-text { max-width: 56ch; font-size: 14.5px; }
+  .gate-actions { margin-top: 6px; }
+  .gate-actions .btn { height: 46px; }
+  .gate-foot { margin-top: 2px; }
+}
+
+/* ---------- motion ----------
+   Arriving: the light is struck in the joint and grows to its length; the name and the question come up after it.
+   (Entrances start at 1 % opacity, not 0, no difference to the eye: browsers count what is fully transparent as
+   not painted yet, and the question is the first thing a visitor sees.)
+   Yes (.out): the question goes; the light runs the whole height of the joint; the slabs slide apart, the red
+   behind them showing whole for a moment before the page takes its place. */
+@keyframes gate-strike { from { scale: 1 0; opacity: .01; } 55% { opacity: 1; } }
+@keyframes gate-glow { from { opacity: .01; scale: .5; } }
+@keyframes gate-rise { from { opacity: .01; translate: 0 22px; } }
+@keyframes gate-name { from { opacity: .01; } }
+@keyframes gate-run { 55% { scale: 1.7 4; opacity: 1; } to { scale: 3 6; opacity: 0; } }
+@keyframes gate-flood { 30% { opacity: 1; scale: 1.5; } to { opacity: 0; scale: 2.4; } }
+@keyframes gate-behind { from { opacity: 0; } 18% { opacity: 1; } 50% { opacity: .85; } to { opacity: 0; } }
+html.motion .gate-seam { animation: gate-strike 1.2s var(--ease-out) .25s backwards; }
+html.motion .gate-halo { animation: gate-glow 1.8s var(--ease-out) .35s backwards; }
+html.motion .gate-word { animation: gate-name 1.1s ease .15s backwards; }
+html.motion .gate-box > * { animation: gate-rise 1s var(--ease-out) backwards; }
+html.motion .gate-box > :nth-child(1) { animation-delay: .6s; }
+html.motion .gate-box > :nth-child(2) { animation-delay: .7s; }
+html.motion .gate-box > :nth-child(3) { animation-delay: .8s; }
+html.motion .gate-box > :nth-child(4) { animation-delay: .9s; }
+html.motion .gate.out { pointer-events: none; }
+html.motion .gate.out .gate-box { opacity: 0; translate: 0 10px; transition: opacity .3s ease, translate .3s ease; }
+html.motion .gate.out .gate-box > * { animation: none; }
+html.motion .gate.out .gate-seam { animation: gate-run 1.15s cubic-bezier(.6, 0, .3, 1) forwards; }
+html.motion .gate.out .gate-halo { animation: gate-flood 1.5s ease-out forwards; }
+html.motion .gate.out .gate-back { animation: gate-behind 1.5s ease-out .36s both; }
+html.motion .gate.out .gate-door { transition: translate 1.35s cubic-bezier(.76, 0, .18, 1) .42s; }
+html.motion .gate.out .gate-door-l { translate: -101% 0; }
+html.motion .gate.out .gate-door-r { translate: 101% 0; }

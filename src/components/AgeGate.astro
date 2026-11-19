@@ -1,35 +1,57 @@
 ---
+// The 18+ question, as the club's door (David, 2026-11-19, after the brand's wall: dark concrete, the name in steel,
+// one line of red light in the seam). Two slabs of concrete meet in the middle of the screen; HOTLAND runs across
+// them in fine steel capitals, HOT on the left slab and LAND on the right, and the red light stands in the joint
+// between the T and the L. It is the first thing on screen and stays while the page loads; "Yes" lets the light run
+// the whole height of the joint, then the slabs slide apart onto the page's first screen.
+// Each slab carries the whole wall (a face as wide as the screen, shifted under its half), so the wall reads as one
+// while the door is shut. The name is drawn from outlines (data/wordmark.ts): no font to wait for on the first
+// screen. Styles: styles/gate.css.
 import { type Lang, ui, altPath } from '../data/i18n';
-import Logo from './Logo.astro';
+import { spaced } from '../data/wordmark';
+import '../styles/gate.css';
 const { lang } = Astro.props as { lang: Lang };
 const t = ui[lang];
 const path = Astro.url.pathname;
+// the name's spacing, in the outlines' units (the capitals stand about 705 high): wide, as on the wall
+const TRACK = 420;
+const hot = spaced('HOT', TRACK);
+const land = spaced('LAND', TRACK);
+// from the joint to each half of the word: half of what separates any two of its letters
+const half = Math.round((hot.after + TRACK + land.before) / 2);
+const box = (w: number) => `0 -725 ${w} 735`;
 ---
-<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title" tabindex="-1" data-lenis-prevent>
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title" aria-describedby="gate-text" tabindex="-1" data-lenis-prevent
+  style={`--wl:${land.width};--gg:${half}`}>
+  <div class="gate-back" aria-hidden="true"></div>
+  <div class="gate-door gate-door-l" aria-hidden="true">
+    <div class="gate-face"><svg class="gate-word" viewBox={box(hot.width)} focusable="false"><path d={hot.paths.join('')} /></svg></div>
+  </div>
+  <div class="gate-door gate-door-r" aria-hidden="true">
+    <div class="gate-face"><svg class="gate-word" viewBox={box(land.width)} focusable="false"><path d={land.paths.join('')} /></svg></div>
+  </div>
+  <div class="gate-light" aria-hidden="true"><i class="gate-halo"></i><i class="gate-seam"></i></div>
   <div class="gate-box">
-    <Logo variant="stacked" size={52} tagline />
-    <div class="gate-seal" aria-hidden="true">
-      <img src="/img/metal/rosette.svg" alt="" />
-      <p class="gate-18">18<span class="plus">+</span></p>
-    </div>
-    <h2 id="gate-title" class="t-m">{t.gate.title}</h2>
-    <p class="body">{t.gate.text}</p>
+    <h2 id="gate-title" class="gate-q">{t.gate.title}</h2>
+    <p id="gate-text" class="gate-text">{t.gate.text}</p>
     <div class="gate-actions">
       <button class="btn btn-crimson" type="button" data-gate-yes>{t.gate.yes}</button>
       <a class="btn btn-line" href={`/${lang}/goodbye/`}>{t.gate.no}</a>
     </div>
     <div class="gate-foot">
-      <a class="label" href={altPath(path, 'ru')}>RU</a>
-      <a class="label" href={altPath(path, 'en')}>EN</a>
-      <a class="label" href={`/${lang}/privacy/`}>{t.footer.privacy}</a>
+      <a href={altPath(path, 'ru')}>RU</a>
+      <a href={altPath(path, 'en')}>EN</a>
+      <a href={`/${lang}/privacy/`}>{t.footer.privacy}</a>
     </div>
   </div>
 </div>
 <script>
   // While the question shows, the page behind it is out of reach (inert: the keyboard and screen readers stay in the
   // question; nothing changes on screen) and the question has the focus.
-  // Yes: remember the answer for this visit (Base.astro asks again on the next one), give the page back, let the
-  // curtain fade, and tell the page it may begin (motion.ts waits for this).
+  // Yes: remember the answer for this visit (Base.astro asks again on the next one), give the page back, open the
+  // door (.out: the question goes, the light runs the height of the joint, the slabs slide apart; gate.css), and
+  // tell the page it may begin (motion.ts waits for this; the first screen makes its own entrance as the door
+  // opens). Once the slabs are off the screen, .age-ok takes the door away.
   const root = document.documentElement;
   const gate = document.getElementById('gate');
   const behind = gate && !root.classList.contains('age-ok')
@@ -44,7 +66,7 @@ const path = Astro.url.pathname;
     if (gate && root.classList.contains('motion')) {
       gate.classList.add('out');
       setTimeout(begin, 250);
-      setTimeout(() => root.classList.add('age-ok'), 750);
+      setTimeout(() => root.classList.add('age-ok'), 1900);
     } else {
       root.classList.add('age-ok');
       begin();

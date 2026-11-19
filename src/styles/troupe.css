@@ -43,7 +43,7 @@
   max-width: none; margin-top: -14px; padding-right: 4%;
 }
 .troupe .pt-name {
-  font: 700 clamp(28px, 2.5vw, 38px)/1.04 var(--display); font-stretch: 75%; letter-spacing: .004em;
+  font: 500 clamp(23px, 2.05vw, 31px)/1.05 var(--display); letter-spacing: -.01em;
   color: var(--fg); transition: color .35s ease;
 }
 .troupe .pt-text { margin: 0; font: 400 16px/1.6 var(--sans); color: var(--fg-2); max-width: 40ch; }

@@ -1,0 +1,22 @@
+---
+// HOTLAND as the wall carries it (the club's brand board): fine steel capitals set wide apart, and a blade of red
+// light standing in the joint between the T and the L. Drawn from outlines (data/wordmark.ts), so it is sharp at
+// any size and waits for no font. `height` is the capitals' height in px (or leave it to CSS: .name { height }).
+import { spaced, place } from '../data/wordmark';
+interface Props { height?: number; seam?: boolean; label?: boolean; class?: string }
+const { height, seam = true, label = false, class: cls } = Astro.props;
+const TRACK = 420;
+const hot = spaced('HOT', TRACK);
+const land = spaced('LAND', TRACK);
+const gap = hot.after + TRACK + land.before;
+const W = hot.width + gap + land.width;
+const x = hot.width + gap / 2;
+const letters = hot.paths.join('') + land.paths.map((d) => place(d, 1, hot.width + gap, 0)).join('');
+// the blade: widest at the capitals' middle, drawn to a point well above and below them
+const blade = `M${x} -1290L${x + 24} -357L${x} 575L${x - 24} -357Z`;
+---
+<svg class:list={['name', cls]} viewBox={`0 -725 ${W} 735`} style={height ? `height:${height}px` : undefined}
+  role={label ? 'img' : undefined} aria-label={label ? 'HOTLAND' : undefined} aria-hidden={label ? undefined : 'true'} focusable="false">
+  <path class="name-word" d={letters} />
+  {seam && <path class="name-seam" d={blade} />}
+</svg>

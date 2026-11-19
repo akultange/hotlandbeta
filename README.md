@@ -121,17 +121,21 @@ Every page view and every tap on Book, Call, WhatsApp, Telegram and Directions, 
 
 `/[lang]/` home · `about` · `program` (+ `program/[event]`) · `artists` · `menu` · `vip` (+ `birthday`, `bachelor`, `corporate`, `hire`) · `booking` (+ `thanks`) · `contacts` · `careers` · `privacy` · `cookies` · `terms` · `goodbye` · `404`
 
-## Design — v6 "Black chrome", with a crimson accent
+## Design — v7 "Concrete and bordeaux"
 
-- **Surfaces:** true black (default), charcoal bands (`.soot`, framed by hairlines) and one light surface, a brushed-metal plate (`.velvet` / `.plate`). Components read colours from surface variables in `global.css`.
-- **Navigation:** every section is a visible link in the header (logo · sections · RU/EN · Book). On phones the sections become a sideways-scrolling row under the logo, and the burger opens a full menu with contacts.
-- **No overline text:** no small caps labels above headings, no breadcrumbs, no rules over titles. A section starts with its heading; `SecIndex` now renders a real heading.
-- **Metal:** brushed silver for the masthead, emblem, membership cards, numerals and the 18+ seal (`public/img/metal/brushed.jpg`, `--sheen`, `#g-metal`, the guilloche `rosette.svg`).
-- **Crimson accent:** emphasised words in headlines are red chrome (`--red-chrome`); booking buttons are crimson anodised metal; crimson also marks active links, hovers, link arrows, "tonight" dots and the "+" in 18+.
-- **Type:** Noto Serif Display, condensed and heavy, in capitals for headlines, with light italics for emphasis. Forum for the HOTLAND wordmark and card names. Golos Text for text.
-- **Photography:** shown big. Sources are colour (`public/img/club/`, `public/img/color/`, lingerie studio portraits in `color/artists/`). CSS shows them in black and white, and hovering brings back the real colour. Masks fade the edges so pictures dissolve into the black page instead of sitting in frames; text never sits on a photo. (A crimson cast is available through `--tint`, but is off.)
-- **Home hero:** one wide black-and-white film of the girls (`public/video/hero-wide.mp4`, 9 s, cut from Honey Bunny's club video; phones get the vertical `hero-45.mp4`) dissolving into black, with the silver HOTLAND masthead underneath and one row with the tagline, a line of info and the booking button. Pause button and reduced-motion support included.
-- **Building blocks:** `Mast`, `Header`, `PageTitle` (giant title; the photo fills the right side and fades into the page), `ArtistCard`, `EventRow`, `MemberCards`, `Photo`.
+After the club's brand board (November 2026): a dark concrete wall, the name in steel, one line of red light in the seam. A premium gentlemen's club, not a cabaret; membership, not VIP.
+
+- **Surfaces:** black concrete (the page), graphite concrete with the formwork's joints and tie holes (`.soot`), and one light surface, a brushed-metal plate (`.velvet` / `.plate`). The stone is two small maps laid over a surface's own colour with `background-blend-mode: overlay` (`public/img/concrete/`, made by `tools/concrete.py`; tokens `--stone`, `--stone-size` in `global.css`).
+- **Colour:** bordeaux (`--bordeaux`) is the brand's colour: buttons, the top card, marks. Bright red is only ever light: the seam (`--light`), a word in a title lit by it (`--lit`), a thin line (`--red`). No gradients across letters; steel is a smooth fall of light (`--metal`, `#g-metal`, `#g-steel`).
+- **Type:** one face, Geologica, served by the site (`tools/fonts/build.py`): `Geologica Sharp` for titles, names and numerals (its sharpness axis at 100: the joints of the letters cut to a point), `Geologica` for text. No italics. Wide-set capitals for the name and for controls.
+- **The name:** HOTLAND as outlines (`src/data/wordmark.ts`, written by `tools/fonts/wordmark.py`): heavy for the hero's window, fine and set wide for the wall, the header, the cards (`Name.astro`), with the blade of red light between the T and the L. The club's final logo replaces these when it arrives.
+- **The 18+ door** (`AgeGate.astro`, `styles/gate.css`): two slabs of concrete with the name across them and the light in the joint. "Yes" runs the light the height of the joint and slides the slabs apart onto the hero.
+- **Home hero:** the film behind frosted glass. Wide screens: HOTLAND cut clear out of the frost, the red line between the T and the L. A phone held upright: the line grown into a gap, the film sharp inside it, the name on one line across it.
+- **Controls:** square-cut plates (2px corners): bordeaux lacquer for the main action, the wall edged in steel for the second; the header's pieces are smoked glass.
+- **No icons:** the 3D icons (stiletto, cherries, lips, key…) are retired (`Icon3d.astro` explains); the blade of light stands in on the thank-you page and the 404.
+- **No overline text:** no small caps labels above headings, no breadcrumbs, no rules over titles. A section starts with its heading.
+- **Photography:** shown big, in its own colour; masks fade the edges so pictures dissolve into the page instead of sitting in frames; text never sits on a photo.
+- **Building blocks:** `Header`, `Name`, `PageTitle`, `PosterCard`, `MemberCards`, `Photo`, `AgeGate`.
 
 Media from earlier design rounds is kept in `_unused/` (ignored by git, not published).
 

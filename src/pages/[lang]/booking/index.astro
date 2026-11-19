@@ -1,6 +1,6 @@
 ---
 import Base from '../../../layouts/Base.astro';
-import Logo from '../../../components/Logo.astro';
+import Name from '../../../components/Name.astro';
 import PageTitle from '../../../components/PageTitle.astro';
 import { type Lang, ui, langPaths } from '../../../data/i18n';
 import { site } from '../../../data/site';
@@ -14,7 +14,7 @@ const f = t.form;
 const ru = lang === 'ru';
 import { show } from '../../../data/variants';
 ---
-<Base lang={lang} title={ru ? 'Бронь стола' : 'Book a table'} description={ru ? 'Забронируйте стол, VIP-карту, сет или праздник в HOTLAND.' : 'Book a table, a VIP card, a bottle set or a party at HOTLAND.'} closing={false}>
+<Base lang={lang} title={ru ? 'Бронь стола' : 'Book a table'} description={ru ? 'Забронируйте стол, карту клуба, сет или праздник в HOTLAND.' : 'Book a table, a club card, a bottle set or a party at HOTLAND.'} closing={false}>
   <PageTitle
     crumbs={[{ href: `/${lang}/`, label: 'HOTLAND' }, { label: ru ? 'Бронь стола' : 'Book a table' }]}
     title={ru ? 'Бронь стола' : 'Book a table'}
@@ -35,7 +35,7 @@ import { show } from '../../../data/variants';
       </div>
       <aside class="stack" style="grid-column: 9 / span 4; gap: 56px">
         <div class="invite">
-          <Logo variant="mark" size={40} />
+          <Name height={13} />
           <!-- (the contact is settled on Luka's, the call back: data/variants.ts; the phone number's version stays here, hidden) -->
           {show('contact', 'luka') && (
             <div class="vx-part" data-v="contact:luka">

@@ -14,11 +14,11 @@ const ru = lang === 'ru';
 const request = `/${lang}/booking/?type=vip`;
 const title = g(3);
 ---
-<Base lang={lang} title={t.nav.vip} description={ru ? 'VIP и праздники в HOTLAND: три карты VIP, четыре VIP-зоны, три караоке-зала и праздник по вашему сценарию.' : 'VIP & parties at HOTLAND: three VIP cards, four VIP zones, three karaoke rooms and a party to your own script.'}>
+<Base lang={lang} title={t.nav.vip} description={ru ? 'Членство и праздники в HOTLAND: три карты клуба, четыре приватные зоны, три караоке-зала и праздник по вашему сценарию.' : 'Membership & parties at HOTLAND: three club cards, four private zones, three karaoke rooms and a party to your own script.'}>
   <PageTitle
     crumbs={[{ href: `/${lang}/`, label: 'HOTLAND' }, { label: t.nav.vip }]}
-    title={ru ? 'VIP и&nbsp;праздники' : t.nav.vip}
-    sub={ru ? 'Три карты <em>VIP</em> и ваш праздник' : 'Three <em>VIP cards</em> and your party'}
+    title={ru ? 'Членство и&nbsp;праздники' : t.nav.vip}
+    sub={ru ? 'Три карты <em>клуба</em> и ваш праздник' : 'Three <em>club cards</em> and your party'}
     lead={tr(vip.lead, lang)}
     img={media(title.img)}
     imgAlt={tr(title.alt, lang)}

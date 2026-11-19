@@ -2,18 +2,19 @@
    Navigation: the header, the phone menu and the phone action dock.
    Loaded after global.css (Base.astro), so the rules here win over the older header, phone-menu and
    phone-bar rules still in global.css ("Header: tucks away", "Phone menu: drops in", "Taps").
-   The pieces are dark glass on the black page: a translucent fill, a blur of whatever passes behind, and a
-   1px edge of light. Nothing sits on a bar; the header itself is transparent.
+   The pieces are plates of smoked glass on the concrete: square-cut, a translucent fill, a blur of whatever passes
+   behind, and a 1px edge of light. Nothing sits on a bar; the header itself is transparent.
    ===================================================================== */
 
 :root {
   /* the space the phone dock takes at the bottom of the screen (0 on desktop), for anything sized to the screen */
   --dock: 0px;
-  /* what is chosen (the page in the header, the language, a menu tab): a small pill of brushed steel, built like the
-     silver buttons (the light along its top, the bevel, the grain), with dark words on it */
-  --steel-pill: linear-gradient(180deg, rgba(255, 255, 255, .86) 0%, rgba(255, 255, 255, .2) 46%, rgba(0, 0, 0, .1) 54%, rgba(255, 255, 255, .46) 100%), var(--brushed);
-  --steel-pill-edge: inset 0 1px 0 rgba(255, 255, 255, .95), inset 0 -1px 0 rgba(0, 0, 0, .24), 0 0 0 1px rgba(255, 255, 255, .28), 0 8px 20px -10px rgba(0, 0, 0, .85);
-  --nav-glass: rgba(24, 24, 27, .58);
+  /* what is chosen among tabs and choices (a menu tab, a booking choice): a plate of light steel with dark words */
+  --steel-pill: linear-gradient(180deg, rgba(255, 255, 255, .55) 0%, rgba(255, 255, 255, 0) 62%);
+  --steel-pill-edge: inset 0 1px 0 rgba(255, 255, 255, .85), inset 0 -1px 0 rgba(0, 0, 0, .2), 0 8px 20px -10px rgba(0, 0, 0, .85);
+  /* what is chosen in the header (the page, the language) stands over a line of the red light */
+  --nav-on: linear-gradient(90deg, transparent, var(--light) 18%, var(--light) 82%, transparent) 50% 100% / calc(100% - 20px) 1.5px no-repeat;
+  --nav-glass: rgba(20, 21, 23, .62);
   --nav-edge: inset 0 0 0 1px rgba(242, 240, 236, .1), inset 0 1px 0 rgba(255, 255, 255, .07);
   --nav-lift: 0 14px 34px -18px rgba(0, 0, 0, .9);
   --nav-blur: blur(20px) saturate(1.5);
@@ -47,44 +48,25 @@
 }
 .hdr-in > * { pointer-events: auto; }
 
-/* the lily alone, in a round glass chip */
-.hdr-chip {
-  justify-self: start; flex: none;
-  display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%;
-  transition: background-color .3s ease;
-}
-.hdr-chip .logo { display: block; }
-.hdr-chip .emblem { width: 28px; height: 28px; }
-@media (hover: hover) {
-  .hdr-chip:hover { background-color: rgba(44, 44, 48, .66); }
-}
+/* the name: steel capitals set wide, the red light in the joint (Name.astro) */
+.hdr-name { justify-self: start; flex: none; display: grid; place-items: center; height: 46px; padding: 0 18px; border-radius: 2px; transition: background-color .3s ease; }
+@media (hover: hover) { .hdr-name:hover { background-color: rgba(44, 45, 48, .66); } }
+.name { display: block; width: auto; height: 12px; overflow: visible; }
+.name-word { fill: url(#g-steel); }
+.name-seam { fill: var(--light); filter: drop-shadow(0 0 2px rgba(255, 48, 69, .95)) drop-shadow(0 0 7px rgba(196, 30, 54, .9)); }
+.hdr-name .name { height: 12px; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .7)); }
 
 /* the sections: a floating glass capsule; the current page is a light pill */
-.hdr-nav { position: relative; display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: 999px; }
+.hdr-nav { position: relative; display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: 2px; }
 .hdr-nav a {
   position: relative; z-index: 1;
-  display: inline-flex; align-items: center; height: 38px; padding: 0 17px; border-radius: 999px;
-  font: 500 15px/1 var(--sans); color: rgba(242, 240, 236, .8); white-space: nowrap;
+  display: inline-flex; align-items: center; height: 38px; padding: 0 16px; border-radius: 2px;
+  font: 500 12px/1 var(--sans); letter-spacing: .13em; text-transform: uppercase; color: rgba(232, 231, 227, .72); white-space: nowrap;
   transition: color .18s ease;
 }
 .hdr-tx { display: block; }
-.hdr-nav a.on { color: var(--ink); }
-.hdr-pill {
-  position: absolute; inset: 0; z-index: -1; overflow: hidden; border-radius: inherit;
-  background-color: #d3d5d9; background-image: var(--steel-pill);
-  background-size: 100% 100%, cover; background-position: 0 0, center; background-blend-mode: soft-light, multiply;
-  box-shadow: var(--steel-pill-edge);
-}
-/* once, as the page arrives, a band of light crosses the steel (the buttons' glint) */
-.hdr-pill::after {
-  content: ''; position: absolute; inset: 0 -60%; pointer-events: none;
-  background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, .75) 50%, transparent 60%);
-  mix-blend-mode: soft-light; translate: -100% 0;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .hdr-pill::after { animation: pill-glint 1.3s var(--ease-io) .7s both; }
-}
-@keyframes pill-glint { to { translate: 100% 0; } }
+.hdr-nav a.on { color: #fff; }
+.hdr-pill { position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--nav-on); filter: drop-shadow(0 0 5px rgba(255, 48, 69, .7)); }
 @media (hover: hover) {
   .hdr-nav a:not(.on):hover { color: #fff; }
 }
@@ -92,7 +74,7 @@
 /* a soft highlight that snaps from link to link (Header.astro sets --x and --w) */
 .hdr-hl {
   position: absolute; top: 4px; bottom: 4px; left: 0; width: var(--w, 0); translate: var(--x, 0) 0;
-  border-radius: 999px; background: rgba(242, 240, 236, .1); box-shadow: inset 0 0 0 1px rgba(242, 240, 236, .08), inset 0 1px 0 rgba(255, 255, 255, .06);
+  border-radius: 2px; background: rgba(232, 231, 227, .08); box-shadow: inset 0 0 0 1px rgba(232, 231, 227, .07);
   opacity: 0; pointer-events: none;
   transition: translate .32s var(--ease-nav), width .32s var(--ease-nav), opacity .16s ease;
 }
@@ -102,31 +84,27 @@
 .hdr-r { justify-self: end; display: flex; align-items: center; gap: 10px; }
 
 /* language: a small segmented pill */
-.seg { display: flex; gap: 2px; padding: 4px; border-radius: 999px; }
+.seg { display: flex; gap: 2px; padding: 4px; border-radius: 2px; }
 .seg a {
-  display: grid; place-items: center; min-width: 40px; height: 38px; padding: 0 10px; border-radius: 999px;
-  font: 600 14px/1 var(--sans); letter-spacing: .02em; color: rgba(242, 240, 236, .62);
+  display: grid; place-items: center; min-width: 40px; height: 38px; padding: 0 10px; border-radius: 2px;
+  font: 500 12px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase; color: rgba(232, 231, 227, .56);
   transition: color .25s ease, background-color .25s ease;
 }
-.seg a.on {
-  color: var(--ink); background-color: #d3d5d9; background-image: var(--steel-pill);
-  background-size: 100% 100%, cover; background-position: 0 0, center; background-blend-mode: soft-light, multiply;
-  box-shadow: var(--steel-pill-edge);
-}
+.seg a.on { color: #fff; background: var(--nav-on); }
 @media (hover: hover) {
   .seg a:not(.on):hover { color: #fff; background: rgba(242, 240, 236, .07); }
 }
 
-.hdr-book { height: 46px; padding: 0 24px; }
+.hdr-book { height: 46px; padding: 0 22px; }
 
 /* phones: a glass "Menu" pill with two lines; in the open sheet it becomes "Close" with a cross */
 .hdr-menu {
-  display: none; align-items: center; gap: 11px; height: 42px; padding: 0 16px 0 18px; border-radius: 999px;
-  font: 500 15px/1 var(--sans); color: var(--fg); white-space: nowrap;
+  display: none; align-items: center; gap: 12px; height: 42px; padding: 0 14px 0 16px; border-radius: 2px;
+  font: 500 12px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--fg); white-space: nowrap;
   transition: scale .2s ease;
 }
 .hdr-menu i { position: relative; flex: none; width: 18px; height: 8px; }
-.hdr-menu i::before, .hdr-menu i::after { content: ''; position: absolute; left: 0; right: 0; height: 1.6px; border-radius: 2px; background: currentColor; }
+.hdr-menu i::before, .hdr-menu i::after { content: ''; position: absolute; left: 0; right: 0; height: 1.5px; background: currentColor; }
 .hdr-menu i::before { top: 0; }
 .hdr-menu i::after { bottom: 0; }
 .hdr-menu.is-close i::before { translate: 0 3.2px; rotate: 45deg; }
@@ -137,23 +115,23 @@
 @media (max-width: 1239px) { .hdr-nav a { padding: 0 13px; } }
 @media (max-width: 1099px) {
   .hdr-in { column-gap: 10px; }
-  .hdr-nav a { padding: 0 11px; font-size: 14px; }
+  .hdr-nav a { padding: 0 11px; font-size: 11.5px; }
   .hdr-r { gap: 8px; }
-  .seg a { min-width: 36px; padding: 0 8px; font-size: 13px; }
-  .hdr-book { padding: 0 18px; font-size: 14px; }
+  .seg a { min-width: 36px; padding: 0 8px; font-size: 11.5px; }
+  .hdr-book { padding: 0 16px; font-size: 12px; }
 }
 @media (max-width: 999px) {
   .hdr-in { column-gap: 6px; }
   .hdr-nav { gap: 0; }
-  .hdr-nav a { padding: 0 8px; font-size: 13.5px; }
+  .hdr-nav a { padding: 0 8px; font-size: 11px; letter-spacing: .1em; }
 }
 
 @media (max-width: 899px) {
   .hdr-in { display: flex; justify-content: space-between; column-gap: 12px; }
   .hdr-nav, .hdr-lang, .hdr-book { display: none; }
   .hdr-menu { display: inline-flex; }
-  .hdr-chip { width: 42px; height: 42px; }
-  .hdr-chip .emblem { width: 26px; height: 26px; }
+  .hdr-name { height: 42px; padding: 0 14px; }
+  .hdr-name .name { height: 10.5px; }
   /* phones: a shorter, denser fade that ends just past the header, over the top padding of the menu page's pinned tabs */
   .hdr::before {
     inset: 0 0 -10px;
@@ -165,39 +143,33 @@
 /* ---------- Phone menu: a full-screen sheet ---------- */
 .mnav {
   position: fixed; inset: 0; z-index: 70; overflow-y: auto; overscroll-behavior: contain;
-  background: radial-gradient(120% 52% at 100% 0%, rgba(220, 20, 60, .1), rgba(220, 20, 60, 0) 62%), #000;
+  background-color: var(--black); background-image: radial-gradient(120% 52% at 100% 0%, rgba(168, 24, 46, .12), rgba(168, 24, 46, 0) 62%), var(--stone); background-size: auto, var(--stone-size); background-blend-mode: normal, overlay, overlay;
   color: var(--fg);
 }
 .mnav-top {
   height: var(--hdr-row); padding: 0 var(--pad);
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
 }
-.mnav-top .hdr-chip { width: 42px; height: 42px; }
-.mnav-top .hdr-chip .emblem { width: 26px; height: 26px; }
 .mnav-top-r { display: flex; align-items: center; gap: 8px; }
 .mnav-top .hdr-menu { display: inline-flex; }
 .mnav-top .seg a { min-width: 38px; height: 34px; }
 
 .mnav-body { display: grid; gap: 30px; padding: 14px var(--pad) calc(40px + env(safe-area-inset-bottom)); }
 .mnav-links { display: grid; }
-.mnav-links { --ic: 46px; }
 .mnav-links a {
-  display: grid; grid-template-columns: var(--ic) minmax(0, 1fr); align-items: center; column-gap: 16px;
-  margin: 0 -10px; padding: 7px 10px; border-radius: 22px;
-  font: 700 clamp(34px, 10.4vw, 46px)/1.06 var(--display); font-stretch: 75%; letter-spacing: -.005em;
-  color: var(--fg); transition: background-color .25s ease, color .25s ease;
+  display: block; padding: 13px 0; border-bottom: 1px solid var(--rule);
+  font: 450 clamp(28px, 8.2vw, 38px)/1.08 var(--display); letter-spacing: -.015em;
+  color: var(--fg); transition: color .25s ease;
 }
 .mnav-links a span { min-width: 0; }
-.mnav-links a.on { color: var(--red-text); font-style: italic; }
-.mnav-links a:active { background-color: rgba(242, 240, 236, .07); }
-.mnav-links .mnav-ic { width: var(--ic); }
+.mnav-links a.on { color: var(--lit); text-shadow: var(--lit-glow); }
+.mnav-links a:active { color: #fff; }
 
 .mnav-info { display: grid; gap: 24px; justify-items: start; }
 .mnav-book { width: 100%; max-width: 460px; }
 /* tablets held upright: the same sheet, a size up */
 @media (min-width: 600px) and (min-height: 700px) {
-  .mnav-links { --ic: 58px; }
-  .mnav-links a { column-gap: 20px; font-size: clamp(46px, 7.6vw, 64px); }
+  .mnav-links a { padding: 16px 0; font-size: clamp(40px, 6.4vw, 56px); }
   .mnav-body { gap: 40px; padding-top: 24px; }
 }
 .mnav-visit { display: grid; gap: 2px; font: 400 17px/1.55 var(--sans); color: var(--fg-2); }
@@ -206,8 +178,8 @@
 .mnav-ask span { color: var(--muted); font-weight: 400; }
 .mnav-msg { display: flex; flex-wrap: wrap; gap: 10px; }
 .mnav-msg a {
-  display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 20px 0 16px; border-radius: 999px;
-  font: 500 16px/1 var(--sans); color: var(--fg); transition: scale .2s ease, background-color .25s ease;
+  display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 18px 0 14px; border-radius: 2px;
+  font: 500 15px/1 var(--sans); color: var(--fg); transition: scale .2s ease, background-color .25s ease;
 }
 .mnav-msg a:active { scale: .97; background-color: rgba(44, 44, 48, .7); }
 .mnav-msg svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
@@ -216,12 +188,11 @@
 
 /* the sheet drops like a curtain with a soft rounded edge, the links follow one by one, and the two lines
    of the button turn into a cross; closing lifts it away again (Header.astro waits 340ms) */
-@keyframes nav-curtain-in { from { clip-path: inset(0 0 100% 0 round 0 0 48px 48px); } to { clip-path: inset(0 0 0 0 round 0); } }
-@keyframes nav-curtain-out { from { clip-path: inset(0 0 0 0 round 0); } to { clip-path: inset(0 0 100% 0 round 0 0 48px 48px); } }
+@keyframes nav-curtain-in { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes nav-curtain-out { from { clip-path: inset(0 0 0 0); } to { clip-path: inset(0 0 100% 0); } }
 @keyframes nav-x { from { translate: 0 0; rotate: 0deg; } }
 html.motion .mnav:not([hidden]) { animation: nav-curtain-in .6s cubic-bezier(.22, 1, .36, 1) both; }
 html.motion .mnav:not([hidden]) :is(.mnav-links a, .mnav-info > *) { animation: rv-up .7s var(--ease-out) calc(.12s + var(--i, 0) * .035s) backwards; }
-html.motion .mnav:not([hidden]) .mnav-ic { animation: rv-pop .8s var(--ease-back) calc(.18s + var(--i, 0) * .035s) backwards; }
 html.motion .mnav:not([hidden]) .is-close i::before,
 html.motion .mnav:not([hidden]) .is-close i::after { animation: nav-x .5s var(--ease-out) .12s backwards; }
 html.motion .mnav.closing { animation: nav-curtain-out .32s cubic-bezier(.5, 0, .2, 1) both; }
@@ -231,8 +202,8 @@ html.motion .mnav.closing { animation: nav-curtain-out .32s cubic-bezier(.5, 0, 
   position: fixed; z-index: 45; left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom));
   max-width: 540px; margin-inline: auto; /* tablets: a dock, not a bar */
   display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) auto; align-items: center;
-  padding: 5px; border-radius: 999px;
-  background-color: rgba(20, 20, 23, .7);
+  padding: 5px; border-radius: 3px;
+  background-color: rgba(18, 19, 21, .74);
   -webkit-backdrop-filter: blur(22px) saturate(1.6); backdrop-filter: blur(22px) saturate(1.6);
   box-shadow: var(--nav-edge), 0 18px 44px -14px rgba(0, 0, 0, .95);
   transition: translate .5s var(--ease-out), opacity .3s ease;
@@ -240,16 +211,16 @@ html.motion .mnav.closing { animation: nav-curtain-out .32s cubic-bezier(.5, 0, 
 /* (global.css paints the first link of the old bar crimson; here the first item is "Call", a button) */
 .mbar .mbar-act {
   display: grid; justify-items: center; align-content: center; gap: 6px; min-width: 0; height: 52px; padding: 0;
-  border: 0; border-radius: 999px; background: none; box-shadow: none; filter: none;
-  font: 500 13px/1 var(--sans); color: var(--fg); white-space: nowrap;
+  border: 0; border-radius: 2px; background: none; box-shadow: none; filter: none;
+  font: 400 11px/1 var(--sans); letter-spacing: .02em; text-transform: none; color: var(--fg-2); white-space: nowrap;
 }
 .mbar .mbar-act:active { background-color: rgba(242, 240, 236, .1); filter: none; color: var(--fg); }
-.mbar-act svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.mbar a.mbar-book { height: 52px; padding: 0 17px; transition: filter .2s, scale .2s ease; }
+.mbar-act svg { width: 21px; height: 21px; color: var(--fg); fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.mbar a.mbar-book { height: 52px; padding: 0 15px; font-size: 12px; letter-spacing: .12em; transition: filter .2s, scale .2s ease; }
 /* smaller phones: the labels keep their room (the dock never cuts a word) */
 @media (max-width: 389px) {
-  .mbar a.mbar-book { padding: 0 14px; font-size: 14px; }
-  .mbar .mbar-act { font-size: 12.5px; }
+  .mbar a.mbar-book { padding: 0 12px; font-size: 11.5px; letter-spacing: .1em; }
+  .mbar .mbar-act { font-size: 10.5px; }
 }
 /* the smallest phones: icons only, the words stay for screen readers */
 @media (max-width: 359px) {
@@ -272,7 +243,7 @@ html.motion .mnav.closing { animation: nav-curtain-out .32s cubic-bezier(.5, 0, 
    the capsule is a picture of itself, which can't blur what passes behind it: a darker fill stands in for the
    glass for that moment. */
 .hdr-nav { view-transition-name: hdr-nav; }
-::view-transition-group(hdr-nav) { animation: none; border-radius: 999px; background: rgba(18, 18, 21, .9); }
+::view-transition-group(hdr-nav) { animation: none; border-radius: 2px; background: rgba(18, 19, 21, .9); }
 ::view-transition-old(hdr-nav), ::view-transition-new(hdr-nav) { animation: none; mix-blend-mode: normal; }
 .hdr-nav .hdr-pill { view-transition-name: hdr-pill; }
 .hdr-nav a.on .hdr-tx { view-transition-name: hdr-on; }
@@ -288,7 +259,7 @@ html.motion .mnav.closing { animation: nav-curtain-out .32s cubic-bezier(.5, 0, 
 
 /* the header's parts keep still across page changes (the header itself has no view-transition-name, so
    its glass can blur what is under it) */
-.hdr-chip { view-transition-name: hdr-chip; }
+.hdr-name { view-transition-name: hdr-chip; }
 .hdr-r { view-transition-name: hdr-r; }
 /* small desktops and laptops: the capsule centred in the free middle, not pushed against the language pill (with
    seven sections, Gallery included, the capsule only fits centred on the page from 1440px) */

@@ -34,16 +34,7 @@
   /* ---------- A picture beside its words (the 12 columns stay side by side): never taller than the screen ---------- */
   .g12 .photo { max-height: calc(100svh - var(--hdr) - 40px); }
 
-  /* ---------- The 18+ question: the seal on the left, the question and the answers beside it ---------- */
-  .gate-box {
-    max-width: min(780px, 100%); grid-template-columns: minmax(0, .8fr) minmax(0, 1fr); align-items: center;
-    gap: 12px clamp(24px, 5vw, 56px); justify-items: start; text-align: left;
-  }
-  .gate-box > :first-child { grid-column: 1; grid-row: 1; justify-self: center; }
-  .gate-box > .gate-seal { grid-column: 1; grid-row: 2 / span 4; justify-self: center; width: min(200px, 46svh); }
-  .gate-box > :nth-child(n + 3) { grid-column: 2; }
-  .gate-18 { font-size: clamp(72px, 22svh, 96px); }
-  .gate-actions { justify-content: flex-start; }
+  /* (the 18+ door keeps its own short-screen layout: styles/gate.css) */
 
   /* ---------- The menu sheet: the sections on the left, booking and contacts on the right ---------- */
   .mnav-body { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; gap: 20px clamp(24px, 5vw, 56px); padding-top: 4px; }

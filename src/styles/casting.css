@@ -7,7 +7,7 @@
    mirror, then the room itself comes up.
    ===================================================================== */
 
-.cc { position: relative; isolation: isolate; overflow: clip; background: #000; margin-block: var(--sec-y); }
+.cc { position: relative; isolation: isolate; overflow: clip; background: var(--black); margin-block: var(--sec-y); }
 /* (the room is a band of its own, edge to edge, so the air every section has above and below it, --sec-y, is
    kept outside it: the black between it and the sections around is the same as between any two sections. On a
    computer the room's foot sinks into black over its last fifth, and the first stretch of that already reads as
@@ -47,7 +47,7 @@ html:not(.motion) :is(.cc-bulb, .cc-spill) { opacity: 1; }
 .cc-room::after {
   content: ''; position: absolute; inset: 0; pointer-events: none;
   background:
-    linear-gradient(180deg, #0a0a0b 0%, rgba(0, 0, 0, 0) 16%, rgba(0, 0, 0, 0) 80%, #000 100%),
+    linear-gradient(180deg, var(--black) 0%, rgba(0, 0, 0, 0) 16%, rgba(0, 0, 0, 0) 80%, var(--black) 100%),
     linear-gradient(90deg, rgba(0, 0, 0, .78) 0%, rgba(0, 0, 0, .5) 34%, rgba(0, 0, 0, 0) 56%);
 }
 
@@ -87,7 +87,7 @@ html:not(.motion) :is(.cc-bulb, .cc-spill) { opacity: 1; }
 @media (max-width: 899px) {
   .cc-room { position: relative; inset: auto; height: min(125vw, 70svh); }
   .cc-stage { --fx: .93; --fy: .3; }
-  .cc-room::after { background: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0) 14%, rgba(0, 0, 0, 0) 60%, #000 96%); }
+  .cc-room::after { background: linear-gradient(180deg, var(--black) 0%, rgba(0, 0, 0, 0) 14%, rgba(0, 0, 0, 0) 60%, var(--black) 96%); }
   /* the heading starts in the room's last few pixels, where it has already sunk into black, so no word sits on the
      photo; under the buttons, the band's own air (--sec-y) and no more */
   .cc-in { min-height: 0; margin-top: -16px; padding-top: 0; padding-bottom: 0; }
