@@ -19,13 +19,14 @@ import { type Lang, ui, tr } from '../data/i18n';
 import { site } from '../data/site';
 import { bookingTypes, bookingFine, events } from '../data/content';
 import Icon3d from './Icon3d.astro';
+import { keepShort } from '../data/format';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ru = lang === 'ru';
 const f = ui[lang].form;
 // each kind has its own 3D icon, as on the booking form's tiles
-const typeIcon = { table: 'coupe', vip: 'key', set: 'cherries', lounge: 'lips', event: 'peach', ticket: 'stiletto' } as const;
+const typeIcon = { table: 'coupe', card: 'key', lounge: 'lips', event: 'peach', ticket: 'stiletto' } as const;
 // the nights a poster can book: date → name
 const nights = Object.fromEntries(events.map((e) => [e.date, tr(e.title, lang)]));
 const occasions = Object.entries(f.occasions);
@@ -34,11 +35,11 @@ const [consentA, ...consentB] = f.consent.split(',');
 const L = ru
   ? {
       title: 'Бронь', close: 'Закрыть', back: 'Назад', next: 'Дальше',
-      h1: 'Что бронируем?',
+      h1: 'Что выбираете?',
       h2: 'Сколько вас?', what: 'Бронь', change: 'изменить', night: 'Вечер', fewer: 'Меньше гостей', more: 'Больше гостей',
       wishesPh: 'Например, стол у сцены или торт в полночь',
       h3: 'Как с вами связаться?', via: 'Где удобнее ответить',
-      doneH: 'Спасибо! Заявка у нас', doneText: 'Менеджер свяжется с вами, чтобы подтвердить бронь.', ok: 'Хорошо',
+      doneH: 'Заявка принята', doneText: 'Менеджер перезвонит и подтвердит бронь, обычно в течение 15 минут. Если срочно, напишите нам.', ok: 'Хорошо',
       needContact: 'Укажите имя и телефон.', needConsent: 'Отметьте согласие на обработку данных.',
       hello: 'Здравствуйте! Хочу забронировать в HOTLAND:', guestsWord: 'гостей',
     }
@@ -48,7 +49,7 @@ const L = ru
       h2: 'How many of you?', what: 'Booking', change: 'change', night: 'Night', fewer: 'Fewer guests', more: 'More guests',
       wishesPh: 'For example, a table by the stage or a cake at midnight',
       h3: 'How do we reach you?', via: 'Where should we reply',
-      doneH: 'Thank you! We have your request', doneText: 'Your host will be in touch to confirm.', ok: 'Done',
+      doneH: 'Request received', doneText: 'Your manager will call to confirm, usually within 15 minutes. If it’s urgent, message us.', ok: 'Done',
       needContact: 'Please enter your name and phone.', needConsent: 'Please tick the consent box.',
       hello: 'Hello! I’d like to book at HOTLAND:', guestsWord: 'guests',
     };
@@ -75,7 +76,7 @@ const pic = await photo('/media/gal-03-on-the-bar.webp', '42vw');
         <!-- 1: what -->
         <fieldset class="apl-step" data-s="1" aria-labelledby="bk-h1">
           <h3 class="apl-h" id="bk-h1" tabindex="-1">{L.h1}</h3>
-          <p class="apl-lead">{tr(bookingFine, lang)}</p>
+          <p class="apl-lead" set:html={keepShort(tr(bookingFine, lang), lang)} />
           <div class="choice choice-tiles apl-roles bk-types">
             {bookingTypes.map((b) => (
               <label><input type="radio" name="type" value={b.id} /><span><Icon3d name={typeIcon[b.id as keyof typeof typeIcon] ?? 'emblem'} size={120} class="choice-ic" />{tr(b.label, lang)}</span></label>

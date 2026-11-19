@@ -24,12 +24,12 @@ html.bk-lock { overflow: hidden; }
 .bk-count { display: flex; align-items: center; gap: 14px; }
 .bk-pm {
   display: grid; place-items: center; flex: none; width: 52px; height: 52px; border-radius: 50%; color: var(--fg);
-  background: rgba(242, 240, 236, .06); box-shadow: inset 0 0 0 1px rgba(242, 240, 236, .14);
+  background: rgba(230, 231, 233, .06); box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .14);
   transition: background-color .2s ease, opacity .2s ease;
 }
-.bk-pm:hover { background: rgba(242, 240, 236, .12); }
+.bk-pm:hover { background: rgba(230, 231, 233, .12); }
 .bk-pm[aria-disabled="true"] { opacity: .32; cursor: default; }
-.bk-pm[aria-disabled="true"]:hover { background: rgba(242, 240, 236, .06); }
+.bk-pm[aria-disabled="true"]:hover { background: rgba(230, 231, 233, .06); }
 .bk-pm svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
 .bk-count input {
   box-sizing: border-box; width: calc(3ch + 10px); height: calc(1em + 10px); margin: 0; padding: 0 0 4px;

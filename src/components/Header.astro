@@ -17,7 +17,8 @@ const path = Astro.url.pathname;
 // About and Contacts are one page now (/about/, with #contacts); /contacts/ redirects there
 // (the show page, /artists/, is hidden at the client's request: pages/[lang]/_artists.astro)
 const keys = ['program', 'vip', 'menu', 'gallery', 'about'] as const;
-const items = keys.map((k) => ({ k, href: `/${lang}/${k}/`, label: t.nav[k] }));
+// (the membership page's key is still vip, as in the strings; its address is /membership/)
+const items = keys.map((k) => ({ k, href: `/${lang}/${k === 'vip' ? 'membership' : k}/`, label: t.nav[k] }));
 const active = (href: string) => path.startsWith(href);
 const home = path === `/${lang}/`;
 const hours = `${site.hours[0].open}–${site.hours[0].close}`;

@@ -39,12 +39,12 @@
 .zn-name {
   display: block; padding: 0; text-align: left; cursor: pointer;
   font: 450 clamp(30px, 3.55vw, 62px)/1.05 var(--display); letter-spacing: -.01em;
-  color: transparent; -webkit-text-stroke: 1px rgba(242, 240, 236, .38);
+  color: transparent; -webkit-text-stroke: 1px rgba(230, 231, 233, .38);
   transition: color .45s ease, -webkit-text-stroke-color .45s ease, translate .6s var(--ease-out);
 }
-.zn-item:hover .zn-name { -webkit-text-stroke-color: rgba(242, 240, 236, .75); }
+.zn-item:hover .zn-name { -webkit-text-stroke-color: rgba(230, 231, 233, .75); }
 .zn-item.on .zn-name { color: var(--fg); -webkit-text-stroke-color: transparent; translate: clamp(10px, 1.2vw, 20px) 0; }
-.zn-name:focus-visible { outline: 2px solid var(--red-text); outline-offset: 6px; border-radius: 4px; }
+.zn-name:focus-visible { outline: 1.5px solid var(--light); outline-offset: 6px; border-radius: 4px; }
 /* a crimson mark before the chosen name */
 .zn-item::before {
   content: ''; position: absolute; left: 0; top: calc(clamp(10px, 1.1vw, 16px) + .46 * clamp(40px, 4.8vw, 84px) - 3px);
@@ -56,10 +56,10 @@
 .zn-detail { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .55s var(--ease-out); }
 .zn-detail > div { overflow: hidden; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 24px; padding-left: clamp(10px, 1.2vw, 20px); }
 .zn-item.on .zn-detail { grid-template-rows: 1fr; }
-.zn-text { margin: 12px 0 0; font: 400 clamp(16px, 1.2vw, 19px)/1.5 var(--sans); color: rgba(242, 240, 236, .78); }
+.zn-text { margin: 12px 0 0; font: 400 clamp(16px, 1.2vw, 19px)/1.5 var(--sans); color: rgba(230, 231, 233, .78); }
 .zn-detail .lnk { margin-top: 12px; }
 /* the hairline under each name; under the one on show, a crimson line for how far through its stretch the page is */
-.zn-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: rgba(242, 240, 236, .1); overflow: hidden; }
+.zn-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: rgba(230, 231, 233, .1); overflow: hidden; }
 .zn-bar i { display: block; width: 100%; height: 100%; background: linear-gradient(90deg, var(--red-deep), var(--red)); transform-origin: 0 50%; scale: 0 1; }
 .zn.pinned .zn-item.on .zn-bar i { scale: var(--zp, 0) 1; }
 

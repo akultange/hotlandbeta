@@ -23,6 +23,7 @@ import { artists, artistFrames, type Frame } from '../data/artists';
 import ArtistStory from './ArtistStory.astro';
 import { photo } from '../data/images';
 import '../styles/spotlight.css';
+import { keepShort } from '../data/format';
 
 interface Props { lang: Lang; id?: string }
 const { lang, id = 'models-stage' } = Astro.props;
@@ -47,7 +48,7 @@ const sets = await Promise.all(artists.map(async (a) => ({ main: await photo(`/m
     <div class="bighead bh-line">
       <h2 class="t-l" id={`${id}-title`}>{ru ? 'Артистки' : 'Artists'}</h2>
       <div class="bighead-side">
-        <p class="body">{ru ? 'Лица HOTLAND. Знакомьтесь, остальное на сцене.' : 'The faces of HOTLAND. Say hello here; the rest happens on stage.'}</p>
+        <p class="body" set:html={keepShort(ru ? 'Лица HOTLAND. Знакомьтесь, остальное на сцене.' : 'The faces of HOTLAND. Say hello here; the rest happens on stage.', lang)} />
       </div>
     </div>
   </div>

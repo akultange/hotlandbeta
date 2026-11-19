@@ -7,6 +7,7 @@
 // data is never put in the URL.
 import { type Lang, ui } from '../data/i18n';
 import { site } from '../data/site';
+import { keepShort } from '../data/format';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -23,7 +24,7 @@ const L = ru
       sendCallback: 'Заказать звонок', sendQuestion: 'Отправить вопрос',
       doneCallback: 'Спасибо! Менеджер скоро позвонит.', doneQuestion: 'Спасибо! Скоро ответим.',
       doneText: 'Номер видят только менеджеры клуба. Всё остальное между нами.', ok: 'Хорошо',
-      failTitle: 'Не получилось отправить', failText: 'Всё, что вы ввели, сохранено: попробуйте ещё раз. Или напишите нам в WhatsApp или Telegram, текст уже в сообщении.', retry: 'Отправить ещё раз',
+      failTitle: 'Не получилось отправить', failText: 'Всё, что вы ввели, сохранено: попробуйте ещё раз. Или напишите нам в WhatsApp, текст уже в сообщении.', retry: 'Отправить ещё раз',
       close: 'Закрыть', fill: 'Заполните обязательные поля.',
     }
   : {
@@ -35,7 +36,7 @@ const L = ru
       sendCallback: 'Request a call', sendQuestion: 'Send your question',
       doneCallback: 'Thank you! A manager will call you soon.', doneQuestion: 'Thank you! We’ll answer soon.',
       doneText: 'Only the club’s managers see your number. The rest stays between us.', ok: 'All right',
-      failTitle: 'We couldn’t send it', failText: 'Everything you typed is kept: try again. Or message us on WhatsApp or Telegram, your words are already in the message.', retry: 'Try again',
+      failTitle: 'We couldn’t send it', failText: 'Nothing you typed is lost: try again. Or message us on WhatsApp, your words are already in the message.', retry: 'Try again',
       close: 'Close', fill: 'Please fill in the required fields.',
     };
 ---
@@ -51,7 +52,7 @@ const L = ru
     <div class="ask-form">
       <div class="ask-head">
         <h2 class="ask-h" id="ask-h"><span data-only="callback">{L.hCallback}</span><span data-only="question" hidden>{L.hQuestion}</span></h2>
-        <p class="ask-lead"><span data-only="callback">{L.leadCallback}</span><span data-only="question" hidden>{L.leadQuestion}</span></p>
+        <p class="ask-lead"><span data-only="callback" set:html={keepShort(L.leadCallback, lang)} /><span data-only="question" hidden set:html={keepShort(L.leadQuestion, lang)} /></p>
       </div>
       <div class="fields">
         <div class="field"><label for="ask-name">{f.name}</label><input id="ask-name" name="name" autocomplete="name" required autofocus /></div>

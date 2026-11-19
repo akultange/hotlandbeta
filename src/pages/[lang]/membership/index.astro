@@ -11,10 +11,10 @@ export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
 const t = ui[lang];
 const ru = lang === 'ru';
-const request = `/${lang}/booking/?type=vip`;
+const request = `/${lang}/booking/?type=card`;
 const title = g(3);
 ---
-<Base lang={lang} title={t.nav.vip} description={ru ? 'Членство и праздники в HOTLAND: три карты клуба, четыре приватные зоны, три караоке-зала и праздник по вашему сценарию.' : 'Membership & parties at HOTLAND: three club cards, four private zones, three karaoke rooms and a party to your own script.'}>
+<Base lang={lang} title={t.nav.vip} description={ru ? 'Членство и праздники в HOTLAND: три карты клуба, приватные комнаты, караоке-залы и праздник по вашему сценарию.' : 'Membership & parties at HOTLAND: three club cards, four private zones, three karaoke rooms and a party to your own script.'}>
   <PageTitle
     crumbs={[{ href: `/${lang}/`, label: 'HOTLAND' }, { label: t.nav.vip }]}
     title={ru ? 'Членство и&nbsp;праздники' : t.nav.vip}

@@ -1,0 +1,126 @@
+/* =====================================================================
+   The first screen's skeleton, shared by the 18+ door (AgeGate.astro, on every page) and the home page's header
+   (Hero.astro, its take v3).
+   The door and the header are one composition in two materials. The door's name stands where the header's does,
+   its question where the header's motto will be, its two buttons where the header's two are. So when the door
+   opens, nothing has to travel: the concrete leaves, and each thing is already in its place.
+   Here: the screen's box (.hv, and the door's copy of it, .gate-in), where the big word or the gap sits in it
+   (--mw --mh --cx --cy), the words under it (.hv-copy), and the name as the wall carries it (.wall-name).
+   Everything else about the header is in hero.css, about the door in gate.css.
+   ===================================================================== */
+
+/* ---------- The screen ---------- */
+.hv, .gate-in {
+  height: 100svh; min-height: 600px;
+  container-type: size;
+  /* the side margins (the page's own column on very wide screens), the space under the last line, the gap above
+     the name, and the name's height (the word is --wr as tall as it is wide) */
+  --inl: max(var(--pad), calc((100cqw - var(--max)) / 2 + var(--pad)));
+  --hv-pb: clamp(28px, 2.8vw, 40px);
+  --hv-gap: clamp(26px, 3.2vw, 46px);
+  --wh: calc((100cqw - 2 * var(--inl)) * var(--wr));
+}
+
+/* ---------- The words: a line in the title's face, a line of text, two buttons ---------- */
+.hv-copy { position: relative; z-index: 1; display: grid; justify-items: start; gap: clamp(10px, 1vw, 14px); }
+.hero-tag { font: 450 clamp(34px, 3.4vw, 54px)/1.05 var(--display); letter-spacing: -.012em; color: var(--fg); padding-right: .08em; }
+.hv-lead { max-width: 36ch; color: #cfd0d3; text-wrap: pretty; }
+.hv-act { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 14px; margin-top: clamp(10px, 1.2vw, 18px); }
+
+/* ---------- Where things stand (the header's take v3, and the door) ----------
+   The big word as wide as the page's column, the words centred under it, and the free room split two to one above
+   the word and below the words. --copy-h is a close guess at the words' height (the motto, the one line under it
+   and the two buttons: 148 to 189px), so the word can be placed before anything is measured; the words themselves
+   always sit exactly --hv-gap under the word. */
+.hv3, .gate-in {
+  --mw: calc(100cqw - 2 * var(--inl));
+  --mh: calc(var(--mw) * var(--wr));
+  --copy-h: clamp(160px, 12.5vw, 190px);
+  --cx: 50cqw;
+  --cy: calc(var(--hdr) + max(0px, 100cqh - var(--hdr) - var(--mh) - var(--hv-gap) - var(--copy-h)) * 2 / 3 + var(--mh) / 2);
+  /* the name in fine capitals (the door's; on an upright phone the header's too): its height and where its middle is */
+  --nh: min(clamp(34px, 4.3cqw, 64px), calc((50cqw - var(--inl)) * 735 / var(--wl)));
+  --ny: var(--cy);
+}
+.hv3 .hv-copy, .gate-in .hv-copy {
+  position: absolute; left: var(--inl); right: var(--inl); top: calc(var(--cy) + var(--mh) / 2 + var(--hv-gap));
+  justify-items: center; text-align: center;
+}
+.hv3 .hv-lead, .gate-in .hv-lead { max-width: 60ch; text-wrap: balance; text-shadow: 0 1px 20px rgba(0, 0, 0, .6); }
+.hv3 .hv-act, .gate-in .hv-act { justify-content: center; }
+
+/* ---------- The name as the wall carries it ----------
+   HOT and LAND in fine steel capitals set wide, one outline per letter (data/wordmark.ts, nameHalves), either side
+   of a line of light: the T stands one letter-space (--ngu, in the outlines' units) before the line, and the L
+   begins on it. Lit from the upper left, as the wall is: each letter's light edge is its upper left, and its shadow
+   falls down and to the right. Where the two halves stand is the door's and the header's own business. */
+.wall-name {
+  --ng: calc(var(--nh) * var(--ngu) / 735);
+  position: absolute; z-index: 2; left: 0; right: 0; top: var(--ny); height: 0; pointer-events: none;
+}
+.wall-name svg {
+  position: absolute; top: 0; height: var(--nh); width: auto; translate: 0 -50%; overflow: visible; fill: url(#g-steel);
+  filter: drop-shadow(-.5px -.6px 0 rgba(255, 255, 255, .32)) drop-shadow(1px 1.5px 1px rgba(0, 0, 0, .85)) drop-shadow(2px 6px 10px rgba(0, 0, 0, .55));
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 899px) {
+  /* the screen ends where the phone's action dock begins: what lies under the dock is already the next section,
+     so once the page moves there is no empty band between the name and Афиша */
+  .hv, .gate-in { height: calc(100svh - var(--dock)); min-height: 520px; --hv-pb: 24px; --hv-gap: 22px; }
+  .hero-tag { font-size: clamp(27px, 8.6vw, 42px); }
+  /* the line under the motto stays one line down to the narrowest phone (17px from 370 wide up) */
+  .hv-lead { font-size: min(17px, 4.6vw); }
+  .hv-copy { gap: 10px; }
+  .hv-act { gap: 10px; margin-top: 8px; }
+  .hv-act .btn { height: 50px; padding: 0 22px; }
+}
+/* narrower phones (360 and 375 wide are common): the two buttons still share one row, their wide-set capitals a step
+   tighter; the narrowest (320), another step */
+@media (max-width: 389px) {
+  .hv-act { gap: 8px; }
+  .hv-act .btn { padding: 0 15px; font-size: 12px; letter-spacing: .11em; }
+}
+@media (max-width: 339px) {
+  .hv-act .btn { padding: 0 11px; font-size: 11.5px; letter-spacing: .07em; }
+}
+
+/* ---------- A phone held upright ----------
+   The line of light is the picture. On the door it is the joint; in the header it has grown into a gap, --mw wide
+   and --mh tall from the top of the screen, the film sharp inside it. The name stands across it at mid-height, and
+   the words sit at the foot of the screen, where the gap has frosted over again. */
+@media (max-width: 899px) and (orientation: portrait) {
+  .hv3, .gate-in {
+    /* the words' height: the motto and the one line under it (their sizes here, each on one line), the buttons' row,
+       and the gaps between them */
+    --copy-h: calc(clamp(27px, 8.6vw, 42px) * 1.05 + min(17px, 4.6vw) * 1.6 + 78px);
+    --mw: clamp(56px, 17.5cqw, 88px);
+    /* the gap runs from the top of the screen to just behind the motto */
+    --mh: calc(100cqh - var(--hv-pb) - var(--copy-h) + 28px);
+    --cx: 50cqw;
+    --cy: calc(var(--mh) / 2);
+    /* the name: as tall as LAND (--wl wide, in the outlines' units) can be between the gap and the screen's edge */
+    --nh: min(34px, calc((50cqw - var(--mw) / 2 - var(--inl)) * 735 / var(--wl)));
+    --ny: calc(var(--mh) / 2);
+  }
+  .hv3 .hv-copy, .gate-in .hv-copy { top: auto; bottom: var(--hv-pb); }
+}
+
+/* ---------- A phone held sideways (or any screen as short) ---------- */
+@media (orientation: landscape) and (max-height: 500px) {
+  .hv, .gate-in { height: 100svh; min-height: 300px; --hv-pb: max(14px, env(safe-area-inset-bottom, 0px)); --hv-gap: 12px; }
+  .hv-copy { gap: 6px; }
+  .hero-tag { font-size: clamp(26px, 8svh, 36px); }
+  .hv-lead { font-size: 14px; line-height: 1.45; max-width: 46ch; }
+  .hv-act { margin-top: 2px; }
+  /* the word on one line (34% of the height at most), the words centred under it, the free room split two to one
+     (--copy-h: a close guess at the words' height on a short screen) */
+  .hv3, .gate-in {
+    --mw: min(calc(100cqw - 2 * var(--inl)), calc(34cqh / var(--wr))); --mh: calc(var(--mw) * var(--wr));
+    --copy-h: 116px;
+    --cx: 50cqw;
+    --cy: calc(var(--hdr) + max(0px, 100cqh - var(--hdr) - var(--mh) - var(--hv-gap) - var(--copy-h)) * 2 / 3 + var(--mh) / 2);
+    --nh: clamp(20px, 7cqh, 34px);
+    --ny: var(--cy);
+  }
+}

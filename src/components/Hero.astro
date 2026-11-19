@@ -10,7 +10,8 @@
 //       On a phone held upright (2026-11-19: the club didn't want the name split over two lines) the clear part is
 //       the door's line of light grown into a gap: a tall slit down the middle of the frost with the red light
 //       along its edges, the film sharp inside it, and the name on one line across it in fine steel capitals,
-//       HOT to its left and LAND to its right, as on the wall.
+//       HOT before it and LAND growing out of its far edge, as on the wall. The 18+ door (AgeGate.astro) stands
+//       on the same skeleton (styles/first-screen.css), so it opens straight into this.
 // The dev server and preview builds (PUBLIC_NOINDEX=1) render all three, plus a small switch at the top left
 // (also ?hero=v1, v2 or v3; the choice is remembered in localStorage 'hl-hero'). A production build renders
 // only DEFAULT and no switch. Settled on v3 (2026-11-12): the client asked to keep v1 and v2 in the code but
@@ -18,7 +19,8 @@
 // SETTLED off to compare them again).
 import { type Lang, ui } from '../data/i18n';
 import { HERO_PHONE } from '../data/hero';
-import { place, line, spaced, GLYPHS } from '../data/wordmark';
+import { place, line, GLYPHS, nameHalves } from '../data/wordmark';
+import '../styles/first-screen.css';
 import '../styles/hero.css';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -71,11 +73,8 @@ const edgeOf = (vb: string, sw: number, paths: string[]) =>
 // v3 on a phone held upright: the gap. Its mask is one rectangle that takes whatever box it is given (the gap's
 // width and height are set in hero.css), clear down its length and frosting over again along its last fifth.
 const gapMask = `url("data:image/svg+xml,${encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 100' preserveAspectRatio='none'><defs><linearGradient id='f' x1='0' y1='0' x2='0' y2='1'><stop offset='0'/><stop offset='.78'/><stop offset='1' stop-opacity='0'/></linearGradient></defs><rect width='10' height='100' fill='url(#f)'/></svg>")}")`;
-// the name either side of the gap: fine capitals set wide (data/wordmark.ts), in the outlines' units
-const NAME_TRACK = 300;
-const nameHot = spaced('HOT', NAME_TRACK);
-const nameLand = spaced('LAND', NAME_TRACK);
-const nameBox = (w: number) => `0 -725 ${w} 735`;
+// the name across the gap, as the wall carries it (data/wordmark.ts, nameHalves): the same lockup as on the 18+ door
+const nm = nameHalves();
 const glass = [
   `--word:${maskOf(box, word.paths)}`, `--word-m:${gapMask}`,
   `--edge:${edgeOf(box, 4.5, word.paths)}`, `--edge-m:${edgeOf(stackBox, 8, stack)}`,
@@ -106,7 +105,7 @@ const PHONE = HERO_PHONE;
 const starter = `(function (v) { v.poster = matchMedia('${PHONE}').matches ? v.dataset.posterPhone : v.dataset.poster; })(document.currentScript.previousElementSibling);`;
 ---
 {CHOOSING && <script is:inline set:html={chooser} />}
-<section class:list={['hero', { 'hv-test': CHOOSING }]} style={`--sxn:${seamX.toFixed(5)};--wr:${(735 / W).toFixed(5)};--wr-m:${(stackH / land.width).toFixed(5)};--ax:${(stemX * 100).toFixed(2)}%;--ay:${(stemY * 100).toFixed(2)}%;--axn:${stemX.toFixed(4)};--ayn:${stemY.toFixed(4)}`}>
+<section class:list={['hero', { 'hv-test': CHOOSING }]} style={`--wl:${nm.land.width};--ngu:${nm.gap};--sxn:${seamX.toFixed(5)};--wr:${(735 / W).toFixed(5)};--wr-m:${(stackH / land.width).toFixed(5)};--ax:${(stemX * 100).toFixed(2)}%;--ay:${(stemY * 100).toFixed(2)}%;--axn:${stemX.toFixed(4)};--ayn:${stemY.toFixed(4)}`}>
   <h1 class="sr-only">{ru ? 'HOTLAND, премиальный мужской клуб в Москве' : 'HOTLAND, a premium gentlemen’s club in Moscow'}</h1>
   {takes.map((take) => (
     <div class:list={['hv', `h${take}`]} data-take={take} style={take === 'v3' ? glass : undefined}>
@@ -127,9 +126,9 @@ const starter = `(function (v) { v.poster = matchMedia('${PHONE}').matches ? v.d
           <div class="hv3-seam" aria-hidden="true"></div>
           {/* a phone held upright: the red light along the gap's two edges, and the name across it */}
           <div class="hv3-gap" aria-hidden="true"><i></i><i></i></div>
-          <div class="hv3-name" aria-hidden="true" style={`--wl:${nameLand.width}`}>
-            <svg viewBox={nameBox(nameHot.width)} focusable="false"><path d={nameHot.paths.join('')} /></svg>
-            <svg viewBox={nameBox(nameLand.width)} focusable="false"><path d={nameLand.paths.join('')} /></svg>
+          <div class="wall-name hv3-name" aria-hidden="true">
+            <svg viewBox={nm.box(nm.hot.width)} focusable="false">{nm.hot.paths.map((d) => <path d={d} />)}</svg>
+            <svg viewBox={nm.box(nm.land.width)} focusable="false">{nm.land.paths.map((d) => <path d={d} />)}</svg>
           </div>
         </Fragment>
       )}
@@ -161,15 +160,15 @@ const starter = `(function (v) { v.poster = matchMedia('${PHONE}').matches ? v.d
             <defs>
               <linearGradient id="hv1-sheen" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0" stop-color="#fff" stop-opacity=".95" />
-                <stop offset=".26" stop-color="#fffdfa" stop-opacity=".55" />
+                <stop offset=".26" stop-color="#ffffff" stop-opacity=".55" />
                 <stop offset=".46" stop-color="#28221e" stop-opacity=".2" />
                 <stop offset=".52" stop-color="#1e1a16" stop-opacity=".36" />
-                <stop offset=".63" stop-color="#fffdfa" stop-opacity=".72" />
-                <stop offset=".8" stop-color="#fffdfa" stop-opacity=".36" />
+                <stop offset=".63" stop-color="#ffffff" stop-opacity=".72" />
+                <stop offset=".8" stop-color="#ffffff" stop-opacity=".36" />
                 <stop offset="1" stop-color="#28221e" stop-opacity=".24" />
               </linearGradient>
               <pattern id="hv1-steel" patternUnits="userSpaceOnUse" x="0" y="-725" width={W} height="735">
-                <rect width={W} height="735" fill="#c9c5bf" />
+                <rect width={W} height="735" fill="#c4c6ca" />
                 <image href="/img/metal/brushed.webp" width={W} height="735" preserveAspectRatio="none" />
                 <rect width={W} height="735" fill="url(#hv1-sheen)" />
               </pattern>
@@ -238,7 +237,17 @@ const starter = `(function (v) { v.poster = matchMedia('${PHONE}').matches ? v.d
   // needs: the upright one on a phone held upright, the wide one anywhere else.
   const phoneCut = matchMedia('(max-width: 899px) and (orientation: portrait)');
   let loaded = document.readyState === 'complete';
-  if (!loaded) addEventListener('load', () => { loaded = true; setTimeout(run, 0); }, { once: true });
+  if (!loaded) addEventListener('load', () => { loaded = true; setTimeout(run, 0); setTimeout(warm, 300); }, { once: true });
+  else setTimeout(warm, 300);
+  // While the 18+ door stands shut the film is made ready behind it (fetched, not played), so that it is already
+  // moving when the door opens. Not on a metered or slow line, where the answer fetches it as before.
+  function warm() {
+    if (answered() || reduce) return;
+    const net = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+    if (net && (net.saveData || /2g|3g/.test(net.effectiveType || ''))) return;
+    const video = parts.get(shown())?.video;
+    if (video && ready(video)) { video.preload = 'auto'; video.load(); }
+  }
   function ready(v: HTMLVideoElement) {
     if (v.getAttribute('src')) return true;
     if (!loaded) return false;

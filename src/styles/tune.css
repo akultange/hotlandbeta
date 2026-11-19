@@ -7,7 +7,7 @@
 /* the four pictures and the lens over the middle of them */
 .gal-peek { position: relative; isolation: isolate; }
 .gal-peek:focus-visible { outline: none; }
-.gal-peek:focus-visible .tune-bezel { box-shadow: 0 0 0 3px var(--red-text), 0 14px 40px -10px rgba(0, 0, 0, .9); }
+.gal-peek:focus-visible .tune-bezel { box-shadow: 0 0 0 2px var(--light), 0 14px 40px -10px rgba(0, 0, 0, .9); }
 
 .tune {
   position: absolute; left: 50%; top: 50%; z-index: 2; width: clamp(156px, 15vw, 224px); aspect-ratio: 1;
@@ -26,8 +26,8 @@
   -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
 }
 .tune-dial, .tune-ring { inset: 0; width: 100%; height: 100%; overflow: visible; }
-.tune-dial line { stroke: rgba(242, 240, 236, .28); stroke-width: .8; stroke-linecap: round; }
-.tune-dial line.big { stroke: rgba(214, 70, 92, .85); stroke-width: 1.1; }
+.tune-dial line { stroke: rgba(230, 231, 233, .28); stroke-width: .8; stroke-linecap: round; }
+.tune-dial line.big { stroke: rgba(255, 43, 61, .8); stroke-width: 1.1; }
 .tune-ring text { font: 600 10.6px/1 var(--sans); letter-spacing: .02em; fill: var(--fg); }
 .tune-ring { animation: tune-turn 28s linear infinite; }
 .tune-dial { animation: tune-turn 90s linear infinite reverse; }
@@ -96,7 +96,7 @@
 .gal-peek.tuning .tune { scale: 1.1; transition: scale .35s var(--ease-out); }
 .gal-peek.tuning .tune-ring { animation: tune-turn .55s cubic-bezier(.5, 0, .3, 1) infinite; }
 .gal-peek.tuning .tune-dial { animation: tune-turn .8s linear infinite reverse; }
-.gal-peek.tuning .tune-dial line { stroke: rgba(214, 70, 92, .95); }
+.gal-peek.tuning .tune-dial line { stroke: rgba(255, 43, 61, .95); }
 .gal-peek.tuning .tune-glow { animation: none; opacity: 1; scale: 1.35; transition: scale .35s var(--ease-out); }
 .gal-peek.tuning .tune-play { scale: .82; background-color: rgba(168, 24, 46, .9); }
 /* the ring of light round the lens: lit by the press, and the thing that flies out (its own part of the passage) */

@@ -22,7 +22,7 @@ export const site = {
   hours: Array.from({ length: 7 }, () => ({ open: '22:00', close: '06:00' })),
 };
 
-/** 3 000 ₽ (prices are in roubles, service included). */
-export const price = (n: number) => `${n.toLocaleString('ru-RU')} ₽`;
-/** от 3 000 ₽ / from 3 000 ₽ */
-export const priceFrom = (n: number, lang: 'ru' | 'en') => `${lang === 'ru' ? 'от' : 'from'} ${price(n)}`;
+/** 3 000 ₽, or 3,000 ₽ in English (prices are in roubles, service included). */
+export const price = (n: number, lang: 'ru' | 'en' = 'ru') => `${n.toLocaleString(lang === 'ru' ? 'ru-RU' : 'en-GB')}\u00a0₽`;
+/** от 3 000 ₽ / from 3,000 ₽ */
+export const priceFrom = (n: number, lang: 'ru' | 'en') => `${lang === 'ru' ? 'от' : 'from'}\u00a0${price(n, lang)}`;

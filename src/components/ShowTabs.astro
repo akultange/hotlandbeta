@@ -9,6 +9,7 @@ import { type Lang, tr } from '../data/i18n';
 import { acts, cast, media } from '../data/content';
 import Icon3d from './Icon3d.astro';
 import '../styles/shows.css';
+import { keepShort } from '../data/format';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -37,7 +38,7 @@ const shots = await Promise.all(acts.map((a) => photo(media(a.img), '(max-width:
     <div class="bighead bh-line">
       <h2 class="t-l" id="shw-title">{ru ? 'Шоу' : 'The show'}</h2>
       <div class="bighead-side">
-        <p class="body">{tr(cast.lead, lang)}</p>
+        <p class="body" set:html={keepShort(tr(cast.lead, lang), lang)} />
       </div>
     </div>
     <div class="shw-body">
@@ -62,7 +63,7 @@ const shots = await Promise.all(acts.map((a) => photo(media(a.img), '(max-width:
       <div class="shw-panels">
         {acts.map((a, i) => (
           <div class="shw-panel" role="tabpanel" id={`shw-p${i}`} aria-labelledby={`shw-t${i}`} tabindex="0" hidden={i !== 0}>
-            <p class="body">{tr(a.text, lang)}</p>
+            <p class="body" set:html={keepShort(tr(a.text, lang), lang)} />
           </div>
         ))}
       </div>

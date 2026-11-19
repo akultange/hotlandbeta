@@ -11,14 +11,14 @@ export function footerLinks(lang: Lang) {
   return {
     sections: [
       { label: t.nav.program, href: p('program') },
-      { label: t.nav.vip, href: p('vip') },
+      { label: t.nav.vip, href: p('membership') },
       { label: t.nav.menu, href: p('menu') },
       { label: t.nav.gallery, href: p('gallery') },
       { label: t.nav.about, href: p('about') },
     ] as FLink[],
     more: [
       { label: f.careers, href: p('careers') },
-      { label: f.parties, href: `${p('vip')}#occasions` },
+      { label: f.parties, href: `${p('membership')}#occasions` },
       { label: f.rules, href: `${p('about')}#rules` },
     ] as FLink[],
     legal: [

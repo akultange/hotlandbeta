@@ -48,7 +48,7 @@ const doors = site.hours[(date.getDay() + 6) % 7].open; // site.hours starts on 
 const when = past
   ? date.toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).replace(/\s*г\.$/, '')
   : `${weekday.charAt(0).toUpperCase()}${weekday.slice(1)} · ${doors}`;
-const entry = price(e.entry);
+const entry = price(e.entry, lang);
 const lineId = `poster-${e.slug}-line`;
 // in Russian a short word ("и", "в") never ends a line: it goes down with the word after it
 const line = keepShort(shortLine(tr(e.text, lang), past ? 50 : 60).replace(/&/g, '&amp;').replace(/</g, '&lt;'), lang);

@@ -87,7 +87,7 @@
 /* the edge: a quiet light line just inside the rim, as on a printed card */
 .poster-frame::after {
   content: ''; position: absolute; inset: 0; z-index: 3; border-radius: inherit; pointer-events: none;
-  box-shadow: inset 0 0 0 1px rgba(242, 240, 236, .17), inset 0 1px 0 rgba(255, 255, 255, .07);
+  box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .17), inset 0 1px 0 rgba(255, 255, 255, .07);
   transition: box-shadow .4s ease;
 }
 
@@ -108,7 +108,7 @@
 .poster-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; margin-top: 18px; }
 .poster-when {
   display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 2px;
-  background: rgba(242, 240, 236, .08); box-shadow: inset 0 0 0 1px rgba(242, 240, 236, .1);
+  background: rgba(230, 231, 233, .08); box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .1);
   font: 500 14px/1 var(--sans); color: var(--fg); white-space: nowrap; font-variant-numeric: lining-nums;
 }
 .poster-price { font: 600 16px/1 var(--sans); color: var(--fg); white-space: nowrap; font-variant-numeric: lining-nums; }
@@ -135,11 +135,11 @@
 .poster-shot :is(img, video) { transition: scale 1.2s var(--ease-out), opacity .6s ease; }
 @media (hover: hover) {
   .poster-link:hover .poster-shot :is(img, video) { scale: 1.035; }
-  .poster-link:hover .poster-frame::after { box-shadow: inset 0 0 0 1px rgba(242, 240, 236, .3), inset 0 1px 0 rgba(255, 255, 255, .1); }
-  .poster-link:hover .poster-title { color: var(--red-text); }
+  .poster-link:hover .poster-frame::after { box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .3), inset 0 1px 0 rgba(255, 255, 255, .1); }
+  .poster-link:hover .poster-title { color: #fff; }
 }
 .poster-link:focus-visible { outline: none; }
-.poster-link:focus-visible .poster-frame { outline: 2px solid var(--red-text); outline-offset: 4px; }
+.poster-link:focus-visible .poster-frame { outline: 1.5px solid var(--light); outline-offset: 4px; }
 
 /* Entrance (only under html.motion, so never for reduced motion): the poster rises with the rest of the
    page (global.css), its picture settles from a slight zoom and the date comes up a beat later. */
@@ -154,7 +154,7 @@ html.motion .poster.is-in .poster-date { animation: poster-date-in 1s var(--ease
 
 /* the night whose page you are on: a crimson note in place of the price, and a crimson edge */
 .poster-here { font: 600 14px/1 var(--sans); color: var(--red-text); white-space: nowrap; }
-.poster.is-here .poster-frame::after { box-shadow: inset 0 0 0 1.5px rgba(214, 70, 92, .7), inset 0 1px 0 rgba(255, 255, 255, .07); }
+.poster.is-here .poster-frame::after { box-shadow: inset 0 0 0 1px rgba(255, 43, 61, .75), inset 0 1px 0 rgba(255, 255, 255, .07); }
 
 /* ---------- With a mouse: over a poster the pointer is a small metal disc reading "Бронь" (PosterCard.astro) ---------- */
 /* the real pointer hides only while the disc stands in for it (PosterCard.astro sets html.poster-disc) */

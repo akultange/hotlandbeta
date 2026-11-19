@@ -15,7 +15,7 @@
   /* what is chosen in the header (the page, the language) stands over a line of the red light */
   --nav-on: linear-gradient(90deg, transparent, var(--light) 18%, var(--light) 82%, transparent) 50% 100% / calc(100% - 20px) 1.5px no-repeat;
   --nav-glass: rgba(20, 21, 23, .62);
-  --nav-edge: inset 0 0 0 1px rgba(242, 240, 236, .1), inset 0 1px 0 rgba(255, 255, 255, .07);
+  --nav-edge: inset 0 0 0 1px rgba(230, 231, 233, .1), inset 0 1px 0 rgba(255, 255, 255, .07);
   --nav-lift: 0 14px 34px -18px rgba(0, 0, 0, .9);
   --nav-blur: blur(20px) saturate(1.5);
   /* the header's motion: quick to start, soft to land (the highlight, the pill between pages) */
@@ -53,7 +53,7 @@
 @media (hover: hover) { .hdr-name:hover { background-color: rgba(44, 45, 48, .66); } }
 .name { display: block; width: auto; height: 12px; overflow: visible; }
 .name-word { fill: url(#g-steel); }
-.name-seam { fill: var(--light); filter: drop-shadow(0 0 2px rgba(255, 48, 69, .95)) drop-shadow(0 0 7px rgba(196, 30, 54, .9)); }
+.name-seam { fill: var(--light); filter: drop-shadow(0 0 2px rgba(255, 43, 61, .95)) drop-shadow(0 0 7px rgba(196, 30, 54, .9)); }
 .hdr-name .name { height: 12px; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .7)); }
 
 /* the sections: a floating glass capsule; the current page is a light pill */
@@ -61,12 +61,12 @@
 .hdr-nav a {
   position: relative; z-index: 1;
   display: inline-flex; align-items: center; height: 38px; padding: 0 16px; border-radius: 2px;
-  font: 500 12px/1 var(--sans); letter-spacing: .13em; text-transform: uppercase; color: rgba(232, 231, 227, .72); white-space: nowrap;
+  font: 500 12px/1 var(--sans); letter-spacing: .13em; text-transform: uppercase; color: rgba(230, 231, 233, .72); white-space: nowrap;
   transition: color .18s ease;
 }
 .hdr-tx { display: block; }
 .hdr-nav a.on { color: #fff; }
-.hdr-pill { position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--nav-on); filter: drop-shadow(0 0 5px rgba(255, 48, 69, .7)); }
+.hdr-pill { position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--nav-on); filter: drop-shadow(0 0 5px rgba(255, 43, 61, .7)); }
 @media (hover: hover) {
   .hdr-nav a:not(.on):hover { color: #fff; }
 }
@@ -74,7 +74,7 @@
 /* a soft highlight that snaps from link to link (Header.astro sets --x and --w) */
 .hdr-hl {
   position: absolute; top: 4px; bottom: 4px; left: 0; width: var(--w, 0); translate: var(--x, 0) 0;
-  border-radius: 2px; background: rgba(232, 231, 227, .08); box-shadow: inset 0 0 0 1px rgba(232, 231, 227, .07);
+  border-radius: 2px; background: rgba(230, 231, 233, .08); box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .07);
   opacity: 0; pointer-events: none;
   transition: translate .32s var(--ease-nav), width .32s var(--ease-nav), opacity .16s ease;
 }
@@ -87,19 +87,19 @@
 .seg { display: flex; gap: 2px; padding: 4px; border-radius: 2px; }
 .seg a {
   display: grid; place-items: center; min-width: 40px; height: 38px; padding: 0 10px; border-radius: 2px;
-  font: 500 12px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase; color: rgba(232, 231, 227, .56);
+  font: 500 12px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase; color: rgba(230, 231, 233, .56);
   transition: color .25s ease, background-color .25s ease;
 }
 .seg a.on { color: #fff; background: var(--nav-on); }
 @media (hover: hover) {
-  .seg a:not(.on):hover { color: #fff; background: rgba(242, 240, 236, .07); }
+  .seg a:not(.on):hover { color: #fff; background: rgba(230, 231, 233, .07); }
 }
 
 .hdr-book { height: 46px; padding: 0 22px; }
 
 /* phones: a glass "Menu" pill with two lines; in the open sheet it becomes "Close" with a cross */
 .hdr-menu {
-  display: none; align-items: center; gap: 12px; height: 42px; padding: 0 14px 0 16px; border-radius: 2px;
+  display: none; align-items: center; gap: 12px; height: 44px; padding: 0 14px 0 16px; border-radius: 2px;
   font: 500 12px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--fg); white-space: nowrap;
   transition: scale .2s ease;
 }
@@ -130,7 +130,7 @@
   .hdr-in { display: flex; justify-content: space-between; column-gap: 12px; }
   .hdr-nav, .hdr-lang, .hdr-book { display: none; }
   .hdr-menu { display: inline-flex; }
-  .hdr-name { height: 42px; padding: 0 14px; }
+  .hdr-name { height: 44px; padding: 0 14px; }
   .hdr-name .name { height: 10.5px; }
   /* phones: a shorter, denser fade that ends just past the header, over the top padding of the menu page's pinned tabs */
   .hdr::before {
@@ -168,7 +168,8 @@
   color: var(--fg); transition: color .25s ease;
 }
 .mnav-links a span { min-width: 0; }
-.mnav-links a.on { color: var(--lit); text-shadow: var(--lit-glow); }
+/* the page you are on: its rule is the line of red light, as under the current page in the desktop header */
+.mnav-links a.on { color: #fff; border-bottom-color: transparent; background: linear-gradient(90deg, var(--light), var(--light) 70%, transparent) 0 100% / min(100%, 220px) 1.5px no-repeat; }
 .mnav-links a:active { color: #fff; }
 
 .mnav-info { display: grid; gap: 24px; justify-items: start; }
@@ -220,7 +221,7 @@ html.motion .mnav.closing { animation: nav-curtain-out .32s cubic-bezier(.5, 0, 
   border: 0; border-radius: 2px; background: none; box-shadow: none; filter: none;
   font: 400 11px/1 var(--sans); letter-spacing: .02em; text-transform: none; color: var(--fg-2); white-space: nowrap;
 }
-.mbar .mbar-act:active { background-color: rgba(242, 240, 236, .1); filter: none; color: var(--fg); }
+.mbar .mbar-act:active { background-color: rgba(230, 231, 233, .1); filter: none; color: var(--fg); }
 .mbar-act svg { width: 21px; height: 21px; color: var(--fg); fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
 .mbar a.mbar-book { height: 52px; padding: 0 15px; font-size: 12px; letter-spacing: .12em; transition: filter .2s, scale .2s ease; }
 /* smaller phones: the labels keep their room (the dock never cuts a word) */

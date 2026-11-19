@@ -101,7 +101,7 @@ Every page view and every tap on Book, Call, WhatsApp, Telegram and Directions, 
 
 ## Link previews
 
-`public/og/hotland-ru.jpg` and `hotland-en.jpg` (1200×630) are what WhatsApp, Telegram and Instagram show when a link is shared. `tools/og/og.swift` regenerates them. Every page also gets prefilled WhatsApp links: event and occasion pages add their name to the message.
+`public/og/hotland-ru.jpg` and `hotland-en.jpg` (1200×630) are what WhatsApp, Telegram and Instagram show when a link is shared. They are photographs of the site's own 18+ door with one line under the name; `tools/og/og.mjs` takes them again (its header says how). Every page also gets prefilled WhatsApp links: event and occasion pages add their name to the message.
 - Wrangler's automatic setup tries to add the `@astrojs/cloudflare` server adapter. Keep the site static: don't accept that setup.
 - Why Cloudflare: its hosting rules cover illegal or harmful content but have no rule against legal adult or suggestive content. GitHub Pages bans "sexually themed or suggestive" content, and Vercel's free plan is non-commercial only.
 - For launch: connect the club's own domain in Cloudflare (Workers & Pages, the `hotland` Worker, then Domains), remove `PUBLIC_NOINDEX=1` from the `build:preview` script (or build with `SITE_URL=https://… npm run build:prod`, which is indexable), and set `SITE_URL` to the real domain.
@@ -119,17 +119,17 @@ Every page view and every tap on Book, Call, WhatsApp, Telegram and Directions, 
 
 ## Pages
 
-`/[lang]/` home · `about` · `program` (+ `program/[event]`) · `artists` · `menu` · `vip` (+ `birthday`, `bachelor`, `corporate`, `hire`) · `booking` (+ `thanks`) · `contacts` · `careers` · `privacy` · `cookies` · `terms` · `goodbye` · `404`
+`/[lang]/` home · `about` · `program` (+ `program/[event]`) · `artists` · `menu` · `membership` (+ `birthday`, `bachelor`, `corporate`, `hire`; it lived at `/vip/` until 2026-11-20, `public/_redirects` forwards the old address) · `booking` (+ `thanks`) · `contacts` · `careers` · `privacy` · `cookies` · `terms` · `goodbye` · `404`
 
-## Design — v7 "Concrete and bordeaux"
+## Design — v8 "Concrete and burgundy"
 
 After the club's brand board (November 2026): a dark concrete wall, the name in steel, one line of red light in the seam. A premium gentlemen's club, not a cabaret; membership, not VIP.
 
 - **Surfaces:** black concrete (the page), graphite concrete with the formwork's joints and tie holes (`.soot`), and one light surface, a brushed-metal plate (`.velvet` / `.plate`). The stone is two small maps laid over a surface's own colour with `background-blend-mode: overlay` (`public/img/concrete/`, made by `tools/concrete.py`; tokens `--stone`, `--stone-size` in `global.css`).
-- **Colour:** bordeaux (`--bordeaux`) is the brand's colour: buttons, the top card, marks. Bright red is only ever light: the seam (`--light`), a word in a title lit by it (`--lit`), a thin line (`--red`). No gradients across letters; steel is a smooth fall of light (`--metal`, `#g-metal`, `#g-steel`).
+- **Colour:** deep burgundy (`--bordeaux` #65081f, with a lit and a deep step either side) is the brand's colour, and it is only ever a surface: buttons, the top card, fields of light on concrete. On black it is too dark to read as text, so nothing is written in it. Bright red (`--light` #ff2b3d) is only ever light: the seam, a thin line under the current page, a focus ring. A title's second half is concrete grey (`em` in a title), small marks are steel. No gradients across letters; steel is a smooth fall of light (`--metal`, `#g-metal`, `#g-steel`).
 - **Type:** one face, Geologica, served by the site (`tools/fonts/build.py`): `Geologica Sharp` for titles, names and numerals (its sharpness axis at 100: the joints of the letters cut to a point), `Geologica` for text. No italics. Wide-set capitals for the name and for controls.
 - **The name:** HOTLAND as outlines (`src/data/wordmark.ts`, written by `tools/fonts/wordmark.py`): heavy for the hero's window, fine and set wide for the wall, the header, the cards (`Name.astro`), with the blade of red light between the T and the L. The club's final logo replaces these when it arrives.
-- **The 18+ door** (`AgeGate.astro`, `styles/gate.css`): two slabs of concrete with the name across them and the light in the joint. "Yes" runs the light the height of the joint and slides the slabs apart onto the hero.
+- **The 18+ door** (`AgeGate.astro`, `styles/gate.css`): two slabs of concrete with the name across them and the light in the joint. It stands on the home header's own layout (`styles/first-screen.css`: the name, the question and the two buttons are where the header's name, motto and buttons will be), so opening it does not cut to another picture. "Yes": the slabs slide apart in one movement; on the home page the light comes to rest where the header's own line is (the gap's two edges on an upright phone, between the T and the L on a wide screen); then the header's plates and the phone's dock come in.
 - **Home hero:** the film behind frosted glass. Wide screens: HOTLAND cut clear out of the frost, the red line between the T and the L. A phone held upright: the line grown into a gap, the film sharp inside it, the name on one line across it.
 - **Controls:** square-cut plates (2px corners): bordeaux lacquer for the main action, the wall edged in steel for the second; the header's pieces are smoked glass.
 - **No icons:** the 3D icons (stiletto, cherries, lips, key…) are retired (`Icon3d.astro` explains); the blade of light stands in on the thank-you page and the 404.

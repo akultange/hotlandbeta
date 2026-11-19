@@ -99,7 +99,7 @@ export const galleryFilms: GalleryFilm[] = [
   loop('poster-1-velvet', '9/16', { ru: 'Velvet', en: 'Velvet' }, { ru: 'Velvet: артистка в бархатном корсете и длинных перчатках на фоне багрового занавеса', en: 'Velvet: an artist in a velvet corset and opera gloves before a crimson curtain' }),
   loop('poster-2-courchevel', '9/16', { ru: 'Courchevel', en: 'Courchevel' }, { ru: 'Courchevel: блондинка в белом меху и кристаллах, бокал шампанского, падает снег', en: 'Courchevel: a blonde in white fur and crystals, a glass of champagne, falling snow' }),
   loop('poster-3-ritual', '9/16', { ru: 'Ritual', en: 'Ritual' }, { ru: 'Ritual: девушка в кружевной маске среди чёрных свечей и багрового воска', en: 'Ritual: a woman in a lace mask among black candles and crimson wax' }),
-  loop('poster-4-new-year', '9/16', { ru: 'Новый год', en: 'New Year' }, { ru: 'Новый год: девушка в серебряных пайетках с бокалом, серебряное конфетти', en: 'New Year: a woman in silver sequins with a glass, silver confetti' }),
+  loop('poster-4-new-year', '9/16', { ru: 'Silver', en: 'Silver' }, { ru: 'Silver: девушка в серебряных пайетках с бокалом, серебряное конфетти', en: 'Silver: a woman in silver sequins with a glass, silver confetti' }),
   loop('artist-1-pole', '3/4', { ru: 'Пилон', en: 'The pole' }, { ru: 'Артистка в чёрном бархатном боди у серебряного пилона', en: 'An artist in a black velvet bodysuit at the silver pole' }),
   loop('artist-3-aerial', '3/4', { ru: 'Воздушное кольцо', en: 'The aerial hoop' }, { ru: 'Артистка в багровом на воздушном кольце высоко над сценой', en: 'An artist in crimson on an aerial hoop high above the stage' }),
   loop('artist-5-live-vocal', '3/4', { ru: 'Живой вокал', en: 'Live vocals' }, { ru: 'Живой вокал: винтажный серебряный микрофон в руках в атласных перчатках', en: 'Live vocals: a vintage silver microphone in satin-gloved hands' }),
@@ -117,12 +117,12 @@ export function galleryCount(lang: 'ru' | 'en') {
   const n10 = f % 10;
   const n100 = f % 100;
   const films = n10 === 1 && n100 !== 11 ? 'фильм' : n10 >= 2 && n10 <= 4 && (n100 < 12 || n100 > 14) ? 'фильма' : 'фильмов';
-  return { photos: `${p} фото`, and: ' и ', films: `${f} ${films}` };
+  return { photos: `${p}\u00a0фото`, and: ' и ', films: `${f}\u00a0${films}` };
 }
 
 export const galleryText = {
   title: { ru: 'Галерея', en: 'Gallery' } as L,
-  description: { ru: 'Галерея HOTLAND: шоу, артистки, бар и ночь до утра. Почти всё, что можно показать.', en: 'The HOTLAND gallery: the show, the artists, the bar and the night until morning. Almost everything we’re allowed to show.' } as L,
+  description: { ru: 'Галерея HOTLAND: шоу, артистки, бар и ночь до утра. Остальное только вживую.', en: 'The HOTLAND gallery: the show, the artists, the bar and the night until morning. The rest, in person only.' } as L,
   photos: { ru: 'Фото', en: 'Photos' } as L,
   films: { ru: 'Фильмы ночи', en: 'Films of the night' } as L,
   filmsLead: { ru: 'Короткие сцены из клуба. Нажмите на любую, чтобы смотреть на весь экран.', en: 'Short scenes from the club. Choose one to watch it full screen.' } as L,

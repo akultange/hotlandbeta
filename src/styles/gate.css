@@ -1,124 +1,169 @@
 /* =====================================================================
    The 18+ question: the club's door (AgeGate.astro).
-   Two slabs of concrete, the name across them in steel, red light in the joint. "Yes" opens them.
+   A wall of dark concrete in two slabs, the name across it in steel, a line of red light in the joint. "Yes" opens
+   it. Where the name, the question and the buttons stand is the first screen's shared skeleton
+   (first-screen.css: .gate-in is the door's copy of the home header's box). Here: the wall, the light, the small
+   links, and how the door arrives. How it opens is the component's script.
    ===================================================================== */
 .gate { display: none; }
-html.js:not(.age-ok) .gate { display: grid; }
+html.js:not(.age-ok) .gate { display: block; }
 .gate:focus { outline: none; } /* (it holds the focus while it shows; its buttons keep their ring) */
 .gate {
-  /* the name's height: as large as the half-screen beside the joint allows (LAND, the longer half, sets it) */
-  --gh: min(clamp(24px, 3.5vw, 50px), calc((50vw - 20px) * 735 / (var(--wl) + var(--gg))));
-  --gy: 31%; /* where the name stands on the wall */
-  position: fixed; inset: 0; z-index: 100; overflow: hidden;
-  grid-template-rows: minmax(0, 1fr); place-items: end center;
-  padding: var(--pad) var(--pad) max(clamp(28px, 7svh, 72px), env(safe-area-inset-bottom));
-  color: var(--fg);
+  position: fixed; inset: 0; z-index: 100; overflow: hidden; overflow: clip; isolation: isolate; color: var(--fg);
+  container-type: size; /* (a slab's face is as wide as the whole door: 100cqw) */
+  touch-action: pinch-zoom; /* a finger on the door does not scroll the page behind it */
 }
+/* the page behind the door holds still until the door has gone */
+html.js:not(.age-ok) body { overflow: hidden; }
+/* Where scrollbars take room (Windows), that room is kept beside the door too (global.css) and the door cannot
+   cover it: it shows the page's ground, one flat colour. While the door stands, the ground is the wall's tone at
+   its right edge (--gate-end; the wall settles into exactly that tone over its last few pixels), so the wall runs
+   to the edge of the window. */
+html { --gate-end: #080808; }
+html.js:not(.age-ok) { background-color: var(--gate-end); }
 
-/* ---------- the slabs ---------- */
-.gate-door { position: absolute; top: 0; bottom: 0; width: 50.05%; overflow: hidden; will-change: transform; }
-.gate-door-l { left: 0; }
-.gate-door-r { right: 0; }
-/* the wall, whole, on each slab: concrete lit from the top left, weathered from the top edge, falling into shadow */
+/* ---------- The wall ----------
+   Each slab is half the screen and carries the whole wall (a face as wide as the door, held under its half), so the
+   wall reads as one while the door is shut. The wall is almost black. A pool of light falls on it from the upper
+   left and the red of the joint lies on it; the concrete's grain is laid over both, so the stone shows where there
+   is light on it and sinks into the dark where there is none. */
+/* (--wash: how much of the joint's red lies on the wall, 0 to 1. A registered number, so the arrival can bring it
+   up with the light; where a browser cannot, the red is simply there.) */
+@property --wash { syntax: '<number>'; inherits: true; initial-value: 1; }
+.gate-slab { position: absolute; top: 0; bottom: 0; width: 50%; will-change: transform; }
+.gate-slab-l { left: 0; width: calc(50% + 1px); } /* (a hair under the right slab: no line of the page between them) */
+.gate-slab-r { right: 0; }
+.gate-clip { position: absolute; inset: 0; overflow: hidden; }
 .gate-face {
-  position: absolute; top: 0; bottom: 0; width: 100vw;
-  background-color: #303134;
+  position: absolute; top: 0; bottom: 0; width: 100cqw;
+  background-color: #08090a;
   background-image:
-    radial-gradient(95% 62% at 10% 0%, rgba(255, 255, 255, .15), transparent 64%),
-    radial-gradient(125% 88% at 50% 40%, transparent 34%, rgba(0, 0, 0, .66) 100%),
-    url('/img/concrete/streaks.webp'), var(--stone);
-  background-size: auto, auto, 620px 1240px, var(--stone-size);
-  background-blend-mode: normal, normal, overlay, overlay, overlay;
+    /* the wall's last pixels on the right settle into the tone the window's edge has (above) */
+    linear-gradient(270deg, var(--gate-end) 0, rgba(8, 8, 8, 0) 56px),
+    /* the corners fall away */
+    radial-gradient(130% 105% at 34% 30%, rgba(0, 0, 0, 0) 38%, rgba(0, 0, 0, .7) 100%),
+    /* the stone: its grain, then its clouds */
+    url('/img/concrete/concrete.webp'), url('/img/concrete/mottle.webp'),
+    /* the red of the joint on the wall beside it */
+    radial-gradient(ellipse min(20cqw, 120px) 40% at 50% var(--wy, 46%), rgba(255, 43, 61, calc(.26 * var(--wash))) 0%, rgba(190, 20, 44, calc(.1 * var(--wash))) 40%, rgba(120, 10, 30, 0) 100%),
+    /* the light from the upper left */
+    radial-gradient(ellipse 58% 56% at 2% 2%, rgba(236, 238, 244, .36) 0%, rgba(236, 238, 244, .17) 36%, rgba(236, 238, 244, .05) 66%, rgba(236, 238, 244, 0) 100%),
+    linear-gradient(115deg, #17181a 0%, #0c0d0e 52%, #070708 100%);
+  background-size: auto, auto, 430px auto, 1500px auto, auto, auto, auto;
+  background-blend-mode: normal, normal, overlay, overlay, normal, normal, normal;
 }
-.gate-door-l .gate-face { left: 0; }
-.gate-door-r .gate-face { right: 0; }
-/* the joint itself: the left slab's edge in shadow, the right one's catching a little light */
-.gate-door::after { content: ''; position: absolute; top: 0; bottom: 0; width: 1px; }
-.gate-door-l::after { right: 0; background: rgba(0, 0, 0, .7); }
-.gate-door-r::after { left: 0; background: linear-gradient(180deg, rgba(255, 255, 255, .1), rgba(255, 255, 255, .03)); }
+.gate-slab-l .gate-face { left: 0; }
+.gate-slab-r .gate-face { right: 0; }
+/* what a slab casts on the page once it has left the line (the script fades it in) */
+.gate-shade { position: absolute; top: 0; bottom: 0; width: 110px; opacity: 0; pointer-events: none; }
+.gate-slab-l .gate-shade { left: 100%; background: linear-gradient(90deg, rgba(0, 0, 0, .66), rgba(0, 0, 0, .2) 45%, rgba(0, 0, 0, 0)); }
+.gate-slab-r .gate-shade { right: 100%; background: linear-gradient(270deg, rgba(0, 0, 0, .66), rgba(0, 0, 0, .2) 45%, rgba(0, 0, 0, 0)); }
 
-/* the name: steel capitals standing off the wall (their shadow falls down and to the right, away from the light) */
-.gate-word {
-  position: absolute; top: var(--gy); height: var(--gh); width: auto; translate: 0 -50%;
-  fill: url(#g-steel); overflow: visible;
-  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, .22)) drop-shadow(1px 2px 1px rgba(0, 0, 0, .75)) drop-shadow(3px 7px 10px rgba(0, 0, 0, .55));
-}
-.gate-door-l .gate-word { right: calc(50% + var(--gh) * var(--gg) / 735); }
-.gate-door-r .gate-word { left: calc(50% + var(--gh) * var(--gg) / 735); }
+/* ---------- What stands on the wall: the skeleton's box ---------- */
+.gate-in { position: absolute; top: 0; left: 0; right: 0; z-index: 2; pointer-events: none; }
+.gate-in .hv-copy { z-index: 3; pointer-events: auto; }
 
-/* ---------- the light ---------- */
-/* behind the slabs: what the joint lets through, seen whole for a moment as they part */
-.gate-back {
-  position: absolute; inset: 0; opacity: 0;
-  background: radial-gradient(40% 80% at 50% 40%, rgba(255, 92, 110, .94), rgba(200, 30, 54, .72) 36%, rgba(100, 13, 30, .5) 66%, rgba(20, 5, 9, 0) 100%);
+/* the name: the T one letter-space before the line, the L on it */
+.gate-name { z-index: 3; will-change: transform; }
+.gate-name svg:first-child { right: calc(50% + var(--ng)); }
+.gate-name svg:last-child { left: calc(50% + 2.5px); }
+
+/* ---------- The light ----------
+   The line is the two slabs' lit edges, side by side: a thin core, white-hot where the name is (--ny), and its
+   glow. It rises from the top of the screen and dies away just above the question (on an upright phone it is as
+   tall as the header's gap will be). When the door opens each slab takes its edge with it. */
+.gate-edge {
+  --line-h: calc(var(--cy) + var(--mh) / 2 + var(--hv-gap));
+  position: absolute; top: 0; height: var(--line-h); left: calc(50% - 90px); width: 180px; pointer-events: none; will-change: transform, opacity;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 calc(var(--ny) - 34cqh), #000 calc(var(--ny) + 6cqh), transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 calc(var(--ny) - 34cqh), #000 calc(var(--ny) + 6cqh), transparent 100%);
 }
-.gate-light { position: absolute; inset: 0; pointer-events: none; }
-/* the red on the wall around the joint */
-.gate-halo {
-  position: absolute; left: 50%; top: var(--gy); width: min(78vw, 560px); height: min(64svh, 620px); translate: -50% -50%;
-  background: radial-gradient(closest-side, rgba(196, 30, 54, .34), rgba(150, 18, 40, .16) 46%, transparent 100%);
-  mix-blend-mode: screen;
+.gate-edge i {
+  position: absolute; top: 0; bottom: 0; width: 1.5px; transform-origin: 50% var(--ny);
+  background: linear-gradient(180deg, rgba(255, 43, 61, .75) 0, #ff4d5f calc(var(--ny) - 20cqh), #ffd9dd calc(var(--ny) - 4cqh), #fff var(--ny), #ffd9dd calc(var(--ny) + 4cqh), #ff4d5f calc(var(--ny) + 14cqh), rgba(255, 43, 61, .75) 100%);
+  box-shadow: 0 0 4px 1px rgba(255, 43, 61, .9), 0 0 14px 2px rgba(214, 26, 50, .44), 0 0 38px 7px rgba(150, 14, 38, .22);
 }
-/* the line of light: a blade, widest at the name and drawn to a point above and below it */
-.gate-seam {
-  position: absolute; left: 50%; top: var(--gy); width: 5px; height: min(46svh, calc(var(--gh) * 9)); translate: -50% -50%;
-  filter: drop-shadow(0 0 5px rgba(255, 48, 69, .95)) drop-shadow(0 0 18px rgba(214, 34, 58, .8)) drop-shadow(0 0 46px rgba(168, 24, 46, .7));
+.gate-edge-l i { right: 90px; }
+.gate-edge-r i { left: 90px; }
+/* the light answering: it swells along the line as "Yes" is pressed (the script), and a little under the pointer.
+   It is light on the wall, so each slab carries its half (two halves of one oval, each clipped at the joint, and
+   moved with its slab by the script): it never lies on the page behind. */
+.gate-flare {
+  position: absolute; top: 0; bottom: 0; width: 50%; overflow: hidden; opacity: 0; pointer-events: none;
+  mix-blend-mode: screen; transition: opacity .5s ease; will-change: transform, opacity;
 }
-.gate-seam::before {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(90deg, #ff3045 0%, #ffc9cf 42%, #fff 50%, #ffc9cf 58%, #ff3045 100%);
-  clip-path: polygon(50% 0, 78% 34%, 100% 50%, 78% 66%, 50% 100%, 22% 66%, 0 50%, 22% 34%);
+.gate-flare-l { left: 0; }
+.gate-flare-r { right: 0; }
+.gate-flare i {
+  position: absolute; top: var(--ny); width: min(118cqw, 720px); height: min(150cqh, 1100px);
+  background: radial-gradient(closest-side, rgba(255, 60, 78, .46) 0%, rgba(196, 24, 48, .22) 30%, rgba(120, 10, 30, .08) 62%, rgba(120, 10, 30, 0) 100%);
+}
+.gate-flare-l i { right: 0; translate: 50% -50%; }
+.gate-flare-r i { left: 0; translate: -50% -50%; }
+.gate:not(.out):has([data-gate-yes]:is(:hover, :focus-visible)) .gate-flare { opacity: .26; }
+.gate.out .gate-flare { transition: none; }
+
+/* ---------- The small links: the language, the privacy page ---------- */
+.gate-foot {
+  position: absolute; z-index: 3; left: 0; right: 0; bottom: max(26px, env(safe-area-inset-bottom));
+  display: flex; justify-content: center; align-items: center; gap: 6px;
+}
+.gate-foot a {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px;
+  font: 500 12px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: #9a9ca2; transition: color .3s;
+}
+.gate-foot a:hover, .gate-foot a[aria-current] { color: var(--fg); }
+/* a short rule between the two languages and the privacy page */
+.gate-foot a:nth-child(3) { margin-left: 12px; padding-left: 26px; background: linear-gradient(var(--rule-2), var(--rule-2)) 0 50% / 1px 12px no-repeat; }
+/* the door's second button stands on concrete, not on the page */
+.gate .btn-line { background: rgba(8, 9, 10, .4); }
+
+/* a phone: the links stand where the page's dock will be */
+@media (max-width: 899px) {
+  .gate-foot { bottom: env(safe-area-inset-bottom, 0px); height: 72px; }
+  .gate-edge i { box-shadow: 0 0 3px .5px rgba(255, 43, 61, .9), 0 0 11px 2px rgba(214, 26, 50, .42), 0 0 28px 5px rgba(150, 14, 38, .2); }
+}
+/* the narrowest phones: the three links a step tighter, so they clear the screen's edges */
+@media (max-width: 389px) {
+  .gate-foot { gap: 2px; }
+  .gate-foot a { padding: 0 8px; font-size: 11px; letter-spacing: .1em; }
+  .gate-foot a:nth-child(3) { margin-left: 6px; padding-left: 16px; }
+}
+/* an upright phone: the line is as tall as the header's gap, and the red on the wall sits at the name's height */
+@media (max-width: 899px) and (orientation: portrait) {
+  .gate-edge { --line-h: var(--mh); }
+  .gate-face { --wy: 38%; }
+}
+/* a short screen (a phone on its side): the links move to the top right corner, out of the buttons' way */
+@media (orientation: landscape) and (max-height: 500px) {
+  .gate-foot { top: 6px; bottom: auto; left: auto; right: calc(var(--pad) - 12px); height: auto; }
 }
 
-/* ---------- the question ---------- */
-.gate-box { position: relative; width: 100%; max-width: 520px; display: grid; justify-items: center; gap: 14px; text-align: center; }
-.gate-q { font: 450 clamp(26px, 3vw, 38px)/1.1 var(--display); letter-spacing: -.012em; color: var(--fg); }
-.gate-text { max-width: 30ch; font: 400 16px/1.55 var(--sans); color: #c3c2be; text-wrap: balance; }
-.gate-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 12px; }
-.gate-actions .btn-line { background: rgba(13, 14, 15, .34); }
-.gate-foot { display: flex; gap: 22px; margin-top: 10px; }
-.gate-foot a { padding: 8px 2px; font: 400 12px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: #a3a29e; transition: color .3s; }
-.gate-foot a:hover { color: var(--fg); }
+/* ---------- Arriving (motion only) ----------
+   The line is struck in the joint: it catches, falters once and holds, growing to its length. The letters come out
+   of it one by one, to either side. Then the question. (Entrances start at 1% opacity, not 0, no difference to the
+   eye: browsers count what is fully transparent as not painted yet, and the door is the first thing a visitor
+   sees.) After that the light breathes, slowly. */
+@keyframes gate-strike { 0% { opacity: .01; scale: 1 .16; } 7% { opacity: 1; } 12% { opacity: .3; } 19% { opacity: 1; } 100% { scale: 1 1; } }
+@keyframes gate-breathe { 50% { opacity: .72; } }
+@keyframes gate-letter { from { opacity: .01; translate: var(--from) 0; } }
+@keyframes gate-rise { from { opacity: .01; translate: 0 18px; } }
+@keyframes gate-fade { from { opacity: .01; } }
+@keyframes gate-wash { from { --wash: 0; } }
+html.motion .gate { animation: gate-wash 1.3s var(--ease-out) .14s backwards; }
+html.motion .gate-edge i { animation: gate-strike 1.5s var(--ease-out) .12s backwards, gate-breathe 5.5s ease-in-out 1.8s infinite; }
+html.motion .gate-name svg:first-child path { --from: 260px; }
+html.motion .gate-name svg:last-child path { --from: -260px; }
+html.motion .gate-name path { animation: gate-letter 1.1s var(--ease-out) calc(.3s + var(--i) * 75ms) backwards; }
+html.motion .gate-copy > * { animation: gate-rise .9s var(--ease-out) .5s backwards; }
+html.motion .gate-copy > :nth-child(2) { animation-delay: .57s; }
+html.motion .gate-copy > :nth-child(3) { animation-delay: .64s; }
+html.motion .gate-foot { animation: gate-fade 1s ease .85s backwards; }
+.gate.out { pointer-events: none; }
+.gate.out .gate-edge i { animation: none; }
 
-/* a phone on its side, or any short screen: the name higher and smaller, the question tighter */
-@media (max-height: 560px) {
-  .gate { --gy: 21%; --gh: min(clamp(20px, 6.4svh, 34px), calc((50vw - 20px) * 735 / (var(--wl) + var(--gg)))); padding-bottom: max(14px, env(safe-area-inset-bottom)); }
-  .gate-seam { height: min(36svh, calc(var(--gh) * 7)); }
-  .gate-box { gap: 8px; }
-  .gate-q { font-size: 24px; }
-  .gate-text { max-width: 56ch; font-size: 14.5px; }
-  .gate-actions { margin-top: 6px; }
-  .gate-actions .btn { height: 46px; }
-  .gate-foot { margin-top: 2px; }
-}
-
-/* ---------- motion ----------
-   Arriving: the light is struck in the joint and grows to its length; the name and the question come up after it.
-   (Entrances start at 1 % opacity, not 0, no difference to the eye: browsers count what is fully transparent as
-   not painted yet, and the question is the first thing a visitor sees.)
-   Yes (.out): the question goes; the light runs the whole height of the joint; the slabs slide apart, the red
-   behind them showing whole for a moment before the page takes its place. */
-@keyframes gate-strike { from { scale: 1 0; opacity: .01; } 55% { opacity: 1; } }
-@keyframes gate-glow { from { opacity: .01; scale: .5; } }
-@keyframes gate-rise { from { opacity: .01; translate: 0 22px; } }
-@keyframes gate-name { from { opacity: .01; } }
-@keyframes gate-run { 55% { scale: 1.7 4; opacity: 1; } to { scale: 3 6; opacity: 0; } }
-@keyframes gate-flood { 30% { opacity: 1; scale: 1.5; } to { opacity: 0; scale: 2.4; } }
-@keyframes gate-behind { from { opacity: 0; } 18% { opacity: 1; } 50% { opacity: .85; } to { opacity: 0; } }
-html.motion .gate-seam { animation: gate-strike 1.2s var(--ease-out) .25s backwards; }
-html.motion .gate-halo { animation: gate-glow 1.8s var(--ease-out) .35s backwards; }
-html.motion .gate-word { animation: gate-name 1.1s ease .15s backwards; }
-html.motion .gate-box > * { animation: gate-rise 1s var(--ease-out) backwards; }
-html.motion .gate-box > :nth-child(1) { animation-delay: .6s; }
-html.motion .gate-box > :nth-child(2) { animation-delay: .7s; }
-html.motion .gate-box > :nth-child(3) { animation-delay: .8s; }
-html.motion .gate-box > :nth-child(4) { animation-delay: .9s; }
-html.motion .gate.out { pointer-events: none; }
-html.motion .gate.out .gate-box { opacity: 0; translate: 0 10px; transition: opacity .3s ease, translate .3s ease; }
-html.motion .gate.out .gate-box > * { animation: none; }
-html.motion .gate.out .gate-seam { animation: gate-run 1.15s cubic-bezier(.6, 0, .3, 1) forwards; }
-html.motion .gate.out .gate-halo { animation: gate-flood 1.5s ease-out forwards; }
-html.motion .gate.out .gate-back { animation: gate-behind 1.5s ease-out .36s both; }
-html.motion .gate.out .gate-door { transition: translate 1.35s cubic-bezier(.76, 0, .18, 1) .42s; }
-html.motion .gate.out .gate-door-l { translate: -101% 0; }
-html.motion .gate.out .gate-door-r { translate: 101% 0; }
+/* ---------- While the door opens ----------
+   What the door hands over is kept back until the door has gone (.age-ok), so nothing is drawn twice: on an upright
+   phone the home header's own name, which the door's name stands in for. (The header's lines of light are faded in
+   under the door's by the script.) */
+html.gate-keep:not(.age-ok) .hv3-name { visibility: hidden; }

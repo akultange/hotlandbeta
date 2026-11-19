@@ -22,7 +22,7 @@ const backstage = g(2);
     imgAlt={tr(careers.shot.alt, lang)}
   >
     <!-- the main action is the form, as in the casting call on the other pages; Telegram is the second one -->
-    <a class="btn btn-crimson" href="#apply" data-apply>{ru ? 'Отправить анкету' : 'Apply'}</a>
+    <a class="btn btn-crimson" href="#apply" data-apply>{ru ? 'Заполнить анкету' : 'Apply'}</a>
     <a class="btn btn-line" href={site.telegramCasting} target="_blank" rel="noopener">{tr(careers.cta, lang)}</a>
   </PageTitle>
 
@@ -50,7 +50,7 @@ const backstage = g(2);
         <h2 class="t-l" set:html={ru ? 'Отправить <em>анкету</em>' : 'Apply <em>in private</em>'} />
         <p class="body">{ru ? 'Три коротких шага: роль, контакты и пара слов о\u00a0себе. Ответим в\u00a0течение двух дней.' : 'Three short steps: the role, how to reach you and a few words about yourself. We reply within two days.'}</p>
         <div class="btns">
-          <a class="btn btn-crimson" href="#apply" data-apply>{ru ? 'Заполнить анкету' : 'Fill in the application'}</a>
+          <a class="btn btn-crimson" href="#apply" data-apply>{ru ? 'Заполнить анкету' : 'Apply'}</a>
           <a class="btn btn-line" href={site.telegramCasting} target="_blank" rel="noopener">{tr(careers.cta, lang)}</a>
         </div>
       </div>

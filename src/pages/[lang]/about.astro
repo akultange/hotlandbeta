@@ -37,7 +37,7 @@ const wings = [night.acts[1], night.acts[2]];
 // A short name for each house rule (the rules themselves come from content.ts).
 const ruleNames = ru
   ? ['Телефон в чехле', 'Без съёмки', 'Свой менеджер', '18+ и дресс-код']
-  : ['Phone in a pouch', 'No cameras', 'Your own host', '18+ and dress code'];
+  : ['Phone in a pouch', 'No cameras', 'Your own manager', '18+ and dress code'];
 
 // The ways to reach the club, as big buttons. The club's number is never shown: "Request a call" and "Ask a
 // question" open the dialog where a visitor leaves theirs (Ask.astro).
@@ -81,8 +81,8 @@ import '../../styles/about.css';
   lang={lang}
   title={t.nav.about}
   description={ru
-    ? `HOTLAND: премиальный мужской клуб, где каждый танец поставлен как спектакль. Правила дома, адрес, часы и как с нами связаться. Каждую ночь ${hours}.`
-    : `HOTLAND, a premium gentlemen’s club where every dance is staged like a play. House rules, the address, the hours and how to reach us. Every night ${hours}.`}
+    ? `HOTLAND: премиальный мужской клуб в Москве. Правила дома, адрес, часы и как с нами связаться. Каждую ночь ${hours}.`
+    : `HOTLAND, a premium gentlemen’s club in Moscow. House rules, the address, the hours and how to reach us. Every night ${hours}.`}
   schema={schema}
 >
   <PageTitle
@@ -103,10 +103,10 @@ import '../../styles/about.css';
         </div>
       ))}
       <div class="ab-centre">
-        <h2 class="t-l ab-centre-h" id="club-h" set:html={ru ? 'Театр <em>после полуночи</em>' : 'Theatre <em>after midnight</em>'} />
+        <h2 class="t-l ab-centre-h" id="club-h" set:html={ru ? 'Частная <em>территория</em>' : 'Strictly <em>private</em>'} />
         <p class="lead">{keep(ru
-          ? 'Премиальный мужской клуб, где каждый танец поставлен как спектакль: свет, хореография и костюмы, в которых ткани ровно столько, сколько нужно номеру.'
-          : 'A premium gentlemen’s club where every dance is staged like a play: light, choreography and costumes with exactly as much fabric as the number needs.')}</p>
+          ? 'Премиальный мужской клуб в Москве. Два шоу за ночь, кухня и бар до утра, приватные комнаты и личный менеджер у каждого гостя.'
+          : 'A premium gentlemen’s club in Moscow. Two shows a night, kitchen and bar until morning, private rooms and a personal manager for every guest.')}</p>
         <p class="body">{keep(tr(manifesto.text, lang))}</p>
       </div>
     </div>

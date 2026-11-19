@@ -39,7 +39,7 @@ const shots = await Promise.all(occasions.map((o) => photo(media(o.img), '(max-w
           </button>
           <div class="pa-cap" id={`pty-${o.slug}-words`}>
             <p class="body">{keep(tr(o.text, lang))}</p>
-            <a class="lnk pa-more" href={p(`vip/${o.slug}`)}>{ui[lang].more}<span class="sr-only">: {tr(o.title, lang)}</span></a>
+            <a class="lnk pa-more" href={p(`membership/${o.slug}`)}>{ui[lang].more}<span class="sr-only">: {tr(o.title, lang)}</span></a>
           </div>
         </div>
       ))}

@@ -58,3 +58,16 @@ export function spaced(text: string, track: number, set = FINE) {
   const [adv, , right] = set[text[text.length - 1]];
   return { paths, width: Math.round(x - track - adv + right), before: set[text[0]][1], after: adv - right };
 }
+
+/** The name as the wall carries it, everywhere it is set small or fine (the 18+ door, the header, the phone's home
+ *  header, the cards): HOT and LAND in the fine capitals, set wide and evenly, and the line of red light standing
+ *  where the L begins, so the L grows out of the light (as on the club's brand board). In the outlines' units:
+ *  each half's letters (one outline per letter, the half's ink starting at x 0) and width, the space from the T's
+ *  ink to the line (`gap`), and the whole lockup's width. */
+export const NAME_TRACK = 420;
+export function nameHalves(track = NAME_TRACK) {
+  const hot = spaced('HOT', track);
+  const land = spaced('LAND', track);
+  const gap = hot.after + track + land.before;
+  return { hot, land, gap, width: hot.width + gap + land.width, box: (w: number) => `0 -725 ${w} 735` };
+}

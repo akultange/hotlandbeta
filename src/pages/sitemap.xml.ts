@@ -4,8 +4,8 @@ import { langs } from '../data/i18n';
 import { occasions } from '../data/content';
 
 const paths = [
-  '', 'about/', 'program/', 'vip/',
-  ...occasions.map((o) => `vip/${o.slug}/`), 'menu/', 'gallery/', 'booking/', 'careers/', 'privacy/', 'cookies/', 'terms/',
+  '', 'about/', 'program/', 'membership/',
+  ...occasions.map((o) => `membership/${o.slug}/`), 'menu/', 'gallery/', 'booking/', 'careers/', 'privacy/', 'cookies/', 'terms/',
 ];
 
 export const GET: APIRoute = ({ site }) => {

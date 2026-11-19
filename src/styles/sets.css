@@ -147,7 +147,7 @@ html.motion .ts.ts-dark .ts-item > :not(.ts-stage) { opacity: 0; translate: 0 24
   .ts.ts-follow .ts-item:not(.on) { --beam: .08; --pool: .15; --bright: .42; }
   .ts.ts-follow .ts-item.on { --beam: 1; --pool: 1; }
   .ts-dots { display: flex; gap: 6px; margin-top: 26px; }
-  .ts-dots i { width: 16px; height: 2px; border-radius: 2px; background: rgba(242, 240, 236, .22); transition: width .5s var(--ease-out), background-color .5s; }
+  .ts-dots i { width: 16px; height: 2px; border-radius: 2px; background: rgba(230, 231, 233, .22); transition: width .5s var(--ease-out), background-color .5s; }
   .ts-dots i.on { width: 34px; background: var(--red); }
 }
 

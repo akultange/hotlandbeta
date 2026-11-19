@@ -50,7 +50,7 @@
 
 /* the act whose film is playing takes the light (on a phone: the one that settled in view), and so does the
    one the keyboard is on */
-.troupe .pt-frame.looping ~ .pt-cap .pt-name, .troupe .pt:focus-visible .pt-name { color: var(--red-text); }
+.troupe .pt-frame.looping ~ .pt-cap .pt-name, .troupe .pt:focus-visible .pt-name { color: #fff; }
 /* the name always stays upright (the older card rule in global.css would slant it on hover) */
 .troupe .pt:hover .pt-name { font-style: normal; }
 @media (hover: hover) and (pointer: fine) {

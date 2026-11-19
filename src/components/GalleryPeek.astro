@@ -53,7 +53,7 @@ const prints = await Promise.all(picks.map((s) => photo(s.thumb ?? s.src, '(max-
     <div class="bighead bh-line gpk-head">
       <h2 class="t-l" id={titleId}>{tr(galleryTitle, lang)}</h2>
       <div class="bighead-side">
-        <p class="body">{ru ? `Ночи HOTLAND без фильтров: ${count}. Почти всё, что можно показать.` : `HOTLAND nights, unfiltered: ${count}. Almost everything we’re allowed to show.`}</p>
+        <p class="body">{ru ? `Клуб изнутри: ${count}. Остальное только вживую.` : `Inside the club: ${count}. The rest, in person only.`}</p>
         <a class="lnk" href={href} {...next}>{ru ? 'Вся галерея' : 'The whole gallery'}</a>
       </div>
     </div>

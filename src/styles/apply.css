@@ -34,12 +34,12 @@ html.apl-lock { overflow: hidden; }
 }
 .apl-x {
   display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; color: var(--fg-2);
-  background: rgba(242, 240, 236, .06); box-shadow: inset 0 0 0 1px rgba(242, 240, 236, .1); transition: background-color .2s ease, color .2s ease;
+  background: rgba(230, 231, 233, .06); box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .1); transition: background-color .2s ease, color .2s ease;
 }
-.apl-x:hover { color: var(--fg); background: rgba(242, 240, 236, .12); }
+.apl-x:hover { color: var(--fg); background: rgba(230, 231, 233, .12); }
 .apl-x svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
 /* the line: a third of it for each step, crimson */
-.apl-line { position: relative; display: block; height: 2px; margin-top: clamp(14px, 1.8vw, 22px); border-radius: 2px; background: rgba(242, 240, 236, .12); overflow: hidden; }
+.apl-line { position: relative; display: block; height: 2px; margin-top: clamp(14px, 1.8vw, 22px); border-radius: 2px; background: rgba(230, 231, 233, .12); overflow: hidden; }
 .apl-line i { position: absolute; inset: 0; border-radius: inherit; background: var(--red); transform-origin: 0 50%; transform: scaleX(var(--apl-p, .3333)); transition: transform .6s var(--ease-out); }
 .apl-ending .apl-count { visibility: hidden; }
 
@@ -62,7 +62,7 @@ html.apl-lock { overflow: hidden; }
 /* 2: the chosen role, the two fields, where to reply */
 .apl-chosen { margin: 0; font: 400 15px/1.4 var(--sans); color: var(--muted); }
 .apl-chosen b { font-weight: 600; color: var(--fg); }
-.apl-change { margin-left: 6px; padding: 0; font: inherit; color: var(--fg-2); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(242, 240, 236, .3); cursor: pointer; }
+.apl-change { margin-left: 6px; padding: 0; font: inherit; color: var(--fg-2); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(230, 231, 233, .3); cursor: pointer; }
 .apl-change:hover { color: var(--fg); }
 .apl-fields { margin-top: 8px; gap: 28px var(--gap); }
 .apl-fields .field input { font-size: 20px; }
@@ -73,15 +73,15 @@ html.apl-lock { overflow: hidden; }
 .apl-pill input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
 .apl-pill span {
   display: inline-flex; align-items: center; height: 48px; padding: 0 22px; border-radius: 2px;
-  font: 500 16px/1 var(--sans); color: var(--fg-2); background: rgba(242, 240, 236, .05); box-shadow: inset 0 0 0 1px rgba(242, 240, 236, .12);
+  font: 500 16px/1 var(--sans); color: var(--fg-2); background: rgba(230, 231, 233, .05); box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .12);
   transition: color .25s ease, background-color .25s ease;
 }
-.apl-pill:hover input:not(:checked) + span { color: var(--fg); background: rgba(242, 240, 236, .09); }
+.apl-pill:hover input:not(:checked) + span { color: var(--fg); background: rgba(230, 231, 233, .09); }
 /* the chosen one: the steel of every chosen state on the site */
 .apl-pill input:checked + span {
   color: var(--ink); background: var(--steel-pill), #d3d5d9; box-shadow: var(--steel-pill-edge);
 }
-.apl-pill input:focus-visible + span { outline: 2px solid var(--red-text); outline-offset: 3px; }
+.apl-pill input:focus-visible + span { outline: 1.5px solid var(--light); outline-offset: 3px; }
 
 /* 3: a few words, the pointer to Telegram, the consent */
 .apl-step .field textarea { min-height: 140px; font-size: 18px; }
@@ -97,7 +97,7 @@ html.apl-lock { overflow: hidden; }
 /* the buttons: back on the left, on (or send) on the right, the message between */
 .apl-foot { display: flex; align-items: center; gap: 16px; padding-top: 16px; border-top: 1px solid var(--rule); }
 .apl-foot .apl-next, .apl-foot .apl-send { margin-left: auto; }
-.apl-err { flex: 1; margin: 0; font: 400 14px/1.4 var(--sans); color: var(--red-text); text-align: right; }
+.apl-err { flex: 1; margin: 0; font: 400 14px/1.4 var(--sans); color: var(--error); text-align: right; }
 .apl-ending .apl-foot { display: none; }
 
 /* ---------- Desktop: the picture on the left ---------- */

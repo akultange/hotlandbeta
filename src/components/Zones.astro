@@ -37,7 +37,7 @@ const ambient = await Promise.all(zones.map((z) => photo(media(z.img), '100vw'))
     {zones.map((z, i) => <img class:list={['zn-amb-i', { on: i === 0 }]} data-i={i} src={media(z.img)} {...ambient[i]} alt="" loading="lazy" decoding="async" />)}
   </div>
   <div class="wrap">
-    <h2 class="t-l zn-h" id="zones-h">{ru ? 'Зоны клуба' : 'The club’s zones'}</h2>
+    <h2 class="t-l zn-h" id="zones-h">{ru ? 'Зоны клуба' : 'Inside the club'}</h2>
   </div>
   <div class="wrap zn-in">
     <div class="zn-grid">

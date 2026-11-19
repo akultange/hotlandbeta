@@ -20,13 +20,13 @@
   touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab; outline: none;
 }
 .mst-stage.drag { cursor: grabbing; }
-.mst-stage:focus-visible .mst-a.on { outline: 2px solid var(--red-text); outline-offset: 8px; border-radius: 3px; }
+.mst-stage:focus-visible .mst-a.on { outline: 1.5px solid var(--light); outline-offset: 8px; border-radius: 3px; }
 
 /* her name, huge, in outline, behind the line */
 .mst-big {
   position: absolute; left: 0; right: 0; top: 2%; z-index: 0; margin: 0; text-align: center; white-space: nowrap; pointer-events: none;
   font: 450 clamp(81px, 12.58vw, 222px)/.9 var(--display); letter-spacing: -.01em;
-  color: transparent; -webkit-text-stroke: 1.2px rgba(242, 240, 236, .15);
+  color: transparent; -webkit-text-stroke: 1.2px rgba(230, 231, 233, .15);
 }
 /* the pool of light on the floor under her, and the cone it falls from */
 .mst-floor {
@@ -93,15 +93,16 @@
   scrollbar-width: none; overscroll-behavior-x: contain;
 }
 .mst-names::-webkit-scrollbar { display: none; }
-.mst-n { position: relative; flex: none; padding: 4px 0; font: 500 clamp(16px, 1.31vw, 20px)/1.05 var(--display); letter-spacing: -.01em; color: rgba(242, 240, 236, .38); cursor: pointer; transition: color .3s ease; }
+.mst-n { position: relative; flex: none; padding: 4px 0; font: 500 clamp(16px, 1.31vw, 20px)/1.05 var(--display); letter-spacing: -.01em; color: rgba(230, 231, 233, .38); cursor: pointer; transition: color .3s ease; }
 .mst-n:hover { color: var(--fg-2); }
 .mst-n.on span {
   background-image: var(--metal-read); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
 }
-.mst-n:focus-visible { outline: 2px solid var(--red-text); outline-offset: 4px; border-radius: 4px; }
+.mst-n:focus-visible { outline: 1.5px solid var(--light); outline-offset: 4px; border-radius: 4px; }
 /* the line under the name in the light: crimson, filling while she stands there when the line moves on its own */
-.mst-n i { position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px; background: rgba(242, 240, 236, .14); overflow: hidden; opacity: 0; transition: opacity .3s ease; }
+.mst-n i { position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px; background: rgba(230, 231, 233, .14); overflow: hidden; opacity: 0; transition: opacity .3s ease; }
 .mst-n.on i { opacity: 1; }
+@media (pointer: coarse) { .mst-n::after { content: ''; position: absolute; inset: -10px -7px; } }
 .mst-n i::before { content: ''; position: absolute; inset: 0; border-radius: inherit; background: var(--red); transform-origin: 0 50%; }
 .mst.auto .mst-n.on i::before { animation: mst-fill var(--mst-hold, 6s) linear both paused; }
 .mst.auto.run .mst-n.on i::before { animation-play-state: running; }
@@ -112,6 +113,7 @@
   .mst { --mst-ch: clamp(320px, 88vw, 460px); }
   .mst-arrow { width: 46px; height: 46px; margin-top: -23px; }
   .mst-arrow svg { width: 18px; height: 18px; }
-  .mst-big { top: 6%; font-size: clamp(90px, 26vw, 150px); }
+  /* (her name in outline needs room either side of her: on a phone only its first and last letters would show) */
+  .mst-big { display: none; }
   .mst-names { justify-content: flex-start; width: 100%; padding-inline: 20px; }
 }

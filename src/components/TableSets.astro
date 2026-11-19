@@ -78,7 +78,7 @@ const beam = (wide: number, size: number) => `${((Math.atan((wide * size * 62) /
             </div>
             <div class="ts-title">
               <h3 class="ts-name">{name}</h3>
-              <p class="ts-price">{price(s.price)}</p>
+              <p class="ts-price">{price(s.price, lang)}</p>
             </div>
             <p class="ts-what">{tie(tr(s.what, lang))}</p>
             <ul class="lily-list ts-perks">{s.perks.map((x) => <li>{tie(tr(x, lang))}</li>)}</ul>

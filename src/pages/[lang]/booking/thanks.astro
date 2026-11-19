@@ -3,6 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import Icon3d from '../../../components/Icon3d.astro';
 import { type Lang, langPaths } from '../../../data/i18n';
 import { site } from '../../../data/site';
+import { keepShort } from '../../../data/format';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
@@ -15,7 +16,7 @@ const ru = lang === 'ru';
     <div class="wrap stack center">
       <Icon3d name="peach" size={240} class="moment-ic" eager />
       <h1 class="t-xl" set:html={ru ? 'Заявка <em>принята</em>' : 'Request <em>received</em>'} />
-      <p class="lead">{ru ? 'Шампанское пока не открываем: сначала перезвоним. Обычно в течение 15 минут. Если срочно, напишите нам.' : 'We’ll hold the champagne until we’ve called you back, usually within 15 minutes. If it’s urgent, message us.'}</p>
+      <p class="lead" set:html={keepShort(ru ? 'Менеджер перезвонит и подтвердит бронь, обычно в течение 15 минут. Если срочно, напишите нам.' : 'Your manager will call to confirm, usually within 15 minutes. If it’s urgent, message us.', lang)} />
       <div class="btns" style="justify-content: center">
         <a class="btn btn-crimson" href={`/${lang}/program/`}>{ru ? 'Смотреть афишу' : 'See the events'}</a>
         <a class="btn btn-line" href={site.whatsapp} target="_blank" rel="noopener">WhatsApp</a>

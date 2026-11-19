@@ -16,7 +16,7 @@
 .shw-tab {
   position: relative; display: flex; align-items: center; gap: clamp(14px, 1.4vw, 22px); width: 100%;
   padding: clamp(8px, 1vh, 12px) 0; border: 0; border-bottom: 1px solid var(--rule); background: none;
-  color: rgba(242, 240, 236, .42); text-align: left; cursor: pointer;
+  color: rgba(230, 231, 233, .42); text-align: left; cursor: pointer;
   transition: color .35s ease;
 }
 .shw-tab::before {
@@ -29,10 +29,10 @@
 .shw-tab[aria-selected="true"]::before { transform: scaleX(1); }
 .shw-tab[aria-selected="true"] .shw-ic { opacity: 1; filter: none; transform: scale(1.08) rotate(-4deg); }
 @media (hover: hover) {
-  .shw-tab:not([aria-selected="true"]):hover { color: rgba(242, 240, 236, .78); }
+  .shw-tab:not([aria-selected="true"]):hover { color: rgba(230, 231, 233, .78); }
   .shw-tab:not([aria-selected="true"]):hover .shw-ic { opacity: .85; filter: none; }
 }
-.shw-tab:focus-visible { outline: 2px solid var(--red-text); outline-offset: 4px; border-radius: 4px; }
+.shw-tab:focus-visible { outline: 1.5px solid var(--light); outline-offset: 4px; border-radius: 4px; }
 /* Taking turns (ShowTabs.astro adds .auto, and .run while the section is on screen): the chosen number's crimson
    line fills from the left in --shw-dur, and when it is full the next number comes up. It waits, half filled,
    while the section is off screen. Once the visitor presses a tab the classes go and the line simply marks the
@@ -44,7 +44,7 @@
 
 .shw-panels { grid-area: text; align-self: end; padding-top: clamp(16px, 2vh, 24px); }
 .shw-panel .body { margin: 0; font-size: 18px; max-width: 34em; color: var(--fg-2); text-wrap: pretty; }
-.shw-panel:focus-visible { outline: 2px solid var(--red-text); outline-offset: 6px; border-radius: 4px; }
+.shw-panel:focus-visible { outline: 1.5px solid var(--light); outline-offset: 6px; border-radius: 4px; }
 .shw-panel:not([hidden]) { animation: shw-in .5s var(--ease-out) both; }
 @keyframes shw-in { from { opacity: 0; translate: 0 8px; } }
 
@@ -82,14 +82,14 @@
   }
   .shw-list::-webkit-scrollbar { display: none; }
   .shw-tab {
-    flex: none; width: auto; gap: 8px; padding: 6px 16px 6px 8px; border: 1px solid var(--rule-2); border-radius: 2px;
-    background: rgba(242, 240, 236, .04); color: rgba(242, 240, 236, .62);
+    flex: none; width: auto; min-height: 44px; gap: 8px; padding: 6px 16px 6px 8px; border: 1px solid var(--rule-2); border-radius: 2px;
+    background: rgba(230, 231, 233, .04); color: rgba(230, 231, 233, .62);
   }
   .shw-tab::before { display: none; }
   /* while they take turns, the chosen pill fills a crimson line along its foot (clipped to the pill's curve) */
   .shw.auto .shw-tab { overflow: hidden; }
   .shw.auto .shw-tab[aria-selected="true"]::before { display: block; bottom: 0; height: 2px; }
-  .shw-tab[aria-selected="true"] { background: rgba(242, 240, 236, .1); border-color: rgba(242, 240, 236, .36); color: var(--fg); }
+  .shw-tab[aria-selected="true"] { background: rgba(230, 231, 233, .1); border-color: rgba(230, 231, 233, .36); color: var(--fg); }
   .shw-ic { width: 30px; }
   .shw-name { font: 600 15px/1.2 var(--sans); font-stretch: normal; letter-spacing: 0; white-space: nowrap; }
   .shw-photo { height: auto; width: 100%; aspect-ratio: 1 / 1; max-height: 42svh; }

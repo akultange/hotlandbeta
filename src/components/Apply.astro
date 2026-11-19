@@ -18,6 +18,7 @@ import { type Lang, ui, tr } from '../data/i18n';
 import { site } from '../data/site';
 import { careers } from '../data/content';
 import Icon3d from './Icon3d.astro';
+import { keepShort } from '../data/format';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -26,7 +27,7 @@ const f = ui[lang].form;
 const roleIcons = ['stiletto', 'keyhole', 'coupe', 'cherries', 'key'] as const;
 const L = ru
   ? {
-      title: 'Анкета', close: 'Закрыть', back: 'Назад', next: 'Дальше', send: 'Отправить анкету',
+      title: 'Анкета', close: 'Закрыть', back: 'Назад', next: 'Дальше', send: 'Отправить',
       h1: 'Кем вы будете в HOTLAND?', lead1: 'Выберите роль. Ответим в течение двух дней, всё между нами.',
       h2: 'Как с вами связаться?', as: 'Роль', change: 'изменить', via: 'Где удобнее ответить',
       h3: 'Пару слов о себе', about: 'О себе', aboutPh: 'Опыт, где вы работали или выступали, ссылка на портфолио',
@@ -37,7 +38,7 @@ const L = ru
       hello: 'Здравствуйте! Хочу работать в HOTLAND.',
     }
   : {
-      title: 'Application', close: 'Close', back: 'Back', next: 'Next', send: 'Send application',
+      title: 'Application', close: 'Close', back: 'Back', next: 'Next', send: 'Send',
       h1: 'Who will you be at HOTLAND?', lead1: 'Choose a role. We reply within two days, just between us.',
       h2: 'How do we reach you?', as: 'Role', change: 'change', via: 'Where should we reply',
       h3: 'A few words about you', about: 'About you', aboutPh: 'Experience, where you’ve worked or performed, a link to your portfolio',
@@ -67,7 +68,7 @@ const pic = await photo('/media/gal-06-dressing-room.webp', '42vw');
         <!-- 1: the role -->
         <fieldset class="apl-step" data-s="1" aria-labelledby="apl-h1">
           <h3 class="apl-h" id="apl-h1" tabindex="-1">{L.h1}</h3>
-          <p class="apl-lead">{L.lead1}</p>
+          <p class="apl-lead" set:html={keepShort(L.lead1, lang)} />
           <div class="choice choice-tiles apl-roles">
             {careers.roles.map((r, i) => (
               <label><input type="radio" name="role" value={tr(r, lang)} data-i={i} /><span><Icon3d name={roleIcons[i] ?? 'emblem'} size={120} class="choice-ic" />{tr(r, lang)}</span></label>

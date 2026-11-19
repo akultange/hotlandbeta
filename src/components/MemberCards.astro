@@ -37,7 +37,7 @@ const Title = hasHead ? 'h3' : 'h2';
           <p class="vtier-sub" set:html={keepShort(tr(p.sub, lang), lang)} />
           <ul class="lily-list">{p.items.map((x) => <li><span set:html={keepShort(tr(x, lang), lang)} /></li>)}</ul>
           <div class="vtier-foot">
-            <a class:list={['btn btn-sm', i === tiers.length - 1 ? 'btn-crimson' : 'btn-silver']} href={`/${lang}/booking/?type=vip`} aria-label={`${tr(vip.request, lang)} ${p.name}`}>{tr(vip.request, lang)}</a>
+            <a class:list={['btn btn-sm', i === tiers.length - 1 ? 'btn-crimson' : 'btn-silver']} href={`/${lang}/booking/?type=card`} aria-label={`${tr(vip.request, lang)}: ${p.name}`}>{tr(vip.request, lang)}</a>
             <span class="vtier-price">{ui[lang].priceOnRequest}</span>
           </div>
         </div>

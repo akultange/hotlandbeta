@@ -11,6 +11,7 @@ import Icon3d from '../../components/Icon3d.astro';
 import '../../styles/menu.css'; // after the layout, so it follows global.css
 import { type Lang, tr, langPaths } from '../../data/i18n';
 import { barMenu, bar, kitchen, entryShows, hookah, media, type Item } from '../../data/content';
+import { keepShort } from '../../data/format';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
@@ -20,10 +21,10 @@ const ru = lang === 'ru';
 const cost = (x: Item) => {
   if (x.price === null) return tr(barMenu.onRequest, lang);
   const from = x.from ? '<span class="pr-from">' + (ru ? 'от' : 'from') + '</span>' : '';
-  return from + x.price.toLocaleString('ru-RU') + '<span class="pr-cur">\u00a0₽</span>';
+  return from + x.price.toLocaleString(ru ? 'ru-RU' : 'en-GB') + '<span class="pr-cur">\u00a0₽</span>';
 };
 /** The few words under a name, and the house cocktails' mark. */
-const own = ru ? 'фирменный' : 'our own';
+const own = ru ? 'фирменный' : 'signature';
 const shot = barMenu.shots;
 const tabs = [
   { id: 'bar', label: tr(barMenu.tabs.bar, lang), shot: shot.bar, icon: 'coupe' },
@@ -200,7 +201,7 @@ const tabs = [
       </div>
       <div class="stack" style="grid-column: 7 / span 6">
         <h2 class="t-l" set:html={tr(hookah.title, lang)} />
-        <p class="body" style="text-wrap: pretty">{tr(hookah.lead, lang)}</p>
+        <p class="body" style="text-wrap: pretty" set:html={keepShort(tr(hookah.lead, lang), lang)} />
         <div style="width: 100%">
           <h3 class="mgroup-h">{tr(hookah.flavorsTitle, lang)}</h3>
           <ul class="lily-list two">{hookah.flavors.map((f) => <li>{tr(f, lang)}</li>)}</ul>

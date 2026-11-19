@@ -38,7 +38,7 @@ const schema = {
   })),
 };
 ---
-<Base lang={lang} description={ru ? 'HOTLAND, премиальный мужской клуб в Москве: шоу-балет, бурлеск, ужин и бар до утра. Только между нами. 18+' : 'HOTLAND, a premium gentlemen’s club in Moscow: show ballet, burlesque, dinner and the bar until morning. Just between us. 18+'} schema={schema}>
+<Base lang={lang} description={ru ? 'HOTLAND, премиальный мужской клуб в Москве: шоу-балет, бурлеск, ужин и бар до утра. Только между нами. 18+' : 'HOTLAND, a premium gentlemen’s club in Moscow: a dance show, burlesque, dinner and the bar until morning. Just between us. 18+'} schema={schema}>
 
   <HeroPreload slot="head" />
   <Hero lang={lang} />
@@ -59,7 +59,7 @@ const schema = {
           <div class="posters in-wrap" data-events data-lenis-prevent-horizontal>
             {events.map((e) => <PosterCard e={e} lang={lang} />)}
           </div>
-          <p class="body" data-events-empty hidden>{ru ? 'Новые особые вечера скоро. А шоу-балет каждую ночь в 23:30 и 01:30.' : 'New special nights are coming. The show ballet is on every night at 23:30 and 01:30.'}</p>
+          <p class="body" data-events-empty hidden>{ru ? 'Новые особые вечера скоро. А шоу-балет каждую ночь в 23:30 и 01:30.' : 'New special nights are coming. The dance show is on every night at 23:30 and 01:30.'}</p>
         </div>
       </div>
     </div>
@@ -89,8 +89,8 @@ const schema = {
         <div slot="head" class="bighead bh-line">
           <h2 class="t-l" set:html={tr(vip.title, lang)} />
           <div class="bighead-side">
-            <p class="body">{tr(vip.lead, lang)}</p>
-            <a class="lnk" href={p('vip')}>{t.nav.vip}</a>
+            <p class="body" set:html={keepShort(tr(vip.lead, lang), lang)} />
+            <a class="lnk" href={p('membership')}>{t.nav.vip}</a>
           </div>
         </div>
       </MemberCards>

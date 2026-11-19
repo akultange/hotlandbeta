@@ -27,7 +27,7 @@ const fit = Math.max(3.2, Math.max(...name.split(/\s+/).map((w) => w.length)) * 
     <!-- the page's name and its line under it, as on every page (PageTitle.astro) -->
     <h1 class="ptitle-h gx-title">
       <span class="t-xl ptitle-name" style={`--fit:${fit}`}>{name}</span>
-      <span class="ptitle-sub" set:html={ru ? 'Подглядывать <em>разрешено</em>' : 'Peeking <em>allowed</em>'} />
+      <span class="ptitle-sub" set:html={ru ? 'Клуб <em>изнутри</em>' : 'Inside <em>the club</em>'} />
     </h1>
     <p class="gx-count"><a href="#photos" set:html={bold(count.photos)} />{count.and}<a href="#films" set:html={bold(count.films)} /></p>
   </section>

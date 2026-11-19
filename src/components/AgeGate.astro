@@ -1,57 +1,65 @@
 ---
-// The 18+ question, as the club's door (David, 2026-11-19, after the brand's wall: dark concrete, the name in steel,
-// one line of red light in the seam). Two slabs of concrete meet in the middle of the screen; HOTLAND runs across
-// them in fine steel capitals, HOT on the left slab and LAND on the right, and the red light stands in the joint
-// between the T and the L. It is the first thing on screen and stays while the page loads; "Yes" lets the light run
-// the whole height of the joint, then the slabs slide apart onto the page's first screen.
-// Each slab carries the whole wall (a face as wide as the screen, shifted under its half), so the wall reads as one
-// while the door is shut. The name is drawn from outlines (data/wordmark.ts): no font to wait for on the first
-// screen. Styles: styles/gate.css.
+// The 18+ question, as the club's door (after the club's brand board: a dark concrete wall, the name in steel, one
+// line of red light). Two slabs of concrete meet in the middle of the screen; HOTLAND runs across them in fine
+// steel capitals, and the line of light stands in the joint, where the L begins. It is the first thing on every
+// page and stays while the page loads.
+//
+// The door stands on the home header's own skeleton (styles/first-screen.css): its name where the header's is, its
+// question where the motto will be, its two buttons where the header's two are. So "Yes" does not cut to another
+// picture. The question goes, the light answers, and the slabs slide apart from the line (one movement drives the
+// slabs, their lit edges and the name: the script below). What the light does next depends on what is behind:
+//   - the home header on an upright phone: the line opens into the header's gap of light. The two lights come to
+//     rest on the gap's two edges and the name stays between them and the screen's edges, HOT before the gap and
+//     LAND on its far edge: they are the header's own from then on;
+//   - the home header on a wider screen: one light comes to rest between the T and the L of the big word, where
+//     the header's own line is; the other leaves with its slab, and the name leaves with the slabs;
+//   - any other page (or the home page opened part-way down): light and name leave with the slabs.
+// The page's own pieces then come in behind it (the header's plates, the phone's dock: global.css, "The door
+// opens"; the home header's words: hero.css, Entrances). Styles: styles/gate.css.
 import { type Lang, ui, altPath } from '../data/i18n';
-import { spaced } from '../data/wordmark';
+import { line, nameHalves } from '../data/wordmark';
+import '../styles/first-screen.css';
 import '../styles/gate.css';
 const { lang } = Astro.props as { lang: Lang };
 const t = ui[lang];
 const path = Astro.url.pathname;
-// the name's spacing, in the outlines' units (the capitals stand about 705 high): wide, as on the wall
-const TRACK = 420;
-const hot = spaced('HOT', TRACK);
-const land = spaced('LAND', TRACK);
-// from the joint to each half of the word: half of what separates any two of its letters
-const half = Math.round((hot.after + TRACK + land.before) / 2);
-const box = (w: number) => `0 -725 ${w} 735`;
+const nm = nameHalves();
+// the big word's proportions (the header's HOTLAND): the skeleton places the name and the words around it
+const wr = 735 / line('HOTLAND').width;
 ---
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title" aria-describedby="gate-text" tabindex="-1" data-lenis-prevent
-  style={`--wl:${land.width};--gg:${half}`}>
-  <div class="gate-back" aria-hidden="true"></div>
-  <div class="gate-door gate-door-l" aria-hidden="true">
-    <div class="gate-face"><svg class="gate-word" viewBox={box(hot.width)} focusable="false"><path d={hot.paths.join('')} /></svg></div>
-  </div>
-  <div class="gate-door gate-door-r" aria-hidden="true">
-    <div class="gate-face"><svg class="gate-word" viewBox={box(land.width)} focusable="false"><path d={land.paths.join('')} /></svg></div>
-  </div>
-  <div class="gate-light" aria-hidden="true"><i class="gate-halo"></i><i class="gate-seam"></i></div>
-  <div class="gate-box">
-    <h2 id="gate-title" class="gate-q">{t.gate.title}</h2>
-    <p id="gate-text" class="gate-text">{t.gate.text}</p>
-    <div class="gate-actions">
-      <button class="btn btn-crimson" type="button" data-gate-yes>{t.gate.yes}</button>
-      <a class="btn btn-line" href={`/${lang}/goodbye/`}>{t.gate.no}</a>
+  style={`--wr:${wr.toFixed(5)};--wl:${nm.land.width};--ngu:${nm.gap}`}>
+  <div class="gate-slab gate-slab-l" aria-hidden="true"><div class="gate-clip"><div class="gate-face"></div></div><i class="gate-shade"></i></div>
+  <div class="gate-slab gate-slab-r" aria-hidden="true"><div class="gate-clip"><div class="gate-face"></div></div><i class="gate-shade"></i></div>
+  <div class="gate-in">
+    <div class="gate-flare gate-flare-l" aria-hidden="true"><i></i></div>
+    <div class="gate-flare gate-flare-r" aria-hidden="true"><i></i></div>
+    <div class="gate-edge gate-edge-l" aria-hidden="true"><i></i></div>
+    <div class="gate-edge gate-edge-r" aria-hidden="true"><i></i></div>
+    <div class="wall-name gate-name" aria-hidden="true">
+      <svg viewBox={nm.box(nm.hot.width)} focusable="false">{nm.hot.paths.map((d, i) => <path d={d} style={`--i:${nm.hot.paths.length - 1 - i}`} />)}</svg>
+      <svg viewBox={nm.box(nm.land.width)} focusable="false">{nm.land.paths.map((d, i) => <path d={d} style={`--i:${i}`} />)}</svg>
     </div>
-    <div class="gate-foot">
-      <a href={altPath(path, 'ru')}>RU</a>
-      <a href={altPath(path, 'en')}>EN</a>
-      <a href={`/${lang}/privacy/`}>{t.footer.privacy}</a>
+    <div class="hv-copy gate-copy">
+      <h2 id="gate-title" class="hero-tag">{t.gate.title}</h2>
+      <p id="gate-text" class="lead hv-lead">{t.gate.text}</p>
+      <div class="hv-act">
+        <button class="btn btn-crimson" type="button" data-gate-yes>{t.gate.yes}</button>
+        <a class="btn btn-line" href={`/${lang}/goodbye/`}>{t.gate.no}</a>
+      </div>
     </div>
+  </div>
+  <div class="gate-foot">
+    <a href={altPath(path, 'ru')} hreflang="ru" lang="ru" aria-current={lang === 'ru' ? 'true' : undefined}>Рус</a>
+    <a href={altPath(path, 'en')} hreflang="en" lang="en" aria-current={lang === 'en' ? 'true' : undefined}>Eng</a>
+    <a href={`/${lang}/privacy/`}>{t.footer.privacy}</a>
   </div>
 </div>
 <script>
+  import { gsap } from 'gsap';
+
   // While the question shows, the page behind it is out of reach (inert: the keyboard and screen readers stay in the
   // question; nothing changes on screen) and the question has the focus.
-  // Yes: remember the answer for this visit (Base.astro asks again on the next one), give the page back, open the
-  // door (.out: the question goes, the light runs the height of the joint, the slabs slide apart; gate.css), and
-  // tell the page it may begin (motion.ts waits for this; the first screen makes its own entrance as the door
-  // opens). Once the slabs are off the screen, .age-ok takes the door away.
   const root = document.documentElement;
   const gate = document.getElementById('gate');
   const behind = gate && !root.classList.contains('age-ok')
@@ -59,17 +67,108 @@ const box = (w: number) => `0 -725 ${w} 735`;
     : [];
   behind.forEach((el) => { el.inert = true; });
   if (behind.length && !gate!.contains(document.activeElement)) gate!.focus({ preventScroll: true });
-  document.querySelector('[data-gate-yes]')?.addEventListener('click', () => {
+
+  // Yes: remember the answer for this visit (Base.astro asks again on the next one), give the page back, and open
+  // the door. The page is told it may begin a moment after (motion.ts waits for this), and once the slabs are off the
+  // screen, .age-ok takes the door away.
+  gate?.querySelector('[data-gate-yes]')?.addEventListener('click', () => {
+    if (gate.classList.contains('out')) return;
     behind.forEach((el) => { el.inert = false; });
     try { sessionStorage.setItem('age_ok', String(Date.now())); } catch {}
     const begin = () => dispatchEvent(new Event('hotland:gate'));
-    if (gate && root.classList.contains('motion')) {
-      gate.classList.add('out');
-      setTimeout(begin, 250);
-      setTimeout(() => root.classList.add('age-ok'), 1900);
-    } else {
+    if (!root.classList.contains('motion')) {
       root.classList.add('age-ok');
       begin();
+      return;
+    }
+    gate.classList.add('out');
+    setTimeout(begin, 250);
+    try {
+      open(gate);
+    } catch (err) {
+      root.classList.add('age-ok');
+      console.error(err);
     }
   });
+
+  function open(gate: HTMLElement) {
+    const q = <T extends Element = HTMLElement>(sel: string) => gate.querySelector<T>(sel)!;
+    const slabL = q('.gate-slab-l'), slabR = q('.gate-slab-r');
+    const edgeL = q('.gate-edge-l'), edgeR = q('.gate-edge-r');
+    const shades = Array.from(gate.querySelectorAll<HTMLElement>('.gate-shade'));
+    const [flareL, flareR] = Array.from(gate.querySelectorAll<HTMLElement>('.gate-flare'));
+    const [nameL, nameR] = Array.from(gate.querySelectorAll<SVGSVGElement>('.gate-name svg'));
+    const W = gate.clientWidth;
+
+    // Where each light comes to rest (see the top of this file): the header's own line on that side of the door, if
+    // the header is what stands behind it. ownL / ownR are the header's lines, aL / aR how far each light travels
+    // to stand on its line (0: no line on that side, the light leaves with its slab).
+    const mid = (el: Element) => { const r = el.getBoundingClientRect(); return r.width ? r.left + r.width / 2 : NaN; };
+    const hero = scrollY < 2 ? document.querySelector<HTMLElement>('.hero .hv3') : null;
+    const gap = hero ? Array.from(hero.querySelectorAll<HTMLElement>('.hv3-gap i')) : [];
+    const seam = hero?.querySelector<HTMLElement>('.hv3-seam');
+    let ownL: HTMLElement | undefined, ownR: HTMLElement | undefined;
+    if (gap.length === 2 && mid(gap[0]) > 0) [ownL, ownR] = gap;
+    else if (seam && mid(seam) < W / 2) ownL = seam;
+    else if (seam && mid(seam) >= W / 2) ownR = seam;
+    const reach = (d: number) => (d > 1 && d < W / 2 ? d : 0);
+    const aL = ownL ? reach(mid(q('.gate-edge-l i')) - mid(ownL)) : 0;
+    const aR = ownR ? reach(mid(ownR) - mid(q('.gate-edge-r i'))) : 0;
+    // the header's gap on both sides: the name stays, either side of it
+    const keep = aL > 0 && aR > 0;
+    root.classList.add(keep ? 'gate-keep' : 'gate-plain');
+
+    // One movement: p is how far each slab has gone from the line.
+    const travel = W / 2 + 110;
+    const state = { p: 0 };
+    const c01 = (v: number) => Math.min(1, Math.max(0, v));
+    const x = (el: HTMLElement | SVGElement, px: number) => { el.style.transform = `translate3d(${px.toFixed(2)}px,0,0)`; };
+    // a light that stays leaves with its slab and then falls behind it, settling on its line by the time the slab
+    // has gone twice as far
+    const settle = (p: number, a: number) => { const u = Math.min(1, p / (2 * a)); return a * (1 - (1 - u) * (1 - u)); };
+    const hand = Math.max(70, travel * 0.24); // how far the slab goes on while the header's own line takes over
+    const ride = W * 0.14 + 50; // how far a light that leaves is carried before it has gone out
+    const light = (edge: HTMLElement, dir: number, a: number, own: HTMLElement | undefined, p: number) => {
+      if (!a || !own) {
+        x(edge, dir * p);
+        edge.style.opacity = (1 - c01((p - 16) / ride)).toFixed(3);
+        return dir * p;
+      }
+      // the header's line comes up under the door's, then the door's goes out: no dip between them
+      const k = (p - 2 * a) / hand;
+      own.style.opacity = c01(k * 2).toFixed(3);
+      edge.style.opacity = (1 - c01(k * 2 - 1)).toFixed(3);
+      x(edge, dir * settle(p, a));
+      return dir * settle(p, a);
+    };
+    const apply = () => {
+      const p = state.p;
+      x(slabL, -p); x(slabR, p);
+      x(flareL, -p); x(flareR, p);
+      const dl = light(edgeL, -1, aL, ownL, p), dr = light(edgeR, 1, aR, ownR, p);
+      const shade = Math.min(1, p / 60).toFixed(3);
+      shades.forEach((el) => { el.style.opacity = shade; });
+      // the name: with the lights where they stay; where they leave, with the slabs, sinking into the dark as it goes
+      x(nameL, keep ? dl : -p); x(nameR, keep ? dr : p);
+      if (!keep) nameL.style.opacity = nameR.style.opacity = (1 - c01((p - W * 0.12) / (W * 0.3))).toFixed(3);
+    };
+
+    let over = false;
+    const done = () => {
+      if (over) return;
+      over = true;
+      clearTimeout(guard);
+      tl.kill();
+      [ownL, ownR].forEach((el) => { if (el) el.style.opacity = ''; });
+      root.classList.add('age-ok');
+    };
+    const tl = gsap.timeline({ onComplete: done });
+    // (if the tab is put away mid-way and the frames stop, the door still goes)
+    const guard = setTimeout(done, 3200);
+    tl.to(q('.gate-copy'), { opacity: 0, y: 8, duration: 0.28, ease: 'power2.in' }, 0)
+      .to(q('.gate-foot'), { opacity: 0, duration: 0.24, ease: 'power1.in' }, 0)
+      .to([flareL, flareR], { opacity: 1, duration: 0.36, ease: 'power2.out' }, 0)
+      .to(state, { p: travel, duration: 1.3, ease: 'power2.inOut', onUpdate: apply }, 0.14)
+      .to([flareL, flareR], { opacity: 0, duration: 0.8, ease: 'power2.out' }, 0.42);
+  }
 </script>

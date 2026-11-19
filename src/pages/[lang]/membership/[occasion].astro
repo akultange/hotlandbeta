@@ -37,7 +37,7 @@ const requestSteps = [
 ---
 <Base lang={lang} title={title} description={tr(o.text, lang)} waContext={title} closing={false}>
   <PageTitle
-    crumbs={[{ href: `/${lang}/`, label: 'HOTLAND' }, { href: `/${lang}/vip/`, label: t.nav.vip }, { label: title }]}
+    crumbs={[{ href: `/${lang}/`, label: 'HOTLAND' }, { href: `/${lang}/membership/`, label: t.nav.vip }, { label: title }]}
     title={title}
     lead={tr(o.text, lang)}
     img={media(o.img)}
@@ -68,7 +68,7 @@ const requestSteps = [
           <h2 class="t-l" set:html={tr(vip.title, lang)} />
           <div class="bighead-side">
             <p class="body">{keep(tr(vip.lead, lang))}</p>
-            <a class="lnk" href={`/${lang}/vip/`}>{t.nav.vip}</a>
+            <a class="lnk" href={`/${lang}/membership/`}>{t.nav.vip}</a>
           </div>
         </div>
       </MemberCards>
@@ -100,7 +100,7 @@ const requestSteps = [
           <div class="rows">
             {requestSteps.map((s, i) => <div class="row num"><span class="n">0{i + 1}</span><span class="k">{keep(s)}</span><span></span></div>)}
           </div>
-          <div class="btns"><a class="btn btn-crimson" href={bookHref}>{ru ? 'Заполнить заявку' : 'Fill in the request'}</a></div>
+          <div class="btns"><a class="btn btn-crimson" href={bookHref}>{ru ? 'Оставить заявку' : 'Enquire'}</a></div>
         </div>
       </div>
     </div>

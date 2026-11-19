@@ -57,7 +57,7 @@ html:not(.motion) :is(.cc-bulb, .cc-spill) { opacity: 1; }
 }
 .cc-txt { display: grid; justify-items: start; gap: clamp(18px, 1.8vw, 26px); width: min(600px, 48%); }
 .cc-txt .t-l { margin: 0; }
-.cc-txt .body { max-width: 46ch; font-size: clamp(16px, 1.15vw, 18px); color: rgba(242, 240, 236, .82); }
+.cc-txt .body { max-width: 46ch; font-size: clamp(16px, 1.15vw, 18px); color: rgba(230, 231, 233, .82); }
 /* the roles, each a link with its 3D icon: three across (two below a laptop's width), the icon beside the name. Each
    column is as wide as its widest name and the gap between columns is the same, so the roles stand evenly spaced
    whatever their names' lengths (equal columns left «Официанты» a whole column away from short «Хостес»). The last
@@ -75,10 +75,10 @@ html:not(.motion) :is(.cc-bulb, .cc-spill) { opacity: 1; }
   font: 500 16px/1.25 var(--sans); color: var(--fg);
   transition: color .25s ease;
 }
-.cc-role span { text-decoration: underline 1px; text-decoration-color: rgba(242, 240, 236, .24); text-underline-offset: 5px; transition: text-decoration-color .25s ease; }
+.cc-role span { text-decoration: underline 1px; text-decoration-color: rgba(230, 231, 233, .24); text-underline-offset: 5px; transition: text-decoration-color .25s ease; }
 .cc-role-ic { flex: none; width: 44px; height: 44px; }
 .cc-role-ic img { display: block; width: 100%; height: 100%; object-fit: contain; filter: saturate(.85) brightness(.92); transition: scale .35s var(--ease-out), filter .35s ease; }
-.cc-role:hover, .cc-role:focus-visible { color: var(--red-text); }
+.cc-role:hover, .cc-role:focus-visible { color: #fff; }
 .cc-role:hover span, .cc-role:focus-visible span { text-decoration-color: currentColor; }
 .cc-role:hover .cc-role-ic img, .cc-role:focus-visible .cc-role-ic img { scale: 1.1; filter: none; }
 .cc-txt .btns { margin-top: 6px; }
