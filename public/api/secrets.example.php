@@ -1,14 +1,8 @@
 <?php
-// The forms' settings, for regular PHP hosting (Timeweb). Put a copy named secrets.php, filled in, in the folder
-// hotland-private NEXT TO public_html (not inside it):
-//
-//   <the account's folder>/
-//     hotland-private/secrets.php   ← here
-//     public_html/                  ← the site
-//
-// If the site can't reach that folder (Timeweb's «Изолировать сайт» keeps a site inside its own folder; GET
-// /api/health then says "store": "inside"), put it here instead, as public_html/api/secrets.php: the web server
-// refuses it, and run as a page it shows nothing.
+// The forms' settings, for regular PHP hosting (Timeweb). Put a copy named secrets.php, filled in, in the site's api
+// folder, next to index.php: public_html/api/secrets.php. The web server refuses it, and run as a page it shows
+// nothing. (A host that lets the site read past its own folder also takes it in hotland-private next to public_html;
+// an isolated site on Timeweb, «Изолировать сайт», can't read there.)
 //
 // Requests reach the managers' Telegram through the Cloudflare worker, which collects them once a minute (servers in
 // Russia can't reach Telegram, blocked in 2026). For that, RELAY_SECRET: a long random string, the same as the

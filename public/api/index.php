@@ -15,11 +15,12 @@
 // in the last 10 minutes and nothing waits longer than that), or the e-mail or Telegram took it. Otherwise the
 // visitor is asked to try again or write in a messenger, and the request still waits in the outbox.
 //
-// What the forms keep (the outbox, the counts' logs, the rate limits) goes next to public_html, in hotland-private,
-// out of the web's reach. A host may not let the site reach past its own folder (Timeweb's «Изолировать сайт»): then
-// it goes to api/private, inside the site, where the web server refuses the folder and every file is a PHP file that
-// shows nothing even if run. The settings (secrets.php, see api/secrets.example.php) are read from hotland-private,
-// or from api/ when the site can't reach that. GET /api/health says which is in use (no settings in it).
+// What the forms keep (the outbox, the counts' logs, the rate limits) goes to api/private, inside the site: the web
+// server refuses that folder, and every file in it is a PHP file that shows nothing even if run. (Not next to
+// public_html: an isolated site on Timeweb, «Изолировать сайт», can't read there, and what it writes there lands in
+// a copy of its own that nobody else sees.) Only if api/private can't be written, hotland-private next to
+// public_html. The settings (secrets.php, see api/secrets.example.php): api/secrets.php, or hotland-private where the
+// site can read it. GET /api/health says which is in use (no settings in it).
 // Written for PHP 7.4 and later.
 
 declare(strict_types=1);
@@ -46,14 +47,14 @@ set_exception_handler(function (): void { reply(['ok' => false, 'error' => 'serv
 /** The first line of every file the forms keep: run as a page, the file shows nothing. */
 const GUARD = "<?php exit; ?>\n";
 
-/** Where the forms keep things: hotland-private next to public_html where the site can write there, else api/private
- *  inside it (see the top). '' when neither can be written. */
+/** Where the forms keep things: api/private inside the site, else hotland-private next to it (see the top). '' when
+ *  neither can be written. */
 function store(): string
 {
     static $root = null;
     if ($root !== null) return $root;
     $root = '';
-    foreach ([dirname(__DIR__, 2) . '/hotland-private', __DIR__ . '/private'] as $dir) {
+    foreach ([__DIR__ . '/private', dirname(__DIR__, 2) . '/hotland-private'] as $dir) {
         if ((@is_dir($dir) || @mkdir($dir, 0700, true)) && @is_writable($dir)) { $root = $dir; break; }
     }
     if ($root === __DIR__ . '/private' && !is_file($root . '/.htaccess')) @file_put_contents($root . '/.htaccess', "Require all denied\n");
@@ -84,7 +85,7 @@ function settings(): array
         $s = [];
         // (a file the site can see but not open is passed over: an isolated site on Timeweb sees hotland-private but may
         // not read it, and a failed `require` would stop the whole request)
-        foreach ([dirname(__DIR__, 2) . '/hotland-private/secrets.php', __DIR__ . '/private/secrets.php', __DIR__ . '/secrets.php'] as $file) {
+        foreach ([__DIR__ . '/secrets.php', __DIR__ . '/private/secrets.php', dirname(__DIR__, 2) . '/hotland-private/secrets.php'] as $file) {
             if (!@is_file($file) || !@is_readable($file)) continue;
             $v = @include $file;
             if (is_array($v)) { $s = $v; break; }

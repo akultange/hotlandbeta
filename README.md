@@ -44,13 +44,13 @@ https://cp482107.tw1.ru/ru/ (not indexed by search engines either). Apache and P
   long browsers keep pages, the forms' addresses, security headers) and `public/api/index.php`, which takes the forms
   and the anonymous counts there (see the next section). Upload `.htaccess` as it is (binary mode), so nothing
   rewrites it. `public/.assetsignore` keeps these files off Cloudflare.
-- **Private folder:** the forms' outbox and counts live in `hotland-private/`, next to `public_html`, where the site
-  can reach it. With «Изолировать сайт» switched on, Timeweb keeps the site inside its own folder, so they go to
-  `public_html/api/private/` instead: the web server refuses that folder, and every file in it is a PHP file that
-  shows nothing even if run. The settings: `secrets.php` (a copy of `public/api/secrets.example.php`, filled in) in
-  `hotland-private/`, or in `public_html/api/` when the site is isolated. `https://<site>/api/health` says which is in
-  use (`"store": "outside"` or `"inside"`), whether the settings were found, and whether the Cloudflare worker is
-  collecting. No settings in it.
+- **Private folder:** the forms' outbox, counts and rate limits live in `public_html/api/private/`, which the PHP
+  makes itself: the web server refuses that folder, and every file in it is a PHP file that shows nothing even if
+  run. (Not next to `public_html`: with «Изолировать сайт» on, Timeweb doesn't let the site read there, and what it
+  writes there lands in a copy only the site itself sees.) The settings: `secrets.php` (a copy of
+  `public/api/secrets.example.php`, filled in) in `public_html/api/`. `https://<site>/api/health` says where things
+  are kept (`"store": "inside"`), whether the settings were found, and whether the Cloudflare worker is collecting.
+  No settings in it.
 - **What Timeweb decides:** its nginx serves the pictures, fonts, scripts and stylesheets itself, so the `.htaccess`
   cache rules reach only the pages and the PHP. Check after an upload (below); if `/_astro/` and `/fonts/` don't come
   back with a long lifetime, ask Timeweb's support to set one for the site. Every such file has its contents'
