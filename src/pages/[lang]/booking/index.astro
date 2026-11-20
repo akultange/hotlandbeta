@@ -78,7 +78,7 @@ import { keepShort } from '../../../data/format';
   /* The card beside the steps, square-cut like every plate. Its buttons stand in one column of one width: the two
      requests one under the other, the two messengers side by side under them, each half that width. (Left to wrap
      by themselves, the two requests stacked at two different widths.) */
-  .invite { justify-self: stretch; border-radius: 2px; } /* (as wide as its column, whatever its words: the English ones left it narrower) */
+  .invite { justify-self: stretch; border-radius: var(--r-5); } /* (as wide as its column, whatever its words: the English ones left it narrower) */
   .invite .t-s { text-wrap: balance; }
   .invite .btns { display: grid; gap: 10px; width: min(100%, 264px); }
   .invite .invite-msg { grid-template-columns: repeat(2, minmax(0, 1fr)); }

@@ -9,7 +9,7 @@
 html.ask-lock { overflow: hidden; }
 .ask {
   width: min(520px, calc(100vw - 24px)); max-width: none; max-height: none; padding: 0; margin: auto;
-  border: 0; border-radius: 2px; background: transparent; color: var(--fg); overflow: visible;
+  border: 0; border-radius: var(--r-5); background: transparent; color: var(--fg); overflow: visible;
 }
 .ask::backdrop { background: rgba(0, 0, 0, .7); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
 .ask-box {
@@ -36,14 +36,14 @@ html.ask-lock { overflow: hidden; }
 .ask-top { display: flex; flex-wrap: wrap-reverse; align-items: center; gap: 8px; }
 .ask-switch { display: flex; flex: 0 1 auto; gap: 8px; min-width: 0; }
 .ask-switch button {
-  flex: 1 1 auto; height: 48px; padding: 0 20px; border-radius: 2px; font: 500 16px/1 var(--sans); color: var(--fg-2); white-space: nowrap;
+  flex: 1 1 auto; height: 48px; padding: 0 20px; border-radius: var(--r-2); font: 500 16px/1 var(--sans); color: var(--fg-2); white-space: nowrap;
   background: var(--plate); box-shadow: var(--plate-edge); transition: background-color .25s ease, color .25s ease;
 }
 @media (hover: hover) { .ask-switch button[aria-pressed="false"]:hover { color: var(--fg); background: var(--plate-lit); } }
 /* the one you are in: the steel of every chosen state on the site */
 .ask-switch button[aria-pressed="true"] { color: var(--ink); background: var(--steel-pill), #d3d5d9; box-shadow: var(--steel-pill-edge); }
 .ask-x {
-  display: grid; place-items: center; flex: none; width: 48px; height: 48px; margin-left: auto; border-radius: 2px; color: var(--fg-2);
+  display: grid; place-items: center; flex: none; width: 48px; height: 48px; margin-left: auto; border-radius: var(--r-2); color: var(--fg-2);
   background: var(--plate); box-shadow: var(--plate-edge); transition: background-color .2s ease, color .2s ease;
 }
 .ask-x:hover { color: var(--fg); background: var(--plate-lit); }
@@ -86,7 +86,7 @@ html.ask-lock { overflow: hidden; }
 
 /* phones: a sheet from the bottom, under the thumb */
 @media (max-width: 599px) {
-  .ask { width: 100%; margin: auto 0 0; border-radius: 2px 2px 0 0; }
+  .ask { width: 100%; margin: auto 0 0; border-radius: var(--r-4) var(--r-4) 0 0; }
   .ask-box { max-height: calc(100vh - 12px); padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
   @supports (height: 100dvh) { .ask-box { max-height: calc(100dvh - 12px); } }
   .ask[open] .ask-box { animation-name: ask-up; animation-duration: .34s; }

@@ -49,7 +49,7 @@ html.apl-lock { overflow: hidden; background: #050405; }
   background-image: var(--metal-read); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
 }
 .apl-x {
-  display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: 2px; color: var(--fg-2);
+  display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: var(--r-2); color: var(--fg-2);
   background: var(--plate); box-shadow: var(--plate-edge); transition: background-color .2s ease, color .2s ease;
 }
 .apl-x:hover { color: var(--fg); background: var(--plate-lit); }
@@ -86,7 +86,7 @@ html.apl-lock { overflow: hidden; background: #050405; }
 .apl-roles label { position: relative; display: grid; -webkit-tap-highlight-color: transparent; }
 .apl-roles input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
 .apl-roles span {
-  display: flex; align-items: center; min-height: 76px; padding: 12px 20px; border-radius: 2px;
+  display: flex; align-items: center; min-height: 76px; padding: 12px 20px; border-radius: var(--r-3);
   font: 500 18px/1.15 var(--display); color: var(--fg); background: var(--plate); box-shadow: var(--plate-edge);
   transition: background-color .25s ease, color .25s ease, scale .2s ease;
 }
@@ -111,7 +111,7 @@ html.apl-lock { overflow: hidden; background: #050405; }
 .apl-pill { position: relative; -webkit-tap-highlight-color: transparent; }
 .apl-pill input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
 .apl-pill span {
-  display: flex; align-items: center; justify-content: center; height: 48px; padding: 0 22px; border-radius: 2px;
+  display: flex; align-items: center; justify-content: center; height: 48px; padding: 0 22px; border-radius: var(--r-2);
   font: 500 16px/1 var(--sans); color: var(--fg-2); white-space: nowrap; background: var(--plate); box-shadow: var(--plate-edge);
   transition: color .25s ease, background-color .25s ease;
 }
@@ -147,7 +147,7 @@ html.apl-lock { overflow: hidden; background: #050405; }
   font-size: 14px; line-height: 22px; cursor: pointer; -webkit-tap-highlight-color: transparent;
 }
 :is(.apl, .ask) .consent input {
-  appearance: none; -webkit-appearance: none; flex: none; width: 22px; height: 22px; margin: 0; border: 0; border-radius: 2px;
+  appearance: none; -webkit-appearance: none; flex: none; width: 22px; height: 22px; margin: 0; border: 0; border-radius: 7px;
   background: transparent; box-shadow: inset 0 0 0 1px var(--rule-2); cursor: pointer;
 }
 @media (hover: hover) { :is(.apl, .ask) .consent:hover input:not(:checked) { box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .38); } }

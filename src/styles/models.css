@@ -45,12 +45,12 @@
   padding: 14px var(--edge);
 }
 .mdl-card {
-  flex: none; position: relative; min-width: 0; border-radius: 3px;
+  flex: none; position: relative; min-width: 0; border-radius: var(--r-4);
   /* --mdl-per portraits across, the last one cut by the edge of the screen */
   width: calc((100cqw - var(--edge) - (var(--mdl-per) - .5) * var(--mdl-gap)) / var(--mdl-per));
   scroll-snap-align: start;
 }
-.mdl-card .photo { border-radius: 3px; }
+.mdl-card .photo { border-radius: var(--r-4); }
 /* until the photos arrive: an empty spot on a dark stage (a warm pool of light at the top, steel words), not a
    red slab, so the page doesn't run red into the crimson VIP panel that follows */
 .mdl-card .photo.ph {
@@ -139,7 +139,7 @@ html:not(.js) :is(.mdl-nav, .mdl-foot) { display: none; }
    It lifts and grows a little and leans toward the pointer, the photograph zooms and crimson light pools under it;
    the name turns to metal. The model in the light breathes: a slow zoom in and out. */
 .mdl-shot {
-  position: relative; border-radius: 3px;
+  position: relative; border-radius: var(--r-4);
   transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
   transition: transform .9s var(--ease-out), translate .7s var(--ease-out), scale .7s var(--ease-out);
 }
@@ -148,7 +148,7 @@ html:not(.js) :is(.mdl-nav, .mdl-foot) { display: none; }
 .mdl-card.is-hover .photo img { scale: 1.06; }
 .mdl-shot::after {
   content: ''; position: absolute; left: 14%; right: 14%; bottom: -8%; height: 24%; z-index: -1; pointer-events: none;
-  border-radius: 50%; background: radial-gradient(closest-side, rgba(101, 8, 31, .85), rgba(101, 8, 31, 0));
+  border-radius: 50%; corner-shape: round; background: radial-gradient(closest-side, rgba(101, 8, 31, .85), rgba(101, 8, 31, 0));
   filter: blur(20px); opacity: 0; transition: opacity .7s var(--ease-out);
 }
 .mdl-card.is-hover .mdl-shot::after { opacity: 1; }
@@ -167,7 +167,7 @@ html.motion .mdl.is-live .mdl-card.is-active .photo img { animation: mdl-breathe
 
 /* the open button: shown on the model in the light where there is no pointer (a phone), and to the keyboard */
 .mdl-open {
-  position: absolute; right: 12px; bottom: 12px; z-index: 4; width: 44px; height: 44px; padding: 0; border-radius: 50%;
+  position: absolute; right: 12px; bottom: 12px; z-index: 4; width: 44px; height: 44px; padding: 0; border-radius: 50%; corner-shape: round;
   display: grid; place-items: center; color: #fff; cursor: pointer;
   background: rgba(12, 12, 14, .5); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, .24);
   opacity: 0; scale: .7; transition: opacity .4s ease, scale .5s var(--ease-out);
@@ -196,7 +196,7 @@ html.mdv-lock { overflow: hidden; }
 }
 .mdv-stage { position: absolute; inset: 0; z-index: 1; touch-action: none; user-select: none; -webkit-user-select: none; }
 .mdv-media {
-  position: absolute; overflow: hidden; border-radius: 3px; background: #0b0b0c; will-change: transform;
+  position: absolute; overflow: hidden; border-radius: var(--r-4); background: #0b0b0c; will-change: transform;
   box-shadow: 0 50px 120px -50px rgba(101, 8, 31, .8), 0 30px 70px -30px rgba(0, 0, 0, .95);
 }
 .mdv-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -224,7 +224,7 @@ html.mdv-lock { overflow: hidden; }
   background-image: var(--metal-read); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
 }
 .mdv-btn {
-  position: absolute; display: grid; place-items: center; padding: 0; border-radius: 2px; color: #fff; cursor: pointer;
+  position: absolute; display: grid; place-items: center; padding: 0; border-radius: var(--r-2); color: #fff; cursor: pointer;
   background: rgba(24, 24, 28, .58); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border: 1px solid rgba(255, 255, 255, .16);
   transition: background-color .3s ease, scale .3s var(--ease-out);
 }

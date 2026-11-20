@@ -9,14 +9,13 @@
 // From 1024px: the cards are dealt out of one stack as the field arrives, then tilt under the pointer and
 // catch the light. Tablets and phones: a row to swipe, with a meter under it; only the card in front shows its
 // words, the next one is a clean edge of its plate. Nothing moves for reduced motion.
-// A page can set a heading over the field (it stands on the page's own left edge, as every section's heading):
+// A page can set a heading for the cards; it stands inside the field, over the cards, on their left edge:
 //   <MemberCards lang={lang}><div slot="head" class="bighead bh-line">…</div></MemberCards>
 import { type Lang, ui, tr } from '../data/i18n';
 import { keepShort } from '../data/format';
 import { tiers, vip } from '../data/content';
 import { nameHalves } from '../data/wordmark';
 import Name from './Name.astro';
-import Corners from './Corners.astro';
 import '../styles/vip.css';
 const { lang } = Astro.props as { lang: Lang };
 const finish = ['silver', 'black', 'bordeaux'];
@@ -28,9 +27,8 @@ const Title = hasHead ? 'h3' : 'h2';
 const { hot, gap, width } = nameHalves();
 const seam = ((hot.width + gap - 30) / width).toFixed(4);
 ---
-{hasHead && <slot name="head" />}
 <div class="vfield">
-  <Corners />
+  {hasHead && <slot name="head" />}
   <div class="vdeck" data-deal data-lenis-prevent-horizontal>
     {tiers.map((p, i) => (
       <article class:list={['vtier', `vtier-${finish[i % finish.length]}`]}>

@@ -28,7 +28,7 @@ section.bm, .ptitle + section.bm { padding-top: var(--head-gap); }
 .bm-note { grid-area: note; }
 
 /* the picture: one for each tab, the chosen one in front, playing its film; shown whole, with no fade at its edges */
-.bm-stack { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 3px; background: #0b0b0c; }
+.bm-stack { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-4); background: #0b0b0c; }
 .photo.bm-shot {
   position: absolute; inset: 0; aspect-ratio: auto; opacity: 0; scale: 1.03; pointer-events: none;
   -webkit-mask-image: none; mask-image: none;

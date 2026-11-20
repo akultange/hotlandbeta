@@ -89,7 +89,7 @@ html.motion [data-rise]:not(.is-in) { opacity: 0; }
 .ab-way {
   display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: 0; align-content: start; justify-items: start;
   width: 100%; padding: 18px 20px 20px; text-align: left;
-  border-radius: 2px; color: var(--fg);
+  border-radius: var(--r-3); color: var(--fg);
   background: rgba(230, 231, 233, .05);
   box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .08), inset 0 1px 0 rgba(255, 255, 255, .05);
   transition: background-color .3s ease, box-shadow .3s ease, scale .2s ease;
@@ -135,7 +135,7 @@ html.motion [data-rise]:not(.is-in) { opacity: 0; }
   -webkit-mask-image: linear-gradient(180deg, #000 76%, transparent 100%); mask-image: linear-gradient(180deg, #000 76%, transparent 100%);
 }
 .ab-arch:focus-visible { outline: none; }
-.ab-door:has(.ab-arch:focus-visible) { outline: 1.5px solid var(--light); outline-offset: 8px; border-radius: 3px; }
+.ab-door:has(.ab-arch:focus-visible) { outline: 1.5px solid var(--light); outline-offset: 8px; border-radius: var(--r-2); }
 .ab-door:has(.ab-arch:focus-visible) .ab-door-cap { color: var(--fg); text-decoration: underline; text-decoration-color: var(--red-text); text-underline-offset: 5px; }
 .ab-arch-layer { position: absolute; inset: 0; }
 .ab-arch-layer :is(img, video) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -162,7 +162,7 @@ html.motion [data-rise]:not(.is-in) { opacity: 0; }
 /* the hint sits just under the threshold, where the arch has already sunk into the black */
 .ab-door-cap { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 40px; margin-top: -26px; font: 500 15px/1.3 var(--sans); color: var(--fg-2); text-align: center; }
 /* a small crimson light, like the one that marks "your table" in the hall */
-.ab-door-dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 3px rgba(168, 24, 46, .25), 0 0 14px 3px rgba(168, 24, 46, .45); }
+.ab-door-dot { flex: none; width: 8px; height: 8px; border-radius: 50%; corner-shape: round; background: var(--red); box-shadow: 0 0 0 3px rgba(168, 24, 46, .25), 0 0 14px 3px rgba(168, 24, 46, .45); }
 .ab-cap-in { display: none; color: var(--red-text); }
 .ab-door.is-open .ab-cap-out { display: none; }
 .ab-door.is-open .ab-cap-in { display: inline; }

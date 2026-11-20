@@ -53,7 +53,7 @@
 .hdr-in > * { pointer-events: auto; }
 
 /* the name: steel capitals set wide, the red light in the joint (Name.astro) */
-.hdr-name { justify-self: start; flex: none; display: grid; place-items: center; height: 46px; padding: 0 18px; border-radius: 2px; transition: background-color .3s ease; }
+.hdr-name { justify-self: start; flex: none; display: grid; place-items: center; height: 46px; padding: 0 18px; border-radius: var(--r-2); transition: background-color .3s ease; }
 @media (hover: hover) { .hdr-name:hover { background-color: rgba(44, 45, 48, .66); } }
 .name { display: block; width: auto; height: 12px; overflow: visible; }
 .name-word { fill: url(#g-steel); }
@@ -61,10 +61,10 @@
 .hdr-name .name { height: 12px; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .7)); }
 
 /* the sections: a floating glass capsule; the current page is a light pill */
-.hdr-nav { position: relative; display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: 2px; }
+.hdr-nav { position: relative; display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: calc(var(--r-2) + 4px); }
 .hdr-nav a {
   position: relative; z-index: 1;
-  display: inline-flex; align-items: center; height: 38px; padding: 0 16px; border-radius: 2px;
+  display: inline-flex; align-items: center; height: 38px; padding: 0 16px; border-radius: var(--r-2);
   font: 500 12px/1 var(--sans); letter-spacing: .13em; text-transform: uppercase; color: rgba(230, 231, 233, .72); white-space: nowrap;
   transition: color .18s ease;
 }
@@ -78,7 +78,7 @@
 /* a soft highlight that snaps from link to link (Header.astro sets --x and --w) */
 .hdr-hl {
   position: absolute; top: 4px; bottom: 4px; left: 0; width: var(--w, 0); translate: var(--x, 0) 0;
-  border-radius: 2px; background: rgba(230, 231, 233, .08); box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .07);
+  border-radius: var(--r-2); background: rgba(230, 231, 233, .08); box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .07);
   opacity: 0; pointer-events: none;
   transition: translate .32s var(--ease-nav), width .32s var(--ease-nav), opacity .16s ease;
 }
@@ -88,9 +88,9 @@
 .hdr-r { justify-self: end; display: flex; align-items: center; gap: 10px; }
 
 /* language: a small segmented pill */
-.seg { display: flex; gap: 2px; padding: 4px; border-radius: 2px; }
+.seg { display: flex; gap: 2px; padding: 4px; border-radius: calc(var(--r-2) + 4px); }
 .seg a {
-  display: grid; place-items: center; min-width: 40px; height: 38px; padding: 0 10px; border-radius: 2px;
+  display: grid; place-items: center; min-width: 40px; height: 38px; padding: 0 10px; border-radius: var(--r-2);
   font: 500 12px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase; color: rgba(230, 231, 233, .56);
   transition: color .25s ease, background-color .25s ease;
 }
@@ -103,7 +103,7 @@
 
 /* phones: a glass "Menu" pill with two lines; in the open sheet it becomes "Close" with a cross */
 .hdr-menu {
-  display: none; align-items: center; gap: 12px; height: 44px; padding: 0 14px 0 16px; border-radius: 2px;
+  display: none; align-items: center; gap: 12px; height: 44px; padding: 0 14px 0 16px; border-radius: var(--r-2);
   font: 500 12px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--fg); white-space: nowrap;
   transition: scale .2s ease;
 }
@@ -196,7 +196,7 @@
 /* the ways to reach the club: four plates, two to a row (one to a row where two would not fit their words) */
 .mnav-msg { display: grid; grid-template-columns: repeat(auto-fit, minmax(168px, 1fr)); gap: 10px; width: 100%; max-width: 460px; }
 .mnav-msg :is(a, button) {
-  display: flex; align-items: center; gap: 10px; min-width: 0; height: 48px; padding: 0 14px; border-radius: 2px;
+  display: flex; align-items: center; gap: 10px; min-width: 0; height: 48px; padding: 0 14px; border-radius: var(--r-2);
   font: 500 15px/1 var(--sans); color: var(--fg); white-space: nowrap; transition: scale .2s ease, background-color .25s ease;
 }
 .mnav-msg :is(a, button):active { scale: .97; background-color: rgba(44, 44, 48, .7); }
@@ -220,7 +220,7 @@ html.motion .mnav.closing { animation: nav-curtain-out .32s cubic-bezier(.5, 0, 
   position: fixed; z-index: 45; left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom));
   max-width: 540px; margin-inline: auto; /* tablets: a dock, not a bar */
   display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) auto; align-items: center;
-  padding: 5px; border-radius: 3px;
+  padding: 5px; border-radius: calc(var(--r-2) + 5px);
   background-color: rgba(18, 19, 21, .74);
   -webkit-backdrop-filter: blur(22px) saturate(1.6); backdrop-filter: blur(22px) saturate(1.6);
   box-shadow: var(--nav-edge), 0 18px 44px -14px rgba(0, 0, 0, .95);
@@ -229,7 +229,7 @@ html.motion .mnav.closing { animation: nav-curtain-out .32s cubic-bezier(.5, 0, 
 /* (global.css paints the first link of the old bar crimson; here the first item is "Call", a button) */
 .mbar .mbar-act {
   display: grid; justify-items: center; align-content: center; gap: 6px; min-width: 0; height: 52px; padding: 0;
-  border: 0; border-radius: 2px; background: none; box-shadow: none; filter: none;
+  border: 0; border-radius: var(--r-2); background: none; box-shadow: none; filter: none;
   font: 400 12px/1 var(--sans); letter-spacing: .01em; text-transform: none; color: var(--fg-2); white-space: nowrap;
 }
 .mbar .mbar-act:active { background-color: rgba(230, 231, 233, .1); filter: none; color: var(--fg); }
@@ -265,7 +265,7 @@ html.motion .mnav.closing { animation: nav-curtain-out .32s cubic-bezier(.5, 0, 
    the capsule is a picture of itself, which can't blur what passes behind it: a darker fill stands in for the
    glass for that moment. */
 .hdr-nav { view-transition-name: hdr-nav; }
-::view-transition-group(hdr-nav) { animation: none; border-radius: 2px; background: rgba(18, 19, 21, .9); }
+::view-transition-group(hdr-nav) { animation: none; border-radius: calc(var(--r-2) + 4px); background: rgba(18, 19, 21, .9); }
 ::view-transition-old(hdr-nav), ::view-transition-new(hdr-nav) { animation: none; mix-blend-mode: normal; }
 .hdr-nav .hdr-pill { view-transition-name: hdr-pill; }
 ::view-transition-group(hdr-pill) { animation-duration: .4s; animation-timing-function: var(--ease-nav); }
