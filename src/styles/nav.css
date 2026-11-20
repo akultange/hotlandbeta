@@ -56,6 +56,7 @@
 .hdr-name { justify-self: start; flex: none; display: grid; place-items: center; height: 46px; padding: 0 18px; border-radius: var(--r-2); transition: background-color .3s ease; }
 @media (hover: hover) { .hdr-name:hover { background-color: rgba(44, 45, 48, .66); } }
 .name { display: block; width: auto; height: 12px; overflow: visible; }
+/* (the club's logo is thin capitals set very wide: 15 times as wide as it is tall) */
 .name-word { fill: url(#g-steel); }
 .name-seam { fill: var(--light); filter: drop-shadow(0 0 2px rgba(255, 43, 61, .95)) drop-shadow(0 0 7px rgba(196, 30, 54, .9)); }
 .hdr-name .name { height: 12px; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .7)); }
@@ -116,22 +117,28 @@
 .hdr-menu:active { scale: .96; }
 
 /* narrower desktops: the capsule tightens so everything stays on one line */
-@media (max-width: 1239px) { .hdr-nav a { padding: 0 13px; } }
-@media (max-width: 1099px) {
+/* (and the club's logo, 15 times as wide as it is tall, is set a step smaller in its plate: at 12px it is 184px wide,
+   and from 1100 down the three plates no longer fitted the bar) */
+@media (max-width: 1239px) { .hdr-nav a { padding: 0 13px; } .hdr-name .name { height: 10px; } }
+@media (min-width: 900px) and (max-width: 1151px) { .hdr-name { padding: 0 12px; } .hdr-name .name { height: 9px; } }
+/* (each step begins a little before the bar runs out: the Russian bar, the longer of the two, has at least 10px to
+   spare at every width from 900 up; measured by sweeping the window's width, 2026-11-20) */
+@media (max-width: 1129px) {
   .hdr-in { column-gap: 10px; }
   .hdr-nav a { padding: 0 11px; font-size: 11.5px; }
   .hdr-r { gap: 8px; }
   .seg a { min-width: 36px; padding: 0 8px; font-size: 11.5px; }
   .hdr-book { padding: 0 16px; font-size: 12px; }
 }
-@media (max-width: 999px) {
+@media (max-width: 1059px) {
   .hdr-in { column-gap: 6px; }
   .hdr-nav { gap: 0; }
   .hdr-nav a { padding: 0 8px; font-size: 11px; letter-spacing: .1em; }
 }
 /* the narrowest desktop (a tablet on its side): every plate a step tighter, so none touches its neighbour */
 @media (min-width: 900px) and (max-width: 959px) {
-  .hdr-name { padding: 0 12px; }
+  .hdr-name { padding: 0 10px; }
+  .hdr-name .name { height: 8.5px; }
   .hdr-nav a { padding: 0 6px; }
   .seg a { min-width: 32px; padding: 0 6px; }
   .hdr-book { padding: 0 12px; }
@@ -142,7 +149,7 @@
   .hdr-nav, .hdr-lang, .hdr-book { display: none; }
   .hdr-menu { display: inline-flex; }
   .hdr-name { height: 44px; padding: 0 14px; }
-  .hdr-name .name { height: 10.5px; }
+  .hdr-name .name { height: 9.5px; }
   /* phones: a shorter, denser fade that ends just past the header, over the top padding of the menu page's pinned tabs */
   .hdr::before {
     inset: 0 0 -10px;
@@ -234,10 +241,7 @@ html.motion .mnav.closing { animation: nav-curtain-out .32s cubic-bezier(.5, 0, 
 }
 .mbar .mbar-act:active { background-color: rgba(230, 231, 233, .1); filter: none; color: var(--fg); }
 .mbar-act svg { width: 21px; height: 21px; color: var(--fg); fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
-.mbar a.mbar-book { height: 52px; padding: 0 14px; font-size: 12px; letter-spacing: .12em; transition: filter .2s, scale .2s ease, background .35s ease, border-color .35s ease, box-shadow .35s ease; }
-/* while the home header's own "Book a table" is on screen just above it, the dock's is the quiet plate: one
-   burgundy button on a screen, not two (MobileBar.astro sets .calm) */
-.mbar.calm a.mbar-book { background: rgba(230, 231, 233, .05); border-color: rgba(230, 231, 233, .32); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06); }
+.mbar a.mbar-book { height: 52px; padding: 0 14px; font-size: 12px; letter-spacing: .12em; transition: filter .2s, scale .2s ease; }
 /* smaller phones: the labels keep their room (the dock never cuts a word) */
 @media (max-width: 389px) {
   .mbar a.mbar-book { padding: 0 11px; font-size: 11.5px; letter-spacing: .1em; }

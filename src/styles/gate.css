@@ -74,6 +74,10 @@ html.js:not(.age-ok) { background-color: var(--gate-end); }
   background-blend-mode: normal, normal, overlay, overlay, overlay, normal, normal, normal;
 }
 .gate-slab-l .gate-face { left: 0; }
+/* the club's flower on the wall: a tall, faint mark at the left edge, a third of it past the edge; lighter than the
+   stone by a breath, as if cast into it */
+.gate-flower { position: absolute; left: 0; top: 50%; height: min(118%, 1100px); width: auto; translate: -34% -50%; fill: rgba(255, 255, 255, .034); pointer-events: none; }
+@media (max-width: 899px) { .gate-flower { height: 96%; translate: -46% -50%; fill: rgba(255, 255, 255, .03); } }
 .gate-slab-r .gate-face { right: 0; }
 /* what a slab casts on the page once it has left the line (the script fades it in) */
 .gate-shade { position: absolute; top: 0; bottom: 0; width: 40px; opacity: 0; pointer-events: none; }
@@ -91,8 +95,8 @@ html.js:not(.age-ok) { background-color: var(--gate-end); }
    line, take a little of its red (a soft red copy under each). */
 .gate-name { z-index: 3; }
 .gate-half { position: absolute; top: 0; height: var(--nh); aspect-ratio: var(--hw) / 735; translate: 0 -50%; will-change: transform, opacity; }
-.gate-half-l { right: calc(50% + var(--ng)); }
-.gate-half-r { left: calc(50% + 2.5px); opacity: .88; }
+.gate-half-l { right: calc(50% + var(--ns) + var(--ng)); }
+.gate-half-r { left: calc(50% - var(--ns)); opacity: .88; }
 .gate-name .gate-half svg { left: 0; top: 0; width: 100%; height: 100%; translate: none; }
 /* (the red copy is pushed towards the line, so it shows on the letter's side that faces the light and not as a halo
    all round it) */

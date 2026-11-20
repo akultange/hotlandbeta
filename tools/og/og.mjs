@@ -23,7 +23,7 @@ for (const lang of ['ru', 'en']) {
   await page.evaluate(() => document.fonts.ready);
   await page.addStyleTag({ content: `
     .gate { right: auto !important; width: 1200px; }
-    .gate-in { --cy: 286px; --ny: 286px; --nh: 74px; }
+    .gate-in { --cy: 286px; --ny: 286px; --nh: 58px; } /* (the club's logo is 15 times as wide as it is tall: 58px is 888px of the 1200) */
     .gate-edge { --line-h: 384px !important; }
     .gate-face { --wy: 45%; }
     .gate-foot, .gate-copy > :not(#gate-text) { display: none !important; }

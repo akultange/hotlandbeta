@@ -17,7 +17,7 @@
 // The page's own pieces then come in behind it (the header's plates, the phone's dock: global.css, "The door
 // opens"; the home header's words: hero.css, Entrances). Styles: styles/gate.css.
 import { type Lang, ui, altPath } from '../data/i18n';
-import { line, nameHalves } from '../data/wordmark';
+import { line, nameHalves, FLOWER } from '../data/wordmark';
 import '../styles/first-screen.css';
 import '../styles/gate.css';
 const { lang } = Astro.props as { lang: Lang };
@@ -32,8 +32,12 @@ const shape = (h: { paths: string[]; width: number }) =>
   `url("data:image/svg+xml,${`<svg xmlns='http://www.w3.org/2000/svg' viewBox='${nm.box(h.width)}'><path d='${h.paths.join(' ')}'/></svg>`.replace(/</g, '%3C').replace(/>/g, '%3E').replace(/#/g, '%23')}")`;
 ---
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title" aria-describedby="gate-text" tabindex="-1" data-lenis-prevent
-  style={`--wr:${wr.toFixed(5)};--wl:${nm.land.width};--ngu:${nm.gap}`}>
-  <div class="gate-slab gate-slab-l" aria-hidden="true"><div class="gate-clip"><div class="gate-face"></div></div><i class="gate-shade"></i></div>
+  style={`--wr:${wr.toFixed(5)};--wl:${nm.land.width};--ngu:${nm.gap};--nsu:${nm.stem / 2}`}>
+  <div class="gate-slab gate-slab-l" aria-hidden="true"><div class="gate-clip"><div class="gate-face"></div>
+    {/* the club's flower, tall and faint on the wall at its left edge (the club's own sheet sets it so); it is on the
+        left slab, so it leaves with it */}
+    <svg class="gate-flower" viewBox={FLOWER.box} focusable="false"><path d={FLOWER.d} /></svg>
+  </div><i class="gate-shade"></i></div>
   <div class="gate-slab gate-slab-r" aria-hidden="true"><div class="gate-clip"><div class="gate-face"></div></div><i class="gate-shade"></i></div>
   <div class="gate-in">
     <div class="gate-flare gate-flare-l" aria-hidden="true"><i></i></div>

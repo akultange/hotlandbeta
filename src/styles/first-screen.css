@@ -57,6 +57,8 @@
    Where the two halves stand is the door's and the header's own business. */
 .wall-name {
   --ng: calc(var(--nh) * var(--ngu) / 735);
+  /* (half the L's stem: the line of light stands on the stem's middle, as the club's logo has it) */
+  --ns: calc(var(--nh) * var(--nsu, 57) / 735);
   position: absolute; z-index: 2; left: 0; right: 0; top: var(--ny); height: 0; pointer-events: none;
 }
 .wall-name svg {
@@ -110,6 +112,12 @@
     --ny: calc(var(--mh) / 2);
   }
   .hv3 .hv-copy, .gate-in .hv-copy { top: auto; bottom: var(--hv-pb); }
+  /* The home header has no buttons of its own here (below): the name, the film in the gap and one line of words.
+     So its gap runs further down than the door's, to just above that line: the clear window in the frost (--zh,
+     hero.css) and the two lights along its edges. The door keeps its two buttons, so the shared --mh and with it
+     the name's place stay as they are for both. */
+  .hero .hv3 { --free: 70px; --zh: calc(var(--mh) + var(--free)); }
+  .hero .hv3 .hv3-gap { height: calc(var(--mh) + var(--free)); }
 }
 
 /* ---------- A phone held sideways (or any screen as short) ---------- */
@@ -129,4 +137,24 @@
     --nh: clamp(20px, 7cqh, 34px);
     --ny: var(--cy);
   }
+}
+
+
+/* ---------- A phone's header has no buttons of its own (2026-11-20) ----------
+   On a phone a "Book" is always on the screen already: the dock under the thumb (under 900px wide), or the bar's own
+   button on a phone held sideways. With the header's "Book a table" there were two on one screen, and its second
+   button only led to the section that begins right under the header. So here the header is the name, the film and
+   one line of words. From 900px up (a screen that is not short) the header keeps its two buttons. */
+@media (max-width: 899px), (orientation: landscape) and (max-height: 500px) {
+  .hero .hv-act { display: none; }
+}
+/* Where the big word stands on one line (not the upright phone's gap), the header's words are now one line, not the
+   door's three: the word is placed with that height, so the free room is again split two to one above the word and
+   under the line. (The door's name then stands a little higher than the header's word; on these screens it sinks
+   as the door opens, nothing is handed over.) */
+@media (max-width: 899px) and (orientation: landscape) {
+  .hero .hv3 { --copy-h: 28px; }
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  .hero .hv3 { --copy-h: 21px; }
 }

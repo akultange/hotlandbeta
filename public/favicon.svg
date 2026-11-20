@@ -1,20 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <defs>
     <linearGradient id="l" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ff2b3d" stop-opacity="0"/>
-      <stop offset=".2" stop-color="#ff2b3d"/>
-      <stop offset=".5" stop-color="#ffe3e6"/>
-      <stop offset=".8" stop-color="#ff2b3d"/>
-      <stop offset="1" stop-color="#ff2b3d" stop-opacity="0"/>
+      <stop offset="0" stop-color="#ff2b3d"/>
+      <stop offset=".38" stop-color="#ff6a76"/>
+      <stop offset=".5" stop-color="#fff0f1"/>
+      <stop offset=".62" stop-color="#ff6a76"/>
+      <stop offset="1" stop-color="#ff2b3d"/>
     </linearGradient>
-    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#a8182e" stop-opacity="0"/>
-      <stop offset=".5" stop-color="#c41e36" stop-opacity=".55"/>
+    <radialGradient id="g" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#e0243a" stop-opacity=".7"/>
       <stop offset="1" stop-color="#a8182e" stop-opacity="0"/>
-    </linearGradient>
+    </radialGradient>
   </defs>
   <rect width="64" height="64" fill="#0d0e0f"/>
-  <rect x="24" y="2" width="16" height="60" fill="url(#g)" opacity=".5"/>
-  <rect x="28" y="2" width="8" height="60" fill="url(#g)"/>
-  <rect x="30" y="3" width="4" height="58" fill="url(#l)"/>
+  <ellipse cx="31" cy="32" rx="13" ry="30" fill="url(#g)"/>
+  <!-- the club's sign: 24.68 x 207.46 in its own units, set 58 tall -->
+  <g transform="translate(26.9 3) scale(.2796)"><path fill="url(#l)" d="M1.25,0c1.68,33.46,1.68,72.47,2.35,89.2.67,10.71,5.69,13.05,21.08,14.39-15.39,1.34-20.08,3.01-20.75,13.39-1,25.76-1,57.02-2.68,90.48C-.42,140.54-.42,66.92,1.25,0Z"/></g>
 </svg>

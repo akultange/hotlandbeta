@@ -223,8 +223,8 @@ html[data-hero]:not([data-hero="v3"]) .hv3 { display: none; }
   /* the name across the gap (.wall-name, first-screen.css): the T one letter-space before the gap's near edge, the
      L on its far edge */
   .hv3-name { display: block; }
-  .hv3-name svg:first-child { right: calc(50% + var(--mw) / 2 + var(--ng)); }
-  .hv3-name svg:last-child { left: calc(50% + var(--mw) / 2 + 2.5px); }
+  .hv3-name svg:first-child { right: calc(50% + var(--mw) / 2 + var(--ns) + var(--ng)); }
+  .hv3-name svg:last-child { left: calc(50% + var(--mw) / 2 - var(--ns)); }
 }
 
 /* ---------- Entrances (motion only; they start once the 18+ question is answered) ---------- */

@@ -24,8 +24,8 @@ const pad2 = (n: number) => String(n).padStart(2, '0');
 /** The tiers' names: under the section's own heading when it has one, else straight under the page's title. */
 const Title = hasHead ? 'h3' : 'h2';
 // where the L begins, as a share of the name's width: the card's line of light stands there (Name.astro's blade does)
-const { hot, gap, width } = nameHalves();
-const seam = ((hot.width + gap - 30) / width).toFixed(4);
+const { hot, gap, stem, width } = nameHalves();
+const seam = ((hot.width + gap + stem / 2) / width).toFixed(4);
 ---
 <div class="vfield">
   {hasHead && <slot name="head" />}
