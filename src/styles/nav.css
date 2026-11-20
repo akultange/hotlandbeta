@@ -9,9 +9,11 @@
 :root {
   /* the space the phone dock takes at the bottom of the screen (0 on desktop), for anything sized to the screen */
   --dock: 0px;
-  /* what is chosen among tabs and choices (a menu tab, a booking choice): a plate of light steel with dark words */
+  /* what is chosen among tabs and choices (a menu tab, a booking choice): a capsule of light steel with dark words,
+     one clean fall of light like the burgundy button: no line along its upper or lower edge (it had both; on a
+     capsule the lower one read as a grey rim) */
   --steel-pill: linear-gradient(180deg, rgba(255, 255, 255, .55) 0%, rgba(255, 255, 255, 0) 62%);
-  --steel-pill-edge: inset 0 1px 0 rgba(255, 255, 255, .85), inset 0 -1px 0 rgba(0, 0, 0, .2), 0 8px 20px -10px rgba(0, 0, 0, .85);
+  --steel-pill-edge: 0 8px 20px -10px rgba(0, 0, 0, .85);
   /* what is chosen in the header (the page, the language) and among tabs stands over a line of the red light: a short
      one, centred under the word, a little above the capsule's lower edge (on the edge itself a capsule's round ends
      cut the line: under a word as short as РУС nothing of it was left but an arc) */

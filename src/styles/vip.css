@@ -112,6 +112,10 @@ html.motion .vfield:not(.vf-ready) :is(.vcard, .vtier-body) { opacity: 0; animat
 .vtier .lily-list { gap: 6px; margin-top: 12px; line-height: 1.5; color: rgba(230, 231, 233, .88); text-wrap: balance; }
 .vtier-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px clamp(12px, 1.3vw, 20px); margin-top: auto; padding-top: clamp(16px, 1.4vw, 20px); }
 .vtier-foot .btn { flex: none; }
+/* On the burgundy field the main button cannot be burgundy too: without a line round it (global.css) it sank into
+   the field. Here it is the capsule of light steel, the steel of every chosen state on the site. */
+.vfield .btn-crimson { background: var(--steel-pill) border-box, #d3d5d9 border-box; color: var(--ink); box-shadow: 0 10px 22px -12px rgba(0, 0, 0, .9); }
+.vfield .btn-crimson:hover { filter: brightness(1.07); }
 .vtier-price { font: 400 14px/1.45 var(--sans); color: rgba(230, 231, 233, .64); }
 
 /* ---------- Tablets and phones: a row to swipe, the next card showing at the edge, a meter under it ---------- */

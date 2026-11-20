@@ -267,8 +267,8 @@ h1, h2, .t-xxl, .t-xl, .t-l { overflow-wrap: break-word; }
 }
 
 /* ---------- Buttons & links ----------
-   A button is a plate set into the wall: square-cut, its words in wide capitals. Bordeaux lacquer for the main
-   action; for the second one the wall itself, edged in steel. Both take the same light along the top edge. */
+   A button is a capsule, its words in wide capitals. Bordeaux lacquer for the main action; for the second one the
+   wall itself, edged in steel. */
 .btn {
   position: relative; overflow: hidden; isolation: isolate;
   display: inline-flex; align-items: center; justify-content: center; gap: 12px;
@@ -277,11 +277,15 @@ h1, h2, .t-xxl, .t-xl, .t-l { overflow-wrap: break-word; }
   transition: filter .2s, background-color .3s, color .3s, border-color .3s, box-shadow .3s, scale .2s ease;
 }
 .btn:active { scale: .98; }
+/* The burgundy button is one clean fall of colour, lighter at the top, with no line round it (2026-11-20). It had a
+   see-through light border and two inset lines: the fill, sized to the padding box, wrapped round under the border,
+   so the lower edge showed the fill's light top through it, a bright pink rim under a dark line. The fill now runs
+   to the button's very edge (border-box) and the border is clear. */
 .btn-crimson, .hdr-book, .mbar a:first-child {
-  background: linear-gradient(180deg, var(--bordeaux-lit) 0%, var(--bordeaux) 48%, var(--bordeaux-deep) 100%);
-  color: #f3eff0; border-color: rgba(230, 231, 233, .2);
+  background: linear-gradient(180deg, var(--bordeaux-lit) 0%, var(--bordeaux) 48%, var(--bordeaux-deep) 100%) border-box;
+  color: #f3eff0; border-color: transparent;
   /* (its shadow is black: a burgundy one read as a red smear on the dark wall under it) */
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), inset 0 -1px 0 rgba(0, 0, 0, .4), 0 12px 26px -14px #000;
+  box-shadow: 0 12px 26px -14px #000;
 }
 .btn-line, .btn-silver {
   background: rgba(230, 231, 233, .03);
@@ -671,7 +675,9 @@ a.row:hover .k { color: #fff; }
 .choice-tiles .choice-ic { width: 60px; height: 60px; transition: scale .35s var(--ease-out), filter .35s; filter: saturate(.85) brightness(.9); }
 .choice-tiles .choice-ic img { width: 100%; height: 100%; object-fit: contain; }
 .choice-tiles input:checked + span {
-  background: var(--steel-pill), #d3d5d9;
+  /* (border-box: the fall of light runs to the tile's very edge; sized to the padding box it wrapped round under
+     the clear border and drew a light line along the tile's lower edge) */
+  background: var(--steel-pill), #d3d5d9; background-origin: border-box;
   border-color: transparent; color: var(--ink); box-shadow: var(--steel-pill-edge);
 }
 .choice-tiles input:checked + span .choice-ic { scale: 1.12; filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, .5)); }
