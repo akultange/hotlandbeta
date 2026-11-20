@@ -1,9 +1,10 @@
 ---
 // The page after "No" on the 18+ door: the door from outside, closed. The wall's dark concrete (the door's own
-// recipe, styles/gate.css, with its light turned down), the name on it in fine steel capitals with the line of red
-// light (Name.astro), one title, one line, and a quiet way back to the question. No club content, no menu.
+// recipe, styles/gate.css, with its light turned down), the club's logo on it (Logo.astro) with its sign burning
+// low, one title, one line, and a quiet way back to the question: the sign comes up to full while the pointer or
+// the keyboard is on that way back. No club content, no menu.
 import Base from '../../layouts/Base.astro';
-import Name from '../../components/Name.astro';
+import Logo from '../../components/Logo.astro';
 import { type Lang, ui, langPaths } from '../../data/i18n';
 import { keepShort } from '../../data/format';
 
@@ -14,7 +15,7 @@ const ru = lang === 'ru';
 <Base lang={lang} title={ru ? 'Доступ ограничен' : 'Access restricted'} bare noindex>
   <section class="bye">
     <div class="bye-in">
-      <Name label class="bye-name" />
+      <Logo label class="bye-name" />
       <h1 class="bye-h">{ru ? 'Только 18+' : '18+ only'}</h1>
       <p class="bye-line" set:html={keepShort(ui[lang].gate.bye, lang)} />
       <a class="bye-back" href={`/${lang}/`}><span>{ru ? 'Вернуться' : 'Back'}</span></a>
@@ -42,10 +43,17 @@ const ru = lang === 'ru';
     background-blend-mode: normal, normal, overlay, overlay, normal, normal;
   }
   .bye-in { display: grid; justify-items: center; }
-  /* the name as the wall carries it: fine steel capitals, the light in the joint; its shadow falls down and right */
-  .bye .bye-name { height: clamp(18px, 1.75vw, 26px); filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, .8)); }
-  /* (the light's points reach above and below the capitals: the title starts clear of the lower one) */
-  .bye-h { margin-top: clamp(48px, 5vw, 72px); font: 450 clamp(32px, 3.4vw, 52px)/1.05 var(--display); letter-spacing: -.012em; font-variant-numeric: lining-nums; }
+  /* the club's logo, whole: the name, and the sign through its L, which reaches 4.3 capitals above the letters and
+     5.2 below (--cap: a capital's height). The logo's own box is only the letters', so the room for the sign is
+     given here: above, so the block is centred with the sign in it; below, so the title starts clear of the
+     sign's lower point. The letters' shadow falls down and right, as on the wall. */
+  .bye { --cap: clamp(18px, 1.75vw, 26px); }
+  .bye .bye-name { height: var(--cap); margin-top: calc(4.3 * var(--cap)); --logo-ink: url(#g-steel); }
+  .bye .bye-name .logo-letters { filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, .8)); }
+  /* the door is shut: the sign burns low. It comes up while the way back is under the pointer or has the focus */
+  .bye .bye-name .logo-sign, .bye .bye-name .logo-heat { opacity: .6; transition: opacity .7s ease; }
+  .bye-in:has(.bye-back:hover, .bye-back:focus-visible) .bye-name :is(.logo-sign, .logo-heat) { opacity: 1; }
+  .bye-h { margin-top: calc(5.2 * var(--cap) + clamp(14px, 1.6vw, 24px)); font: 450 clamp(32px, 3.4vw, 52px)/1.05 var(--display); letter-spacing: -.012em; font-variant-numeric: lining-nums; }
   .bye-line { max-width: 34ch; margin-top: clamp(10px, 1vw, 14px); font: 400 clamp(16px, 1.3vw, 19px)/1.6 var(--sans); color: #cfd0d3; text-wrap: balance; }
   /* the way back to the question: small wide capitals over a hairline, a finger's height to tap; under the pointer
      the hairline turns to the red light, as the site's links do */

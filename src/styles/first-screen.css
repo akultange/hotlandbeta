@@ -38,8 +38,11 @@
   --copy-h: clamp(160px, 12.5vw, 190px);
   --cx: 50cqw;
   --cy: calc(var(--hdr) + max(0px, 100cqh - var(--hdr) - var(--mh) - var(--hv-gap) - var(--copy-h)) * 2 / 3 + var(--mh) / 2);
-  /* the name in fine capitals (the door's; on an upright phone the header's too): its height and where its middle is */
-  --nh: min(clamp(34px, 4.3cqw, 64px), calc((50cqw - var(--inl)) * 735 / var(--wl)));
+  /* the name in fine capitals (the door's; on an upright phone the header's too): its height and where its middle
+     is. (--nh0 is the skeleton's own figure; the door then sets its --nh and --ny from it so that the whole logo,
+     sign and all, stands clear above its question: gate.css, Where the logo stands.) */
+  --nh0: min(clamp(34px, 4.3cqw, 64px), calc((50cqw - var(--inl)) * 735 / var(--wl)));
+  --nh: var(--nh0);
   --ny: var(--cy);
 }
 .hv3 .hv-copy, .gate-in .hv-copy {
@@ -57,8 +60,9 @@
    Where the two halves stand is the door's and the header's own business. */
 .wall-name {
   --ng: calc(var(--nh) * var(--ngu) / 735);
-  /* (half the L's stem: the line of light stands on the stem's middle, as the club's logo has it) */
-  --ns: calc(var(--nh) * var(--nsu, 57) / 735);
+  /* (where the light stands from the L's left edge: in the club's logo the sign's needle runs along the stem's
+     outer edge, a hair to its left, so --nsu is a small negative number: nameHalves().axis) */
+  --ns: calc(var(--nh) * var(--nsu, -6) / 735);
   position: absolute; z-index: 2; left: 0; right: 0; top: var(--ny); height: 0; pointer-events: none;
 }
 .wall-name svg {
@@ -108,7 +112,8 @@
     /* the name: as tall as LAND (--wl wide, in the outlines' units) can be between the gap and the screen's edge */
     /* (LAND starts 2.5px past the gap's edge: that much less room, so its D ends inside the page's column) */
     /* (a tablet held upright has the room for a taller name: up to 48px) */
-    --nh: min(clamp(34px, 5.6cqw, 48px), calc((50cqw - var(--mw) / 2 - var(--inl) - 3px) * 735 / var(--wl)));
+    --nh0: min(clamp(34px, 5.6cqw, 48px), calc((50cqw - var(--mw) / 2 - var(--inl) - 3px) * 735 / var(--wl)));
+    --nh: var(--nh0);
     --ny: calc(var(--mh) / 2);
   }
   .hv3 .hv-copy, .gate-in .hv-copy { top: auto; bottom: var(--hv-pb); }
@@ -134,7 +139,8 @@
     --copy-h: 116px;
     --cx: 50cqw;
     --cy: calc(var(--hdr) + max(0px, 100cqh - var(--hdr) - var(--mh) - var(--hv-gap) - var(--copy-h)) * 2 / 3 + var(--mh) / 2);
-    --nh: clamp(20px, 7cqh, 34px);
+    --nh0: clamp(20px, 7cqh, 34px);
+    --nh: var(--nh0);
     --ny: var(--cy);
   }
 }

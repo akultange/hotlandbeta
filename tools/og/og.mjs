@@ -1,5 +1,7 @@
-// The link-preview pictures (public/og/hotland-ru.jpg, hotland-en.jpg; 1200 x 630): the club's door, with one line
-// under the name. They are photographs of the site's own 18+ door (AgeGate.astro), so they follow its look.
+// The link-preview pictures (public/og/hotland-ru.jpg, hotland-en.jpg; 1200 x 630): the club's door with the whole
+// logo on it, the sign from near the top edge to near the bottom, and one line at the foot, set either side of the
+// sign's lower point as the name is set either side of the sign. They are photographs of the site's own 18+ door
+// (AgeGate.astro), so they follow its look.
 //
 //   1. npm run dev                      (the site at http://127.0.0.1:4321, or pass BASE=...)
 //   2. node tools/og/og.mjs             (needs Playwright and a Chrome: npm i -D playwright, or point
@@ -12,7 +14,7 @@ const require = createRequire(process.env.PLAYWRIGHT_FROM || import.meta.url);
 const { chromium } = require('playwright');
 const base = process.env.BASE || 'http://127.0.0.1:4321';
 const out = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../public/og');
-const lines = { ru: 'Премиальный мужской клуб в Москве', en: 'A premium gentlemen’s club in Moscow' };
+const lines = { ru: ['Премиальный мужской клуб', 'Москва'], en: ['Premium gentlemen’s club', 'Moscow'] };
 
 const browser = await chromium.launch(process.env.CHROME ? { executablePath: process.env.CHROME } : {});
 for (const lang of ['ru', 'en']) {
@@ -23,14 +25,18 @@ for (const lang of ['ru', 'en']) {
   await page.evaluate(() => document.fonts.ready);
   await page.addStyleTag({ content: `
     .gate { right: auto !important; width: 1200px; }
-    .gate-in { --cy: 286px; --ny: 286px; --nh: 58px; } /* (the club's logo is 15 times as wide as it is tall: 58px is 888px of the 1200) */
-    .gate-edge { --line-h: 384px !important; }
-    .gate-face { --wy: 45%; }
-    .gate-foot, .gate-copy > :not(#gate-text) { display: none !important; }
-    .gate-in .gate-copy { top: 392px !important; }
-    #gate-text { max-width: none !important; font: 500 21px/1 var(--sans) !important; letter-spacing: .3em; text-transform: uppercase; color: #c3c4c8 !important; }
+    /* (the name's box 54px tall: the name is 827px of the 1200, and the sign, ten times the box, runs from 28px
+       under the top edge to 59px above the bottom one) */
+    .gate-in { --nh: 54px !important; --ny: 276px !important; }
+    .gate-foot, .gate-copy { display: none !important; }
+    .og-line { position: absolute; top: 549px; font: 500 19px/1 var(--sans); letter-spacing: .3em; text-transform: uppercase; color: #c3c4c8; white-space: nowrap; }
+    .og-line-l { right: calc(50% + 34px); margin-right: -.3em; }
+    .og-line-r { left: calc(50% + 34px); }
   ` });
-  await page.evaluate((line) => { document.getElementById('gate-text').textContent = line; }, lines[lang]);
+  await page.evaluate(([l, r]) => {
+    const box = document.querySelector('.gate-in');
+    for (const [cls, text] of [['og-line og-line-l', l], ['og-line og-line-r', r]]) { const el = document.createElement('span'); el.className = cls; el.textContent = text; box.append(el); }
+  }, lines[lang]);
   await page.waitForTimeout(300);
   await page.screenshot({ path: path.join(out, `hotland-${lang}.png`), clip: { x: 0, y: 0, width: 1200, height: 630 } });
   await ctx.close();

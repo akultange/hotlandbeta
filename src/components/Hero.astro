@@ -104,7 +104,7 @@ const PHONE = HERO_PHONE;
 const starter = `(function (v) { v.poster = matchMedia('${PHONE}').matches ? v.dataset.posterPhone : v.dataset.poster; })(document.currentScript.previousElementSibling);`;
 ---
 {CHOOSING && <script is:inline set:html={chooser} />}
-<section class:list={['hero', { 'hv-test': CHOOSING }]} style={`--wl:${nm.land.width};--ngu:${nm.gap};--nsu:${nm.stem / 2};--wr:${(735 / W).toFixed(5)};--wr-m:${(stackH / land.width).toFixed(5)};--ax:${(stemX * 100).toFixed(2)}%;--ay:${(stemY * 100).toFixed(2)}%;--axn:${stemX.toFixed(4)};--ayn:${stemY.toFixed(4)}`}>
+<section class:list={['hero', { 'hv-test': CHOOSING }]} style={`--wl:${nm.land.width};--ngu:${nm.gap};--nsu:${nm.axis};--wr:${(735 / W).toFixed(5)};--wr-m:${(stackH / land.width).toFixed(5)};--ax:${(stemX * 100).toFixed(2)}%;--ay:${(stemY * 100).toFixed(2)}%;--axn:${stemX.toFixed(4)};--ayn:${stemY.toFixed(4)}`}>
   <h1 class="sr-only">{ru ? 'HOTLAND, премиальный мужской клуб в Москве' : 'HOTLAND, a premium gentlemen’s club in Moscow'}</h1>
   {takes.map((take) => (
     <div class:list={['hv', `h${take}`]} data-take={take} style={take === 'v3' ? glass : undefined}>

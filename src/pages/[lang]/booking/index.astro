@@ -1,6 +1,6 @@
 ---
 import Base from '../../../layouts/Base.astro';
-import Name from '../../../components/Name.astro';
+import Logo from '../../../components/Logo.astro';
 import PageTitle from '../../../components/PageTitle.astro';
 import { type Lang, ui, langPaths } from '../../../data/i18n';
 import { site } from '../../../data/site';
@@ -36,7 +36,7 @@ import { keepShort } from '../../../data/format';
       </div>
       <aside class="stack" style="grid-column: 9 / span 4; gap: 56px">
         <div class="invite">
-          <Name height={13} short />
+          <Logo height={13} sign="tight" />
           <!-- (the contact is settled on Luka's, the call back: data/variants.ts; the phone number's version stays here, hidden) -->
           {show('contact', 'luka') && (
             <div class="vx-part" data-v="contact:luka">

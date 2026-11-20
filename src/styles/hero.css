@@ -113,7 +113,11 @@ html[data-hero]:not([data-hero="v3"]) .hv3 { display: none; }
 .hv3 .hv-stage { z-index: 4; display: block; }
 /* a finger wiping the glass sideways must not drag the page sideways (it still scrolls up and down, and zooms) */
 .hv3 { touch-action: pan-y pinch-zoom; }
-.hv3-film { position: absolute; inset: 0; z-index: 0; overflow: clip; background: #000; }
+/* (the film stops 2px short of the header's lower edge. Once the page has scrolled past the held header, the
+   header's box ends a hair past a whole pixel (1/1024px, measured); Chrome then draws the film's last row in full
+   but the fade over it not at all, and that row showed as a bright hairline across the page above Афиша. Those
+   2px are under the fade's black end anyway.) */
+.hv3-film { position: absolute; inset: 0 0 2px; z-index: 0; overflow: clip; background: #000; }
 .hv3-film video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .hv3-frost {
   position: absolute; inset: 0; z-index: 1; pointer-events: none;

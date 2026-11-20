@@ -332,17 +332,13 @@ h1, h2, .t-xxl, .t-xl, .t-l { overflow-wrap: break-word; }
 /* (the plain heading with a link, SecIndex: the same order, the link under the title) */
 .shead { display: grid; justify-items: start; row-gap: clamp(16px, 1.5vw, 22px); margin-bottom: var(--head-gap); }
 
-/* ---------- Logo ---------- */
-.logo { display: inline-flex; align-items: center; gap: 12px; color: var(--fg); }
-.logo .emblem { flex: none; }
+/* ---------- Logo ----------
+   The club's logo is Logo.astro (its rules: nav.css, .logo). What stood here dressed the earlier lily-and-wordmark
+   lockup, which no page sets any more; only the two marks' own fills are kept, for the hidden footer that still
+   draws them (FooterNight.astro). */
 .emblem { fill: var(--emblem); }
 .emblem .es { stroke: var(--emblem); }
-.logo-text { display: grid; justify-items: center; gap: 7px; }
 .wordmark { display: block; width: auto; height: 20px; fill: var(--emblem); }
-.tagline { display: flex; align-items: center; gap: 12px; white-space: nowrap; font: 500 17px/1.05 var(--display); color: var(--fg-2); }
-.tagline::before, .tagline::after { content: ''; width: 24px; height: 1px; background: currentColor; opacity: .7; }
-.logo-stacked { flex-direction: column; gap: 16px; }
-.logo-stacked .wordmark { height: 32px; }
 
 /* ---------- Frames: hard edges, big ---------- */
 .arch, .photo { position: relative; overflow: hidden; aspect-ratio: 4 / 5; }
@@ -711,6 +707,8 @@ a.row:hover .k { color: #fff; }
 
 /* Booking aside */
 .invite { position: relative; display: grid; gap: 20px; justify-items: center; text-align: center; padding: clamp(36px, 4vw, 52px) clamp(24px, 3vw, 40px); background: radial-gradient(120% 90% at 50% 0%, #1d1416 0%, #0d0d0e 70%); border-radius: var(--r-3); }
+/* (the club's logo at its head, Logo.astro, sign="tight": room for the sign above the letters and under them) */
+.invite > .logo { margin: 8px 0 12px; }
 .invite .phone { font: 500 clamp(28px, 2.46vw, 36px)/1.05 var(--display); }
 .fine { gap: 20px; }
 .fine .row { padding: 13px 0; }

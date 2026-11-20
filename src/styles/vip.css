@@ -68,18 +68,15 @@
   background-image: linear-gradient(158deg, rgba(255, 255, 255, .2) 0%, rgba(255, 255, 255, 0) 38%, rgba(0, 0, 0, .42) 100%), var(--brushed);
   background-size: auto, cover; background-blend-mode: normal, multiply;
 }
-/* the name on the card, where the wall has it; pressed into the card (darker than the face, its lower edge
-   catching the light), as on the brand board's card */
-.vcard-name.name { position: absolute; left: 19.4%; top: 11.5%; width: 61.2%; height: auto; filter: drop-shadow(0 1px 0 rgba(255, 255, 255, .22)); }
-.vtier-silver .vcard-name .name-word { fill: rgba(22, 20, 20, .84); }
-.vtier-silver .vcard-name.name { filter: drop-shadow(0 1px 0 rgba(255, 255, 255, .55)); }
-.vtier-black .vcard-name .name-word { fill: #08090a; }
-.vtier-bordeaux .vcard-name .name-word { fill: #2a030f; }
-/* the line of red light, the card's whole height, where the L begins (--seam: MemberCards.astro) */
-.vcard-seam {
-  position: absolute; top: 0; bottom: 0; left: calc(19.4% + var(--seam, .43) * 61.2%); width: 1px;
-  background: var(--light); box-shadow: 0 0 5px rgba(255, 43, 61, .55);
-}
+/* the club's logo on the card, whole (Logo.astro): the name across the card a little above its middle, and the sign
+   through the L, which at this size (a capital is 3.8% of the card's width) reaches from about a sixth of the
+   card's height to four fifths, clear of the foot line. Its light is clipped by the card's edge like anything
+   printed on it. On steel the letters are pressed in (their lower edge catches the light); on black and on
+   bordeaux they are silver foil. */
+.vcard-logo.logo { position: absolute; left: 19.4%; top: 43.5%; width: 61.2%; height: auto; translate: 0 -50%; }
+.vcard-logo .logo-letters { filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .5)); }
+.vtier-silver .vcard-logo .logo-letters { filter: drop-shadow(0 1px 0 rgba(255, 255, 255, .55)); }
+.vtier-black .vcard-logo, .vtier-bordeaux .vcard-logo { --logo-ink: url(#g-steel); }
 /* along the foot: which card it is, and a member's number, both quiet, on one baseline */
 .vcard-foot { position: absolute; left: 7.5%; right: 7.5%; bottom: 10%; display: flex; justify-content: space-between; align-items: baseline; color: var(--vc-ink); }
 .vcard-tier { font: 500 10px/1 var(--sans); letter-spacing: .3em; text-transform: uppercase; }
@@ -159,5 +156,4 @@ html.motion .vfield:not(.vf-ready) :is(.vcard, .vtier-body) { opacity: 0; animat
    all stand on one screen under the header */
 @media (min-width: 1024px) and (max-height: 760px) {
   .vcard { aspect-ratio: 1.9; }
-  .vcard-name.name { top: 13%; }
 }

@@ -1,8 +1,10 @@
 ---
 // The club's three cards (membership; styles in styles/vip.css), in a field of concrete with bordeaux light rising
-// from below. Each is set as a real club card, after the brand board's own: the name where the wall has it, a
-// hairline of the red light down the card's whole height at the L, the card's name in small capitals at the foot
-// and a member's number beside it. Three finishes: brushed steel, black concrete and bordeaux lacquer. Under each
+// from below. Each is set as a real club card: the club's logo across its middle, whole, the sign through the L
+// from near the card's top edge to just above its foot line, the card's name in small capitals at the foot and a
+// member's number beside it. Three finishes: brushed steel, black concrete and bordeaux lacquer, each carrying
+// the logo as the club drew it for that ground (Logo.astro: the one for light ground on steel, graphite letters
+// and a soft red falloff; the one for dark ground on the other two, pale letters and the sign's own light). Under each
 // card: its name, what it is, what comes with it, a request button and the price. The buttons follow the one rule
 // for a row of cards (the bottle sets in TableSets.astro too): steel-edged under the first cards and bordeaux
 // under the last, the top one.
@@ -14,8 +16,8 @@
 import { type Lang, ui, tr } from '../data/i18n';
 import { keepShort } from '../data/format';
 import { tiers, vip } from '../data/content';
-import { nameHalves } from '../data/wordmark';
-import Name from './Name.astro';
+import { logoDark } from '../data/art';
+import Logo from './Logo.astro';
 import '../styles/vip.css';
 const { lang } = Astro.props as { lang: Lang };
 const finish = ['silver', 'black', 'bordeaux'];
@@ -23,19 +25,17 @@ const hasHead = Astro.slots.has('head');
 const pad2 = (n: number) => String(n).padStart(2, '0');
 /** The tiers' names: under the section's own heading when it has one, else straight under the page's title. */
 const Title = hasHead ? 'h3' : 'h2';
-// where the L begins, as a share of the name's width: the card's line of light stands there (Name.astro's blade does)
-const { hot, gap, stem, width } = nameHalves();
-const seam = ((hot.width + gap + stem / 2) / width).toFixed(4);
 ---
 <div class="vfield">
+  {/* (the gradients of the logo for light ground, for the steel card: Logo.astro) */}
+  <svg class="svg-defs" aria-hidden="true" focusable="false"><defs set:html={logoDark.defs} /></svg>
   {hasHead && <slot name="head" />}
   <div class="vdeck" data-deal data-lenis-prevent-horizontal>
     {tiers.map((p, i) => (
       <article class:list={['vtier', `vtier-${finish[i % finish.length]}`]}>
         <div class="vcard" aria-hidden="true">
-          <div class="vcard-in" style={`--seam:${seam}`}>
-            <Name class="vcard-name" seam={false} />
-            <span class="vcard-seam"></span>
+          <div class="vcard-in">
+            <Logo class="vcard-logo" tone={finish[i % finish.length] === 'silver' ? 'dark' : 'light'} />
             <span class="vcard-foot"><span class="vcard-tier">{p.name}</span><span class="vcard-no">№&nbsp;0001</span></span>
             <span class="vcard-glint"></span>
             <span class="vcard-glare"></span>

@@ -23,6 +23,7 @@ import { type Lang, altPath, ui } from '../data/i18n';
 import { TEST as VTEST, chooser as vChooser, hideRules as vHide, show as showV } from '../data/variants';
 import fonts from '../data/fonts.json';
 import { LILY, WORDMARK, WORDMARK_BOX } from '../data/brand';
+import { logoLight, signGlow } from '../data/art';
 
 interface Props {
   lang: Lang;
@@ -197,6 +198,22 @@ const preload = lang === 'ru'
           <stop offset=".5" stop-color="#d0d1d4" />
           <stop offset="1" stop-color="#96989d" />
         </linearGradient>
+        {/* the club's logo: the gradients its glowing sign is drawn with (Logo.astro, the door), and the two fades
+            that shorten the sign where the whole needle (five capitals each way) has no room. A capital is 47.4 of
+            the artwork's units, and both fades are centred on the capitals' middle (y 280.8):
+            "short", where the name stands in a plate (the header): full to 95 units, gone by 150, so the needle
+            breaks through the plate's edge above and below and dies away just outside it;
+            "tight", where other things stand close above and below (the footer's card, a line of text): full to
+            59, gone by 85, so it stays within about a capital of the name */}
+        <Fragment set:html={signGlow.defs + logoLight.defs} />
+        <linearGradient id="hl-fade" gradientUnits="userSpaceOnUse" x1="0" y1="130.8" x2="0" y2="430.8">
+          <stop offset="0" stop-color="#fff" stop-opacity="0" /><stop offset=".183" stop-color="#fff" /><stop offset=".817" stop-color="#fff" /><stop offset="1" stop-color="#fff" stop-opacity="0" />
+        </linearGradient>
+        <mask id="hl-short" maskUnits="userSpaceOnUse" x="280" y="128" width="150" height="306"><rect x="280" y="128" width="150" height="306" fill="url(#hl-fade)" /></mask>
+        <linearGradient id="hl-fade-t" gradientUnits="userSpaceOnUse" x1="0" y1="195.8" x2="0" y2="365.8">
+          <stop offset="0" stop-color="#fff" stop-opacity="0" /><stop offset=".153" stop-color="#fff" /><stop offset=".847" stop-color="#fff" /><stop offset="1" stop-color="#fff" stop-opacity="0" />
+        </linearGradient>
+        <mask id="hl-tight" maskUnits="userSpaceOnUse" x="280" y="190" width="150" height="182"><rect x="280" y="190" width="150" height="182" fill="url(#hl-fade-t)" /></mask>
         {/* the lily and the old wordmark, written once and referenced where they show: only the footer's hidden
             version v5 uses them now (FooterNight.astro), so they are in the page only when that version is */}
         {showV('footer', 'v5') && <symbol id="hl-lily" viewBox="0 0 256 256"><path fill-rule="evenodd" d={LILY} /></symbol>}

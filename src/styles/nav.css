@@ -56,14 +56,15 @@
 }
 .hdr-in > * { pointer-events: auto; }
 
-/* the name: steel capitals set wide, the red light in the joint (Name.astro) */
+/* the name: the club's logo, its sign breaking through the plate's edge (Logo.astro, sign="short") */
 .hdr-name { justify-self: start; flex: none; display: grid; place-items: center; height: 46px; padding: 0 18px; border-radius: var(--pill); transition: background-color .3s ease; }
 @media (hover: hover) { .hdr-name:hover { background-color: rgba(44, 45, 48, .66); } }
-.name { display: block; width: auto; height: 12px; overflow: visible; }
-/* (the club's logo is thin capitals set very wide: 15 times as wide as it is tall) */
-.name-word { fill: url(#g-steel); }
-.name-seam { fill: var(--light); filter: drop-shadow(0 0 2px rgba(255, 43, 61, .95)) drop-shadow(0 0 7px rgba(196, 30, 54, .9)); }
-.hdr-name .name { height: 12px; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .7)); }
+/* the club's logo (Logo.astro): its box is the capitals' box (thin capitals set very wide: 16 times as wide as
+   they are tall), and the glowing sign is drawn outside it. --logo-ink: the letters in another tone than the
+   club's own pale grey, where the ground asks for it (the logo for dark ground only) */
+.logo { display: block; width: auto; height: 12px; aspect-ratio: 756.7 / 47.4; overflow: visible; }
+.logo-light .logo-letters > * { fill: var(--logo-ink, #b0b1b3); }
+.hdr-name .logo { height: 12px; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .7)); }
 
 /* the sections: a floating glass capsule; the current page is a light pill */
 .hdr-nav { position: relative; display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: var(--pill); }
@@ -123,8 +124,8 @@
 /* narrower desktops: the capsule tightens so everything stays on one line */
 /* (and the club's logo, 15 times as wide as it is tall, is set a step smaller in its plate: at 12px it is 184px wide,
    and from 1100 down the three plates no longer fitted the bar) */
-@media (max-width: 1239px) { .hdr-nav a { padding: 0 13px; } .hdr-name .name { height: 10px; } }
-@media (min-width: 900px) and (max-width: 1151px) { .hdr-name { padding: 0 12px; } .hdr-name .name { height: 9px; } }
+@media (max-width: 1239px) { .hdr-nav a { padding: 0 13px; } .hdr-name .logo { height: 10px; } }
+@media (min-width: 900px) and (max-width: 1151px) { .hdr-name { padding: 0 12px; } .hdr-name .logo { height: 9px; } }
 /* (each step begins a little before the bar runs out: the Russian bar, the longer of the two, has at least 10px to
    spare at every width from 900 up; measured by sweeping the window's width, 2026-11-20) */
 @media (max-width: 1129px) {
@@ -142,7 +143,7 @@
 /* the narrowest desktop (a tablet on its side): every plate a step tighter, so none touches its neighbour */
 @media (min-width: 900px) and (max-width: 959px) {
   .hdr-name { padding: 0 10px; }
-  .hdr-name .name { height: 8.5px; }
+  .hdr-name .logo { height: 8.2px; }
   .hdr-nav a { padding: 0 6px; }
   .seg a { min-width: 32px; padding: 0 6px; }
   .hdr-book { padding: 0 12px; }
@@ -153,7 +154,7 @@
   .hdr-nav, .hdr-lang, .hdr-book { display: none; }
   .hdr-menu { display: inline-flex; }
   .hdr-name { height: 44px; padding: 0 14px; }
-  .hdr-name .name { height: 9.5px; }
+  .hdr-name .logo { height: 9.5px; }
   /* phones: a shorter, denser fade that ends just past the header, over the top padding of the menu page's pinned tabs */
   .hdr::before {
     inset: 0 0 -10px;
@@ -186,7 +187,7 @@
    sheet's cross is on the screen and the bar keeps its right margin (at 320px the cross was cut off) */
 @media (max-width: 359px) {
   .hdr-name { padding: 0 11px; }
-  .hdr-name .name { height: 8px; }
+  .hdr-name .logo { height: 8px; }
   .mnav-top, .mnav-top-r { gap: 6px; }
   .mnav-top .seg a { min-width: 40px; }
 }
