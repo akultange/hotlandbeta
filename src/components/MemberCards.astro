@@ -16,6 +16,7 @@ import { keepShort } from '../data/format';
 import { tiers, vip } from '../data/content';
 import { nameHalves } from '../data/wordmark';
 import Name from './Name.astro';
+import Corners from './Corners.astro';
 import '../styles/vip.css';
 const { lang } = Astro.props as { lang: Lang };
 const finish = ['silver', 'black', 'bordeaux'];
@@ -29,6 +30,7 @@ const seam = ((hot.width + gap - 30) / width).toFixed(4);
 ---
 {hasHead && <slot name="head" />}
 <div class="vfield">
+  <Corners />
   <div class="vdeck" data-deal data-lenis-prevent-horizontal>
     {tiers.map((p, i) => (
       <article class:list={['vtier', `vtier-${finish[i % finish.length]}`]}>

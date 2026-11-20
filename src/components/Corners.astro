@@ -1,0 +1,8 @@
+---
+// A panel's steel corners: a bevelled, tapering bracket in its top left corner and, turned round, in its bottom
+// right (styles: global.css, "Steel corners"; the drawing: #hl-corner in layouts/Base.astro). The panel has to be
+// positioned. `one`: the top left corner only.
+const { one = false } = Astro.props as { one?: boolean };
+---
+<svg class="corner" aria-hidden="true" focusable="false"><use href="#hl-corner" /></svg>
+{!one && <svg class="corner corner-br" aria-hidden="true" focusable="false"><use href="#hl-corner" /></svg>}

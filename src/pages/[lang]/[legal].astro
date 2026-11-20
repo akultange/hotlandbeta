@@ -62,7 +62,8 @@ const name = page.title.replace('конфиденциальности', 'кон�
   /* A document's name: one size on all three pages (it used to follow each name's longest word: 30, 45 and 64px on
      a phone), its lines a full line apart, so two lines of Cyrillic never touch. 8.2vw keeps «конфиденциальности»
      (10.55em wide) whole from 320px up, with a little to spare. */
-  main:has(> .legal) .ptitle-name { font-size: clamp(26px, 8.2vw, 64px); line-height: 1; text-wrap: balance; }
+  /* (in the titles' capitals «КОНФИДЕНЦИАЛЬНОСТИ» is the widest word on the site: this size keeps it on a 320px screen) */
+  main:has(> .legal) .ptitle-name { font-size: clamp(21px, 6.5vw, 64px); line-height: 1; text-wrap: balance; }
   .legal-shy { display: none; }
   @media (max-width: 319px) { .legal-shy { display: inline; } }
   /* the first part's heading gets the air every part's heading has above it (the text's own 18px and the heading's

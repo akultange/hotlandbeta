@@ -90,6 +90,8 @@
    length, from PosterCard.astro). */
 .poster-date { position: absolute; z-index: 2; top: 6cqw; right: 6.5cqw; display: flex; align-items: flex-end; gap: 1.2cqw; color: #fff; }
 .poster-day {
+  /* (the date in polished steel, as the titles are: global.css --steel-type) */
+  background-image: var(--steel-type); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
   font: 500 25.16cqw/.9 var(--display); letter-spacing: -.02em;
   font-variant-numeric: lining-nums proportional-nums; margin-left: -.035em;
 }

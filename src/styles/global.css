@@ -60,6 +60,11 @@
   --stone-size: 1800px auto, 640px auto;
   --display: 'Geologica Sharp', 'Geologica', 'Helvetica Neue', Arial, sans-serif;
   --sans: 'Geologica', 'Helvetica Neue', Arial, sans-serif;
+  /* the big titles: heavy, tight capitals (styles/fonts-title.css) in polished steel, lit from above: one smooth
+     fall of light, no band across the letters. --steel-dim: a title's second half, the same metal in shadow. */
+  --title: 'Inter Tight', 'Geologica Sharp', 'Helvetica Neue', Arial, sans-serif;
+  --steel-type: linear-gradient(176deg, #ffffff 8%, #eceef1 38%, #b4b8bf 66%, #7e828a 96%);
+  --steel-dim: linear-gradient(176deg, #b9bcc3 8%, #8d9098 50%, #5c5f67 96%);
   --max: 1440px;
   --pad: clamp(16px, 3.2vw, 48px);
   --gap: clamp(14px, 1.8vw, 28px);
@@ -197,11 +202,33 @@ main:focus { outline: none; }
 .label-bone { color: var(--fg); }
 .label-red { color: var(--red-text); }
 .velvet .label-red, .plate .label-red { color: var(--bordeaux); }
-.t-xxl, .t-xl, .t-l, .t-m { font-family: var(--display); }
-.t-xxl { font-size: clamp(44px, 9.4vw, 156px); font-weight: 450; line-height: .98; letter-spacing: -.022em; overflow-wrap: normal; }
-.t-xl { font-size: clamp(40px, 6.2vw, 108px); font-weight: 450; line-height: 1; letter-spacing: -.02em; }
+.t-m { font-family: var(--display); }
+/* The big titles (2026-11-20, after the club's references: heavy tight capitals in polished metal). Capitals by
+   style, so the words stay as written for a screen reader and for search. */
+.t-xxl, .t-xl, .t-l { font-family: var(--title); font-weight: 700; text-transform: uppercase; }
+.t-xxl { font-size: clamp(40px, 8.6vw, 144px); line-height: .98; letter-spacing: -.022em; overflow-wrap: normal; }
+.t-xl { font-size: clamp(36px, 5.6vw, 96px); line-height: 1; letter-spacing: -.02em; }
 /* (a section's title: on a wide screen it has to hold its own over a row of posters with 107px numerals) */
-.t-l { font-size: clamp(32px, 4.4vw, 72px); font-weight: 450; line-height: 1.05; letter-spacing: -.015em; }
+.t-l { font-size: clamp(30px, 4.1vw, 68px); line-height: 1.03; letter-spacing: -.018em; }
+/* Their metal. The gradient is clipped to the letters of whatever is actually drawn: the title itself, or, once the
+   motion script has split it to bring it in (scripts/motion.ts), each of its lines (.sl) or letters (.xc): a title
+   cannot lend its fill to pieces that move on their own. Nearly vertical, so it reads the same on every piece. */
+:is(.t-xxl, .t-xl, .t-l):not(.split-l, :has(.xc)), :is(.t-xxl, .t-xl, .t-l) :is(.sl, .xc) {
+  background-image: var(--steel-type); -webkit-background-clip: text; background-clip: text;
+  color: var(--fg); -webkit-text-fill-color: transparent;
+}
+:is(.t-xxl, .t-xl, .t-l) em:not(:has(.xc)), :is(.t-xxl, .t-xl, .t-l) em .xc {
+  background-image: var(--steel-dim); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+/* (on the light steel plate a title is ink, as before) */
+:is(.velvet, .plate) :is(.t-xxl, .t-xl, .t-l), :is(.velvet, .plate) :is(.t-xxl, .t-xl, .t-l) :is(.sl, .xc, em) { background-image: none; -webkit-text-fill-color: currentColor; }
+
+/* ---------- Steel corners (Corners.astro) ----------
+   A panel that matters is held at two corners by a bevelled steel bracket: a long thin blade along the top from
+   the left corner and a shorter one down the side, meeting in a mitre, and the same turned round at the bottom
+   right. Drawn once (#hl-corner, layouts/Base.astro), scaled to the panel. */
+.corner { position: absolute; z-index: 3; left: 0; top: 0; width: clamp(170px, 30%, 460px); aspect-ratio: 460 / 150; pointer-events: none; overflow: visible; }
+.corner-br { left: auto; top: auto; right: 0; bottom: 0; rotate: 180deg; }
 .t-m { font-size: clamp(22px, 1.9vw, 30px); font-weight: 500; letter-spacing: -.008em; line-height: 1.12; }
 .t-s { font: 400 18px/1.45 var(--sans); }
 .t-statement { font: 400 clamp(22px, 2.3vw, 34px)/1.4 var(--sans); letter-spacing: -.012em; color: var(--fg); max-width: 34em; }

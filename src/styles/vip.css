@@ -9,16 +9,19 @@
   /* the air above and below follows the screen's height too, so a wide, low laptop screen still holds the field */
   padding: clamp(28px, min(3.4vw, 5vh), 52px) var(--vf-x) clamp(30px, min(3.1vw, 4.6vh), 48px);
   border-radius: 3px;
-  background-color: #151517;
-  /* (the bordeaux rises from the two lower corners and is gone well before the words: a light on the wall, not a
-     flood) */
+  background-color: #0b0c0d;
+  /* The field is a sheet of black liquid metal (img/metal/flow.webp, drawn by tools/metal/flow.py), held at two
+     corners by steel brackets (Corners.astro). Over it: a veil that keeps the lists readable (darkest where the
+     words are), a little light from above, and the bordeaux rising from the two lower corners, gone well before
+     the words. */
   background-image:
-    radial-gradient(58% 70% at 0% 106%, rgba(101, 8, 31, .4) 0%, rgba(101, 8, 31, 0) 70%),
-    radial-gradient(58% 70% at 100% 106%, rgba(101, 8, 31, .4) 0%, rgba(101, 8, 31, 0) 70%),
-    radial-gradient(46% 60% at 50% -8%, rgba(255, 255, 255, .07) 0%, rgba(255, 255, 255, 0) 72%),
-    var(--stone);
-  background-size: auto, auto, auto, var(--stone-size);
-  background-blend-mode: normal, normal, normal, overlay, overlay;
+    radial-gradient(58% 70% at 0% 106%, rgba(101, 8, 31, .34) 0%, rgba(101, 8, 31, 0) 70%),
+    radial-gradient(58% 70% at 100% 106%, rgba(101, 8, 31, .34) 0%, rgba(101, 8, 31, 0) 70%),
+    radial-gradient(46% 60% at 50% -8%, rgba(255, 255, 255, .08) 0%, rgba(255, 255, 255, 0) 72%),
+    linear-gradient(180deg, rgba(9, 10, 11, .5) 0%, rgba(9, 10, 11, .72) 38%, rgba(9, 10, 11, .9) 100%),
+    url('/img/metal/flow.webp');
+  background-size: auto, auto, auto, auto, cover;
+  background-position: 0 0, 0 0, 0 0, 0 0, 50% 30%;
   box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .06), inset 0 30px 60px -30px rgba(0, 0, 0, .8);
 }
 /* (a page's heading for the cards stands over the field, on the page's own left edge like every section's:
