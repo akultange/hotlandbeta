@@ -112,6 +112,56 @@ const shape = (h: { paths: string[]; width: number }) =>
     else setTimeout(idle, 3000);
   }
 
+  /* The door as a place (src/door3d). Where the browser has a graphics card and the visitor has not asked for less
+     motion (html.d3, set in the page's head), the two slabs are a scene drawn in three dimensions, and "Yes" opens
+     that. The flat door above stays underneath: it is what everyone else gets, and what comes back if the scene has
+     not arrived within five seconds or fails. The question and its answers move into the scene's own frame at once
+     (gate.css, The door as a place), so they can be answered before the picture is there.
+     In the address: ?door=2d keeps the flat door; ?door=3d waits for the scene however long it takes and accepts a
+     slow graphics card; ?door=first plays the long first-visit arrival again (a returning visitor gets a short one:
+     hl-door-seen, kept in this browser). */
+  type Door3d = { arrive(quick: boolean): void; open(o?: { onCover?: () => void }): Promise<void>; stop(): void };
+  let door3d: Door3d | null = null;
+  if (gate && behind.length && root.classList.contains('d3')) {
+    const want = new URLSearchParams(location.search).get('door');
+    const copy = gate.querySelector('.gate-copy')!;
+    const moved = [gate.querySelector('#gate-title')!, gate.querySelector('#gate-text')!, copy.querySelector('.hv-act')!];
+    const ask = document.createElement('div'), canvas = document.createElement('canvas');
+    // back to the flat door: its pieces are shown again and the question goes back where it was
+    const flat = () => { root.classList.remove('d3', 'd3-on'); copy.append(...moved); ask.remove(); canvas.remove(); };
+    let gl: WebGL2RenderingContext | null = null;
+    try { gl = document.createElement('canvas').getContext('webgl2', { failIfMajorPerformanceCaveat: want !== '3d' }); } catch {}
+    // (a browser that draws without a graphics card would take seconds over every frame: it says so in its
+    // renderer's name, and keeps the flat door without the scene ever being fetched; the scene times itself too)
+    let soft = false;
+    try {
+      const info = gl?.getExtension('WEBGL_debug_renderer_info');
+      soft = !!gl && /swiftshader|llvmpipe|software|basic render/i.test(String(gl.getParameter(info ? info.UNMASKED_RENDERER_WEBGL : gl.RENDERER)));
+    } catch {}
+    if (!gl || (soft && want !== '3d')) flat();
+    else {
+      gl.getExtension('WEBGL_lose_context')?.loseContext();
+      const q = document.createElement('div'), a = document.createElement('div');
+      q.className = 'd3-q'; q.append(moved[0], moved[1]);
+      a.className = 'd3-a'; a.append(moved[2]);
+      ask.className = 'd3-ask'; ask.append(q, a);
+      canvas.id = 'd3-scene'; canvas.className = 'd3-scene'; canvas.setAttribute('aria-hidden', 'true');
+      gate.prepend(canvas);
+      gate.append(ask);
+      let late = false;
+      const timer = want === '3d' ? 0 : window.setTimeout(() => { late = true; flat(); }, 5000);
+      import('../door3d/scene.js').then((m) => m.ready).then((d) => {
+        clearTimeout(timer);
+        if (late || gate.classList.contains('out') || root.classList.contains('age-ok')) { d.stop(); return; }
+        let seen = false;
+        try { seen = !!localStorage.getItem('hl-door-seen'); } catch {}
+        root.classList.add('d3-on');
+        door3d = d;
+        d.arrive(want !== 'first' && (seen || root.classList.contains('door-still')));
+      }).catch((err) => { clearTimeout(timer); if (!late) flat(); console.error(err); });
+    }
+  }
+
   // Yes: remember the answer for this visit (Base.astro asks again on the next one), give the page back, and open
   // the door. The page is told it may begin a moment after (motion.ts waits for this), and once the slabs are off the
   // screen, .age-ok takes the door away.
@@ -120,6 +170,23 @@ const shape = (h: { paths: string[]; width: number }) =>
     behind.forEach((el) => { el.inert = false; });
     try { sessionStorage.setItem('age_ok', String(Date.now())); } catch {}
     const begin = () => dispatchEvent(new Event('hotland:gate'));
+    if (root.classList.contains('d3')) {
+      // The door as a place (below) has its own opening: the slabs part, we go in, the picture fills with the light
+      // inside and, once it is all light, the page begins behind it and the picture gives way to it. Answered
+      // before the scene has arrived, there is no door to open: the page is simply there.
+      const d = door3d;
+      if (!d) { root.classList.add('age-ok'); begin(); return; }
+      gate.classList.add('d3-out');
+      root.classList.add('gate-plain');
+      try { localStorage.setItem('hl-door-seen', '1'); } catch {}
+      let over = false;
+      const cover = () => { if (gate.classList.contains('out')) return; gate.classList.add('out'); begin(); };
+      const done = () => { if (over) return; over = true; clearTimeout(guard); cover(); root.classList.add('age-ok'); d.stop(); };
+      // (if the tab is put away mid-way and the frames stop, the door still goes)
+      const guard = setTimeout(done, 6500);
+      d.open({ onCover: cover }).then(done, done);
+      return;
+    }
     if (!root.classList.contains('motion') || typeof gate.animate !== 'function') {
       root.classList.add('age-ok');
       begin();
