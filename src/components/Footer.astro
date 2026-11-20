@@ -12,31 +12,31 @@ import { keepShort } from '../data/format';
 // cta: the closing "your table is waiting" block; pages that end in a form of their own leave it out
 const { lang, cta = true } = Astro.props as { lang: Lang; cta?: boolean };
 const t = ui[lang];
-const ru = lang === 'ru';
 const p = (s: string) => `/${lang}/${s}/`;
-const invite = await photo('/media/invite-table.webp', '100vw');
+// (the invitation's picture shows a little over half the page's column wide; the whole of it on a phone)
+const invite = await photo('/media/invite-table.webp', '(min-width: 900px) min(54vw, 760px), 100vw');
 ---
 <footer class:list={['ft', { 'no-cta': !cta }]}>
   <div class="wrap">
     {cta && (
-      <div class="ft-cta" data-invite>
-        <!-- the hall from a guest's seat: the room dims and a spotlight finds one table by the stage -->
-        <div class="invite-room" aria-hidden="true">
-          <img src="/media/invite-table.webp" {...invite} alt="" loading="lazy" decoding="async" />
-          <span class="invite-dim"></span>
-          <span class="invite-pin"><i></i><b>{ru ? 'Ваш стол' : 'Your table'}</b></span>
-        </div>
-        <!-- the invitation: the title on the left; the line and the two buttons beside it, so the whole block,
-             hall included, fits one screen -->
-        <div class="ft-cta-in">
-          <p class="t-xl ft-cta-h" set:html={tr(closing.title, lang)} />
-          <div class="ft-cta-side">
-            <p class="lead" set:html={keepShort(tr(closing.text, lang), lang)} />
-            <div class="btns">
-              <a class="btn btn-crimson" href={p('booking')}>{t.bookTable}</a>
-              <a class="btn btn-line" href={site.whatsapp} target="_blank" rel="noopener">WhatsApp</a>
+      <div class="ft-cta">
+        <!-- The invitation: one card on the page's column. Its words stand in one stack on the left, the title at
+             the card's head and the line with the two buttons at its foot; beside them the hall from a guest's
+             seat, a table with its champagne and the stage behind it, as a picture with clean edges in its own
+             colour. (It was three things apart: the hall edge to edge and dimmed, a "your table" tag pinned on it
+             just over the title, and the line and the buttons alone in the far third of the page.) -->
+        <div class="cta-card">
+          <div class="cta-words">
+            <p class="t-xl cta-h" set:html={tr(closing.title, lang)} />
+            <div class="cta-act">
+              <p class="lead" set:html={keepShort(tr(closing.text, lang), lang)} />
+              <div class="btns">
+                <a class="btn btn-crimson" href={p('booking')}>{t.bookTable}</a>
+                <a class="btn btn-line" href={site.whatsapp} target="_blank" rel="noopener">WhatsApp</a>
+              </div>
             </div>
           </div>
+          <div class="photo cta-shot" aria-hidden="true"><img src="/media/invite-table.webp" {...invite} alt="" loading="lazy" decoding="async" /></div>
         </div>
       </div>
     )}
@@ -54,15 +54,3 @@ const invite = await photo('/media/invite-table.webp', '100vw');
   </div>
 </footer>
 
-<script>
-  // The closing invitation: when the hall comes into view the room dims and the spotlight opens on a table.
-  const room = document.querySelector<HTMLElement>('[data-invite] .invite-room');
-  if (room) {
-    const lit = () => room.classList.add('lit');
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) lit();
-    else {
-      const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { lit(); io.disconnect(); } }, { threshold: 0.45 });
-      io.observe(room);
-    }
-  }
-</script>

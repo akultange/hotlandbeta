@@ -23,7 +23,7 @@ import { type Lang, altPath, ui } from '../data/i18n';
 import { TEST as VTEST, chooser as vChooser, hideRules as vHide, show as showV } from '../data/variants';
 import fonts from '../data/fonts.json';
 import { LILY, WORDMARK, WORDMARK_BOX } from '../data/brand';
-import { logoLight, signGlow } from '../data/art';
+import { logoLight, signGlow, flowerGlow } from '../data/art';
 
 interface Props {
   lang: Lang;
@@ -205,7 +205,7 @@ const preload = lang === 'ru'
             breaks through the plate's edge above and below and dies away just outside it;
             "tight", where other things stand close above and below (the footer's card, a line of text): full to
             59, gone by 85, so it stays within about a capital of the name */}
-        <Fragment set:html={signGlow.defs + logoLight.defs} />
+        <Fragment set:html={signGlow.defs + logoLight.defs + flowerGlow.defs} />
         <linearGradient id="hl-fade" gradientUnits="userSpaceOnUse" x1="0" y1="130.8" x2="0" y2="430.8">
           <stop offset="0" stop-color="#fff" stop-opacity="0" /><stop offset=".183" stop-color="#fff" /><stop offset=".817" stop-color="#fff" /><stop offset="1" stop-color="#fff" stop-opacity="0" />
         </linearGradient>
