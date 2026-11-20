@@ -148,7 +148,7 @@ html:not(.js) :is(.mdl-nav, .mdl-foot) { display: none; }
 .mdl-card.is-hover .photo img { scale: 1.06; }
 .mdl-shot::after {
   content: ''; position: absolute; left: 14%; right: 14%; bottom: -8%; height: 24%; z-index: -1; pointer-events: none;
-  border-radius: 50%; corner-shape: round; background: radial-gradient(closest-side, rgba(101, 8, 31, .85), rgba(101, 8, 31, 0));
+  border-radius: 50%; background: radial-gradient(closest-side, rgba(101, 8, 31, .85), rgba(101, 8, 31, 0));
   filter: blur(20px); opacity: 0; transition: opacity .7s var(--ease-out);
 }
 .mdl-card.is-hover .mdl-shot::after { opacity: 1; }
@@ -167,7 +167,7 @@ html.motion .mdl.is-live .mdl-card.is-active .photo img { animation: mdl-breathe
 
 /* the open button: shown on the model in the light where there is no pointer (a phone), and to the keyboard */
 .mdl-open {
-  position: absolute; right: 12px; bottom: 12px; z-index: 4; width: 44px; height: 44px; padding: 0; border-radius: 50%; corner-shape: round;
+  position: absolute; right: 12px; bottom: 12px; z-index: 4; width: 44px; height: 44px; padding: 0; border-radius: 50%;
   display: grid; place-items: center; color: #fff; cursor: pointer;
   background: rgba(12, 12, 14, .5); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, .24);
   opacity: 0; scale: .7; transition: opacity .4s ease, scale .5s var(--ease-out);
@@ -224,7 +224,7 @@ html.mdv-lock { overflow: hidden; }
   background-image: var(--metal-read); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
 }
 .mdv-btn {
-  position: absolute; display: grid; place-items: center; padding: 0; border-radius: var(--r-2); color: #fff; cursor: pointer;
+  position: absolute; display: grid; place-items: center; padding: 0; border-radius: 50%; color: #fff; cursor: pointer;
   background: rgba(24, 24, 28, .58); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border: 1px solid rgba(255, 255, 255, .16);
   transition: background-color .3s ease, scale .3s var(--ease-out);
 }

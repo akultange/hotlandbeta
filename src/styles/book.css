@@ -14,7 +14,7 @@ html.bk-lock { overflow: hidden; background: #050405; } /* (the window's own bla
 .bk-guests { display: grid; justify-items: start; gap: 10px; margin-top: 6px; }
 .bk-count { display: flex; align-items: center; gap: 14px; }
 .bk-pm {
-  display: grid; place-items: center; flex: none; width: 52px; height: 52px; border-radius: var(--r-2); color: var(--fg);
+  display: grid; place-items: center; flex: none; width: 52px; height: 52px; border-radius: 50%; color: var(--fg);
   background: var(--plate); box-shadow: var(--plate-edge);
   transition: background-color .2s ease, opacity .2s ease;
 }

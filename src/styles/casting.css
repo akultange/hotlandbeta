@@ -33,7 +33,7 @@
 /* each bulb's glow, over the bulb in the photo */
 .cc-bulb {
   position: absolute; left: var(--x); top: var(--y);
-  width: calc(var(--s) * 2.4%); aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; corner-shape: round;
+  width: calc(var(--s) * 2.4%); aspect-ratio: 1; translate: -50% -50%; border-radius: 50%;
   background: radial-gradient(closest-side, rgba(255, 248, 232, .95) 0%, rgba(255, 228, 184, .6) 32%, rgba(255, 196, 140, .18) 64%, rgba(255, 190, 130, 0) 100%);
   mix-blend-mode: screen; opacity: 0; pointer-events: none;
 }

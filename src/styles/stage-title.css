@@ -17,7 +17,7 @@
 .st-dark { position: absolute; inset: 0; filter: brightness(.11) saturate(.45) contrast(1.1); }
 /* the spot: a soft round window onto the lit picture */
 .st-spot {
-  position: absolute; left: 0; top: 0; width: 240px; height: 240px; border-radius: 50%; corner-shape: round; overflow: hidden;
+  position: absolute; left: 0; top: 0; width: 240px; height: 240px; border-radius: 50%; overflow: hidden;
   -webkit-mask-image: radial-gradient(closest-side, #000 52%, rgba(0, 0, 0, .55) 74%, transparent 100%);
   mask-image: radial-gradient(closest-side, #000 52%, rgba(0, 0, 0, .55) 74%, transparent 100%);
   opacity: 0; transition: opacity 1.2s ease .3s; will-change: transform;

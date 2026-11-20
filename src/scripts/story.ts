@@ -8,6 +8,8 @@ import { gsap } from 'gsap';
 
 const root = document.documentElement;
 const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+/** An element's own corner, in px, as the style sheet gives it (`or` if there is no element or no corner). */
+const corner = (el: Element | null | undefined, or: number) => (el && parseFloat(getComputedStyle(el).borderTopLeftRadius)) || or;
 
 type Shot = { z: number; x: number; y: number };
 type Frame = { ox: number; oy: number; a: Shot; b?: Shot };
@@ -204,8 +206,9 @@ export function profile(dlg: HTMLElement, items: StoryItem[], hooks: StoryHooks)
       const r = from?.getBoundingClientRect();
       const b = box();
       if (r && r.width > 8) {
-        gsap.fromTo(media, { left: r.left, top: r.top, width: r.width, height: r.height, borderRadius: 14 },
-          { left: b.left, top: b.top, width: b.width, height: b.height, borderRadius: phoneQ.matches ? 0 : 16, duration: 0.95, ease: 'expo.out' });
+        // (the corners travel from the card's own to the viewer's own, as the style sheet has them: models.css)
+        gsap.fromTo(media, { left: r.left, top: r.top, width: r.width, height: r.height, borderRadius: corner(from, 20) },
+          { left: b.left, top: b.top, width: b.width, height: b.height, borderRadius: phoneQ.matches ? 0 : corner(media, 24), duration: 0.95, ease: 'expo.out' });
         reframe(media, true, 0.95, 'expo.out');
       } else gsap.fromTo(media, { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.6, ease: 'expo.out' });
       gsap.fromTo(veil, { opacity: 0 }, { opacity: 1, duration: 0.55, ease: 'power2.out' });
@@ -264,7 +267,7 @@ export function profile(dlg: HTMLElement, items: StoryItem[], hooks: StoryHooks)
     requestAnimationFrame(() => {
       const r = hooks.photo(at)?.getBoundingClientRect();
       if (r && r.width > 8 && r.bottom > 0 && r.top < innerHeight) {
-        gsap.to(el, { left: r.left, top: r.top, width: r.width, height: r.height, borderRadius: 14, x: 0, y: 0, scale: 1, opacity: 1, duration: 0.75, ease: 'expo.inOut', onComplete: done });
+        gsap.to(el, { left: r.left, top: r.top, width: r.width, height: r.height, borderRadius: corner(hooks.photo(at), 20), x: 0, y: 0, scale: 1, opacity: 1, duration: 0.75, ease: 'expo.inOut', onComplete: done });
         reframe(el, false, 0.75, 'expo.inOut');
       } else gsap.to(el, { opacity: 0, scale: 0.94, duration: 0.45, ease: 'power2.in', onComplete: done });
     });

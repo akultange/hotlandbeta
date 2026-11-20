@@ -21,7 +21,7 @@
 .freach { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, max-content); gap: 8px; }
 .freach li:last-child { grid-column: 1 / -1; }
 .freach-a {
-  display: flex; align-items: center; gap: 9px; width: 100%; height: 46px; padding: 0 19px 0 15px; border-radius: var(--r-2);
+  display: flex; align-items: center; gap: 9px; width: 100%; height: 46px; padding: 0 19px 0 15px; border-radius: var(--pill);
   font: 500 15px/1 var(--sans); color: var(--fg); white-space: nowrap;
   background-color: var(--nav-glass); -webkit-backdrop-filter: var(--nav-blur); backdrop-filter: var(--nav-blur);
   box-shadow: var(--nav-edge), var(--nav-lift); transition: background-color .25s ease, scale .2s ease;
@@ -68,7 +68,7 @@
 .fv4-foot { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; }
 .fv4-addr { font: 400 clamp(14px, 1.05vw, 15px)/1.5 var(--sans); color: #cfd0d3; }
 .fv4-route {
-  display: inline-flex; align-items: center; gap: 6px; flex: none; height: 44px; padding: 0 14px 0 11px; border-radius: var(--r-2);
+  display: inline-flex; align-items: center; gap: 6px; flex: none; height: 44px; padding: 0 14px 0 11px; border-radius: var(--pill);
   font: 500 14px/1 var(--sans); color: var(--fg); background: rgba(255, 255, 255, .07); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12);
   transition: background-color .25s ease;
 }
@@ -124,7 +124,7 @@
   background: linear-gradient(90deg, rgba(168, 24, 46, .9) 0%, rgba(230, 231, 233, .2) 26%, rgba(230, 231, 233, .2) 100%);
 }
 .fv5-stop { position: relative; display: grid; justify-items: start; gap: 8px; padding-top: 30px; }
-.fv5-dot { position: absolute; left: 0; top: 0; width: 13px; height: 13px; border-radius: 50%; corner-shape: round; background: #0b0b0c; box-shadow: inset 0 0 0 1.5px rgba(230, 231, 233, .55); }
+.fv5-dot { position: absolute; left: 0; top: 0; width: 13px; height: 13px; border-radius: 50%; background: #0b0b0c; box-shadow: inset 0 0 0 1.5px rgba(230, 231, 233, .55); }
 .fv5-stop.now .fv5-dot { background: var(--red); box-shadow: 0 0 0 5px rgba(168, 24, 46, .22), 0 0 22px rgba(168, 24, 46, .85); }
 .fv5-t { font: 450 clamp(46px, 5.41vw, 92px)/.9 var(--display); letter-spacing: -.01em; font-variant-numeric: tabular-nums lining-nums; padding-right: .04em; }
 .fv5-c { font: 500 clamp(15px, 1.2vw, 18px)/1.35 var(--sans); color: var(--fg-2); }

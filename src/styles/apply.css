@@ -49,7 +49,7 @@ html.apl-lock { overflow: hidden; background: #050405; }
   background-image: var(--metal-read); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
 }
 .apl-x {
-  display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: var(--r-2); color: var(--fg-2);
+  display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: 50%; color: var(--fg-2);
   background: var(--plate); box-shadow: var(--plate-edge); transition: background-color .2s ease, color .2s ease;
 }
 .apl-x:hover { color: var(--fg); background: var(--plate-lit); }
@@ -111,7 +111,7 @@ html.apl-lock { overflow: hidden; background: #050405; }
 .apl-pill { position: relative; -webkit-tap-highlight-color: transparent; }
 .apl-pill input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
 .apl-pill span {
-  display: flex; align-items: center; justify-content: center; height: 48px; padding: 0 22px; border-radius: var(--r-2);
+  display: flex; align-items: center; justify-content: center; height: 48px; padding: 0 22px; border-radius: var(--pill);
   font: 500 16px/1 var(--sans); color: var(--fg-2); white-space: nowrap; background: var(--plate); box-shadow: var(--plate-edge);
   transition: color .25s ease, background-color .25s ease;
 }

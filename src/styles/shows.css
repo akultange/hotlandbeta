@@ -90,7 +90,7 @@
   }
   .shw-list::-webkit-scrollbar { display: none; }
   .shw-tab {
-    flex: none; width: auto; min-height: 44px; gap: 8px; padding: 6px 16px 6px 8px; border: 1px solid var(--rule-2); border-radius: var(--r-2);
+    flex: none; width: auto; min-height: 44px; gap: 8px; padding: 6px 16px 6px 8px; border: 1px solid var(--rule-2); border-radius: var(--pill);
     background: rgba(230, 231, 233, .04); color: rgba(230, 231, 233, .62);
   }
   .shw-tab::before { display: none; }

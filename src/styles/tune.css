@@ -15,13 +15,13 @@
 }
 .tune > * { position: absolute; }
 .tune-glow {
-  inset: -22%; z-index: -1; border-radius: 50%; corner-shape: round;
+  inset: -22%; z-index: -1; border-radius: 50%;
   background: radial-gradient(closest-side, rgba(168, 24, 46, .55) 0%, rgba(168, 24, 46, .2) 46%, rgba(168, 24, 46, 0) 100%);
   animation: tune-breathe 3.8s ease-in-out infinite;
 }
 /* the dark disc the dial and the words sit on, so they read over any picture */
 .tune::before {
-  content: ''; position: absolute; inset: 0; border-radius: 50%; corner-shape: round;
+  content: ''; position: absolute; inset: 0; border-radius: 50%;
   background: radial-gradient(closest-side, rgba(6, 6, 7, .92) 70%, rgba(6, 6, 7, .78) 88%, rgba(6, 6, 7, 0) 100%);
   -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
 }
@@ -34,12 +34,12 @@
 
 /* the chrome bezel round the lens */
 .tune-bezel {
-  inset: 18%; border-radius: 50%; corner-shape: round;
+  inset: 18%; border-radius: 50%;
   background: conic-gradient(from 200deg, #f3f4f6, #7a7d83 14%, #dcdee2 30%, #4b4d52 46%, #eceef1 62%, #808389 78%, #f3f4f6);
   box-shadow: 0 14px 40px -10px rgba(0, 0, 0, .9), 0 0 0 1px rgba(255, 255, 255, .12), 0 0 34px -4px rgba(168, 24, 46, .65);
 }
 /* the lens: the gallery passing by, one picture after another, each pushing in a little */
-.tune-lens { inset: 20.5%; border-radius: 50%; corner-shape: round; overflow: hidden; isolation: isolate; background: #0b0b0c; clip-path: circle(50%); }
+.tune-lens { inset: 20.5%; border-radius: 50%; overflow: hidden; isolation: isolate; background: #0b0b0c; clip-path: circle(50%); }
 .tune-lens img {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0;
   animation: tune-pass 9s linear infinite; animation-delay: calc(var(--i) * 1.5s - 9s);
@@ -51,7 +51,7 @@
 /* glass in the middle, and on it the play mark */
 .tune-play {
   position: absolute; left: 50%; top: 50%; z-index: 2; display: grid; place-items: center; width: 40%; aspect-ratio: 1;
-  translate: -50% -50%; border-radius: 50%; corner-shape: round;
+  translate: -50% -50%; border-radius: 50%;
   background: rgba(10, 10, 12, .34); -webkit-backdrop-filter: blur(8px) saturate(1.4); backdrop-filter: blur(8px) saturate(1.4);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .28), inset 0 1px 0 rgba(255, 255, 255, .35), 0 6px 18px -6px rgba(0, 0, 0, .8);
   transition: scale .5s var(--ease-back), background-color .3s ease;
@@ -101,7 +101,7 @@
 .gal-peek.tuning .tune-play { scale: .82; background-color: rgba(168, 24, 46, .9); }
 /* the ring of light round the lens: lit by the press, and the thing that flies out (its own part of the passage) */
 .tune-halo {
-  inset: 17.2%; border-radius: 50%; corner-shape: round; opacity: 0; transition: opacity .25s ease;
+  inset: 17.2%; border-radius: 50%; opacity: 0; transition: opacity .25s ease;
   border: 2px solid rgba(255, 226, 232, .95);
   box-shadow: 0 0 18px 3px rgba(204, 40, 62, .85), 0 0 46px 8px rgba(168, 24, 46, .55), inset 0 0 18px 2px rgba(204, 40, 62, .6);
 }
@@ -154,7 +154,7 @@ html.lens-in:not(.lens-vt) body::after {
 .gal-reel-track { display: flex; width: max-content; animation: gal-reel 70s linear infinite; }
 .gal-reel img {
   flex: none; height: clamp(170px, 18vw, 290px); aspect-ratio: 3 / 4; margin-right: clamp(10px, 1.1vw, 18px);
-  object-fit: cover; border-radius: var(--r-3); filter: brightness(.46) saturate(.9);
+  object-fit: cover; border-radius: var(--r-2); filter: brightness(.46) saturate(.9);
   transition: filter .6s ease;
 }
 @keyframes gal-reel { to { translate: -50% 0; } }
