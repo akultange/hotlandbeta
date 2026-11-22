@@ -1174,10 +1174,9 @@ html.lenis { scroll-behavior: auto; }
 .mbar { view-transition-name: mbar; }
 /* (the parts kept still are pictured on their own while the page changes, and Safari paints such a picture's glass
    blur as a square, out past its round edge: a dark square behind the lily, a band behind the dock. For that third
-   of a second they trade the blur for a solid tint of the same dark; Base.astro sets html.vt while it lasts) */
-html.vt :is(.hdr-nav, .mbar) { -webkit-backdrop-filter: none; backdrop-filter: none; }
-html.vt .hdr-nav { background-color: rgba(20, 21, 23, .92); }
-html.vt .mbar { background-color: rgba(20, 20, 23, .94); }
+   of a second they trade the blur for a solid tint of the same dark; Base.astro sets html.vt while it lasts. The
+   header's bar does the same: nav.css) */
+html.vt .mbar { -webkit-backdrop-filter: none; backdrop-filter: none; background-color: rgba(20, 20, 23, .94); }
 /* (quick: the old page goes in a blink, the new one is there a third of a second later) */
 ::view-transition-old(root) { animation: fade-out .18s ease-in both; }
 ::view-transition-new(root) { animation: rv-fade .34s var(--ease-out) both; }

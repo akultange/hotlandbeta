@@ -28,7 +28,7 @@ html.js:not(.age-ok) body:has(> .gate:not(.out)) > :not(.gate, .svg-defs) *::aft
 /* A page change while the door is shut (its language links, its privacy link): the header's parts and the phone's
    dock are pictured on their own by the browser (nav.css names them, so they hold still between pages) and were
    drawn above the door for the length of the change. No names until the door has gone. */
-html.js:not(.age-ok) :is(.hdr-name, .hdr-nav, .hdr-nav .hdr-pill, .hdr-r, .mbar) { view-transition-name: none; }
+html.js:not(.age-ok) :is(.hdr-bar, .hdr-in, .hdr-light, .mbar) { view-transition-name: none; }
 /* Where scrollbars take room (Windows), that room is kept beside the door too (global.css) and the door cannot
    cover it: it shows the page's ground, one flat colour. While the door stands, the ground is the wall's tone at
    its right edge (--gate-end; the wall settles into exactly that tone over its last few pixels), so the wall runs
