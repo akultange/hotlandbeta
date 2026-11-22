@@ -15,3 +15,4 @@ _unused/
 # the forms' settings and the counts' logs on regular PHP hosting (Timeweb): on the server only
 public/api/secrets.php
 public/api/logs/
+tools/door3d/out/

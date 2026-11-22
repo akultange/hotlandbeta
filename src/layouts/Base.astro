@@ -132,6 +132,9 @@ const preload = lang === 'ru'
         // to be revealed behind it, and on a slow line the scripts may arrive while it is up), or of the page itself.
         if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
           r.classList.add('motion');
+          // The 18+ door as a place (src/door3d, AgeGate.astro): where the question will show and the browser can draw
+          // in three dimensions (?door=2d in the address keeps the flat door; so does a visitor saving data).
+          try { if (!r.classList.contains('age-ok') && window.WebGL2RenderingContext && !/[?&]door=2d\b/.test(location.search) && !(navigator.connection && navigator.connection.saveData)) r.classList.add('d3'); } catch (e) {}
           var arm = function () { setTimeout(function () { if (!r.classList.contains('motion-ready')) r.classList.remove('motion'); }, 3000); };
           if (r.classList.contains('age-ok')) arm();
           else {
