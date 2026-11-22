@@ -1,102 +1,106 @@
-/* The club's cards (MemberCards.astro): three cards in a field of concrete, bordeaux light rising from below.
-   Loaded after global.css (Base.astro). The classes are the component's own (vfield, vdeck, vtier, vcard), so the
-   older .mem-card tilt and sweep rules in global.css (Motion) don't reach them; the motion is in the component. */
+/* The club's cards (MemberCards.astro): three cards on the navy cloth. Loaded after global.css (Base.astro). The
+   classes are the component's own (vfield, vdeck, vtier, vcard), so the older .mem-card rules in global.css (Motion)
+   don't reach them; the motion is in the component.
+   «Между», 2026-11-21: the burgundy field with its dots, the brushed-steel card, the bordeaux lacquer, the glare and
+   the band of light that crossed the metal are gone. The field is the suit's cloth, the cards are a black-on-black
+   set (cloth, blackened steel, black nappa with its seam of red light), and the only light on them is the logo's
+   needle and that seam. */
 
-/* ---------- The field: a recess in the wall, lit from below by the bordeaux ---------- */
+/* ---------- The field: a panel of the navy cloth (global.css .cloth), square, in one hairline ---------- */
 .vfield {
   --vf-x: clamp(20px, 3.9vw, 64px);
+  /* the materials' grain, drawn (no pictures to fetch): a fine speckle for the bead-blasted steel, a sparse pebble
+     for the nappa */
+  --grain-fine: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 .4 0 0 0 -.19'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  --grain-pebble: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 .13 0 0 0 -.055'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
   position: relative; isolation: isolate; overflow: hidden; overflow: clip;
   /* the air above and below follows the screen's height too, so a wide, low laptop screen still holds the field */
   padding: clamp(28px, min(3.4vw, 5vh), 52px) var(--vf-x) clamp(30px, min(3.1vw, 4.6vh), 48px);
-  border-radius: var(--r-5);
-  /* The field (2026-11-20, back to the panel the club liked in the studio's first version): one rounded panel,
-     near-black at its head and burgundy rising from its foot, with a fine grid of dots over it. Nothing else: the
-     cards are what is looked at here, the field only holds them. (A sheet of liquid metal was tried and took the
-     eye off the cards.) */
-  background-color: #12060a;
-  background-image:
-    radial-gradient(circle, rgba(255, 255, 255, .06) 0 .9px, rgba(255, 255, 255, 0) 1.5px),
-    linear-gradient(180deg, #0f0709 0%, #1a070c 30%, #38091a 68%, #5a0a1e 100%);
-  background-size: 13px 13px, auto;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .05), inset 0 1px 0 rgba(255, 255, 255, .09);
+  box-shadow: inset 0 0 0 1px var(--rule);
 }
+/* (in a section that is cloth already, the membership page's, the field paints nothing of its own: one cloth, one
+   stripe; the row to swipe on a phone then runs to the screen's edges) */
+.cloth .vfield { --vf-x: var(--pad); padding: 0; background: none; box-shadow: none; overflow: visible; }
 /* (the page's heading for the cards stands inside the field, over them: MemberCards.astro, slot "head") */
 .vfield > .bighead { margin-bottom: clamp(24px, 3vw, 44px); }
-.vfield > .bh-line { border: 0; padding-bottom: 0; }
-.vfield > .bh-line::after { content: none; }
 
 /* ---------- The three cards, each with its words under it ---------- */
 .vdeck { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px clamp(20px, 2.6vw, 44px); }
 .vtier { display: grid; grid-template-rows: auto 1fr; min-width: 0; }
 
-/* the card: a holder that is dealt (GSAP) and a face inside it that tilts (--rx, --ry). The face is set as a club
-   card: the name near its head, a hairline of the red light down its whole height at the L (the brand board's
-   card has it so), and along its foot the card's name in small wide capitals and a member's number. A hairline
-   of light runs round its edge, so the black one stands off its dark field. Its corners are the footer's club
-   card's (footers.css, .fv4-card). */
+/* the card: a holder that is dealt (GSAP) and a face inside it that leans (--rx, --ry). The face is set as a club
+   card: which card it is at its head, the club's logo at its foot on the left, the member's number at its foot on
+   the right. One hairline of light round its edge, a little brighter along the top, so the black ones stand off the
+   cloth; a soft shadow under it, as under any card lying on cloth. */
 .vcard { position: relative; aspect-ratio: 1.586; perspective: 900px; }
 .vcard-in {
-  --vc-ink: rgba(230, 231, 233, .56);   /* the card's small print */
-  position: absolute; inset: 0; overflow: hidden; isolation: isolate;
-  border-radius: var(--r-3);
-  background: #222 center / cover no-repeat;
+  --vc-ink: rgba(236, 236, 232, .82);   /* the card's small print */
+  position: absolute; inset: 0; overflow: hidden; isolation: isolate; container-type: inline-size;
+  background-color: var(--graphite);
   transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
   transition: transform .7s var(--ease-out), box-shadow .5s ease;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14), inset 0 1px 0 rgba(255, 255, 255, .2), 0 34px 54px -32px rgba(0, 0, 0, .95), 0 6px 14px -6px rgba(0, 0, 0, .5);
+  box-shadow: inset 0 0 0 1px rgba(236, 236, 232, .1), inset 0 1px 0 rgba(236, 236, 232, .16), 0 30px 50px -30px rgba(0, 0, 0, .95), 0 6px 14px -6px rgba(0, 0, 0, .55);
 }
 .vcard.tilting .vcard-in {
   transition: transform .12s linear, box-shadow .3s ease;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14), inset 0 1px 0 rgba(255, 255, 255, .2), 0 46px 74px -30px rgba(0, 0, 0, .95), 0 8px 18px -8px rgba(0, 0, 0, .5);
+  box-shadow: inset 0 0 0 1px rgba(236, 236, 232, .1), inset 0 1px 0 rgba(236, 236, 232, .16), 0 40px 64px -30px rgba(0, 0, 0, .95), 0 8px 18px -8px rgba(0, 0, 0, .55);
 }
-/* the three finishes: brushed steel (the site's plate: light from above falling off evenly, no hot corners),
-   black concrete a step above its field, bordeaux lacquer */
-.vtier-silver .vcard-in {
-  --vc-ink: rgba(22, 20, 20, .66);
-  background-color: #c3c6cb;
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, .36) 0%, rgba(255, 255, 255, 0) 36%, rgba(0, 0, 0, .14) 100%), var(--brushed);
-  background-size: auto, cover;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .3), inset 0 1px 0 rgba(255, 255, 255, .7), 0 34px 54px -32px rgba(0, 0, 0, .95), 0 6px 14px -6px rgba(0, 0, 0, .5);
+/* the three finishes, black on black. Silver: charcoal cloth, a chalk stripe every few millimetres and the twill
+   under it, the light falling off from the top. */
+.vtier-cloth .vcard-in {
+  background-color: #17181b;
+  background-image:
+    linear-gradient(180deg, rgba(236, 236, 232, .06), transparent 42%, rgba(0, 0, 0, .3)),
+    repeating-linear-gradient(90deg, rgba(236, 236, 232, .075) 0 1px, transparent 1px 3.4cqw),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, .022) 0 1px, transparent 1px 3px);
 }
-.vtier-black .vcard-in {
-  background-color: #1d1e21;
-  background-image: radial-gradient(90% 80% at 8% 0%, rgba(255, 255, 255, .1), rgba(255, 255, 255, 0) 60%), var(--stone);
-  background-size: auto, 900px auto, 320px auto; background-blend-mode: normal, overlay, overlay;
+/* Black: blackened steel, bead-blasted to a fine matte grain, one bright edge along the top */
+.vtier-steel .vcard-in {
+  background-color: #1c1e21;
+  background-image:
+    linear-gradient(180deg, rgba(236, 236, 232, .26) 0 1px, transparent 1px),
+    linear-gradient(162deg, rgba(255, 255, 255, .07), transparent 46%, rgba(0, 0, 0, .34)),
+    var(--grain-fine);
+  background-size: auto, auto, 180px 180px;
 }
-.vtier-bordeaux .vcard-in {
-  --vc-ink: rgba(241, 230, 231, .62);
-  background-color: var(--bordeaux);
-  background-image: linear-gradient(158deg, rgba(255, 255, 255, .2) 0%, rgba(255, 255, 255, 0) 38%, rgba(0, 0, 0, .42) 100%), var(--brushed);
-  background-size: auto, cover; background-blend-mode: normal, multiply;
+/* Bordeaux: black nappa, its soft pebble catching a little light, and its seam (below) */
+.vtier-nappa .vcard-in {
+  background-color: #0b0b0c;
+  background-image:
+    linear-gradient(158deg, rgba(255, 255, 255, .055), transparent 40%, rgba(0, 0, 0, .4)),
+    var(--grain-pebble);
+  background-size: auto, 220px 220px;
 }
-/* the club's logo on the card, whole (Logo.astro): the name across the card a little above its middle, and the sign
-   through the L, which at this size (a capital is 3.8% of the card's width) reaches from about a sixth of the
-   card's height to four fifths, clear of the foot line. Its light is clipped by the card's edge like anything
-   printed on it. On steel the letters are pressed in (their lower edge catches the light); on black and on
-   bordeaux they are silver foil. */
-.vcard-logo.logo { position: absolute; left: 19.4%; top: 43.5%; width: 61.2%; height: auto; translate: 0 -50%; }
-.vcard-logo .logo-letters { filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .5)); }
-.vtier-silver .vcard-logo .logo-letters { filter: drop-shadow(0 1px 0 rgba(255, 255, 255, .55)); }
-.vtier-black .vcard-logo, .vtier-bordeaux .vcard-logo { --logo-ink: url(#g-steel); }
-/* along the foot: which card it is, and a member's number, both quiet, on one baseline */
-.vcard-foot { position: absolute; left: 7.5%; right: 7.5%; bottom: 10%; display: flex; justify-content: space-between; align-items: baseline; color: var(--vc-ink); }
-.vcard-tier { font: 500 10px/1 var(--sans); letter-spacing: .3em; text-transform: uppercase; }
-.vcard-no { font: 450 13px/1 var(--display); letter-spacing: .1em; font-variant-numeric: lining-nums tabular-nums; }
-/* a band of light crosses each card once as it lands: the band is the card's own background, swept from left to
-   right (the component moves background-position), so it never reaches past the card's rounded edge. (Moving a
-   band element across instead leaned on the card's clipping, which Safari on the iPhone drops for a tilted card:
-   the light showed as white edges outside the card.) */
-.vcard-glint {
-  position: absolute; inset: 0; z-index: 1; pointer-events: none; border-radius: inherit;
-  background: linear-gradient(100deg, rgba(255, 255, 255, 0) 38%, rgba(255, 255, 255, .7) 50%, rgba(255, 255, 255, 0) 62%) 105% 0 / 260% 100% no-repeat;
-  mix-blend-mode: soft-light;
+/* the nappa's seam: a welt stitched down the card, its middle a line of the red light (the club's own, at any hour,
+   like the logo's needle), the stitches either side of it in thread */
+.vcard-seam { position: absolute; z-index: 1; top: -1px; bottom: -1px; left: 64%; width: 13px; translate: -50% 0; pointer-events: none; }
+.vcard-seam::before {
+  content: ''; position: absolute; top: 0; bottom: 0; left: 6px; width: 1px;
+  background: var(--light-core);
+  box-shadow: 0 0 2px 0 var(--light), 0 0 8px 1px color-mix(in srgb, var(--light) 55%, transparent), 0 0 22px 3px color-mix(in srgb, var(--light) 18%, transparent);
 }
-/* with a mouse: the light follows the pointer while the card tilts */
-.vcard-glare {
-  position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity .4s ease; border-radius: inherit;
-  background: radial-gradient(60% 80% at var(--gx, 50%) var(--gy, 30%), rgba(255, 255, 255, .9), rgba(255, 255, 255, 0) 60%);
-  mix-blend-mode: soft-light;
+.vcard-seam::after {
+  content: ''; position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(180deg, rgba(236, 236, 232, .16) 0 3px, transparent 3px 7px) 0 0 / 1px 100% no-repeat,
+    repeating-linear-gradient(180deg, rgba(236, 236, 232, .16) 0 3px, transparent 3px 7px) 100% 0 / 1px 100% no-repeat;
 }
-.vcard.tilting .vcard-glare { opacity: 1; }
+/* at its head, which card it is: the Label, small */
+.vcard-tier {
+  position: absolute; z-index: 2; left: 7%; top: 10%;
+  font: var(--label-wght) 11px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase;
+  color: var(--vc-ink);
+}
+/* at its foot on the left, the club's logo as the club drew it (Logo.astro), its needle kept close to the name */
+.vcard-logo.logo { position: absolute; z-index: 2; left: 7%; bottom: 13%; width: auto; height: 2.4cqw; --logo-ink: #c3c5c8; }
+/* at its foot on the right, the member's number: the Dial, tall and hairline, like a watch's figures; the № beside
+   it in the Label, level with the figures' top */
+.vcard-no {
+  position: absolute; z-index: 2; right: 7%; bottom: 10%; display: flex; align-items: flex-start; gap: 1.6cqw;
+  font-family: var(--f-flex); font-weight: 140; font-stretch: var(--dial-wdth); font-size: 16cqw; line-height: .74;
+  font-variant-numeric: tabular-nums lining-nums; color: var(--vc-ink);
+}
+.vcard-no span { font: var(--label-wght) 10px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); }
 
 /* the entrance (MemberCards.astro): out of sight until the component takes over (.vf-ready), and back on
    its own after a few seconds should the component never start */
@@ -104,31 +108,35 @@
 html.motion .vfield:not(.vf-ready) :is(.vcard, .vtier-body) { opacity: 0; animation: vf-show .3s ease 3.5s both; }
 
 /* the words under the card, set close; the buttons line up along the bottom of the three */
-.vtier-body { display: flex; flex-direction: column; align-items: flex-start; margin-top: clamp(16px, 1.5vw, 22px); }
-.vtier-sub { margin-top: 4px; font: 400 16px/1.45 var(--sans); color: rgba(230, 231, 233, .8); }
-.vtier .lily-list { gap: 6px; margin-top: 12px; line-height: 1.5; color: rgba(230, 231, 233, .88); text-wrap: balance; }
-.vtier-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px clamp(12px, 1.3vw, 20px); margin-top: auto; padding-top: clamp(16px, 1.4vw, 20px); }
+.vtier-body { display: flex; flex-direction: column; align-items: flex-start; margin-top: clamp(18px, 1.6vw, 24px); }
+.vtier .card-title { font: 500 var(--sub)/1.1 var(--f-text); letter-spacing: -.012em; }
+.vtier-sub { margin-top: 4px; font: 400 16px/1.45 var(--f-text); color: var(--fg-2); }
+.vtier .lily-list { gap: 6px; margin-top: 14px; line-height: 1.5; color: var(--fg); text-wrap: balance; }
+.vtier-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px clamp(14px, 1.4vw, 22px); margin-top: auto; padding-top: clamp(18px, 1.5vw, 22px); }
 .vtier-foot .btn { flex: none; }
-/* On the burgundy field the main button cannot be burgundy too: without a line round it (global.css) it sank into
-   the field. Here it is the capsule of light steel, the steel of every chosen state on the site. */
-.vfield .btn-crimson { background: var(--steel-pill) border-box, #d3d5d9 border-box; color: var(--ink); box-shadow: 0 10px 22px -12px rgba(0, 0, 0, .9); }
-.vfield .btn-crimson:hover { filter: brightness(1.07); }
-.vtier-price { font: 400 14px/1.45 var(--sans); color: rgba(230, 231, 233, .64); }
+/* the price, in the Label as prices are */
+.vtier-price {
+  font: var(--label-wght) 12px/1.3 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase;
+  color: var(--ash);
+}
 
 /* ---------- Tablets and phones: a row to swipe, the next card showing at the edge, a meter under it ---------- */
-.vmeter { display: none; align-items: center; gap: 14px; margin-top: 16px; }
-.vmeter-bar { position: relative; flex: 1; height: 2px; border-radius: 2px; background: rgba(230, 231, 233, .16); overflow: hidden; }
-.vmeter-bar i { position: absolute; top: 0; bottom: 0; left: 0; width: var(--w, 38%); border-radius: inherit; background: var(--metal); translate: var(--x, 0%) 0; }
-.vmeter-n { min-width: 56px; text-align: right; font: 500 13px/1 var(--sans); letter-spacing: .06em; color: rgba(230, 231, 233, .72); font-variant-numeric: tabular-nums; }
+.vmeter { display: none; align-items: center; gap: 14px; margin-top: 18px; }
+.vmeter-bar { position: relative; flex: 1; height: 1px; background: var(--rule-2); overflow: hidden; }
+.vmeter-bar i { position: absolute; top: 0; bottom: 0; left: 0; width: var(--w, 38%); background: var(--shirt); translate: var(--x, 0%) 0; }
+.vmeter-n {
+  min-width: 56px; text-align: right;
+  font: var(--label-wght) 12px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track);
+  color: var(--fg-2); font-variant-numeric: tabular-nums;
+}
 @media (max-width: 1023px) {
   .vdeck {
-    grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: min(calc(100% - 28px), 336px); gap: 16px;
+    grid-template-columns: none; grid-auto-flow: column; gap: 16px;
     margin-inline: calc(-1 * var(--vf-x)); padding: 0 var(--vf-x) 8px;
     overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory; scroll-padding-inline: var(--vf-x); scrollbar-width: none;
   }
   .vdeck::-webkit-scrollbar { display: none; }
-  /* the card peeking in fades at the right; room after the last card, so it comes to rest at the start too */
   /* the card peeking in fades at the right; room after the last card, so it comes to rest at the start too. The
      card's width is taken from the screen (the panel spans the page column), not from the row's own box, which
      that end room changes. */
@@ -138,22 +146,51 @@ html.motion .vfield:not(.vf-ready) :is(.vcard, .vtier-body) { opacity: 0; animat
     -webkit-mask-image: var(--peek-fade); mask-image: var(--peek-fade);
     padding-inline-end: calc(100vw - 2 * var(--pad) - var(--vf-x) - var(--vd-card));
   }
+  /* (a field that is the section itself: the row's edges are the screen's) */
+  .cloth .vfield .vdeck {
+    --vd-card: min(calc(100vw - 2 * var(--pad) - 28px), 336px);
+    padding-inline-end: calc(100vw - var(--pad) - var(--vd-card));
+  }
   .vtier { scroll-snap-align: start; }
   /* the next card peeks in as a clean edge of its plate: its words and its small print wait unseen until it is
      the card in front (MemberCards.astro marks it), so nothing is ever sliced mid-word at the screen's edge */
-  .vfield.vf-ready .vtier :is(.vtier-body, .vcard-foot) { transition: opacity .35s ease; }
-  .vfield.vf-ready .vtier:not(.is-front) :is(.vtier-body, .vcard-foot) { opacity: 0; }
+  .vfield.vf-ready .vtier :is(.vtier-body, .vcard-tier, .vcard-no, .vcard-logo) { transition: opacity .35s ease; }
+  .vfield.vf-ready .vtier:not(.is-front) :is(.vtier-body, .vcard-tier, .vcard-no, .vcard-logo) { opacity: 0; }
   .vtier-body { margin-top: 18px; }
   .vtier .lily-list { margin-top: 10px; }
   .vtier-foot { padding-top: 16px; }
   html.js .vmeter { display: flex; }
 }
 @media (max-width: 699px) {
-  .vfield { --vf-x: 20px; padding-top: 24px; padding-bottom: 22px; border-radius: var(--r-4); }
+  .vfield { --vf-x: 20px; padding-top: 24px; padding-bottom: 22px; }
+  .cloth .vfield { --vf-x: var(--pad); padding: 0; }
   .vdeck { gap: 14px; }
 }
 /* a wide, low screen (a 720px laptop): the cards a little flatter, so the cards, their lists and their buttons
    all stand on one screen under the header */
 @media (min-width: 1024px) and (max-height: 760px) {
   .vcard { aspect-ratio: 1.9; }
+}
+@media (prefers-reduced-motion: reduce) { .vcard-in { transition: none; } }
+
+/* ---------- The membership page (membership/index.astro): the cloth the whole width of the page ----------
+   The page's name is the cards' heading, so the cloth starts close under it and holds its own air. After the cards,
+   over a hairline, the two things a member carries in, drawn in chalk (LineArt.astro): the card, with the way to ask
+   for one, and the cuff and watch, with the dress code. Side by side on a wide screen, one under the other on a
+   phone; each drawing in a box of one shape, so their words stand on one line. */
+.ptitle + .sec.cloth.mem-suit { margin-top: clamp(40px, 5vw, 80px); padding-top: clamp(48px, 5.6vw, 96px); }
+.mem-pair {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 56px var(--gap);
+  margin-top: var(--sec-y); padding-top: clamp(40px, 4vw, 64px); border-top: 1px solid var(--rule);
+}
+.mem-fig { display: grid; align-content: start; justify-items: start; gap: clamp(20px, 2.2vw, 32px); min-width: 0; }
+.mem-art { width: min(100%, 560px); aspect-ratio: 10 / 7; }
+.mem-cap { display: grid; justify-items: start; gap: 10px; }
+/* what it is, quietly, in the text face; then what to know, larger */
+.mem-k { font: 400 15px/1.4 var(--f-text); color: var(--ash); }
+.mem-v { font: 500 clamp(22px, 1.9vw, 30px)/1.15 var(--f-text); letter-spacing: -.014em; color: var(--fg); }
+.mem-cap .lnk { margin-top: 10px; }
+@media (max-width: 899px) {
+  .mem-pair { grid-template-columns: minmax(0, 1fr); }
+  .mem-art { width: 100%; }
 }

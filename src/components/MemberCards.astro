@@ -1,44 +1,42 @@
 ---
-// The club's three cards (membership; styles in styles/vip.css), in a field of concrete with bordeaux light rising
-// from below. Each is set as a real club card: the club's logo across its middle, whole, the sign through the L
-// from near the card's top edge to just above its foot line, the card's name in small capitals at the foot and a
-// member's number beside it. Three finishes: brushed steel, black concrete and bordeaux lacquer, each carrying
-// the logo as the club drew it for that ground (Logo.astro: the one for light ground on steel, graphite letters
-// and a soft red falloff; the one for dark ground on the other two, pale letters and the sign's own light). Under each
-// card: its name, what it is, what comes with it, a request button and the price. The buttons follow the one rule
-// for a row of cards (the bottle sets in TableSets.astro too): steel-edged under the first cards and bordeaux
-// under the last, the top one.
-// From 1024px: the cards are dealt out of one stack as the field arrives, then tilt under the pointer and
-// catch the light. Tablets and phones: a row to swipe, with a meter under it; only the card in front shows its
-// words, the next one is a clean edge of its plate. Nothing moves for reduced motion.
+// The club's three cards (membership; styles in styles/vip.css), on the navy cloth with its chalk stripe (global.css,
+// .cloth: the suit sections). «Между», 2026-11-21: the three are a black-on-black set, each made of what a good suit
+// and a good car are made of. Silver is charcoal cloth with a chalk stripe; Black is blackened steel, bead-blasted,
+// with one bright edge; Bordeaux is black nappa with a seam of red light down it. Each is set as a real club card:
+// which card it is at the head in the Label, the club's logo at the foot as the club drew it (Logo.astro, with its
+// needle of red light at the L), and the member's number in the Dial, hairline and tall like a watch's figures. A
+// number, never a name. Under each card: its name, what it is, what comes with it, a request button and the price.
+// The buttons follow the one rule for a row of cards: the frame under the first cards, the cuff under the last, the
+// top one.
+// From 1024px: the cards are dealt out of one stack as the field arrives, then lean a little under the pointer.
+// Tablets and phones: a row to swipe, with a meter under it; only the card in front shows its words, the next one is
+// a clean edge of its plate. Nothing moves for reduced motion.
 // A page can set a heading for the cards; it stands inside the field, over the cards, on their left edge:
 //   <MemberCards lang={lang}><div slot="head" class="bighead bh-line">…</div></MemberCards>
+// Inside a section that is cloth already (the membership page), the field paints nothing of its own (vip.css).
 import { type Lang, ui, tr } from '../data/i18n';
 import { keepShort } from '../data/format';
 import { tiers, vip } from '../data/content';
-import { logoDark } from '../data/art';
 import Logo from './Logo.astro';
 import '../styles/vip.css';
 const { lang } = Astro.props as { lang: Lang };
-const finish = ['silver', 'black', 'bordeaux'];
+const finish = ['cloth', 'steel', 'nappa'];
 const hasHead = Astro.slots.has('head');
 const pad2 = (n: number) => String(n).padStart(2, '0');
 /** The tiers' names: under the section's own heading when it has one, else straight under the page's title. */
 const Title = hasHead ? 'h3' : 'h2';
 ---
-<div class="vfield">
-  {/* (the gradients of the logo for light ground, for the steel card: Logo.astro) */}
-  <svg class="svg-defs" aria-hidden="true" focusable="false"><defs set:html={logoDark.defs} /></svg>
+<div class="vfield cloth">
   {hasHead && <slot name="head" />}
   <div class="vdeck" data-deal data-lenis-prevent-horizontal>
     {tiers.map((p, i) => (
       <article class:list={['vtier', `vtier-${finish[i % finish.length]}`]}>
         <div class="vcard" aria-hidden="true">
           <div class="vcard-in">
-            <Logo class="vcard-logo" tone={finish[i % finish.length] === 'silver' ? 'dark' : 'light'} />
-            <span class="vcard-foot"><span class="vcard-tier">{p.name}</span><span class="vcard-no">№&nbsp;0001</span></span>
-            <span class="vcard-glint"></span>
-            <span class="vcard-glare"></span>
+            {finish[i % finish.length] === 'nappa' && <span class="vcard-seam"></span>}
+            <span class="vcard-tier">{p.name}</span>
+            <Logo class="vcard-logo" sign="tight" />
+            <span class="vcard-no"><span>№</span>0001</span>
           </div>
         </div>
         <div class="vtier-body">
@@ -46,7 +44,7 @@ const Title = hasHead ? 'h3' : 'h2';
           <p class="vtier-sub" set:html={keepShort(tr(p.sub, lang), lang)} />
           <ul class="lily-list">{p.items.map((x) => <li><span set:html={keepShort(tr(x, lang), lang)} /></li>)}</ul>
           <div class="vtier-foot">
-            <a class:list={['btn btn-sm', i === tiers.length - 1 ? 'btn-crimson' : 'btn-silver']} href={`/${lang}/booking/?type=card`} aria-label={`${tr(vip.request, lang)}: ${p.name}`}>{tr(vip.request, lang)}</a>
+            <a class:list={['btn btn-sm', i === tiers.length - 1 ? 'btn-crimson' : 'btn-line']} href={`/${lang}/booking/?type=card`} aria-label={`${tr(vip.request, lang)}: ${p.name}`}>{tr(vip.request, lang)}</a>
             <span class="vtier-price">{ui[lang].priceOnRequest}</span>
           </div>
         </div>
@@ -65,7 +63,7 @@ const Title = hasHead ? 'h3' : 'h2';
   const pad2 = (n: number) => String(n).padStart(2, '0');
 
   /** After the 18+ question, once the page has loaded and its web fonts are in (never waiting long for either),
-   *  so the cards are dealt where they end up and never behind the curtain. */
+   *  so the cards are dealt where they end up and never behind the door. */
   function whenSettled(fn: () => void) {
     const wait = (p: Promise<unknown>, ms: number) => Promise.race([p, new Promise((r) => setTimeout(r, ms))]);
     const loaded = new Promise((r) => (document.readyState === 'complete' ? r(0) : addEventListener('load', r, { once: true })));
@@ -78,15 +76,12 @@ const Title = hasHead ? 'h3' : 'h2';
     else addEventListener('hotland:gate', go, { once: true });
   }
 
-  /** Phones: the meter under the row says how far along it is and which card is in front. When a swipe comes
-   *  to rest on another card, `settle` gets its number (a band of light then crosses that card). */
-  function meter(field: HTMLElement, deck: HTMLElement, tiers: HTMLElement[], settle?: (i: number) => void) {
+  /** Phones: the meter under the row says how far along it is and which card is in front. */
+  function meter(field: HTMLElement, deck: HTMLElement, tiers: HTMLElement[]) {
     const thumb = field.querySelector<HTMLElement>('.vmeter i');
     const count = field.querySelector<HTMLElement>('.vmeter-n');
     if (!thumb || !count) return;
     let queued = 0;
-    let front = 0;
-    let rest = 0;
     const frontNow = () => {
       const step = tiers.length > 1 ? tiers[1].offsetLeft - tiers[0].offsetLeft : 0;
       return step > 0 ? Math.max(0, Math.min(tiers.length - 1, Math.round(deck.scrollLeft / step))) : 0;
@@ -104,47 +99,39 @@ const Title = hasHead ? 'h3' : 'h2';
       tiers.forEach((t, i) => t.classList.toggle('is-front', i === now));
     };
     const queue = () => { if (!queued) queued = requestAnimationFrame(measure); };
-    deck.addEventListener('scroll', () => {
-      queue();
-      clearTimeout(rest);
-      rest = window.setTimeout(() => {
-        const i = frontNow();
-        if (i !== front) { front = i; settle?.(i); }
-      }, 160);
-    }, { passive: true });
+    deck.addEventListener('scroll', queue, { passive: true });
     addEventListener('resize', queue);
     measure();
   }
 
-  /** A mouse: the card tilts under the pointer and the light follows it. */
+  /** A mouse: the card leans a little under the pointer, as a card does when it is picked up. (The light that
+   *  used to slide across it is gone: nothing glossy.) */
   function tilt(cards: HTMLElement[]) {
     cards.forEach((card) => {
-      const metal = card.querySelector<HTMLElement>('.vcard-in');
-      if (!metal) return;
+      const face = card.querySelector<HTMLElement>('.vcard-in');
+      if (!face) return;
       card.addEventListener('pointermove', (e) => {
         if (e.pointerType === 'touch') return;
         const r = card.getBoundingClientRect();
         const x = (e.clientX - r.left) / r.width;
         const y = (e.clientY - r.top) / r.height;
         card.classList.add('tilting');
-        metal.style.setProperty('--ry', `${((x - 0.5) * 16).toFixed(2)}deg`);
-        metal.style.setProperty('--rx', `${((0.5 - y) * 12).toFixed(2)}deg`);
-        metal.style.setProperty('--gx', `${(x * 100).toFixed(1)}%`);
-        metal.style.setProperty('--gy', `${(y * 100).toFixed(1)}%`);
+        face.style.setProperty('--ry', `${((x - 0.5) * 10).toFixed(2)}deg`);
+        face.style.setProperty('--rx', `${((0.5 - y) * 8).toFixed(2)}deg`);
       });
       card.addEventListener('pointerleave', () => {
         card.classList.remove('tilting');
-        metal.style.removeProperty('--rx');
-        metal.style.removeProperty('--ry');
+        face.style.removeProperty('--rx');
+        face.style.removeProperty('--ry');
       });
     });
   }
 
   /** The entrance, once, as the field arrives. Desktop: the cards are dealt out of one fanned stack on the
-   *  middle card. Phones: they rise into the row. Then the words follow and a band of light crosses the metal.
-   *  Until this runs, CSS keeps the cards out of sight (html.motion, vip.css); `.vf-ready` hands them over.
-   *  The start is watched with an IntersectionObserver, so pictures loading above can't make it late. */
-  function entrance(deck: HTMLElement, cards: HTMLElement[], bodies: HTMLElement[], glints: HTMLElement[]) {
+   *  middle card. Phones: they rise into the row. Then the words follow. Until this runs, CSS keeps the cards out
+   *  of sight (html.motion, vip.css); `.vf-ready` hands them over. The start is watched with an
+   *  IntersectionObserver, so pictures loading above can't make it late. */
+  function entrance(deck: HTMLElement, cards: HTMLElement[], bodies: HTMLElement[]) {
     gsap.matchMedia().add({ wide: '(min-width: 1024px)', narrow: '(max-width: 1023px)' }, (ctx) => {
       if (deck.getBoundingClientRect().bottom < 0) return; // already scrolled past: leave them in place
       const wide = Boolean(ctx.conditions?.wide);
@@ -175,7 +162,6 @@ const Title = hasHead ? 'h3' : 'h2';
           tl.to(cards, { opacity: 1, y: 0, duration: 0.7, ease: 'expo.out', stagger: 0.06 }, 0)
             .to(bodies.slice(0, 1), { opacity: 1, y: 0, duration: 0.6, ease: 'expo.out' }, 0.12);
         }
-        tl.fromTo(glints, { backgroundPosition: '105% 0%' }, { backgroundPosition: '-5% 0%', duration: 1.05, ease: 'power2.inOut', stagger: 0.08 }, wide ? 0.45 : 0.3);
       });
       // (as soon as a sliver of the row is on screen: a reader who stops with the field just in view must not
       // look at an empty one)
@@ -197,15 +183,10 @@ const Title = hasHead ? 'h3' : 'h2';
       const tiers = Array.from(deck.querySelectorAll<HTMLElement>('.vtier'));
       const pick = (s: string) => tiers.map((t) => t.querySelector<HTMLElement>(s)).filter((el): el is HTMLElement => Boolean(el));
       const cards = pick('.vcard');
-      const glints = pick('.vcard-glint');
-      const shine = (i: number) => {
-        if (still || !glints[i]) return;
-        gsap.fromTo(glints[i], { backgroundPosition: '105% 0%' }, { backgroundPosition: '-5% 0%', duration: 1.05, ease: 'power2.inOut', overwrite: true });
-      };
-      meter(field, deck, tiers, shine);
+      meter(field, deck, tiers);
       if (still) return;
       if (mouse) tilt(cards);
-      if (root.classList.contains('motion')) entrance(deck, cards, pick('.vtier-body'), glints);
+      if (root.classList.contains('motion')) entrance(deck, cards, pick('.vtier-body'));
     } catch (err) {
       console.error(err);
       field.querySelectorAll('.vcard, .vtier-body').forEach((el) => el.removeAttribute('style'));

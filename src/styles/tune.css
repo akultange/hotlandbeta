@@ -1,42 +1,40 @@
 /* =====================================================================
-   "Tune in" (GalleryTune.astro): the way into the gallery, in the middle of the four pictures (artists page).
-   Outside in: a crimson light breathing behind, the ticks of a tuning dial, a slowly turning ring of words, a
-   chrome bezel and the lens, the gallery's pictures passing through it, a play mark on glass in the middle.
+   "Tune in" (GalleryTune.astro): the way into the gallery, in the middle of the four pictures (artists page; on no
+   page at the moment). Outside in: the ticks of a tuning dial, a slowly turning ring of words, a ring of blackened
+   steel and the lens, the gallery's pictures passing through it, a play mark on smoke in the middle.
+   (2026-11-21, «Между»: the crimson light breathing behind it, the chrome bezel and the blurred glass are gone; the
+   dial's long ticks and the press are lit with the light of lines, --lit.)
    ===================================================================== */
 
 /* the four pictures and the lens over the middle of them */
 .gal-peek { position: relative; isolation: isolate; }
 .gal-peek:focus-visible { outline: none; }
-.gal-peek:focus-visible .tune-bezel { box-shadow: 0 0 0 2px var(--light), 0 14px 40px -10px rgba(0, 0, 0, .9); }
+.gal-peek:focus-visible .tune-bezel { box-shadow: 0 0 0 var(--seam) var(--lit); }
 
 .tune {
   position: absolute; left: 50%; top: 50%; z-index: 2; width: clamp(156px, 15vw, 224px); aspect-ratio: 1;
   translate: -50% -50%; pointer-events: none; transition: scale .6s var(--ease-out);
 }
 .tune > * { position: absolute; }
-.tune-glow {
-  inset: -22%; z-index: -1; border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(168, 24, 46, .55) 0%, rgba(168, 24, 46, .2) 46%, rgba(168, 24, 46, 0) 100%);
-  animation: tune-breathe 3.8s ease-in-out infinite;
-}
-/* the dark disc the dial and the words sit on, so they read over any picture */
+/* (no light breathes behind the lens) */
+.tune-glow { display: none; }
+/* the dark disc the dial and the words sit on, so they read over any picture: smoked, solid, never blurred */
 .tune::before {
   content: ''; position: absolute; inset: 0; border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(6, 6, 7, .92) 70%, rgba(6, 6, 7, .78) 88%, rgba(6, 6, 7, 0) 100%);
-  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  background: radial-gradient(closest-side, rgba(5, 5, 6, .94) 70%, rgba(5, 5, 6, .8) 88%, rgba(5, 5, 6, 0) 100%);
 }
 .tune-dial, .tune-ring { inset: 0; width: 100%; height: 100%; overflow: visible; }
-.tune-dial line { stroke: rgba(230, 231, 233, .28); stroke-width: .8; stroke-linecap: round; }
-.tune-dial line.big { stroke: rgba(255, 43, 61, .8); stroke-width: 1.1; }
-.tune-ring text { font: 600 10.6px/1 var(--sans); letter-spacing: .02em; fill: var(--fg); }
+.tune-dial line { stroke: var(--rule-2); stroke-width: .8; stroke-linecap: round; }
+.tune-dial line.big { stroke: var(--lit); stroke-width: 1.1; }
+.tune-ring text { font: var(--label-wght) 10.6px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase; fill: var(--fg); }
 .tune-ring { animation: tune-turn 28s linear infinite; }
 .tune-dial { animation: tune-turn 90s linear infinite reverse; }
 
-/* the chrome bezel round the lens */
+/* the ring of blackened steel round the lens, its one bright edge a hairline */
 .tune-bezel {
   inset: 18%; border-radius: 50%;
-  background: conic-gradient(from 200deg, #f3f4f6, #7a7d83 14%, #dcdee2 30%, #4b4d52 46%, #eceef1 62%, #808389 78%, #f3f4f6);
-  box-shadow: 0 14px 40px -10px rgba(0, 0, 0, .9), 0 0 0 1px rgba(255, 255, 255, .12), 0 0 34px -4px rgba(168, 24, 46, .65);
+  background: var(--steel);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--steel-hi) 60%, transparent);
 }
 /* the lens: the gallery passing by, one picture after another, each pushing in a little */
 .tune-lens { inset: 20.5%; border-radius: 50%; overflow: hidden; isolation: isolate; background: #0b0b0c; clip-path: circle(50%); }
@@ -46,17 +44,16 @@
 }
 .tune-tint {
   position: absolute; inset: 0; z-index: 1;
-  background: radial-gradient(closest-side, rgba(0, 0, 0, 0) 38%, rgba(0, 0, 0, .55) 100%), linear-gradient(160deg, rgba(168, 24, 46, .16), rgba(0, 0, 0, .1));
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0) 38%, rgba(0, 0, 0, .55) 100%);
 }
-/* glass in the middle, and on it the play mark */
+/* smoke in the middle, and on it the play mark */
 .tune-play {
   position: absolute; left: 50%; top: 50%; z-index: 2; display: grid; place-items: center; width: 40%; aspect-ratio: 1;
   translate: -50% -50%; border-radius: 50%;
-  background: rgba(10, 10, 12, .34); -webkit-backdrop-filter: blur(8px) saturate(1.4); backdrop-filter: blur(8px) saturate(1.4);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .28), inset 0 1px 0 rgba(255, 255, 255, .35), 0 6px 18px -6px rgba(0, 0, 0, .8);
-  transition: scale .5s var(--ease-back), background-color .3s ease;
+  background: var(--smoke); box-shadow: inset 0 0 0 1px var(--rule-2);
+  transition: scale .5s var(--ease-back), box-shadow .3s ease;
 }
-.tune-play svg { width: 46%; height: 46%; fill: #fff; translate: 4% 0; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .5)); }
+.tune-play svg { width: 46%; height: 46%; fill: var(--shirt); translate: 4% 0; }
 
 @keyframes tune-turn { to { rotate: 360deg; } }
 @keyframes tune-breathe { 50% { opacity: .55; scale: .93; } }
@@ -69,11 +66,10 @@
   100% { opacity: 0; scale: 1.02; }
 }
 
-/* pointing at the pictures: the lens comes forward, the glass turns crimson */
+/* pointing at the pictures: the lens comes forward, its play mark's hairline comes up to shirt white */
 @media (hover: hover) {
   .gal-peek:hover .tune { scale: 1.07; }
-  .gal-peek:hover .tune-play { scale: 1.1; background-color: rgba(134, 18, 38, .62); }
-  .gal-peek:hover .tune-glow { animation-duration: 1.9s; }
+  .gal-peek:hover .tune-play { scale: 1.1; box-shadow: inset 0 0 0 1px var(--shirt); }
 }
 .gal-peek:active .tune { scale: .96; transition-duration: .15s; }
 
@@ -88,7 +84,7 @@
 }
 
 /* ---------- Into the gallery through the lens ----------
-   The press (GalleryTune.astro): the words and the dial spin up, the light flares, the glass turns crimson. Then the
+   The press (GalleryTune.astro): the words and the dial spin up and the ring round the lens is lit. Then the
    gallery opens out of the lens: the new page is revealed through a circle growing from the lens, coming forward as
    it opens, while the page you leave falls into the lens, darkening. Browsers that animate between pages do it as a
    view transition of the type "lens" (Base.astro's first script sets the type and the lens's place); the others
@@ -96,14 +92,14 @@
 .gal-peek.tuning .tune { scale: 1.1; transition: scale .35s var(--ease-out); }
 .gal-peek.tuning .tune-ring { animation: tune-turn .55s cubic-bezier(.5, 0, .3, 1) infinite; }
 .gal-peek.tuning .tune-dial { animation: tune-turn .8s linear infinite reverse; }
-.gal-peek.tuning .tune-dial line { stroke: rgba(255, 43, 61, .95); }
-.gal-peek.tuning .tune-glow { animation: none; opacity: 1; scale: 1.35; transition: scale .35s var(--ease-out); }
-.gal-peek.tuning .tune-play { scale: .82; background-color: rgba(168, 24, 46, .9); }
-/* the ring of light round the lens: lit by the press, and the thing that flies out (its own part of the passage) */
+.gal-peek.tuning .tune-dial line { stroke: var(--lit); }
+.gal-peek.tuning .tune-play { scale: .82; }
+/* the ring of light round the lens: lit by the press (a line of the light, its core and its bloom), and the thing
+   that flies out (its own part of the passage) */
 .tune-halo {
   inset: 17.2%; border-radius: 50%; opacity: 0; transition: opacity .25s ease;
-  border: 2px solid rgba(255, 226, 232, .95);
-  box-shadow: 0 0 18px 3px rgba(204, 40, 62, .85), 0 0 46px 8px rgba(168, 24, 46, .55), inset 0 0 18px 2px rgba(204, 40, 62, .6);
+  border: var(--seam) solid var(--lit-core);
+  box-shadow: var(--seam-glow), inset 0 0 10px 1px color-mix(in srgb, var(--lit) 45%, transparent);
 }
 .gal-peek.tuning .tune-halo { opacity: 1; view-transition-name: lens-halo; }
 
@@ -116,7 +112,7 @@ html:active-view-transition-type(lens)::view-transition-new(root) { animation: l
 html:active-view-transition-type(lens)::view-transition-old(lens-halo) { animation: lens-fly 1.2s var(--lens-ease) both; }
 @keyframes lens-fall { to { scale: 3.2; filter: blur(14px) brightness(.15); } }
 @keyframes lens-open {
-  from { clip-path: circle(var(--lens-r, 70px) at var(--lens-x, 50%) var(--lens-y, 50%)); scale: 1.12; filter: brightness(1.8) saturate(1.4); }
+  from { clip-path: circle(var(--lens-r, 70px) at var(--lens-x, 50%) var(--lens-y, 50%)); scale: 1.12; filter: brightness(1.8); }
   to { clip-path: circle(var(--lens-rf, 150vmax) at var(--lens-x, 50%) var(--lens-y, 50%)); scale: 1; filter: none; }
 }
 @keyframes lens-fly {
@@ -154,13 +150,13 @@ html.lens-in:not(.lens-vt) body::after {
 .gal-reel-track { display: flex; width: max-content; animation: gal-reel 70s linear infinite; }
 .gal-reel img {
   flex: none; height: clamp(170px, 18vw, 290px); aspect-ratio: 3 / 4; margin-right: clamp(10px, 1.1vw, 18px);
-  object-fit: cover; border-radius: var(--r-2); filter: brightness(.46) saturate(.9);
+  object-fit: cover; filter: var(--grade) brightness(.46);
   transition: filter .6s ease;
 }
 @keyframes gal-reel { to { translate: -50% 0; } }
 @media (hover: hover) {
   .gal-band:hover .gal-reel-track { animation-play-state: paused; }
-  .gal-band:hover .gal-reel img { filter: brightness(.62) saturate(1); }
+  .gal-band:hover .gal-reel img { filter: var(--grade) brightness(.62); }
 }
 .gal-band .tune { width: clamp(168px, 16vw, 236px); }
 @media (max-width: 699px) {
@@ -170,7 +166,8 @@ html.lens-in:not(.lens-vt) body::after {
 @media (prefers-reduced-motion: reduce) { .gal-reel-track { animation: none; } }
 
 /* ---------- The way back (GalleryNext.astro, the end of the gallery) ----------
-   One quiet line and a silver button that goes straight on to the part of the page they came from. */
+   One quiet line and a framed button (the frame: one pixel of shirt white) that goes straight on to the part of the
+   page they came from. */
 .gnext { padding: var(--sec-y) 0; background: var(--black); }
 .gnext-in { display: grid; justify-items: center; gap: 18px; text-align: center; }
 .gnext-kick { font: 400 clamp(16px, 1.2vw, 18px)/1.5 var(--sans); color: var(--fg-2); }

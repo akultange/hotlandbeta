@@ -10,8 +10,10 @@
 // already in the message.
 // One dialog for the whole site (Base.astro), opened by any link or button with data-apply; data-apply-role="2"
 // comes with that role chosen and opens on step 2. The links still go to /careers/ (with ?role= and #apply), so
-// without scripts nothing is lost, and /careers/#apply opens the dialog straight away. Desktop: a backstage
-// picture on the left, the steps on the right. Phones: the steps fill the screen, the buttons at the foot.
+// without scripts nothing is lost, and /careers/#apply opens the dialog straight away. Desktop: the dressing room on
+// the left (the casting call's own picture: the bulb-lit mirror and its free chair, nobody in it; until 2026-11-21 it
+// was two artists at a mirror in their underwear), the steps on the right. Phones: the steps fill the screen, the
+// buttons at the foot.
 // It sends to /api/careers (the managers' Telegram), as the careers form did. Personal data never goes into the URL.
 import { photo } from '../data/images';
 import { type Lang, ui, tr } from '../data/i18n';
@@ -52,12 +54,12 @@ const vias = ['WhatsApp', 'Telegram', f.call];
 const [, consentA, consentLink, consentB] =
   f.consent.match(/^(.*?)(политику конфиденциальности|the privacy policy)(.*)$/) ?? f.consent.match(/^(.*\s)(\S+\s+\S+)()$/) ?? ['', '', f.consent, ''];
 const unit = (t: string) => t.replace(/(\d) (?=\p{L})/gu, '$1\u00a0');
-const pic = await photo('/media/gal-06-dressing-room.webp', '42vw');
+const pic = await photo('/media/casting-room.webp', '42vw');
 ---
 <dialog class="apl" id="apply-dlg" aria-labelledby="apl-title" data-lenis-prevent data-wa={site.whatsapp} data-l={JSON.stringify({ needContact: L.needContact, needConsent: L.needConsent, hello: L.hello })}>
   <h2 class="sr-only" id="apl-title">{L.title}</h2>
   <div class="apl-in">
-    <figure class="apl-pic" aria-hidden="true"><img src="/media/gal-06-dressing-room.webp" {...pic} alt="" loading="lazy" decoding="async" /></figure>
+    <figure class="apl-pic apl-room" aria-hidden="true"><img src="/media/casting-room.webp" {...pic} alt="" loading="lazy" decoding="async" /></figure>
     <form class="apl-box" novalidate data-step="1">
       <header class="apl-top">
         <p class="apl-count" aria-hidden="true"><b data-apl-n>01</b><span>/&nbsp;03</span></p>

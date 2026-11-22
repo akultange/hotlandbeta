@@ -1,7 +1,12 @@
 ---
+// The booking page. The booking itself is the full-screen dialog (Book.astro), which opens straight away here; the
+// page under it is what stays when it is closed: the three steps and their button, the table with its lamp (the
+// line art, out until the table is booked: the thanks page lights it), and beside them the call-back card and the
+// terms in short.
 import Base from '../../../layouts/Base.astro';
 import Logo from '../../../components/Logo.astro';
 import PageTitle from '../../../components/PageTitle.astro';
+import LineArt from '../../../components/LineArt.astro';
 import { type Lang, ui, langPaths } from '../../../data/i18n';
 import { site } from '../../../data/site';
 import { bookingFine } from '../../../data/content';
@@ -29,10 +34,12 @@ import { keepShort } from '../../../data/format';
     <div class="wrap g12" style="align-items: start">
       <div class="stack bk-cta" style="grid-column: 1 / span 7">
         <h2 class="t-l" set:html={ru ? 'Бронь <em>в&nbsp;три шага</em>' : 'Book <em>in three steps</em>'} />
-        <p class="body" set:html={keepShort(ru ? 'Что выбираете, сколько вас и как с вами связаться. Менеджер подтвердит бронь и назовёт депозит.' : 'What you’re booking, how many of you and how to reach you. Your manager confirms and names the deposit.', lang)} />
+        <p class="body" set:html={keepShort(ru ? 'Что выбираете, сколько вас и как с вами связаться. Менеджер подтвердит бронь и назовёт депозит.' : 'What you’re booking, how many of you and how to reach you. Your manager confirms and names the deposit.', lang)} />
         <div class="btns">
           <button class="btn btn-crimson" type="button" data-book aria-haspopup="dialog">{ru ? 'Забронировать' : 'Book a table'}</button>
         </div>
+        <!-- the table waiting: its lamp is out (lit only when the room is, after 04:00) -->
+        <LineArt name="lamp" class="bk-page-lamp" />
       </div>
       <aside class="stack" style="grid-column: 9 / span 4; gap: 56px">
         <div class="invite">
@@ -42,7 +49,7 @@ import { keepShort } from '../../../data/format';
             <div class="vx-part" data-v="contact:luka">
               <p class="t-s">{ru ? 'Удобнее по телефону или есть вопрос?' : 'Prefer to talk, or have a question?'}</p>
               <div class="btns invite-ask">
-                <!-- (silver, as in «Как нас найти»: «Забронировать» stays the page's one crimson action) -->
+                <!-- (frames, as in «Как нас найти»: «Забронировать» stays the page's one cuff) -->
                 <button class="btn btn-line btn-sm" type="button" data-contact="callback">{ru ? 'Заказать звонок' : 'Request a call'}</button>
                 <button class="btn btn-line btn-sm" type="button" data-contact="question">{ru ? 'Задать вопрос' : 'Ask a question'}</button>
               </div>
@@ -72,13 +79,18 @@ import { keepShort } from '../../../data/format';
 
 <style>
   .bk-cta { max-width: 640px; }
-  /* a computer: the three steps and their button are short beside the card and the terms, so they stay in view,
-     under the header, while the taller column passes (the left half of the screen is never left empty) */
+  /* a computer: the three steps, their button and the table are short beside the card and the terms, so they stay
+     in view, under the header, while the taller column passes (the left half of the screen is never left empty) */
   @media (min-width: 900px) and (min-height: 600px) { .bk-cta { position: sticky; top: calc(var(--hdr) + 32px); } }
+  /* the table with its lamp, under the button: as tall as the screen allows beside the steps, a little smaller on a
+     phone. Its light is the room's (--room, global.css: after 04:00); a booked table's is lit (the thanks page). */
+  .bk-cta :global(.bk-page-lamp) { width: min(100%, 340px, 40vh); margin-top: clamp(4px, 1.6vw, 24px); }
+  .bk-cta :global(.bk-page-lamp .la-light) { opacity: var(--room); transition: opacity 1.2s ease; }
+  @media (max-width: 899px) { .bk-cta :global(.bk-page-lamp) { width: min(64vw, 260px); } }
   /* The card beside the steps, square-cut like every plate. Its buttons stand in one column of one width: the two
      requests one under the other, the two messengers side by side under them, each half that width. (Left to wrap
      by themselves, the two requests stacked at two different widths.) */
-  .invite { justify-self: stretch; border-radius: var(--r-5); } /* (as wide as its column, whatever its words: the English ones left it narrower) */
+  .invite { justify-self: stretch; } /* (as wide as its column, whatever its words: the English ones left it narrower) */
   .invite .t-s { text-wrap: balance; }
   .invite .btns { display: grid; gap: 10px; width: min(100%, 264px); }
   .invite .invite-msg { grid-template-columns: repeat(2, minmax(0, 1fr)); }

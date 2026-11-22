@@ -1,40 +1,36 @@
-/* Finding the club (Visit.astro): the end of the home page, and the About page's contacts. Loaded after
-   global.css (Base.astro); its classes start with .vs.
+/* Finding the club (Visit.astro): the About page's contacts (and the home page's end, when it comes back there).
+   Loaded after global.css (Base.astro); its classes start with .vs.
 
-   Easy to read, top to bottom: the heading, the address, the four facts as a plain list (a label, then the
-   answer) and the two ways to get here. Beside them a round peephole looks out at the door: the film's edge
-   dissolves into the black like the view through a door viewer. Phones: one column in the same order, with the
-   peephole after the address. The air above and below is every section's (.sec, --sec-y). */
+   Easy to read, top to bottom: the heading, the address, the facts as a plain list (a label, then the answer) and
+   the two ways to get here. Beside them the car at the side door, drawn: a long black saloon on wet asphalt, the
+   door's red seam behind it. It hangs as every drawing on the site does, on lacquer inside one hairline. Phones:
+   one column in the same order, the drawing after the address. The air above and below is every section's (.sec,
+   --sec-y). (2026-11-21, «Между»: the round peephole with its film of the door gave way to the drawing, and the
+   street in brushed metal letters to plain shirt white.) */
 
-@property --vs-iris { syntax: '<percentage>'; inherits: false; initial-value: 100%; }
-
-.vs { --vs-lens: clamp(300px, min(34vw, 62vh), 470px); }
-/* desktop: the peephole on the left; the words in one column on the right, centred on it */
+/* desktop: the car on the left, wide; the words in one column on the right, centred on it */
 .vs-wrap {
-  display: grid; grid-template-columns: var(--vs-lens) minmax(0, 1fr); grid-template-rows: 1fr auto auto auto 1fr;
-  column-gap: clamp(40px, 6vw, 104px); align-items: start;
+  display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); grid-template-rows: 1fr auto auto auto 1fr;
+  column-gap: clamp(36px, 5vw, 88px); align-items: start;
 }
-.vs-peep { grid-column: 1; grid-row: 1 / -1; align-self: center; }
-.vs-wrap > :not(.vs-peep) { grid-column: 2; max-width: 640px; }
+.vs-plate { grid-column: 1; grid-row: 1 / -1; align-self: center; }
+.vs-wrap > :not(.vs-plate) { grid-column: 2; max-width: 600px; }
 .vs-head { grid-row: 2; display: grid; justify-items: start; gap: clamp(10px, 1vw, 14px); }
 .vs-facts { grid-row: 3; }
 .vs-btns { grid-row: 4; }
 
+/* ---------- The drawing: on lacquer, one hairline, square ---------- */
+.vs-plate { margin: 0; padding: clamp(14px, 2.2vw, 32px); background: var(--lacquer); box-shadow: inset 0 0 0 1px var(--rule); }
+.vs-car { width: 100%; }
+
 /* ---------- The address: clear and big, but no bigger than the heading's company ---------- */
 .vs-addr {
   max-width: 100%;
-  font: 500 clamp(28px, 2.95vw, 48px)/1.05 var(--display); letter-spacing: -.004em;
+  font: 500 clamp(26px, 2.6vw, 42px)/1.08 var(--f-text); letter-spacing: -.012em; color: var(--fg);
   text-wrap: balance;
 }
-.vs-street {
-  background-image: var(--sheen), var(--brushed);
-  background-size: 100% 100%, cover; background-position: 0 0, center;
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-box-decoration-break: clone; box-decoration-break: clone;
-  color: transparent; -webkit-text-fill-color: transparent;
-  padding-right: .02em;
-}
-/* the city is the address's quiet half, said as a title's second half is: the same face and weight, concrete grey */
+.vs-street { padding-right: .02em; }
+/* the city is the address's quiet half, said as a title's second half is: the same face and weight, in ash */
 .vs-city { color: var(--quiet); }
 
 /* ---------- The facts: a label, then the answer, one per line ---------- */
@@ -43,46 +39,12 @@
   display: grid; grid-template-columns: minmax(7.5em, 9.5em) minmax(0, 1fr); align-items: baseline; gap: 4px 20px;
   padding: 14px 0; border-top: 1px solid var(--rule);
 }
+.vs-fact:first-child { border-top-color: var(--rule-2); }
 .vs-fact:last-child { border-bottom: 1px solid var(--rule); }
-.vs-fact dt { font: 400 15px/1.45 var(--sans); color: var(--muted); }
-.vs-fact dd { margin: 0; font: 400 18px/1.45 var(--sans); color: var(--fg-2); }
-.vs-fact dd b { font-weight: 600; color: var(--fg); font-variant-numeric: lining-nums; }
+.vs-fact dt { font: 400 16px/1.45 var(--f-text); color: var(--ash); }
+.vs-fact dd { margin: 0; font: 400 18px/1.45 var(--f-text); color: var(--fg-2); }
+.vs-fact dd b { font-weight: 500; color: var(--fg); font-variant-numeric: lining-nums tabular-nums; }
 .vs-fact dd b.whole { white-space: nowrap; }
-
-/* ---------- The peephole ---------- */
-.vs-peep { display: grid; place-items: center; margin: 0; }
-.vs-lens { position: relative; display: block; width: var(--vs-lens); aspect-ratio: 1; border-radius: 50%; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.vs-lens:focus-visible { outline-offset: 6px; }
-/* the view through the lens: round, and its edge dissolves into the black */
-.vs-glass {
-  --vs-iris: 100%;
-  position: absolute; inset: 0; display: block; overflow: hidden; border-radius: 50%; background: #0b0b0c; isolation: isolate;
-  -webkit-mask-image: radial-gradient(closest-side, #000 calc(var(--vs-iris) * .56), rgba(0, 0, 0, .6) calc(var(--vs-iris) * .8), transparent var(--vs-iris));
-  mask-image: radial-gradient(closest-side, #000 calc(var(--vs-iris) * .56), rgba(0, 0, 0, .6) calc(var(--vs-iris) * .8), transparent var(--vs-iris));
-}
-.vs-glass :is(img, video) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; scale: 1.14; transform-origin: 57% 46%; }
-/* the film comes in over the still once it is really playing */
-.vs-glass video { opacity: 0; transition: opacity .6s ease; }
-.vs-lens.rolling .vs-glass video { opacity: 1; }
-/* a little light on the glass */
-.vs-glass::after {
-  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
-  background: radial-gradient(circle at 32% 26%, rgba(255, 255, 255, .13), rgba(255, 255, 255, 0) 30%);
-  mix-blend-mode: screen;
-}
-/* pause and play: shown under the pointer or keyboard focus */
-.vs-ctl {
-  position: absolute; left: 50%; top: 50%; width: 56px; height: 56px; margin: -28px 0 0 -28px; z-index: 2;
-  border-radius: 50%; background: rgba(0, 0, 0, .5); box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .22);
-  opacity: 0; scale: .8; transition: opacity .3s ease, scale .45s var(--ease-out); pointer-events: none;
-}
-.vs-ctl::before, .vs-ctl::after { content: ''; position: absolute; top: 19px; width: 5px; height: 18px; border-radius: 2px; background: var(--silver); }
-.vs-ctl::before { left: 20px; }
-.vs-ctl::after { right: 20px; }
-.vs-lens.paused .vs-ctl::before { left: 22px; width: 0; height: 0; border-radius: 0; background: none; border-style: solid; border-width: 9px 0 9px 15px; border-color: transparent transparent transparent var(--silver); }
-.vs-lens.paused .vs-ctl::after { display: none; }
-.vs-lens:focus-visible .vs-ctl { opacity: 1; scale: 1; }
-@media (hover: hover) { .vs-lens:hover .vs-ctl { opacity: 1; scale: 1; } }
 
 /* ---------- Buttons ---------- */
 .vs-btns { margin-top: clamp(24px, 2.6vw, 36px); }
@@ -90,12 +52,11 @@
 /* ---------- Whatever the page adds under the block (About: the ways to reach the club) ---------- */
 .vs-more { margin-top: clamp(40px, 4.4vw, 64px); }
 
-/* ---------- Phones and tablets: one column, the peephole after the address ---------- */
+/* ---------- Phones and tablets: one column, the drawing after the address ---------- */
 @media (max-width: 899px) {
-  .vs { --vs-lens: min(72vw, 360px); }
   .vs-wrap { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
   .vs-wrap > * { grid-column: 1 !important; grid-row: auto !important; max-width: none; }
-  .vs-peep { justify-self: center; margin-top: 26px; }
+  .vs-plate { margin-top: 26px; }
   .vs-facts { margin-top: 26px; }
 }
 @media (max-width: 699px) {
@@ -103,24 +64,21 @@
      street never breaks (no-break spaces, Visit.astro), so it is set no larger than fits the screen: --len letters
      at about .57em each. The lines stand far enough apart that the street's tails (у, р, the comma inside it)
      clear the city's capitals. */
-  .vs-addr { font-size: min(clamp(32px, 10vw, 48px), calc((100vw - 2 * var(--pad)) / (var(--len, 18) * .57))); line-height: 1.08; }
+  .vs-addr { font-size: min(clamp(30px, 9vw, 44px), calc((100vw - 2 * var(--pad)) / (var(--len, 18) * .57))); line-height: 1.1; }
   .vs-city { display: block; }
   .vs-sep { display: none; }
-  .vs { --vs-lens: min(64vw, 300px); }
   .vs-fact { grid-template-columns: 6.6em minmax(0, 1fr); gap: 12px; padding: 12px 0; }
   .vs-fact dd { font-size: 16.5px; }
   .vs-btns { margin-top: 26px; }
 }
 
 /* ---------- Entrance (only with motion on and once the script is watching: .vs-wait, then .vs-on) ----------
-   The peephole opens from its centre and the view settles into focus, and the facts rise in one after another. */
-@keyframes vs-iris { from { --vs-iris: 0%; } }
-@keyframes vs-focus { from { scale: 1.36; filter: blur(12px) brightness(.35); } }
-html.motion .vs-wait:not(.vs-on) .vs-glass { --vs-iris: 0%; }
+   The facts rise in one after another (the drawing draws itself in: LineArt.astro). */
 html.motion .vs-wait:not(.vs-on) .vs-fact { opacity: 0; }
-html.motion .vs-on .vs-glass { animation: vs-iris 1.5s var(--ease-io) .05s backwards; }
-html.motion .vs-on .vs-glass :is(img, video) { animation: vs-focus 2.2s var(--ease-out) .05s backwards; }
 html.motion .vs-on .vs-fact { animation: rv-up 1.1s var(--ease-out) var(--d, .4s) backwards; }
-
-@media (prefers-reduced-motion: reduce) { .vs-ctl { transition: none; } }
 .vs-fact:nth-child(1) { --d: .3s; } .vs-fact:nth-child(2) { --d: .38s; } .vs-fact:nth-child(3) { --d: .46s; } .vs-fact:nth-child(4) { --d: .54s; }
+
+/* ---------- A phone held sideways (or any screen as short): the drawing within the screen ---------- */
+@media (orientation: landscape) and (max-height: 500px) {
+  .vs-plate { width: min(100%, calc((100svh - var(--hdr) - 24px) * 2.2)); }
+}

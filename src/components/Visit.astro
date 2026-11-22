@@ -1,11 +1,13 @@
 ---
-// Finding the club (styles in styles/visit.css): the end of the home page, and the About page's contacts.
-// Read top to bottom: the heading, the address, the four facts as a plain list (hours, shows, dress code, entry)
-// and the two ways to get here. Beside them a round peephole looks out at the door: its film plays over the
-// still while it is in view (a click or tap pauses it; with reduced motion only the still shows until asked).
+// Finding the club (styles in styles/visit.css): the About page's contacts (and the end of the home page, when the
+// club brings it back there). Read top to bottom: the heading, the address, the facts as a plain list (hours,
+// shows, dress code, entry) and the two ways to get here. Beside them the car at the side door, drawn (LineArt):
+// a long black saloon, the door's red seam behind it caught on the roof, the shoulder and the wet asphalt.
+// (2026-11-21, «Между»: it was a round peephole with a film of the door; the drawing says how a guest arrives, and
+// a drawing never shows a face or a number plate.)
 // Whatever the page puts inside <Visit> sits under the block, in the same section (About: the ways to reach us).
-import { photo } from '../data/images';
-import { visit, media } from '../data/content';
+import LineArt from './LineArt.astro';
+import { visit } from '../data/content';
 import { type Lang, ui, tr } from '../data/i18n';
 import { site } from '../data/site';
 interface Props {
@@ -43,9 +45,8 @@ const facts = visit.rows.slice(0, factCount).map((r) => {
 import VariantSwitch from './VariantSwitch.astro';
 import { choosing, show } from '../data/variants';
 import '../styles/visit.css';
-const door = await photo(media(visit.shot.img), '(max-width: 899px) 74vw, 38vw');
 ---
-<!-- VISIT: one column to read top to bottom (where, when, the rules, the way there) beside the peephole on the door -->
+<!-- VISIT: one column to read top to bottom (where, when, the rules, the way there) beside the car at the side door -->
 <section class:list={['sec vs', { 'vx-host': choosing('contact') }]} id={id} aria-labelledby={`${id}-h`} data-visit>
   <VariantSwitch name="contact" />
   <div class="wrap vs-wrap">
@@ -53,19 +54,8 @@ const door = await photo(media(visit.shot.img), '(max-width: 899px) 74vw, 38vw')
       <h2 class="t-l" id={`${id}-h`} set:html={tr(visit.title, lang)} />
       <p class="vs-addr" style={`--len:${street.length}`}><span class="vs-street">{street}{city && <span class="vs-sep">,</span>}</span>{city && <> <span class="vs-city">{city}</span></>}</p>
     </div>
-    <figure class="vs-peep">
-      <button class="vs-lens" type="button" data-peep data-pause={ru ? 'Остановить видео' : 'Pause the video'} data-play={ru ? 'Включить видео' : 'Play the video'} aria-label={ru ? 'Остановить видео' : 'Pause the video'}>
-        <span class="vs-glass">
-          <img src={media(visit.shot.img)} {...door} alt="" loading="lazy" decoding="async" />
-          {visit.shot.loop && (
-            <video muted loop playsinline preload="none" aria-hidden="true">
-              <source src={media(visit.shot.loop)} type="video/mp4" />
-            </video>
-          )}
-        </span>
-        <i class="vs-ctl" aria-hidden="true"></i>
-      </button>
-      <figcaption class="sr-only">{tr(visit.shot.alt, lang)}</figcaption>
+    <figure class="vs-plate">
+      <LineArt name="car" class="vs-car" />
     </figure>
     <!-- the four facts as a plain list, in the order a guest asks: when, the show, what to wear, the door -->
     <dl class="vs-facts">
@@ -81,63 +71,22 @@ const door = await photo(media(visit.shot.img), '(max-width: 899px) 74vw, 38vw')
 </section>
 
 <script>
-  // Finding us: the block's entrance, and the film in the peephole.
+  // Finding us: the block's entrance (visit.css): with motion on, once, when the block comes into view after the
+  // 18+ question. Nothing is hidden unless this runs (.vs-wait), and nothing at all without html.motion. It watches
+  // the block itself, not what a page adds under it (About's ways to reach us), so a long section on a short screen
+  // still gets far enough into view. (The drawing draws itself in: LineArt.astro.)
   const sec = document.querySelector<HTMLElement>('[data-visit]');
-  if (sec) {
-    const root = document.documentElement;
-
-    // 1. The entrance (visit.css): with motion on, once, when the block comes into view after the 18+ question.
-    //    Nothing is hidden unless this runs (.vs-wait), and nothing at all without html.motion. It watches the
-    //    block itself, not what a page adds under it (About's ways to reach us), so a long section on a short
-    //    screen still gets far enough into view.
-    if (root.classList.contains('motion') && 'IntersectionObserver' in window) {
-      sec.classList.add('vs-wait');
-      const io = new IntersectionObserver((entries) => {
-        if (!entries.some((e) => e.isIntersecting)) return;
-        sec.classList.add('vs-on');
-        io.disconnect();
-      }, { threshold: 0.3 });
-      const start = () => io.observe(sec.querySelector('.vs-wrap') || sec);
-      const gate = document.getElementById('gate');
-      if (!gate || root.classList.contains('age-ok') || gate.classList.contains('out')) start();
-      else addEventListener('hotland:gate', start, { once: true });
-    }
-
-    // 2. The film plays, muted, over the still while the peephole is in view (it loads only then); a click or
-    //    tap pauses it until asked again. With reduced motion, or when the phone asks to save data, it waits
-    //    for that click.
-    const lens = sec.querySelector<HTMLButtonElement>('[data-peep]');
-    const film = lens?.querySelector('video');
-    if (lens && film) {
-      const saveData = Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData);
-      let held = saveData || matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const sync = () => {
-        lens.classList.toggle('paused', film.paused);
-        lens.setAttribute('aria-label', (film.paused ? lens.dataset.play : lens.dataset.pause) || '');
-      };
-      film.addEventListener('playing', () => lens.classList.add('rolling'), { once: true });
-      film.addEventListener('play', sync);
-      film.addEventListener('pause', sync);
-      lens.addEventListener('click', () => {
-        held = !film.paused;
-        if (film.paused) film.play().catch(() => {});
-        else film.pause();
-      });
-      if ('IntersectionObserver' in window) {
-        // (an iPhone in Low Power Mode refuses to start a film without a touch: the next tap starts it)
-        let inView = false;
-        let refused = false;
-        const roll = () => film.play()
-          .then(() => { refused = false; })
-          .catch((err: DOMException) => { if (err?.name === 'NotAllowedError') refused = true; });
-        new IntersectionObserver(([e]) => {
-          inView = e.isIntersecting;
-          if (!e.isIntersecting) film.pause();
-          else if (!held) roll();
-        }, { threshold: 0.35 }).observe(lens);
-        addEventListener('touchend', () => { if (refused && inView && !held && film.paused) roll(); }, { passive: true });
-      }
-      sync();
-    }
+  const root = document.documentElement;
+  if (sec && root.classList.contains('motion') && 'IntersectionObserver' in window) {
+    sec.classList.add('vs-wait');
+    const io = new IntersectionObserver((entries) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      sec.classList.add('vs-on');
+      io.disconnect();
+    }, { threshold: 0.3 });
+    const start = () => io.observe(sec.querySelector('.vs-wrap') || sec);
+    const gate = document.getElementById('gate');
+    if (!gate || root.classList.contains('age-ok') || gate.classList.contains('out')) start();
+    else addEventListener('hotland:gate', start, { once: true });
   }
 </script>

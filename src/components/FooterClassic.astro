@@ -1,12 +1,14 @@
 ---
-// The footer's last screen as it was in Luka's and Gio's rounds (Footer.astro keeps them in the preview switch
-// beside v4 and v5): four columns of links, the sign (Luka's 3D channel letters or Gio's brushed-steel HOTLAND),
-// and the small print, together never taller than the screen. Styles: the "Footer" part of global.css.
+// The footer's last screen as it was in Luka's and Gio's rounds (Footer.astro keeps them, hidden, beside v4 and v5):
+// four columns of links, the club's name across the page, and the small print, together never taller than the
+// screen. Styles: the "Footer" part of global.css, and footers.css for the name. The name is the club's logo now
+// (2026-11-21, «Между»: no chrome letters, no 3D sign): in Luka's take it hangs as a sign with its whole needle of
+// light, in Gio's it runs the page's width with the needle kept close. (Their signs were Mast.astro, 3D channel
+// letters of the old wordmark in crimson light, and MastSteel.astro, HOTLAND in polished chrome.)
 import { type Lang, ui } from '../data/i18n';
 import { site } from '../data/site';
 import { show } from '../data/variants';
-import Mast from './Mast.astro';
-import MastSteel from './MastSteel.astro';
+import Logo from './Logo.astro';
 interface Props { lang: Lang; sign: 'luka' | 'gio' }
 const { lang, sign } = Astro.props;
 const t = ui[lang];
@@ -59,9 +61,9 @@ const p = (s: string) => `/${lang}/${s}/`;
   </div>
 </div>
 
-<!-- the sign: Luka's 3D channel letters, or Gio's brushed-steel HOTLAND -->
-<div class="ft-mast">
-  {sign === 'luka' ? <Mast /> : <MastSteel />}
+<!-- the name: the club's logo, as a sign with its whole needle (Luka's) or across the page (Gio's) -->
+<div class:list={['ft-mast', `ft-mast-${sign}`]}>
+  <Logo label sign={sign === 'luka' ? 'full' : 'tight'} class="ft-logo" />
 </div>
 
 <div class="ft-bottom">

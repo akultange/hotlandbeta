@@ -1,5 +1,7 @@
 // Small site-wide behaviours, loaded on every page.
 import { track, linkEvent } from './track';
+import { clubHour } from '../data/hero';
+import { site } from '../data/site';
 
 // 1. Count the page view and every tap on a booking, call, messenger or directions link.
 track('view');
@@ -241,3 +243,22 @@ document.addEventListener('click', (e) => {
     sessionStorage.setItem('hl-lang', JSON.stringify({ t: Date.now(), to: to.pathname, ...at }));
   } catch { /* no storage: the other page simply opens at its top */ }
 });
+
+// 7. The club's hour through the night (data/hero.ts: open, late after 04:00, closed from closing to opening). The
+//    page's head set html[data-hour] before the first paint (AgeGate.astro carries that script, on every page with the
+//    18+ door); a page without the door gets it here. While the page stays open the hour is read again at every turn
+//    of the minute and whenever the tab comes back, and when it changes the light changes with it (global.css) and
+//    the page is told (hotland:hour: the home page's door shuts at closing and opens at the opening).
+(() => {
+  const root = document.documentElement;
+  const check = () => {
+    const hour = clubHour(Date.now(), site.hours).hour;
+    if (root.dataset.hour === hour) return;
+    root.dataset.hour = hour;
+    dispatchEvent(new Event('hotland:hour'));
+  };
+  check();
+  const tick = () => { check(); setTimeout(tick, 60_000 - (Date.now() % 60_000) + 50); };
+  setTimeout(tick, 60_000 - (Date.now() % 60_000) + 50);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) check(); });
+})();

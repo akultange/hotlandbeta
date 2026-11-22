@@ -1,9 +1,11 @@
 ---
 // Footer v4, «Визитка» (styles in styles/footers.css): the last screen as the club's calling card. On the left a
-// black card printed in silver foil, set at a slight angle: the club's logo with its sign alight, "just between us",
-// and at its foot the address and the hours with the way there. On the right the sections in large type, and
-// under them the ways to reach the club as glass pills. Along the bottom the small print and the smaller links.
-// Phones: the card first, then the sections in two columns, the pills, the small print.
+// black card, matte, square, in one hairline: the club's logo with its needle alight, "just between us", and at its
+// foot the address and the hours with the way there. On the right the sections in the text face, a row each over a
+// hairline, and under them the ways to reach the club, a row each with its line icon. Along the bottom the small
+// print and the smaller links. (Until 2026-11-21 the card was black liquid metal with a burgundy corner and the
+// ways to reach the club were glass capsules.)
+// Phones: the card first, then the sections in two columns, the ways to reach the club, the small print.
 import { type Lang, ui } from '../data/i18n';
 import { site } from '../data/site';
 import Logo from './Logo.astro';
@@ -27,7 +29,7 @@ const hours = `${site.hours[0].open}–${site.hours[0].close}`;
         </div>
         <div class="fv4-foot">
           <p class="fv4-addr">{site.address[lang]}<br />{hours}, {ru ? 'каждую ночь' : 'every night'}</p>
-          <a class="fv4-route" href={site.mapUrl} target="_blank" rel="noopener"><Ic name="pin" /><span>{ru ? 'Маршрут' : 'Directions'}</span></a>
+          <a class="fv4-route" href={site.mapUrl} target="_blank" rel="noopener"><Ic name="route" /><span>{ru ? 'Маршрут' : 'Directions'}</span></a>
         </div>
       </div>
     </div>

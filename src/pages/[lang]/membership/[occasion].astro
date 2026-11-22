@@ -3,6 +3,8 @@ import Base from '../../../layouts/Base.astro';
 import Photo from '../../../components/Photo.astro';
 import PageTitle from '../../../components/PageTitle.astro';
 import MemberCards from '../../../components/MemberCards.astro';
+import LineArt from '../../../components/LineArt.astro';
+import { type LineArtName } from '../../../data/lineart';
 import { type Lang, ui, tr, langs } from '../../../data/i18n';
 import { site } from '../../../data/site';
 import { occasions, parties, vip, bookingFine, gallery, media, type Occasion } from '../../../data/content';
@@ -32,6 +34,10 @@ const keep = (s: string) => (ru ? s.replace(/(?<=^|\s)(в|во|на|за|до|п
 const occasion = (t.form.occasions as Record<string, string>)[o.slug];
 const bookHref = `/${lang}/booking/?type=event${occasion ? `&occasion=${o.slug}` : ''}`;
 const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
+// Under the title of what comes with a party, a drawing in chalk lines (LineArt.astro) for the occasion: the glass for
+// a birthday's toast, the cigar for the groom's night, the bottle for the company's table, and for the whole club its
+// door, shut to everyone else that night.
+const art: Record<Occasion['slug'], LineArtName> = { birthday: 'glass', bachelor: 'cigar', corporate: 'bottle', hire: 'door' };
 const requestSteps = [
   `${ru ? 'Праздник' : 'A party'}: ${lower(occasion ?? title)}`,
   ru ? 'Сколько вас и ваши пожелания' : 'How many of you, and your wishes',
@@ -54,7 +60,10 @@ const requestSteps = [
   <section class="sec">
     <div class="wrap">
       <div class="g12">
-        <h2 class="t-l" style="grid-column: 1 / span 6" set:html={listTitle} />
+        <div class="occ-head" style="grid-column: 1 / span 6">
+          <h2 class="t-l" set:html={listTitle} />
+          <LineArt name={art[o.slug]} class={`occ-art occ-art-${art[o.slug]}`} />
+        </div>
         <div class="rows" style="grid-column: 8 / span 5; text-wrap: pretty">
           {parties.included.map((x, i) => <div class="row num"><span class="n">0{i + 1}</span><span class="k">{keep(tr(x, lang))}</span><span></span></div>)}
         </div>
@@ -113,6 +122,15 @@ const requestSteps = [
 </Base>
 
 <style>
+  /* What comes with a party: the title and, under it, the occasion's drawing, as tall as the four rows beside it are
+     long (a wide drawing, the door, is held by the column's width). A phone: the title, the rows, then the drawing. */
+  .occ-head { display: grid; align-content: start; justify-items: start; gap: clamp(32px, 4vw, 56px); }
+  :global(.occ-art) { width: auto; max-width: 100%; height: clamp(240px, 25vw, 360px); }
+  @media (max-width: 639px), (max-width: 899px) and (orientation: portrait), (max-width: 899px) and (min-height: 501px) {
+    .occ-head { display: contents; }
+    :global(.occ-art) { order: 1; height: auto; width: min(80%, 320px); max-height: 300px; }
+    :global(.occ-art-door) { width: 100%; }
+  }
   /* The request block. A wide screen: the words and, under them, the messengers on the left; the steps and the main
      button on the right, beside both. One column (the same screens as every .g12, global.css): the words, the
      steps and the main button, then the messengers. */
@@ -123,8 +141,13 @@ const requestSteps = [
     .rq-steps, .rq-msg { grid-row: auto; }
     .rq-msg { margin-top: 0; }
   }
-  /* the step you are on: its number is a small sign of the red light; the two to come are quieter */
-  .rq-steps .row[aria-current] .n { background: none; color: var(--light); -webkit-text-fill-color: currentColor; }
+  /* the step you are on: shirt white over a line of the light along its rule (red; amber after four), as a chosen
+     thing is marked everywhere on the site; the two to come are quieter */
+  .rq-steps .row { position: relative; }
+  .rq-steps .row[aria-current]::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: var(--seam);
+    background: var(--lit-core); box-shadow: var(--seam-glow);
+  }
   .rq-steps .row:not([aria-current]) .k { color: var(--fg-2); }
-  .rq-steps .row:not([aria-current]) .n { background: none; color: var(--muted); -webkit-text-fill-color: currentColor; }
+  .rq-steps .row:not([aria-current]) .n { color: var(--muted); }
 </style>

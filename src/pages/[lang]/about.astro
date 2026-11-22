@@ -2,23 +2,25 @@
 // About us («О нас»): everything about HOTLAND on one page, contacts included (the old Contacts page sends visitors
 // to #contacts).
 //   1. The page's name, the slogan, one line and the two actions (book a table, find us).
-//   2. The club: two show portraits stand like the wings of a stage, and the words about the club sit between
-//      them, centre stage. Each portrait plays its film on hover (on a phone, when it settles in view).
-//   3. House rules (#rules): four big steel numerals, a short name and the rule itself, like a theatre programme.
+//   2. The club: the low leather lounge chair, drawn (LineArt), and beside it the words about the club. (2026-11-21,
+//      «Между»: it was two show portraits standing like the wings of a stage; the owner wants a gentlemen's club, and
+//      the guest's own chair says that better than the show does.)
+//   3. House rules (#rules): the four rules as a programme, each under its numeral in the Dial, beside the door
+//      drawn with its seam of light and the sealed pouches on the counter (the first rule).
 //   4. Finding us (#contacts): the home page's own block (Visit.astro: the address, the hours and the shows, the
-//      way there, beside the peephole on the door), and under it four big ways to reach the club.
+//      way there, beside the car drawn at the side door), and under it four big ways to reach the club.
 //   5. The casting call, as on the home page and the artists page (CastingCall.astro). The footer's own closing
 //      invitation ("your table is waiting") ends the page.
-// Styles: styles/about.css (and visit.css, casting.css for the shared blocks). No words on photos, nothing in
-// capitals, no long dashes in the copy.
+// Styles: styles/about.css (and visit.css, casting.css for the shared blocks). No words on photos or drawings, no
+// long dashes in the copy.
 import Base from '../../layouts/Base.astro';
-import Photo from '../../components/Photo.astro';
 import PageTitle from '../../components/PageTitle.astro';
+import LineArt from '../../components/LineArt.astro';
 import Visit from '../../components/Visit.astro';
 import CastingCall from '../../components/CastingCall.astro';
 import { type Lang, ui, tr, langPaths } from '../../data/i18n';
 import { site } from '../../data/site';
-import { manifesto, houseRules, houseRulesTitle, night, media } from '../../data/content';
+import { manifesto, houseRules, houseRulesTitle } from '../../data/content';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
@@ -30,9 +32,6 @@ const keep = (s: string) => (ru ? s.replace(/(?<=^|\s)(в|во|на|за|до|п
 // …and a word with a hyphen ("дресс-код") never breaks at it. Our own copy only (returns HTML).
 const nowrapHyphens = (s: string) => s.replace(/[^\s-]+(?:-[^\s-]+)+/g, (w) => `<span class="ab-nw">${w}</span>`);
 const hours = `${site.hours[0].open}–${site.hours[0].close}`;
-
-// The two show portraits: the feather fans of the first show, the crystals of the second (portrait cuts and films).
-const wings = [night.acts[1], night.acts[2]];
 
 // A short name for each house rule (the rules themselves come from content.ts).
 const ruleNames = ru
@@ -94,16 +93,14 @@ import '../../styles/about.css';
     <a class="btn btn-line" href="#contacts">{ru ? 'Как нас найти' : 'Find us'}</a>
   </PageTitle>
 
-  <!-- THE CLUB: two show portraits like the wings of a stage, the words centre stage -->
+  <!-- THE CLUB: the guest's own chair, drawn, and the words about the club beside it -->
   <section class="sec ab-club" id="club" aria-labelledby="club-h">
-    <div class="wrap ab-stage">
-      {wings.map((a, i) => (
-        <div class:list={['ab-wing', i ? 'ab-wing-r' : 'ab-wing-l']}>
-          <Photo src={media(a.imgPhone)} loop={media(a.filmPhone)} alt={tr(a.alt, lang)} ratio="4/5" />
-        </div>
-      ))}
-      <div class="ab-centre">
-        <h2 class="t-l ab-centre-h" id="club-h" set:html={ru ? 'Частная <em>территория</em>' : 'Strictly <em>private</em>'} />
+    <div class="wrap ab-club-in">
+      <figure class="ab-plate ab-chair">
+        <LineArt name="chair" class="ab-art" />
+      </figure>
+      <div class="ab-words">
+        <h2 class="t-l ab-words-h" id="club-h" set:html={ru ? 'Частная <em>территория</em>' : 'Strictly <em>private</em>'} />
         <p class="lead">{keep(ru
           ? 'Премиальный мужской клуб в Москве. Два шоу за ночь, кухня и бар до утра, приватные комнаты и личный менеджер у каждого гостя.'
           : 'A premium gentlemen’s club in Moscow. Two shows a night, kitchen and bar until morning, private rooms and a personal manager for every guest.')}</p>
@@ -112,22 +109,27 @@ import '../../styles/about.css';
     </div>
   </section>
 
-  <!-- HOUSE RULES: a theatre programme, four big steel numerals -->
+  <!-- HOUSE RULES: a programme, each rule under its numeral in the Dial, beside the door and its sealed pouches -->
   <section class="sec soot ab-rules" id="rules" aria-labelledby="rules-h">
     <div class="wrap">
       <div class="bighead bh-line">
         <h2 class="t-l" id="rules-h">{tr(houseRulesTitle, lang)}</h2>
         <div class="bighead-side"><p class="body">{keep(ru ? 'Их всего четыре, и каждое бережёт ваш вечер.' : 'Just four, and each one looks after your night.')}</p></div>
       </div>
-      <ol class="ab-rules-list" role="list">
-        {houseRules.map((r, i) => (
-          <li class="ab-rule" data-rise>
-            <span class="ab-rule-n metal" aria-hidden="true">{i + 1}</span>
-            <h3 class="ab-rule-t">{ruleNames[i]}</h3>
-            <p class="ab-rule-x" set:html={nowrapHyphens(keep(tr(r, lang)))} />
-          </li>
-        ))}
-      </ol>
+      <div class="ab-rules-in">
+        <ol class="ab-rules-list" role="list">
+          {houseRules.map((r, i) => (
+            <li class="ab-rule" data-rise>
+              <span class="ab-rule-n" aria-hidden="true">{i + 1}</span>
+              <h3 class="ab-rule-t">{ruleNames[i]}</h3>
+              <p class="ab-rule-x" set:html={nowrapHyphens(keep(tr(r, lang)))} />
+            </li>
+          ))}
+        </ol>
+        <figure class="ab-plate ab-pouches">
+          <LineArt name="door" class="ab-art" />
+        </figure>
+      </div>
     </div>
   </section>
 

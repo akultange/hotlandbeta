@@ -1,18 +1,26 @@
 ---
+// Membership and parties. «Между», 2026-11-21: the cards stand on the suit's own cloth (global.css .cloth, the navy
+// with its chalk stripe), the whole width of the page, and under them, in fine chalk lines, the two things a member
+// carries in: the card (with the way to ask for one) and the cuff and watch (with the dress code). Then the club's
+// zones, a plain list on black, and the parties. Styles: styles/vip.css (the cards and this page's cloth),
+// styles/zones.css, styles/parties.css.
 import Base from '../../../layouts/Base.astro';
 import PageTitle from '../../../components/PageTitle.astro';
 import MemberCards from '../../../components/MemberCards.astro';
 import Zones from '../../../components/Zones.astro';
 import Parties from '../../../components/Parties.astro';
+import LineArt from '../../../components/LineArt.astro';
 import { type Lang, ui, tr, langPaths } from '../../../data/i18n';
-import { vip, media, g } from '../../../data/content';
+import { vip, visit, bookingTypes } from '../../../data/content';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
 const t = ui[lang];
 const ru = lang === 'ru';
 const request = `/${lang}/booking/?type=card`;
-const title = g(3);
+// the two drawings' words, the site's own: what the booking form calls a card, and the dress code from the visit
+const card = bookingTypes.find((b) => b.id === 'card')!.label;
+const dress = visit.rows.find((r) => r.k.en === 'Dress code')!;
 ---
 <Base lang={lang} title={t.nav.vip} description={ru ? 'Членство и праздники в HOTLAND: три карты клуба, приватные комнаты, караоке-залы и праздник по вашему сценарию.' : 'Membership & parties at HOTLAND: three club cards, four private zones, three karaoke rooms and a party to your own script.'}>
   <PageTitle
@@ -20,20 +28,35 @@ const title = g(3);
     title={ru ? 'Членство и&nbsp;праздники' : t.nav.vip}
     sub={ru ? 'Три карты <em>клуба</em> и ваш праздник' : 'Three <em>club cards</em> and your party'}
     lead={tr(vip.lead, lang)}
-    img={media(title.img)}
-    imgAlt={tr(title.alt, lang)}
   >
     <a class="btn btn-crimson" href={request}>{tr(vip.request, lang)}</a>
   </PageTitle>
 
-  <!-- 01 The cards -->
-  <section class="sec">
+  <!-- 01 The cards, on the navy cloth (the suit section), and the two things a member carries in -->
+  <section class="sec cloth mem-suit">
     <div class="wrap">
       <MemberCards lang={lang} />
+      <div class="mem-pair">
+        <div class="mem-fig">
+          <LineArt name="card" class="mem-art" />
+          <div class="mem-cap">
+            <span class="mem-k">{tr(card, lang)}</span>
+            <span class="mem-v">{t.priceOnRequest}</span>
+            <a class="lnk" href={request}>{tr(vip.request, lang)}</a>
+          </div>
+        </div>
+        <div class="mem-fig">
+          <LineArt name="cuff" class="mem-art" />
+          <div class="mem-cap">
+            <span class="mem-k">{tr(dress.k, lang)}</span>
+            <span class="mem-v">{tr(dress.v, lang)}</span>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- 02 Zones: a look through the keyhole, held on screen while the page moves through the five rooms (Zones.astro) -->
+  <!-- 02 Zones: a plain list on black (Zones.astro) -->
   <Zones lang={lang} />
 
   <!-- 03 Parties: the same section as on the home page (Parties.astro), anchored "occasions" for the footer's «Праздники» -->

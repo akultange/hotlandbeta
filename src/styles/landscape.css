@@ -22,10 +22,11 @@
 
   /* ---------- Sections breathe less ---------- */
   :root { --sec-y: clamp(36px, 9svh, 56px); --head-gap: 16px; }
-  .t-xl { font-size: clamp(44px, 13svh, 64px); }
-  .t-xxl { font-size: clamp(52px, 17svh, 84px); }
-  .t-l { font-size: clamp(34px, 10svh, 48px); }
-  .btn { height: 46px; padding: 0 22px; font-size: 14px; }
+  /* (a page's name is the Dial: narrow enough that a quarter of the screen's height still fits the longest word) */
+  .t-xl { font-size: clamp(72px, 24svh, 120px); }
+  .t-xxl { font-size: clamp(80px, 28svh, 136px); }
+  .t-l { font-size: clamp(28px, 8svh, 40px); }
+  .btn { height: 46px; padding: 0 22px; }
 
   /* ---------- Films: the wide cut, never taller than the screen ---------- */
   .film .photo { aspect-ratio: var(--r, 16 / 9); max-height: calc(100svh - var(--hdr)); }

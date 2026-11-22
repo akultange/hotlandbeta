@@ -5,20 +5,27 @@
    red light filling as you go, the step under it, its buttons at the foot. Phones: the steps fill the screen, the
    buttons at its foot (above the keyboard, when it is up).
    The controls here are the windows' one language, the call-back window's too (ask.css): every control a square
-   2px plate (the cross, a kind, a pill, the minus and the plus), steel for what is chosen, burgundy only for the
-   one main button; the consent's box; how a field shows it is wrong; the line of light that says "sent".
+   plate of lacquer inside one hairline (the cross, a kind, a pill, the minus and the plus); what is chosen is
+   framed in shirt white over its lit seam, as everywhere on the site (never a fill); the cuff only for the one main
+   button; the consent's box; how a field shows it is wrong; the line of light that says "sent".
+   (2026-11-21, «Между»: the burgundy light at the top of the page, the steel pills for what is chosen, the round
+   cross and the metal count are gone; the window is lacquer, the deepest black.)
    ===================================================================== */
 
 /* While a window is open the page behind is held still. (Its ground then is the window's own black: where a
    computer keeps a strip at the right for the page's scrollbar, the strip no longer shows a lighter black.) */
-html.apl-lock { overflow: hidden; background: #050405; }
-/* a control at rest: a plate a shade lighter than the wall with a hairline edge; a shade lighter again under the
-   pointer. What is chosen turns to steel (--steel-pill, nav.css). */
-.apl, .ask { --plate: rgba(230, 231, 233, .05); --plate-lit: rgba(230, 231, 233, .1); --plate-edge: inset 0 0 0 1px rgba(230, 231, 233, .12); }
+html.apl-lock { overflow: hidden; background: var(--lacquer); }
+/* a control at rest: a plate a shade lighter than the window's black, inside one hairline; under the pointer the
+   hairline comes up. What is chosen is framed in shirt white over a seam of the light (--chosen). */
+.apl, .ask {
+  --plate: rgba(236, 236, 232, .035); --plate-lit: rgba(236, 236, 232, .06);
+  --plate-edge: inset 0 0 0 1px var(--rule-2); --plate-edge-lit: inset 0 0 0 1px color-mix(in srgb, var(--shirt) 55%, transparent);
+  --chosen: inset 0 0 0 1px var(--shirt), inset 0 calc(-1 * var(--seam)) 0 var(--lit);
+}
 
 .apl {
   position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0;
-  border: 0; background: #050405; color: var(--fg); overflow: hidden;
+  border: 0; background: var(--lacquer); color: var(--fg); overflow: hidden;
 }
 /* (the screen's height as it is now: when a phone's keyboard comes up, the window ends above it, buttons and all) */
 @supports (height: 100dvh) { .apl { height: 100dvh; } }
@@ -32,31 +39,33 @@ html.apl-lock { overflow: hidden; background: #050405; }
 @keyframes apl-out { to { opacity: 0; } }
 
 .apl-in { display: grid; height: 100%; grid-template-columns: minmax(0, 1fr); }
-.apl-pic { display: none; margin: 0; position: relative; overflow: hidden; background: #0b0b0c; }
+.apl-pic { display: none; margin: 0; position: relative; overflow: hidden; background: var(--lacquer); }
 .apl-pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+/* (the application's dressing room: the mirror and its bulbs stand in the picture's right half, the free chair to
+   their left; a tall cut holds both) */
+.apl-room img { object-position: 74% 50%; }
 
 /* the steps' page: the top bar, the line, the step, the buttons (one column that never grows past the screen,
    however long a button's words are) */
 .apl-box {
   position: relative; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto minmax(0, 1fr) auto; height: 100%; min-height: 0;
   padding: clamp(18px, 2.6vw, 40px) clamp(20px, 5vw, 88px) clamp(18px, 2.6vw, 36px);
-  background: radial-gradient(90% 60% at 70% 0%, rgba(84, 11, 24, .22), rgba(84, 11, 24, 0) 70%), #050405;
+  background: var(--lacquer);
 }
 .apl-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-.apl-count { display: flex; align-items: baseline; gap: 8px; margin: 0; font: 500 14px/1 var(--sans); color: var(--muted); font-variant-numeric: tabular-nums; }
-.apl-count b {
-  font: 450 22px/1.05 var(--display); font-variant-numeric: tabular-nums lining-nums;
-  background-image: var(--metal-read); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
-}
+/* the count: the step's number in the Dial, how many in the Label */
+.apl-count { display: flex; align-items: baseline; gap: 8px; margin: 0; font: var(--label-wght) 13px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); color: var(--ash); font-variant-numeric: tabular-nums; }
+.apl-count b { font: 200 40px/.8 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; letter-spacing: 0; color: var(--fg); }
+/* the cross: a square plate */
 .apl-x {
-  display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: 50%; color: var(--fg-2);
-  background: var(--plate); box-shadow: var(--plate-edge); transition: background-color .2s ease, color .2s ease;
+  display: grid; place-items: center; flex: none; width: 48px; height: 48px; color: var(--fg-2);
+  background: var(--plate); box-shadow: var(--plate-edge); transition: box-shadow .2s ease, color .2s ease;
 }
-.apl-x:hover { color: var(--fg); background: var(--plate-lit); }
-.apl-x svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; }
-/* the line: a third of it for each step, in red light */
-.apl-line { position: relative; display: block; height: 2px; margin-top: clamp(14px, 1.8vw, 22px); background: rgba(230, 231, 233, .12); overflow: hidden; }
-.apl-line i { position: absolute; inset: 0; background: var(--light); transform-origin: 0 50%; transform: scaleX(var(--apl-p, .3333)); transition: transform .6s var(--ease-out); }
+.apl-x:hover { color: var(--fg); box-shadow: var(--plate-edge-lit); }
+.apl-x svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.4; }
+/* the line: a hairline, and on it a third of a line of the light for each step (red; amber after 04:00) */
+.apl-line { position: relative; display: block; height: 1px; margin-top: clamp(14px, 1.8vw, 22px); background: var(--rule-2); }
+.apl-line i { position: absolute; left: 0; right: 0; top: -.5px; height: var(--seam); background: var(--lit-core); box-shadow: var(--seam-glow); transform-origin: 0 50%; transform: scaleX(var(--apl-p, .3333)); transition: transform .6s var(--ease-out); }
 /* at the end the count and the line have done their work and go: the one light left is the sign that it is sent */
 .apl-line { transition: opacity .3s ease; }
 .apl-ending .apl-count { visibility: hidden; }
@@ -75,85 +84,84 @@ html.apl-lock { overflow: hidden; background: #050405; }
 @keyframes apl-step { from { opacity: 0; translate: 0 12px; } }
 .apl-h {
   float: none; width: 100%; margin: 0; padding: 0;
-  font: 500 clamp(30px, 3.61vw, 56px)/1.05 var(--display); letter-spacing: -.01em; text-wrap: balance;
+  font: 500 clamp(30px, 3.61vw, 56px)/1.05 var(--f-text); letter-spacing: -.022em; text-wrap: balance;
 }
 .apl-h:focus { outline: none; }
-.apl-lead { margin: 0; max-width: 46ch; font: 400 17px/1.55 var(--sans); color: var(--fg-2); text-wrap: pretty; }
+.apl-lead { margin: 0; max-width: 46ch; font: 400 17px/1.55 var(--f-text); color: var(--fg-2); text-wrap: pretty; }
 
-/* 1: the kinds (the roles), each a plate with its name in the title face, three to a row; a tap chooses one and
-   moves on. (They were sized for the icons they once carried; now a plate is as tall as its name needs.) */
+/* 1: the kinds (the roles), each a square plate with its name in the text face, three to a row; a tap chooses one
+   and moves on. (They were sized for the icons they once carried; now a plate is as tall as its name needs.) */
 .apl-roles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 6px; }
 .apl-roles label { position: relative; display: grid; -webkit-tap-highlight-color: transparent; }
 .apl-roles input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
 .apl-roles span {
-  display: flex; align-items: center; min-height: 76px; padding: 12px 20px; border-radius: var(--r-3);
-  font: 500 18px/1.15 var(--display); color: var(--fg); background: var(--plate); box-shadow: var(--plate-edge);
-  transition: background-color .25s ease, color .25s ease, scale .2s ease;
+  display: flex; align-items: center; min-height: 76px; padding: 12px 20px;
+  font: 500 18px/1.15 var(--f-text); color: var(--fg); background: var(--plate); box-shadow: var(--plate-edge);
+  transition: box-shadow .25s ease, color .25s ease, scale .2s ease;
 }
-@media (hover: hover) { .apl-roles label:hover input:not(:checked) + span { background: var(--plate-lit); } }
+@media (hover: hover) { .apl-roles label:hover input:not(:checked) + span { box-shadow: var(--plate-edge-lit); } }
 .apl-roles label:active span { scale: .985; }
-.apl-roles input:checked + span { color: var(--ink); background: var(--steel-pill), #d3d5d9; box-shadow: var(--steel-pill-edge); }
-.apl-roles input:focus-visible + span { outline: 1.5px solid var(--light); outline-offset: 3px; }
+.apl-roles input:checked + span { color: #fff; box-shadow: var(--chosen); }
+.apl-roles input:focus-visible + span { outline: var(--seam) solid var(--lit); outline-offset: 3px; }
 
 /* 2: the chosen role, the two fields, where to reply */
-.apl-chosen { margin: 0; font: 400 15px/1.4 var(--sans); color: var(--muted); }
-.apl-chosen b { font-weight: 600; color: var(--fg); }
+.apl-chosen { margin: 0; font: 400 16px/1.4 var(--f-text); color: var(--ash); }
+.apl-chosen b { font-weight: 500; color: var(--fg); }
 /* («изменить» is a word in a line, but a finger's height to tap: the extra is unseen, takes no room, and leaves the
    focus ring round the word itself; the same for the two links in a sentence, below) */
-.apl-change { position: relative; margin-left: 6px; padding: 0; font: inherit; color: var(--fg-2); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(230, 231, 233, .3); cursor: pointer; }
-.apl-change:hover { color: var(--fg); }
+.apl-change { position: relative; margin-left: 6px; padding: 0; font: inherit; color: var(--fg-2); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .28em; text-decoration-color: var(--rule-2); cursor: pointer; transition: text-decoration-color .2s, color .2s; }
+.apl-change:is(:hover, :focus-visible) { color: var(--fg); text-decoration-color: var(--lit); }
 :is(.apl-change, .apl-hint a)::before { content: ''; position: absolute; inset: -13px -6px; }
 .apl-fields { margin-top: 8px; gap: 28px var(--gap); }
 .apl-fields .field input { font-size: 20px; }
 .apl-via { display: grid; gap: 12px; margin-top: 6px; }
-.apl-via-l { margin: 0; font: 400 14px/1.4 var(--sans); color: var(--muted); }
+.apl-via-l { margin: 0; font: 400 15px/1.4 var(--f-text); color: var(--ash); }
 .apl-pills { display: flex; flex-wrap: wrap; gap: 8px; }
 .apl-pill { position: relative; -webkit-tap-highlight-color: transparent; }
 .apl-pill input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
 .apl-pill span {
-  display: flex; align-items: center; justify-content: center; height: 48px; padding: 0 22px; border-radius: var(--pill);
-  font: 500 16px/1 var(--sans); color: var(--fg-2); white-space: nowrap; background: var(--plate); box-shadow: var(--plate-edge);
-  transition: color .25s ease, background-color .25s ease;
+  display: flex; align-items: center; justify-content: center; height: 48px; padding: 0 22px;
+  font: 500 16px/1 var(--f-text); color: var(--fg-2); white-space: nowrap; background: var(--plate); box-shadow: var(--plate-edge);
+  transition: color .25s ease, box-shadow .25s ease;
 }
-@media (hover: hover) { .apl-pill:hover input:not(:checked) + span { color: var(--fg); background: var(--plate-lit); } }
-/* the chosen one: the steel of every chosen state on the site */
-.apl-pill input:checked + span {
-  color: var(--ink); background: var(--steel-pill), #d3d5d9; box-shadow: var(--steel-pill-edge);
-}
-.apl-pill input:focus-visible + span { outline: 1.5px solid var(--light); outline-offset: 3px; }
+@media (hover: hover) { .apl-pill:hover input:not(:checked) + span { color: var(--fg); box-shadow: var(--plate-edge-lit); } }
+/* the chosen one: framed in shirt white over its lit seam, as every chosen thing on the site */
+.apl-pill input:checked + span { color: #fff; box-shadow: var(--chosen); }
+.apl-pill input:focus-visible + span { outline: var(--seam) solid var(--lit); outline-offset: 3px; }
 
 /* 3: a few words, the pointer to Telegram, the consent */
 .apl-step .field textarea { min-height: 140px; font-size: 18px; }
-.apl-hint { margin: 0; font: 400 15px/1.5 var(--sans); color: var(--muted); }
-.apl-hint a { position: relative; color: var(--fg-2); text-decoration: underline; text-underline-offset: 3px; }
-.apl-hint a:hover { color: var(--fg); }
+.apl-hint { margin: 0; font: 400 16px/1.5 var(--f-text); color: var(--ash); }
+.apl-hint a { position: relative; color: var(--fg-2); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .28em; text-decoration-color: var(--rule-2); transition: text-decoration-color .2s, color .2s; }
+.apl-hint a:is(:hover, :focus-visible) { color: var(--fg); text-decoration-color: var(--lit); }
 
 /* ---------- The fields, in every window ----------
-   What is typed stands in bone white, so what is only suggested is the wall's grey; the caret is the light. A box
-   for a few words keeps its size (no corner to drag) and grows with what is written where the browser can. */
-:is(.apl, .ask) .field :is(input, textarea) { caret-color: var(--light); }
-:is(.apl, .ask) .field ::placeholder { color: var(--muted); opacity: 1; }
+   What is typed stands in shirt white, so what is only suggested is ash; the caret is the light. A box for a few
+   words keeps its size (no corner to drag) and grows with what is written where the browser can. */
+:is(.apl, .ask) .field :is(input, textarea) { caret-color: var(--lit); }
+:is(.apl, .ask) .field ::placeholder { color: var(--ash); opacity: 1; }
 :is(.apl, .ask) .field textarea { resize: none; field-sizing: content; max-height: 40vh; }
 /* a field that is wrong says so itself: its own line turns to light and its name to the colour of the message at
    the window's foot (the scripts add .is-bad and aria-invalid, and take them away once it is put right) */
 :is(.apl, .ask) .field.is-bad label { color: var(--error); }
-:is(.apl, .ask) .field.is-bad :is(input, textarea) { border-bottom-color: var(--light); }
+:is(.apl, .ask) .field.is-bad :is(input, textarea) { border-bottom-color: var(--light); box-shadow: 0 1px 0 0 var(--light); }
 
 /* ---------- The consent, in every window ----------
    A square box and the sentence. A tap anywhere on the sentence ticks the box (only the policy's name is a link,
-   kept whole on one line); ticked, the box is a steel plate with an ink tick. A finger's height all along. */
+   kept whole on one line); ticked, the box is framed in shirt white with a shirt-white tick in it, never filled.
+   A finger's height all along. */
 :is(.apl, .ask) .consent {
   align-items: flex-start; gap: 12px; padding-block: 11px; margin-block: -11px;
   font-size: 14px; line-height: 22px; cursor: pointer; -webkit-tap-highlight-color: transparent;
 }
 :is(.apl, .ask) .consent input {
-  appearance: none; -webkit-appearance: none; flex: none; width: 22px; height: 22px; margin: 0; border: 0; border-radius: 7px;
+  appearance: none; -webkit-appearance: none; flex: none; width: 22px; height: 22px; margin: 0; border: 0; border-radius: 0;
   background: transparent; box-shadow: inset 0 0 0 1px var(--rule-2); cursor: pointer;
 }
-@media (hover: hover) { :is(.apl, .ask) .consent:hover input:not(:checked) { box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .38); } }
+@media (hover: hover) { :is(.apl, .ask) .consent:hover input:not(:checked) { box-shadow: var(--plate-edge-lit); } }
 :is(.apl, .ask) .consent input:checked {
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'%3E%3Cpath d='M5.5 11.4l3.7 3.7 7.3-8.2' fill='none' stroke='%230b0b0c' stroke-width='2'/%3E%3C/svg%3E") 50% 50% / 22px 22px no-repeat, var(--steel-pill), #d3d5d9;
-  box-shadow: var(--steel-pill-edge);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'%3E%3Cpath d='M5.5 11.4l3.7 3.7 7.3-8.2' fill='none' stroke='%23ecece8' stroke-width='1.6'/%3E%3C/svg%3E") 50% 50% / 22px 22px no-repeat;
+  box-shadow: inset 0 0 0 1px var(--shirt);
 }
 :is(.apl, .ask) .consent.is-bad input { box-shadow: inset 0 0 0 1px var(--light); }
 /* (the link answers to a finger a little above and well below its words: under it there is nothing else to hit,
@@ -161,12 +169,13 @@ html.apl-lock { overflow: hidden; background: #050405; }
 :is(.apl, .ask) .consent a { position: relative; white-space: nowrap; }
 :is(.apl, .ask) .consent a::before { content: ''; position: absolute; inset: -5px 0 -22px; }
 
-/* the end: sent (the brand's own sign, a short line of red light, over the words), or not sent (WhatsApp) */
+/* the end: sent (the brand's own sign, a short seam of the light, as the door's, over the words), or not sent
+   (WhatsApp) */
 .apl-end { justify-items: start; }
 .apl-mark {
-  display: block; width: 2px; height: 56px; margin-bottom: 4px;
-  background: linear-gradient(180deg, rgba(255, 43, 61, 0), var(--light) 26%, var(--light) 74%, rgba(255, 43, 61, 0));
-  filter: drop-shadow(0 0 10px rgba(255, 43, 61, .55));
+  display: block; width: var(--seam); height: 56px; margin-bottom: 4px;
+  background: linear-gradient(180deg, transparent, var(--lit-core) 26%, var(--lit-core) 74%, transparent);
+  filter: drop-shadow(0 0 3px var(--lit)) drop-shadow(0 0 8px color-mix(in srgb, var(--lit) 55%, transparent));
 }
 /* (the light comes on from its middle, as the door's seam opens) */
 :is(.apl-step, .ask-done):not([hidden]) .apl-mark { animation: apl-mark .7s var(--ease-out) .12s both; }
@@ -176,7 +185,8 @@ html.apl-lock { overflow: hidden; background: #050405; }
    right. The first step has no buttons (a tap on a kind moves on), so it has no foot. */
 .apl-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; padding-top: 16px; border-top: 1px solid var(--rule); }
 .apl-foot .apl-next, .apl-foot .apl-send { margin-left: auto; }
-.apl-err { flex: 1 0 100%; margin: 0; font: 400 14px/1.4 var(--sans); color: var(--error); }
+/* (what is wrong: white words beside a line of the red light, as a form's error is everywhere, .form-error) */
+.apl-err { flex: 1 0 100%; margin: 0; padding-left: 12px; border-left: var(--seam) solid var(--light); font: 400 15px/1.4 var(--f-text); color: var(--error); }
 .apl-box[data-step="1"] .apl-foot, .apl-ending .apl-foot { display: none; }
 
 /* ---------- Desktop: the picture on the left ---------- */

@@ -4,12 +4,12 @@
 // No date or time to fill in: the manager agrees those when they get in touch. Coming from a poster, the form
 // says which night it is for and passes it on. Personal data is never put in the URL.
 // No longer used: the booking dialog (Book.astro) replaced it on 2026-11-13; kept, as the client hides rather than deletes.
+// «Между» (2026-11-21): the kinds are words in square tiles, the chosen one framed in shirt white over its lit seam
+// (global.css, Forms), as the dialog's are; the glossy 3D icons they carried (a coupe, lips, a peach...) are gone.
+// The fields are lines, the button the cuff; what it asks, checks and sends is unchanged.
 import { type Lang, ui, tr } from '../data/i18n';
 import { bookingTypes, events } from '../data/content';
 import { site } from '../data/site';
-import Icon3d from './Icon3d.astro';
-// each kind of booking has its own 3D icon: the icons mark choices, they don't decorate headlines
-const typeIcon = { table: 'coupe', vip: 'key', set: 'cherries', lounge: 'lips', event: 'peach', ticket: 'stiletto' } as const;
 interface Props { lang: Lang; type?: string; occasion?: string; compact?: boolean }
 const { lang, type = 'table', occasion = 'none', compact = false } = Astro.props;
 const t = ui[lang];
@@ -26,7 +26,7 @@ import { show } from '../data/variants';
       <legend class="label">{f.type}</legend>
       <div class="choice choice-tiles">
         {bookingTypes.map((b) => (
-          <label><input type="radio" name="type" value={b.id} checked={b.id === type} /><span><Icon3d name={typeIcon[b.id as keyof typeof typeIcon] ?? 'emblem'} size={120} class="choice-ic" />{tr(b.label, lang)}</span></label>
+          <label><input type="radio" name="type" value={b.id} checked={b.id === type} /><span>{tr(b.label, lang)}</span></label>
         ))}
       </div>
     </fieldset>

@@ -2,7 +2,6 @@
 // What every page uses; a part's own look comes with the part (its component imports its stylesheet), so a page
 // carries only the parts it shows. landscape.css stays last.
 import '../styles/fonts.css';
-import '../styles/fonts-title.css';
 import '../styles/global.css';
 import '../styles/nav.css';
 import '../styles/ask.css';
@@ -50,12 +49,13 @@ const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · ${lang =
 const path = Astro.url.pathname;
 const abs = (p: string) => new URL(p, Astro.site).href;
 // The fonts the first screen needs (styles/fonts.css, the site's own), fetched alongside the page instead of after its
-// stylesheet: the headings' and the text's letters in the page's language, and their digits, spaces and Latin.
-// One face, Geologica: the titles' sharp cut and the text's soft one, their Russian letters on a Russian page, and
-// their Latin, digits and signs.
+// stylesheet. Every first screen has all three faces: the text (Inter Tight), the labels of the header and the
+// buttons (Roboto Flex Label) and the big voice of a page's title or the hours (Roboto Flex); each in the page's
+// letters, and in Latin, where the digits, the spaces and the signs are. The small ones first. (Geologica, the
+// burgundy site's face, is on no first screen now: its files stay for parts not yet moved off it, unpreloaded.)
 const preload = lang === 'ru'
-  ? [fonts['geologica-sharp-cyr'], fonts['geologica-sharp-lat'], fonts['geologica-cyr'], fonts['geologica-lat']]
-  : [fonts['geologica-sharp-lat'], fonts['geologica-lat']];
+  ? [fonts['inter-tight-cyr'], fonts['inter-tight-lat'], fonts['roboto-flex-label-cyr'], fonts['roboto-flex-label-lat'], fonts['roboto-flex-cyr'], fonts['roboto-flex-lat']]
+  : [fonts['inter-tight-lat'], fonts['roboto-flex-label-lat'], fonts['roboto-flex-lat']];
 ---
 <!doctype html>
 <html lang={lang} data-door={!bare && !gate ? 'none' : undefined}>
@@ -69,7 +69,7 @@ const preload = lang === 'ru'
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
     <title>{fullTitle}</title>
     {description && <meta name="description" content={description} />}
-    <meta name="theme-color" content="#0d0e0f" />
+    <meta name="theme-color" content="#0e0d0d" />
     {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={abs(path)} />
     <link rel="alternate" hreflang="ru" href={abs(altPath(path, 'ru'))} />
@@ -186,17 +186,17 @@ const preload = lang === 'ru'
   <body class:list={{ bare }} data-wa-hello={ui[lang].waHello} data-wa-context={waContext}>
     <svg class="svg-defs" aria-hidden="true" focusable="false">
       <defs>
-        {/* steel, lit from above: a smooth fall of light, no band across the letters (the emblem, the wordmark) */}
+        {/* steel (the emblem, the old wordmark, the gallery's clip) and the name on the wall: once polished
+            gradients, now one flat colour each (2026-11-21, «Между»: no chrome, nothing glossy). The two ids stay,
+            so the parts that still paint with url(#g-metal) and url(#g-steel) keep working: blackened steel's bright
+            edge, and the logo's own pale grey */}
         <linearGradient id="g-metal" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#fafaf8" />
-          <stop offset=".55" stop-color="#d6d7d9" />
-          <stop offset="1" stop-color="#aeb0b4" />
+          <stop offset="0" stop-color="#9ba0a7" />
+          <stop offset="1" stop-color="#9ba0a7" />
         </linearGradient>
-        {/* the same steel for the name on the wall, lit from the top left */}
-        <linearGradient id="g-steel" x1="0" y1="0" x2=".35" y2="1">
-          <stop offset="0" stop-color="#ffffff" />
-          <stop offset=".5" stop-color="#d0d1d4" />
-          <stop offset="1" stop-color="#96989d" />
+        <linearGradient id="g-steel" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#b0b1b3" />
+          <stop offset="1" stop-color="#b0b1b3" />
         </linearGradient>
         {/* the club's logo: the gradients its glowing sign is drawn with (Logo.astro, the door), and the two fades
             that shorten the sign where the whole needle (five capitals each way) has no room. A capital is 47.4 of

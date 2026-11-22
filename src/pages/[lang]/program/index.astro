@@ -1,15 +1,18 @@
 ---
+// The Афиша: the special nights as posters set in type (PosterCard.astro), then every night's own programme, the
+// four acts by the hour beside a guest under the laser (the line art's "shoulder"). Styles: styles/posters.css.
 import Base from '../../../layouts/Base.astro';
 import PageTitle from '../../../components/PageTitle.astro';
 import PosterCard from '../../../components/PosterCard.astro';
+import LineArt from '../../../components/LineArt.astro';
 import { type Lang, ui, tr, langPaths } from '../../../data/i18n';
-import { events, eventsLead, night, media } from '../../../data/content';
+import { events, eventsLead, night } from '../../../data/content';
+import { keepShort } from '../../../data/format';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
 const t = ui[lang];
 const ru = lang === 'ru';
-const first = night.acts[1];
 ---
 <Base lang={lang} title={ru ? 'Афиша' : 'Events'} description={ru ? 'Афиша HOTLAND: Courchevel в пятницу, Velvet в субботу, Ritual в воскресенье. А шоу-балет каждую ночь в 23:30 и 01:30.' : 'Events at HOTLAND: Courchevel on Friday, Velvet on Saturday, Ritual on Sunday. And the dance show every night at 23:30 and 01:30.'}>
   <PageTitle
@@ -17,13 +20,11 @@ const first = night.acts[1];
     title={ru ? 'Афиша' : 'Events'}
     sub={ru ? 'Один вечер, <em>одна тема</em>' : 'One night, <em>one theme</em>'}
     lead={tr(eventsLead, lang)}
-    img={media(first.imgPhone)}
-    imgAlt={tr(first.alt, lang)}
   >
     <a class="btn btn-crimson" href={`/${lang}/booking/`}>{t.bookTable}</a>
   </PageTitle>
 
-  <!-- 01 Event nights -->
+  <!-- 01 Event nights: the posters (the page's name is their heading) -->
   <section class="sec">
     <div class="posters" data-events data-lenis-prevent-horizontal>
       {events.map((e) => <PosterCard e={e} lang={lang} />)}
@@ -33,4 +34,28 @@ const first = night.acts[1];
     </div>
   </section>
 
+  <!-- 02 Every night: the four acts by the hour (the Dial), beside the guest under the laser. The laser follows the
+       hour: off after four, when the room's amber catches him instead (lineart.css). -->
+  <section class="sec nightly" aria-labelledby="nightly-h">
+    <div class="wrap">
+      <div class="bighead bh-line">
+        <h2 class="t-l" id="nightly-h">{tr(night.title, lang)}</h2>
+        <div class="bighead-side"><p class="body" set:html={keepShort(tr(night.lead, lang), lang)} /></div>
+      </div>
+      <div class="nightly-in">
+        <LineArt name="shoulder" class="nightly-art" />
+        <ol class="rows nightly-acts">
+          {night.acts.map((a) => (
+            <li class="row nightly-act">
+              <span class="nightly-time">{a.time}</span>
+              <div class="nightly-words">
+                <h3 class="nightly-t">{tr(a.title, lang)}</h3>
+                <p class="nightly-x" set:html={keepShort(tr(a.text, lang), lang)} />
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
 </Base>

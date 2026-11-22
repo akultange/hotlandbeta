@@ -28,18 +28,16 @@ export function getStaticPaths() {
 const lang = Astro.params.lang as Lang;
 const page = pages[Astro.params.legal as Key][lang];
 const ru = lang === 'ru';
-// The page's name is set at one size on all three pages (the style below), small enough on a phone for the longest
-// word of the three, «конфиденциальности», to stay whole. Only on a screen narrower than any phone's (a folded
-// phone's cover, 280px) may it break, here: the soft hyphen wakes up there alone (.legal-shy), or every phone would
-// break the word at it to fill the first line.
-const name = page.title.replace('конфиденциальности', 'конфиден<span class="legal-shy">&shy;</span>циальности');
+// The page's name is every page's (PageTitle.astro: the Dial, sized so its longest word fits the screen). The Dial's
+// letters are narrow enough that «конфиденциальности», the longest word on the site, stays whole at a size as large
+// as any page's on a phone (about 120px at 390px wide), so nothing here sets it smaller or breaks it.
 // (a document ends with its text: no closing «Ваш стол уже ждёт» under it; and it opens without the 18+ door, which
 // links to the privacy policy: the policy has to be readable before the question is answered)
 ---
 <Base lang={lang} title={page.title} closing={false} gate={false}>
   <PageTitle
     crumbs={[{ href: `/${lang}/`, label: 'HOTLAND' }, { label: page.title }]}
-    title={name}
+    title={page.title}
     label={ru ? 'Документ' : 'Document'}
     lead={ru ? 'Черновик-заглушка. Окончательный текст должен подготовить юрист.' : 'Placeholder draft. The final text must be written by a lawyer.'}
   />
@@ -59,13 +57,8 @@ const name = page.title.replace('конфиденциальности', 'кон�
 </Base>
 
 <style is:global>
-  /* A document's name: one size on all three pages (it used to follow each name's longest word: 30, 45 and 64px on
-     a phone), its lines a full line apart, so two lines of Cyrillic never touch. 8.2vw keeps «конфиденциальности»
-     (10.55em wide) whole from 320px up, with a little to spare. */
-  /* (in the titles' capitals «КОНФИДЕНЦИАЛЬНОСТИ» is the widest word on the site: this size keeps it on a 320px screen) */
-  main:has(> .legal) .ptitle-name { font-size: clamp(21px, 6.5vw, 64px); line-height: 1; text-wrap: balance; }
-  .legal-shy { display: none; }
-  @media (max-width: 319px) { .legal-shy { display: inline; } }
+  /* (the name's two words stand a little apart, so the capitals of two lines never touch) */
+  main:has(> .legal) .ptitle-name { line-height: .86; }
   /* the first part's heading gets the air every part's heading has above it (the text's own 18px and the heading's
      24px), not the closer gap a page's first line of content keeps under the page's name */
   main:has(> .legal) .ptitle + .sec-t.legal { padding-top: 42px; }
@@ -73,5 +66,5 @@ const name = page.title.replace('конфиденциальности', 'кон�
      two lines breaks them evenly, never leaving one word alone */
   .legal .prose { max-width: 640px; }
   .legal .prose h2 { text-wrap: balance; }
-  .legal-sign { margin-top: 32px; }
+  .legal-sign { margin-top: 32px; font-size: 16px; }
 </style>

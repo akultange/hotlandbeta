@@ -3,7 +3,7 @@
 // page, the same steps, the same buttons (styles/apply.css, and styles/book.css for the little booking adds). The
 // client: "rework the booking flow like you did careers". Instead of a trip to the booking page and a form there,
 // the booking opens where you are, in three short steps.
-//   1. «Что выбираете?»: the kinds as plates with their names; a tap chooses one and moves on.
+//   1. «Что выбираете?»: the kinds, one to a row; a tap chooses one (its seam lights) and moves on.
 //   2. «Сколько вас?»: the kind chosen (and the night, when a poster brought you), the guests, the occasion, wishes.
 //   3. «Как с вами связаться?»: name, phone, where to reply, the consent.
 // Then thanks; or, if sending fails, the same request again (nothing typed is lost), or WhatsApp with the request
@@ -14,7 +14,11 @@
 // again where the visitor left off, unless the link brings presets; after a request (sent or not) it starts afresh.
 // Arriving at /booking/ itself (a shared link, a new tab) opens it straight away, with that page's query.
 // It sends to /api/booking (the managers' Telegram), as the booking form did. Personal data never goes into the URL.
-import { photo } from '../data/images';
+// «Между» (2026-11-21): the picture on the left (a computer's) is the table with its lamp, drawn (LineArt.astro), in
+// place of the photograph of an artist on the bar. The lamp is out while you book (lit only when the room is, after
+// 04:00), and lights, amber, the moment the request has gone; on a phone the sent step has the same table of its own.
+// The window is dressed in styles/book.css.
+import LineArt from './LineArt.astro';
 import { type Lang, ui, tr } from '../data/i18n';
 import { site } from '../data/site';
 import { bookingTypes, bookingFine, events } from '../data/content';
@@ -58,12 +62,11 @@ const script = {
   needContact: L.needContact, needConsent: L.needConsent, hello: L.hello, guestsWord: L.guestsWord,
   locale: ru ? 'ru-RU' : 'en-GB', path: `/${lang}/booking/`,
 };
-const pic = await photo('/media/gal-03-on-the-bar.webp', '42vw');
 ---
 <dialog class="apl bk" id="book-dlg" aria-labelledby="bk-title" data-lenis-prevent data-wa={site.whatsapp} data-l={JSON.stringify(script)} data-nights={JSON.stringify(nights)}>
   <h2 class="sr-only" id="bk-title">{L.title}</h2>
   <div class="apl-in">
-    <figure class="apl-pic" aria-hidden="true"><img src="/media/gal-03-on-the-bar.webp" {...pic} alt="" loading="lazy" decoding="async" /></figure>
+    <figure class="apl-pic bk-pic" aria-hidden="true"><LineArt name="lamp" class="bk-lamp" /></figure>
     <form class="apl-box" novalidate data-step="1">
       <header class="apl-top">
         <p class="apl-count" aria-hidden="true"><b data-bk-n>01</b><span>/&nbsp;03</span></p>
@@ -134,9 +137,9 @@ const pic = await photo('/media/gal-03-on-the-bar.webp', '42vw');
           <label class="consent"><input type="checkbox" name="consent" required /><span>{unit(consentA)}<a href={`/${lang}/privacy/`} target="_blank" rel="noopener">{consentLink}</a>{consentB}</span></label>
         </fieldset>
 
-        <!-- sent -->
+        <!-- sent: the table's lamp lights (a phone's own drawing; on a computer the one on the left lights) -->
         <div class="apl-step apl-end" data-s="done" role="status" hidden>
-          <span class="apl-mark" aria-hidden="true"></span>
+          <LineArt name="lamp" class="bk-lamp-done" />
           <p class="apl-h" tabindex="-1">{L.doneH}</p>
           <p class="apl-lead">{L.doneText}</p>
           <div class="btns"><button class="btn btn-crimson" type="button" data-bk-close>{L.ok}</button></div>
@@ -469,13 +472,7 @@ const pic = await photo('/media/gal-03-on-the-bar.webp', '42vw');
       if (typeof form.requestSubmit === 'function') form.requestSubmit(); else send.click();
     });
 
-    // its picture (a computer's) is fetched once the page has settled, so it is there when it opens
-    const warm = () => dlg.querySelectorAll<HTMLImageElement>('img[loading="lazy"]').forEach((img) => {
-      if (!img.closest('.apl-pic') || matchMedia('(min-width: 900px)').matches) img.loading = 'eager';
-    });
-    const later = () => ('requestIdleCallback' in window ? requestIdleCallback(warm, { timeout: 4000 }) : setTimeout(warm, 2000));
-    if (document.readyState === 'complete') later();
-    else addEventListener('load', later, { once: true });
+    // (its picture is a drawing in the page itself, LineArt.astro: nothing to fetch before it opens)
 
     // arriving at the booking page itself (a shared link, a new tab): it opens straight away, with that page's query,
     // once the 18+ question is answered

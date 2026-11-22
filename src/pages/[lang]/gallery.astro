@@ -19,8 +19,9 @@ const count = galleryCount(lang);
 const bold = (s: string) => s.replace(/(\d+)/, '<b>$1</b>');
 const ru = lang === 'ru';
 const name = tr(galleryText.title, lang);
-// the page's name as big as every page's (PageTitle.astro): sized so its longest word fits the screen
-const fit = Math.max(3.2, Math.max(...name.split(/\s+/).map((w) => w.length)) * 0.66).toFixed(2);
+// the page's name as big as every page's (PageTitle.astro): sized so its longest word fits the screen, at the Dial's
+// 0.16em a letter
+const fit = Math.max(0.6, Math.max(...name.split(/\s+/).map((w) => w.length)) * 0.16).toFixed(2);
 ---
 <Base lang={lang} title={tr(galleryText.title, lang)} description={tr(galleryText.description, lang)}>
   <section class="gx-top wrap">

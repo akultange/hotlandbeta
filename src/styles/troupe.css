@@ -2,7 +2,8 @@
    Desktop: three columns hung at different heights, like pictures on a gallery wall; the script in
    Troupe.astro lets them drift a little apart while the page scrolls. Phones: two columns, the right one
    lower. No frames: each portrait fades into the black. The hang uses `top`, never `translate` (the reveal
-   animations use `translate`, and GSAP moves the items with `transform`). */
+   animations use `translate`, and GSAP moves the items with `transform`). (The artists page is hidden since
+   2026-11-13; the portraits are black and white until the new shoot, the grade on their frame, global.css.) */
 
 /* ---------- The wall ---------- */
 .troupe {
@@ -43,10 +44,10 @@
   max-width: none; margin-top: -14px; padding-right: 4%;
 }
 .troupe .pt-name {
-  font: 500 clamp(23px, 2.05vw, 31px)/1.05 var(--display); letter-spacing: -.01em;
+  font: 500 clamp(23px, 2.05vw, 31px)/1.05 var(--f-text); letter-spacing: -.01em;
   color: var(--fg); transition: color .35s ease;
 }
-.troupe .pt-text { margin: 0; font: 400 16px/1.6 var(--sans); color: var(--fg-2); max-width: 40ch; }
+.troupe .pt-text { margin: 0; font: 400 16px/1.6 var(--f-text); color: var(--fg-2); max-width: 40ch; }
 
 /* the act whose film is playing takes the light (on a phone: the one that settled in view), and so does the
    one the keyboard is on */
@@ -55,7 +56,7 @@
 .troupe .pt:hover .pt-name { font-style: normal; }
 @media (hover: hover) and (pointer: fine) {
   /* with a mouse the hover stays quiet: the name stays upright and only comes up to full white (also while the
-     act's film plays under the pointer, no crimson), and the portrait leans in a touch */
+     act's film plays under the pointer), and the portrait leans in a touch */
   .troupe .pt:hover .pt-name, .troupe .pt:hover .pt-frame.looping ~ .pt-cap .pt-name { color: #fff; }
   .troupe .pt:hover .pt-frame :is(img, .loop) { transform: scale(1.03); }
   /* one act at a time: while the mouse is on a portrait, the others step back into the dark (their light is

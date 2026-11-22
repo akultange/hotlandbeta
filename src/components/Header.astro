@@ -1,17 +1,21 @@
 ---
-// Header (2026-11-20, fourth take). Desktop: one bar the width of the window with the club's flower at its centre.
-// The sections stand either side of it in the footer's order, Home and the next two on the left and the other
-// three on the right. The language is at the far left and "Book" at the far right. A hairline runs the full width
-// along the bar's lower edge, and the current section is lit on it: a short tube of the red light under the word,
-// which glows up into the bar and a little onto the page below and warms the word itself. Under the mouse, a faint
-// silver light glides along the line from link to link. Over the top of a page the bar is clear, only its line
-// across; once the page moves under it, the bar fills with smoked glass.
-// Phones: the flower at the centre and "Menu" on the right, over the same line. The menu is a full-screen sheet:
-// the language, the flower and the cross on its top row (where the header's row was), then the sections in big
-// type (the current one lit the same way), booking, address, hours and contacts.
+// Header (2026-11-20, the designer's fourth take; dressed in «Между», 2026-11-21). Desktop: one bar the width of the
+// window with the club's logo at its centre: HOTLAND with the red needle at the L, as the club drew it (Logo.astro;
+// it took the lily's place). The sections stand either side of it in the footer's order, Home and the next two on
+// the left and the other three on the right, in the Label's small capitals. The language is at the far left, plain
+// (РУС / ENG), and "Book" at the far right, as the cuff. A hairline runs the full width along the bar's lower edge,
+// and the current section is lit on it: a short seam of the light under the word (red; amber after 04:00, through
+// html[data-hour]). Under the mouse a chalk line glides along the hairline from word to word. Over the top of a page
+// the bar is clear, only its line across; once the page moves under it, the bar is smoked: solid, a little
+// translucent, never blurred.
+// Phones: the logo at the centre and "Menu" on the right, over the same line, with the current section's seam lit
+// on the line where its word stands on a desktop (the first three left of the logo, the others right of it). The
+// menu is a full-screen sheet: the language, the logo and the cross on its top row (where the header's row was),
+// then the sections in large type (the current one lit the same way), booking, address, hours and the ways to reach
+// the club.
 import { type Lang, ui, altPath } from '../data/i18n';
 import { site } from '../data/site';
-import Flower from './Flower.astro';
+import Logo from './Logo.astro';
 import Ic from './FooterIcon.astro';
 interface Props { lang: Lang; solid?: boolean }
 const { lang } = Astro.props;
@@ -25,12 +29,15 @@ const keys = ['program', 'vip', 'menu', 'gallery', 'about'] as const;
 const items = keys.map((k) => ({ k, href: `/${lang}/${k === 'vip' ? 'membership' : k}/`, label: t.nav[k] }));
 const active = (href: string) => path.startsWith(href);
 const home = path === `/${lang}/`;
-// the header's six, Home first; the flower stands between the third and the fourth
+// the header's six, Home first; the logo stands between the third and the fourth
 const links = [
   { href: `/${lang}/`, label: ru ? 'Главная' : 'Home', on: home },
   ...items.map((i) => ({ href: i.href, label: i.label, on: active(i.href) })),
 ];
 const [left, right] = [links.slice(0, 3), links.slice(3)];
+// where the current section stands among the six: on a phone its seam is lit at that place on the line, on the
+// logo's right from the fourth on (-1: a page that is none of them, booking or a document, lights nothing)
+const at = links.findIndex((l) => l.on);
 const hours = `${site.hours[0].open}–${site.hours[0].close}`;
 const homeLabel = `${site.name}, ${ru ? 'главная' : 'home'}`;
 const langs = [
@@ -40,7 +47,7 @@ const langs = [
 import { show } from '../data/variants';
 ---
 <header class="hdr" id="hdr">
-  <span class="hdr-bar" aria-hidden="true"></span>
+  <span class="hdr-bar" aria-hidden="true">{at >= 0 && <span class:list={['hdr-at', { 'hdr-at-r': at > 2 }]} style={`--at:${at}`}></span>}</span>
   <div class="hdr-in">
     <div class="seg hdr-lang" role="group" aria-label={ru ? 'Язык' : 'Language'}>
       {langs.map((l) => <a href={l.href} class:list={{ on: lang === l.code }} hreflang={l.code} lang={l.code} aria-current={lang === l.code ? 'true' : undefined}>{l.label}</a>)}
@@ -54,7 +61,7 @@ import { show } from '../data/variants';
           </a>
         ))}
       </div>
-      <a class="hdr-name" href={`/${lang}/`} aria-label={homeLabel}><Flower /></a>
+      <a class="hdr-name" href={`/${lang}/`} aria-label={homeLabel}><Logo sign="tight" /></a>
       <div class="hdr-links hdr-links-r">
         {right.map((l) => (
           <a href={l.href} class:list={{ on: l.on }} aria-current={l.on ? 'page' : undefined}>
@@ -75,7 +82,7 @@ import { show } from '../data/variants';
     <div class="seg" role="group" aria-label={ru ? 'Язык' : 'Language'}>
       {langs.map((l) => <a href={l.href} class:list={{ on: lang === l.code }} hreflang={l.code} lang={l.code} aria-current={lang === l.code ? 'true' : undefined}>{l.label}</a>)}
     </div>
-    <a class="hdr-name" href={`/${lang}/`} aria-label={homeLabel}><Flower /></a>
+    <a class="hdr-name" href={`/${lang}/`} aria-label={homeLabel}><Logo sign="tight" /></a>
     <button class="hdr-menu is-close" type="button" data-close><span>{t.menuClose}</span><i aria-hidden="true"></i></button>
   </div>
   <div class="mnav-body">
@@ -94,17 +101,12 @@ import { show } from '../data/variants';
         <p>{ru ? 'Каждую ночь' : 'Nightly'} {hours}</p>
         {show('contact', 'gio') && <a class="mnav-phone" data-v="contact:gio" href={site.phoneHref}>{site.phone}</a>}
       </div>
+      <!-- the ways to reach the club: four plain frames, two to a row, each with its line icon -->
       <div class="mnav-msg" style="--i:10">
-        {show('contact', 'luka') && <button class="glass" type="button" data-contact="callback" data-v="contact:luka"><Ic name="phone" />{ru ? 'Заказать звонок' : 'Request a call'}</button>}
-        {show('contact', 'luka') && <button class="glass" type="button" data-contact="question" data-v="contact:luka"><Ic name="ask" />{ru ? 'Задать вопрос' : 'Ask a question'}</button>}
-        <a class="glass" href={site.whatsapp} target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 20.5 4.8 16A8.6 8.6 0 1 1 8 19.3z" /><path d="M9.3 8.3c.3-.4.9-.4 1.2 0l.8 1.5c.2.3.1.7-.1 1l-.5.5c.6 1.2 1.5 2.1 2.7 2.7l.5-.5c.3-.2.7-.3 1-.1l1.5.8c.4.3.4.9 0 1.2-.6.6-1.5.9-2.4.7-2.4-.6-4.3-2.5-4.9-4.9-.2-.9.1-1.8.7-2.4z" /></svg>
-          {t.whatsapp}
-        </a>
-        <a class="glass" href={site.telegram} target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.6 3.6 2.9 10.4c-.8.3-.8 1.4 0 1.7l4.4 1.6 1.7 5.4c.2.7 1.1.9 1.6.4l2.5-2.4 4.4 3.2c.6.4 1.4.1 1.6-.6l3-14.6c.2-.9-.7-1.6-1.5-1.5z" /><path d="m7.3 13.7 9.4-6.2-6.6 7.4" /></svg>
-          {t.telegram}
-        </a>
+        {show('contact', 'luka') && <button class="mnav-act" type="button" data-contact="callback" data-v="contact:luka"><Ic name="phone" /><span>{ru ? 'Заказать звонок' : 'Request a call'}</span></button>}
+        {show('contact', 'luka') && <button class="mnav-act" type="button" data-contact="question" data-v="contact:luka"><Ic name="ask" /><span>{ru ? 'Задать вопрос' : 'Ask a question'}</span></button>}
+        <a class="mnav-act" href={site.whatsapp} target="_blank" rel="noopener"><Ic name="whatsapp" /><span>{t.whatsapp}</span></a>
+        <a class="mnav-act" href={site.telegram} target="_blank" rel="noopener"><Ic name="telegram" /><span>{t.telegram}</span></a>
       </div>
       <a class="mnav-careers" style="--i:11" href={`/${lang}/careers/`}>{t.footer.careers}<span aria-hidden="true">→</span></a>
     </div>
@@ -114,7 +116,7 @@ import { show } from '../data/variants';
 <script>
   const root = document.documentElement;
 
-  // 1. The bar: clear over the top of the page, smoked glass once the page moves under it.
+  // 1. The bar: clear over the top of the page, smoked once the page moves under it.
   const hdr = document.getElementById('hdr');
   if (hdr) {
     let queued = false;
@@ -123,9 +125,9 @@ import { show } from '../data/variants';
     tint();
   }
 
-  // 2. Desktop sections: a faint light on the line snaps to the link under the mouse (or the keyboard focus). It
+  // 2. Desktop sections: a chalk line on the hairline snaps to the link under the mouse (or the keyboard focus). It
   //    moves link to link, never with the pointer itself, and fades when the pointer leaves. (It waits a moment
-  //    before fading, so that crossing the flower from one side to the other is one glide, not a fade and a jump.)
+  //    before fading, so that crossing the logo from one side to the other is one glide, not a fade and a jump.)
   const nav = document.querySelector<HTMLElement>('.hdr-nav');
   const hl = nav?.querySelector<HTMLElement>('.hdr-hl');
   if (nav && hl) {
@@ -203,11 +205,4 @@ import { show } from '../data/variants';
   matchMedia('(min-width: 900px)').addEventListener('change', (e) => { if (e.matches && mnav && !mnav.hidden) setOpen(false); });
   // Coming back with the browser's Back button: the page returns as it was left, so shut the sheet at once.
   addEventListener('pageshow', (e) => { if (e.persisted && mnav && !mnav.hidden) setOpen(false, true); });
-  // Fetch the menu's 3D icons once the page has settled, so they are there when the sheet opens.
-  if (mnav && matchMedia('(max-width: 899px)').matches) {
-    const warm = () => mnav.querySelectorAll<HTMLImageElement>('img[loading="lazy"]').forEach((img) => { img.loading = 'eager'; });
-    const later = () => ('requestIdleCallback' in window ? requestIdleCallback(warm, { timeout: 3000 }) : setTimeout(warm, 1500));
-    if (document.readyState === 'complete') later();
-    else addEventListener('load', later, { once: true });
-  }
 </script>

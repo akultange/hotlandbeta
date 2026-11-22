@@ -1,11 +1,11 @@
 ---
 // The gallery in brief, take two (the home page's «Галерея», data/variants.ts 'gallery': v2; styles in
 // styles/filmstrip.css): the pictures as a strip of real film. A length of half-frame 35 mm film (upright frames,
-// as a half-frame camera makes them) lying flat and level on the wall, in the site's cold materials: a base of
-// near-black graphite with its grain and a cold sheen; the sprocket holes cut clean through it along both edges
-// (four to a frame, as on the real thing), so the page shows through them, and the film's thickness shows as a
-// thin steel edge inside each hole and along the strip's foot; the frame numbers and the film's name printed in
-// quiet concrete grey along the edges; in each frame a different photograph, square-cut. It runs off the screen
+// as a half-frame camera makes them) lying flat and level on the wall, in the site's cold materials: a matte base
+// of near-black graphite with its grain; the sprocket holes cut clean through it along both edges (four to a frame,
+// as on the real thing), so the page shows through them, and the film's thickness shows as a thin steel edge inside
+// each hole and along the strip's foot; the frame numbers and the film's name printed faint in steel along the
+// edges; in each frame a different photograph, square-cut, in black and white. It runs off the screen
 // at both sides. As the page scrolls it slides sideways past you, from its first frames to its last, and a finger
 // laid on it moves it too (with reduced motion it stays, a row to scroll by hand). Under the mouse a frame comes
 // up brighter and plays its film if it has one (on phones, the frame that settles in view plays). Each frame opens
@@ -32,8 +32,7 @@ const sets = await Promise.all(frames.map((s) => photo(s.thumb ?? s.src, '(max-w
 <div class="gfs" data-gfs>
   <div class="gfs-run" data-lenis-prevent-horizontal>
     <div class="gfs-body" data-gfs-strip>
-    <!-- under the strip: its soft shadow, and its thickness (the same film, cut the same, a hair lower and lighter) -->
-    <div class="gfs-shadow" aria-hidden="true"></div>
+    <!-- under the strip: its thickness (the same film, cut the same, a hair lower, in steel) -->
     <div class="gfs-wall gfs-cut" aria-hidden="true"></div>
     <div class="gfs-strip gfs-cut">
       <ol class="gfs-frames" role="list">

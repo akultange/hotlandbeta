@@ -32,6 +32,17 @@ export const ui = {
       no: 'Нет',
       bye: 'Клуб и сайт только для совершеннолетних.',
     },
+    // the home page's door (Hero.astro): the club's hours for screen readers, and while the club is closed, when it
+    // opens again ({when}: one of the words below; {at}: the time from the club's hours) and a table for tonight
+    door: {
+      hours: 'Каждую ночь {open}–{close}',
+      closed: 'Сейчас закрыто.',
+      opens: 'Откроемся {when} в {at}.',
+      today: 'сегодня',
+      tomorrow: 'завтра',
+      days: ['в понедельник', 'во вторник', 'в среду', 'в четверг', 'в пятницу', 'в субботу', 'в воскресенье'],
+      book: 'Забронировать на сегодня',
+    },
     footer: {
       club: 'Клуб', visit: 'Визит', contact: 'Связь', other: 'Ещё',
       careers: 'Вакансии', terms: 'Условия брони', privacy: 'Конфиденциальность', cookies: 'Cookies',
@@ -78,6 +89,15 @@ export const ui = {
       yes: 'Yes, I’m 18+',
       no: 'No',
       bye: 'The club and this site are for adults only.',
+    },
+    door: {
+      hours: 'Nightly {open}–{close}',
+      closed: 'Closed now.',
+      opens: 'We open {when} at {at}.',
+      today: 'tonight',
+      tomorrow: 'tomorrow',
+      days: ['on Monday', 'on Tuesday', 'on Wednesday', 'on Thursday', 'on Friday', 'on Saturday', 'on Sunday'],
+      book: 'Book for tonight',
     },
     footer: {
       club: 'Club', visit: 'Visit', contact: 'Contact', other: 'More',

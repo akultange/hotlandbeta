@@ -1,22 +1,24 @@
 /* =====================================================================
    "Request a call" and "Ask a question" (Ask.astro): one window for the whole site, since the club's number is
-   never shown. A card in the middle of the screen (a sheet rising from the bottom on phones). It speaks the booking
-   window's language (apply.css: the plates, steel for what is chosen, the fields, the consent, the message at the
-   foot, the sign that it is sent). At the top the two ways in, as two plates, and the cross; then the fields, which
-   scroll if the screen is short; at the foot the button, always in sight (above a phone's keyboard too).
+   never shown. A card in the middle of the screen (a sheet rising from the bottom on phones): matte lacquer inside
+   one hairline, square, over the page smoked (solid, never blurred). It speaks the booking window's language
+   (apply.css: the plates, what is chosen framed in shirt white over its lit seam, the fields, the consent, the
+   message at the foot, the sign that it is sent). At the top the two ways in, as two plates, and the cross; then the
+   fields, which scroll if the screen is short; at the foot the button, always in sight (above a phone's keyboard
+   too). (2026-11-21, «Между»: no burgundy light, no shadow under the card, no blur behind it.)
    ===================================================================== */
 
 html.ask-lock { overflow: hidden; }
 .ask {
   width: min(520px, calc(100vw - 24px)); max-width: none; max-height: none; padding: 0; margin: auto;
-  border: 0; border-radius: var(--r-5); background: transparent; color: var(--fg); overflow: visible;
+  border: 0; background: transparent; color: var(--fg); overflow: visible;
 }
-.ask::backdrop { background: rgba(0, 0, 0, .7); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.ask::backdrop { background: var(--smoke); }
 .ask-box {
   --ask-pad: clamp(20px, 3vw, 32px);
-  position: relative; display: flex; flex-direction: column; gap: 22px; max-height: calc(100vh - 32px); padding: 18px var(--ask-pad) var(--ask-pad); border-radius: inherit;
-  background: radial-gradient(120% 70% at 50% 0%, #1c1315 0%, #111112 62%);
-  box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .1), inset 0 1px 0 rgba(255, 255, 255, .06), 0 40px 90px -24px rgba(0, 0, 0, .95);
+  position: relative; display: flex; flex-direction: column; gap: 22px; max-height: calc(100vh - 32px); padding: 18px var(--ask-pad) var(--ask-pad);
+  background: var(--lacquer);
+  box-shadow: inset 0 0 0 1px var(--rule-2);
 }
 /* (the screen's height as it is now, so the card ends above a phone's keyboard) */
 @supports (height: 100dvh) { .ask-box { max-height: calc(100dvh - 32px); } }
@@ -36,18 +38,18 @@ html.ask-lock { overflow: hidden; }
 .ask-top { display: flex; flex-wrap: wrap-reverse; align-items: center; gap: 8px; }
 .ask-switch { display: flex; flex: 0 1 auto; gap: 8px; min-width: 0; }
 .ask-switch button {
-  flex: 1 1 auto; height: 48px; padding: 0 20px; border-radius: var(--pill); font: 500 16px/1 var(--sans); color: var(--fg-2); white-space: nowrap;
-  background: var(--plate); box-shadow: var(--plate-edge); transition: background-color .25s ease, color .25s ease;
+  flex: 1 1 auto; height: 48px; padding: 0 20px; font: 500 16px/1 var(--f-text); color: var(--fg-2); white-space: nowrap;
+  background: var(--plate); box-shadow: var(--plate-edge); transition: box-shadow .25s ease, color .25s ease;
 }
-@media (hover: hover) { .ask-switch button[aria-pressed="false"]:hover { color: var(--fg); background: var(--plate-lit); } }
-/* the one you are in: the steel of every chosen state on the site */
-.ask-switch button[aria-pressed="true"] { color: var(--ink); background: var(--steel-pill), #d3d5d9; box-shadow: var(--steel-pill-edge); }
+@media (hover: hover) { .ask-switch button[aria-pressed="false"]:hover { color: var(--fg); box-shadow: var(--plate-edge-lit); } }
+/* the one you are in: framed in shirt white over its lit seam, as every chosen thing on the site */
+.ask-switch button[aria-pressed="true"] { color: #fff; box-shadow: var(--chosen); }
 .ask-x {
-  display: grid; place-items: center; flex: none; width: 48px; height: 48px; margin-left: auto; border-radius: 50%; color: var(--fg-2);
-  background: var(--plate); box-shadow: var(--plate-edge); transition: background-color .2s ease, color .2s ease;
+  display: grid; place-items: center; flex: none; width: 48px; height: 48px; margin-left: auto; color: var(--fg-2);
+  background: var(--plate); box-shadow: var(--plate-edge); transition: box-shadow .2s ease, color .2s ease;
 }
-.ask-x:hover { color: var(--fg); background: var(--plate-lit); }
-.ask-x svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+.ask-x:hover { color: var(--fg); box-shadow: var(--plate-edge-lit); }
+.ask-x svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.4; }
 
 /* the middle: the heading, the fields, the consent (it scrolls when the card can't be as tall as it needs; the
    room around is for a focus ring at the edge, and under the consent for its link's unseen finger room, so that
@@ -59,9 +61,9 @@ html.ask-lock { overflow: hidden; }
 }
 .ask-form { display: grid; gap: 22px; }
 .ask-head { display: grid; gap: 8px; }
-.ask-h { margin: 0; font: 500 clamp(25px, 2.46vw, 31px)/1.05 var(--display); letter-spacing: -.01em; text-wrap: balance; }
+.ask-h { margin: 0; font: 500 clamp(25px, 2.46vw, 31px)/1.05 var(--f-text); letter-spacing: -.016em; text-wrap: balance; }
 .ask-h:focus { outline: none; }
-.ask-lead { margin: 0; font: 400 15px/1.55 var(--sans); color: var(--fg-2); text-wrap: pretty; }
+.ask-lead { margin: 0; font: 400 16px/1.55 var(--f-text); color: var(--fg-2); text-wrap: pretty; }
 .ask-fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px 18px; }
 .ask .field textarea { min-height: 84px; }
 .ask .apl-via { margin-top: 0; }
@@ -86,7 +88,7 @@ html.ask-lock { overflow: hidden; }
 
 /* phones: a sheet from the bottom, under the thumb */
 @media (max-width: 599px) {
-  .ask { width: 100%; margin: auto 0 0; border-radius: var(--r-5) var(--r-5) 0 0; }
+  .ask { width: 100%; margin: auto 0 0; }
   .ask-box { max-height: calc(100vh - 12px); padding-bottom: calc(20px + env(safe-area-inset-bottom)); }
   @supports (height: 100dvh) { .ask-box { max-height: calc(100dvh - 12px); } }
   .ask[open] .ask-box { animation-name: ask-up; animation-duration: .34s; }
@@ -97,7 +99,7 @@ html.ask-lock { overflow: hidden; }
   .ask-fail .ask-h { min-height: 44px; padding-right: 56px; }
   .ask-fields { grid-template-columns: minmax(0, 1fr); gap: 16px; }
 }
-@media (max-width: 374px) { .ask-switch button { padding: 0 10px; font-size: 13px; } }
+@media (max-width: 374px) { .ask-switch button { padding: 0 10px; font-size: 14px; } }
 @keyframes ask-up { from { translate: 0 100%; } }
 @keyframes ask-down { to { translate: 0 100%; } }
 /* less motion: the card and the dark still come and go in a short fade, but nothing moves */

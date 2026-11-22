@@ -4,11 +4,12 @@
    sprocket holes every 4.75 mm (four to a frame), 2.8 x 1.98 mm, 2 mm in from the edge.
    It lies flat and level on the wall, in the site's own cold materials (2026-11-20; it used to be the one warm
    thing left: a brown base over a warm light, amber print, turned in 3D so its foot sloped across the screen).
-   Layers, back to front: the strip's shadow; its thickness (the same film, cut the same, a hair lower and lighter,
-   so a thin steel edge shows inside the top of each hole and along the strip's foot); the strip itself: a base of
-   near-black graphite with a cold sheen and its grain, the holes cut clean through it (the page's concrete shows
-   through), the pictures square-cut, the edge print in quiet concrete grey. The pictures are the only colour on it.
-   It runs off the screen at both sides.
+   Layers, back to front: its thickness (the same film, cut the same, a hair lower and lighter, so a thin steel
+   edge shows inside the top of each hole and along the strip's foot); the strip itself: a matte base of near-black
+   graphite with its grain, the holes cut clean through it (the page's concrete shows through), the pictures
+   square-cut and in black and white, the edge print in the Label's small capitals, in steel. (2026-11-21,
+   «Между»: the cold sheen across the plastic and the soft shadow under the strip are gone: nothing glossy, no
+   shadow under a part.) It runs off the screen at both sides.
    Without motion, or before the script: a row to move by hand. With motion (.is-live, set by the script): the strip
    slides sideways as the page scrolls, and a finger laid on it moves it too. */
 .gfs {
@@ -21,7 +22,7 @@
   position: relative; overflow-x: clip; overflow-y: visible;
 }
 /* the row, moved by hand: a finger or a trackpad scrolls it. The 6 mm under the strip, inside the scrolling row,
-   hold its shadow and are taken back, so the next section's air starts at the strip's foot. */
+   hold its edge and are taken back, so the next section's air starts at the strip's foot. */
 .gfs-run { position: relative; overflow-x: auto; scrollbar-width: none; padding: 0 var(--pad) calc(var(--mm) * 6); margin-bottom: calc(var(--mm) * -6); }
 .gfs-run::-webkit-scrollbar { display: none; }
 .gfs-body { position: relative; width: max-content; }
@@ -42,25 +43,16 @@
   /* the whole strip, less the two rows of holes */
   -webkit-mask-composite: source-out, source-over, source-over; mask-composite: subtract, add, add;
 }
-/* the shadow the strip casts on the wall under it */
-.gfs-shadow {
-  position: absolute; left: 0; right: 0; top: 30%; bottom: -3%;
-  background: rgba(0, 0, 0, .7); filter: blur(calc(var(--mm) * 2.4)); translate: 0 calc(var(--mm) * 1.6);
-}
-/* the film's thickness: the same cut strip, a hair lower, in the cold grey of the base's cut edge */
+/* the film's thickness: the same cut strip, a hair lower, in blackened steel, the base's cut edge */
 .gfs-wall {
   position: absolute; inset: 0; translate: 0 var(--thick);
-  background: linear-gradient(180deg, #3d3f44 0%, #26272a 50%, #3d3f44 100%);
+  background: var(--steel);
 }
 .gfs-strip {
   position: relative; height: var(--sh);
   padding: 0 calc(var(--mm) * 3);
-  background:
-    /* the light along its top and bottom edges, and a long cold sheen across the plastic */
-    linear-gradient(180deg, rgba(255, 255, 255, .1) 0, rgba(255, 255, 255, 0) 2px, rgba(255, 255, 255, 0) calc(100% - 2px), rgba(255, 255, 255, .04) 100%),
-    linear-gradient(104deg, rgba(236, 238, 244, 0) 30%, rgba(236, 238, 244, .045) 46%, rgba(236, 238, 244, 0) 60%),
-    /* the base itself: near-black graphite */
-    linear-gradient(180deg, #1c1d20 0%, var(--char) 50%, #1c1d20 100%);
+  /* the base itself: matte graphite, its top edge catching one hairline of light */
+  background: linear-gradient(180deg, rgba(236, 236, 232, .1) 0 1px, transparent 1px) var(--graphite);
 }
 /* the base's grain, under the pictures */
 .gfs-frames::before {
@@ -76,7 +68,7 @@
 /* the picture in its frame: square-cut, a fine dark line where the image ends on the film */
 .gfs-img {
   position: relative; display: block; width: 100%; height: 100%; overflow: hidden;
-  background: #050506; box-shadow: 0 0 0 1px rgba(0, 0, 0, .7);
+  background: var(--lacquer); box-shadow: 0 0 0 1px rgba(0, 0, 0, .7);
 }
 /* the picture at full strength, with no vignette or shadow over it (the client: "remove shadow from gallery
    images"); under the pointer it comes up a touch brighter */
@@ -84,10 +76,12 @@
 @media (hover: hover) { .gfs-a:hover .gfs-img img { filter: brightness(1.06) contrast(1.05); } }
 
 /* the edge print: the frame's number and an arrow, in the margin under the frame; the film's name over some
-   frames, in the top margin. Small and quiet, as it is on film: concrete grey on the graphite. */
+   frames, in the top margin. Small and quiet, as it is on film: the Label's capitals (serial numbers), in steel,
+   faint on the graphite. */
 .gfs-no, .gfs-brand {
   position: absolute; z-index: 1; left: calc(var(--mm) * 2);
-  font: 600 calc(var(--mm) * 1.05)/1 var(--sans); letter-spacing: .08em; color: var(--concrete); opacity: .72;
+  font: var(--label-wght) max(11px, calc(var(--mm) * 1.05))/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase;
+  color: var(--steel-hi); opacity: .5;
   font-variant-numeric: tabular-nums; white-space: nowrap; pointer-events: none;
 }
 .gfs-no { top: calc(100% + var(--mm) * .2); display: flex; align-items: center; gap: calc(var(--mm) * .5); }

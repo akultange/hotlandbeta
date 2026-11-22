@@ -104,16 +104,17 @@ const steps = ru ? ['Роль', 'Контакты', 'Пара слов о се�
   .sec-t.cr-sec { padding-bottom: 0; }
   .cr-roles { list-style: none; margin: clamp(10px, 1.7vw, 26px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(12px, 1.5vw, 22px); }
   .cr-role { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 6px 10px; color: var(--fg); -webkit-tap-highlight-color: transparent; }
-  .cr-shot.photo { grid-column: 1 / -1; aspect-ratio: 3 / 4; margin-bottom: 8px; border-radius: var(--r-4); }
+  .cr-shot.photo { grid-column: 1 / -1; aspect-ratio: 3 / 4; margin-bottom: 8px; }
   /* (the hairline round pictures that stand side by side, global.css: three of the five are dark to their edges,
      and without it their cards had no shape beside the two bright ones) */
-  .cr-shot.photo::after { box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .15), inset 0 1px 0 rgba(255, 255, 255, .06); }
+  .cr-shot.photo::after { box-shadow: inset 0 0 0 1px var(--rule); }
   /* (drawn larger than its frame around the part that matters: --at, --zoom, set per picture above) */
   .cr-shot img { object-position: var(--at, 50% 50%); transform-origin: var(--at, 50% 50%); transform: scale(var(--zoom, 1)); }
-  .cr-n { font: 500 12px/1 var(--sans); letter-spacing: .12em; color: var(--muted); font-variant-numeric: lining-nums tabular-nums; }
-  .cr-k { font: 500 clamp(16px, 1.45vw, 21px)/1.2 var(--display); text-wrap: balance; }
-  .cr-go { grid-column: 2; display: inline-flex; align-items: center; gap: 6px; font: 500 13px/1.2 var(--sans); color: var(--fg-2); transition: color .3s ease, gap .3s var(--ease-out); }
-  .cr-go i { font-style: normal; }
+  /* (a role's number is a serial number: the Label; its way in, a control: the Label too, the arrow in steel) */
+  .cr-n { font: var(--label-wght) 12px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); color: var(--steel-hi); font-variant-numeric: lining-nums tabular-nums; }
+  .cr-k { font: 500 clamp(16px, 1.45vw, 21px)/1.2 var(--f-text); text-wrap: balance; }
+  .cr-go { grid-column: 2; display: inline-flex; align-items: center; gap: 8px; margin-top: 2px; font: var(--label-wght) 12px/1.2 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase; color: var(--fg-2); transition: color .3s ease, gap .3s var(--ease-out); }
+  .cr-go i { font: 400 14px/1 var(--f-text); font-style: normal; letter-spacing: 0; color: var(--steel-hi); }
   @media (hover: hover) {
     .cr-role:hover .cr-go { color: var(--fg); gap: 10px; }
     .cr-role:hover .cr-shot img { transform: scale(calc(var(--zoom, 1) * 1.04)); }
@@ -131,17 +132,18 @@ const steps = ru ? ['Роль', 'Контакты', 'Пара слов о се�
   /* ---------- Applying ----------
      The invitation's card (global.css, .cta-card) with this page's words: the title a step smaller than the
      invitation's (its first word is longer), the three steps as a short ruled row, the two buttons. */
-  .cr-apply .cta-h { font-size: clamp(30px, 5.5cqw, 76px); }
+  /* (the card's title is a section's heading here, not the page's name: the text face, as every section's) */
+  .cr-apply .cta-h { font-size: clamp(30px, 5.5cqw, 76px); font-weight: 500; }
   .cr-apply-head { display: grid; gap: clamp(12px, 1.6cqw, 20px); }
   .cr-apply-head .lead { max-width: 30ch; text-wrap: pretty; }
   .cr-steps { list-style: none; margin: 0; padding: 0; width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 clamp(10px, 1.6cqw, 20px); }
-  .cr-steps li { display: grid; align-content: start; gap: 8px; padding-top: 12px; border-top: 1px solid var(--rule-2); font: 400 clamp(14px, 1.25cqw, 16px)/1.35 var(--sans); color: var(--fg); }
-  .cr-steps span { font: 500 12px/1 var(--sans); letter-spacing: .12em; color: var(--muted); font-variant-numeric: lining-nums tabular-nums; }
+  .cr-steps li { display: grid; align-content: start; gap: 10px; padding-top: 14px; border-top: 1px solid var(--rule-2); font: 400 16px/1.35 var(--f-text); color: var(--fg); }
+  /* (a step's number: the Dial, as the watch's hours are) */
+  .cr-steps span { font: 200 clamp(40px, 4cqw, 56px)/.8 var(--f-flex); font-stretch: var(--dial-wdth); color: var(--fg); font-variant-numeric: lining-nums tabular-nums; }
   /* (the dressing room: the mirror and its bulbs stand in the picture's right half, the free chair to their left) */
   .cr-apply .cta-shot img { object-position: 86% 50%; transform: none; }
   @media (max-width: 899px) {
     .cr-apply .cta-h { font-size: clamp(30px, 12cqw, 64px); }
     .cr-apply .cta-shot img { object-position: 80% 50%; }
-    .cr-steps li { font-size: 14px; }
   }
 </style>

@@ -1,38 +1,160 @@
 /* =====================================================================
    The booking (Book.astro): the job application's full-screen page (apply.css: the picture on the left, the
    count and the cross, the line of light, the step under it, the buttons at the foot), with the little the
-   booking adds: the night line, the guests (a minus, the number, a plus) and shorter wishes.
+   booking adds (the night line, the guests: a minus, the number, a plus; shorter wishes) and how it is dressed.
+   «Между» (2026-11-21). apply.css still dresses the windows the old way (plates, steel pills, a burgundy haze); the
+   booking's window takes the club's own here, scoped to .bk, so it holds whatever the other windows do:
+   - the ground is the site's black (leather and its concrete), the picture's side lacquer, one hairline between;
+   - the picture is the table with its lamp, drawn (LineArt.astro). The lamp is out while you book, lit only when
+     the room is (--room: after 04:00), and when the request has gone it lights, amber, and stays (a booked table is
+     amber at any hour);
+   - the step's number is the Dial, the line over the step a seam of the light that fills as you go (--lit: red,
+     amber after 04:00);
+   - every control is square and drawn in 1px lines, never filled: the kinds are rows over hairlines, the chosen
+     one lit along its left edge; the guests' minus and plus are frames round the number, which is the Dial on its
+     own line; the pills are frames, the chosen one in shirt white over its lit seam; a field is a line that lights
+     when you write in it; the consent a square frame with a chalk tick;
+   - words in the text face, the labels too; the buttons are the site's (the cuff to go on and to send).
    ===================================================================== */
 
-html.bk-lock { overflow: hidden; background: #050405; } /* (the window's own black in the scrollbar's strip: apply.css) */
+html.bk-lock { overflow: hidden; background: var(--lacquer); } /* (the window's own black in the scrollbar's strip: apply.css) */
 /* (a scroll that reaches the end of a step stays in the dialog; the page behind never moves) */
-.bk { overscroll-behavior: contain; }
+.bk { overscroll-behavior: contain; background: var(--lacquer); }
 
-/* 2: what and which night, then the guests: a minus and a plus (plates, as every control in the window), the
-   number big between them (a real field: it can be typed into, and it keeps to 1 to 200) */
-.bk-chosen { display: grid; gap: 6px; }
-.bk-guests { display: grid; justify-items: start; gap: 10px; margin-top: 6px; }
-.bk-count { display: flex; align-items: center; gap: 14px; }
-.bk-pm {
-  display: grid; place-items: center; flex: none; width: 52px; height: 52px; border-radius: 50%; color: var(--fg);
-  background: var(--plate); box-shadow: var(--plate-edge);
-  transition: background-color .2s ease, opacity .2s ease;
+/* ---------- The picture: the table and its lamp ----------
+   A computer's: the left of the window, lacquer black, one hairline where the steps begin; the drawing stands in
+   its middle. (A phone has no picture; its sent step has the table of its own, below.) */
+.bk .bk-pic { background: var(--lacquer); box-shadow: inset -1px 0 0 var(--rule); }
+@media (min-width: 900px) { .bk .bk-pic { display: grid; place-items: center; } }
+.bk .bk-lamp { width: min(68%, 54vh, 460px); }
+/* the lamp's light (its haze, its pool on the table, the lit rim of its shade): the room's until the request goes */
+.bk .bk-lamp .la-light { opacity: var(--room); transition: opacity 1.8s cubic-bezier(.4, 0, .2, 1) .2s; }
+.bk:has(.apl-box[data-step="done"]) .bk-lamp .la-light { opacity: 1; }
+
+/* ---------- The steps' page ---------- */
+.bk .apl-box {
+  background-color: var(--leather); background-image: var(--stone); background-size: var(--stone-size); background-blend-mode: overlay, overlay;
 }
-.bk-pm:hover { background: var(--plate-lit); }
+/* the count is a serial number: the Label, the step in shirt white and «/ 03» in ash (at this size the Dial's 0 and 1
+   are two hairlines) */
+.bk .apl-count {
+  gap: 8px; color: var(--ash);
+  font: var(--label-wght) 13px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); font-variant-numeric: tabular-nums lining-nums;
+}
+.bk .apl-count b { font: inherit; font-stretch: inherit; letter-spacing: inherit; color: var(--shirt); background: none; -webkit-text-fill-color: currentColor; }
+/* the cross: a square frame */
+.bk .apl-x { border-radius: 0; background: none; box-shadow: inset 0 0 0 1px var(--rule-2); color: var(--fg-2); transition: box-shadow .2s ease, color .2s ease; }
+.bk .apl-x:hover { background: none; }
+@media (hover: hover) { .bk .apl-x:hover { box-shadow: inset 0 0 0 1px var(--shirt); color: var(--shirt); } }
+.bk .apl-x svg { stroke-width: 1.25; }
+/* the line: a hairline, and on it a seam of the light that fills a third a step */
+.bk .apl-line { height: var(--seam); overflow: visible; background: linear-gradient(var(--rule-2), var(--rule-2)) 0 100% / 100% 1px no-repeat; }
+.bk .apl-line i { background: var(--lit-core); box-shadow: var(--seam-glow); }
+.bk .apl-h { letter-spacing: -.02em; }
+
+/* 1: the kinds, one to a row over hairlines, their names in the text face and a steel arrow at the end. The chosen
+   one lights its seam along its left edge, and its name turns shirt white. */
+.bk .apl-roles { grid-template-columns: minmax(0, 1fr); gap: 0; margin-top: 4px; border-top: 1px solid var(--rule-2); }
+.bk .apl-roles span {
+  position: relative; justify-content: space-between; gap: 16px; min-height: 68px; padding: 12px 6px 12px 22px;
+  border-radius: 0; border-bottom: 1px solid var(--rule); background: none; box-shadow: none;
+  font: 400 clamp(19px, 1.45vw, 22px)/1.2 var(--f-text); letter-spacing: -.01em; color: var(--fg-2);
+  transition: color .25s ease;
+}
+.bk .apl-roles span::before {
+  content: ''; position: absolute; left: 0; top: 14px; bottom: 14px; width: var(--seam);
+  background: var(--lit-core); box-shadow: var(--seam-glow);
+  transform: scaleY(0); transition: transform .4s var(--ease-io);
+}
+.bk .apl-roles span::after { content: '→'; flex: none; font: 400 16px/1 var(--f-text); color: var(--steel-hi); transition: translate .45s var(--ease-out); }
+@media (hover: hover) {
+  .bk .apl-roles label:hover input:not(:checked) + span { background: none; color: var(--shirt); }
+  .bk .apl-roles label:hover span::after { translate: 5px 0; }
+}
+.bk .apl-roles input:checked + span { background: none; box-shadow: none; color: var(--shirt); }
+.bk .apl-roles input:checked + span::before { transform: scaleY(1); }
+.bk .apl-roles input:focus-visible + span { outline: var(--seam) solid var(--lit); outline-offset: 2px; }
+.bk .apl-roles label:active span { scale: 1; }
+
+/* 2: what and which night, then the guests: the number in the Dial on its own line (a real field: it can be typed
+   into, and it keeps to 1 to 200), a square frame either side for the minus and the plus */
+.bk-chosen { display: grid; gap: 6px; }
+.bk .apl-chosen { font: 400 16px/1.45 var(--f-text); color: var(--ash); }
+.bk .apl-chosen b { font-weight: 500; color: var(--shirt); }
+.bk .apl-change {
+  color: var(--fg-2); text-decoration-thickness: 1px; text-underline-offset: .28em; text-decoration-color: var(--rule-2);
+  transition: color .2s, text-decoration-color .2s;
+}
+.bk .apl-change:is(:hover, :focus-visible) { color: var(--shirt); text-decoration-color: var(--lit); }
+.bk-guests { display: grid; justify-items: start; gap: 12px; margin-top: 6px; }
+.bk-count { display: flex; align-items: center; gap: 18px; }
+.bk-pm {
+  display: grid; place-items: center; flex: none; width: 52px; height: 52px; border-radius: 0; color: var(--fg);
+  background: none; box-shadow: inset 0 0 0 1px var(--rule-2);
+  transition: box-shadow .2s ease, opacity .2s ease;
+}
+@media (hover: hover) { .bk-pm:hover { box-shadow: inset 0 0 0 1px var(--shirt); } }
 .bk-pm[aria-disabled="true"] { opacity: .32; cursor: default; }
-.bk-pm[aria-disabled="true"]:hover { background: var(--plate); }
-.bk-pm svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+.bk-pm[aria-disabled="true"]:hover { box-shadow: inset 0 0 0 1px var(--rule-2); }
+.bk-pm svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.25; }
 .bk-count input {
-  box-sizing: border-box; width: calc(3ch + 10px); height: calc(1em + 10px); margin: 0; padding: 0 0 4px;
-  border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: none; color: var(--fg); text-align: center;
-  font: 450 clamp(38px, 3.4vw, 53px)/1.05 var(--display); font-variant-numeric: tabular-nums lining-nums; caret-color: var(--light);
+  box-sizing: border-box; width: calc(3ch + 24px); height: 92px; margin: 0; padding: 0 0 8px;
+  border: 0; border-bottom: 1px solid var(--rule-2); border-radius: 0; background: none; color: var(--fg); text-align: center;
+  font: 180 84px/1 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; caret-color: var(--lit);
   appearance: textfield; -moz-appearance: textfield; transition: border-color .3s ease;
 }
 .bk-count input::-webkit-inner-spin-button, .bk-count input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-.bk-count input:focus { outline: none; border-bottom-color: var(--light); }
+.bk-count input:focus { outline: none; border-bottom-color: var(--lit); }
+
+/* the occasion and where to reply: square frames; the chosen one in shirt white over its lit seam (global.css,
+   Forms: chosen is said one way everywhere) */
+.bk .apl-pill span {
+  height: 48px; padding: 0 20px; border-radius: 0; border: 1px solid var(--rule-2); background: none; box-shadow: none;
+  font: 400 16px/1 var(--f-text); color: var(--fg-2);
+  transition: color .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+@media (hover: hover) { .bk .apl-pill:hover input:not(:checked) + span { background: none; color: var(--shirt); border-color: color-mix(in srgb, var(--shirt) 55%, transparent); } }
+.bk .apl-pill input:checked + span { background: none; color: var(--shirt); border-color: var(--shirt); box-shadow: inset 0 calc(-1 * var(--seam)) 0 var(--lit); }
+.bk .apl-pill input:focus-visible + span { outline: var(--seam) solid var(--lit); outline-offset: 3px; }
+
+/* the fields: a line each (global.css, Forms), lit while you write; their names in the text face */
+.bk .apl-via-l, .bk .field label { font: 400 16px/1.4 var(--f-text); color: var(--ash); }
+.bk .field :is(input, textarea) { caret-color: var(--lit); }
 /* the wishes: three lines to start with (the application's few words have five); two on a low screen, so the
    whole step is there without a scroll */
 .bk .apl-step .field textarea { min-height: calc(3 * 1.4em + 18px); }
 @media (min-width: 600px) and (max-height: 860px) {
   .bk .apl-step .field textarea { min-height: calc(2 * 1.4em + 18px); }
+}
+
+/* 3: the consent: a square frame and the sentence; ticked, the frame turns shirt white round a chalk tick */
+.bk.apl .consent { font-size: 16px; line-height: 22px; color: var(--ash); }
+.bk.apl .consent input { border-radius: 0; background: none; box-shadow: inset 0 0 0 1px var(--rule-2); }
+@media (hover: hover) { .bk.apl .consent:hover input:not(:checked) { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--shirt) 55%, transparent); } }
+.bk.apl .consent input:checked {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'%3E%3Cpath d='M5.8 11.4l3.5 3.5 7-7.9' fill='none' stroke='%23ecece8' stroke-width='1.5' stroke-linecap='square'/%3E%3C/svg%3E") 50% 50% / 22px 22px no-repeat;
+  box-shadow: inset 0 0 0 1px var(--shirt);
+}
+.bk.apl .consent.is-bad input { box-shadow: inset 0 0 0 1px var(--light); }
+.bk.apl .consent input:focus-visible { outline: var(--seam) solid var(--lit); outline-offset: 3px; }
+
+/* what is wrong: white words beside a line of the red light, as every form on the site says it (.form-error) */
+.bk .apl-err { padding-left: 12px; border-left: var(--seam) solid var(--light); font: 400 16px/1.4 var(--f-text); color: var(--shirt); }
+
+/* sent, on a phone: the table, its lamp lit, over the words (a computer's lights on the left instead) */
+.bk .bk-lamp-done { width: min(52vw, 210px); margin: 0 0 6px -8px; }
+@media (min-width: 900px) { .bk .bk-lamp-done { display: none; } }
+
+/* ---------- Phones ---------- */
+@media (max-width: 599px) {
+  .bk .apl-roles span { min-height: clamp(56px, 8svh, 64px); }
+  .bk .apl-pill span { padding: 0 6px; font-size: 16px; }
+  .bk-count input { height: 80px; font-size: 72px; font-weight: 200; }
+}
+/* the smallest phones: the five kinds still whole on a 320x568 screen */
+@media (max-width: 599px) and (max-height: 600px) {
+  .bk .apl-roles span { min-height: 50px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bk .apl-roles span::before, .bk .apl-roles span::after { transition: none; }
 }

@@ -1,42 +1,49 @@
 /* =====================================================================
-   Navigation: the header, the phone menu and the phone action dock.
-   Loaded after global.css (Base.astro), so the rules here win over the older header, phone-menu and
-   phone-bar rules still in global.css ("Header: tucks away", "Phone menu: drops in", "Taps").
-   The pieces are plates of smoked glass on the concrete: square-cut, a translucent fill, a blur of whatever passes
-   behind, and a 1px edge of light. Nothing sits on a bar; the header itself is transparent.
+   Navigation: the header, the phone menu and the phone's dock.
+   Loaded after global.css (Base.astro), so the rules here win over the older header, phone-menu and phone-bar
+   rules still in global.css ("Header: tucks away", "Phone menu: drops in", "Taps").
+   «Между» (2026-11-21): the designer's header (the logo at the centre, one hairline across the full width, the
+   current page lit on it) in the system's dress. The words are the Label's small capitals. The one light is the
+   current page's seam on the line: red, amber after 04:00 (--lit, global.css). Nothing is frosted: over the top of
+   a page the bar is clear, and once the page moves under it the bar is smoked, solid and a little translucent. The
+   dock is blackened steel with the seam along its top edge; the menu sheet is the page's own black. Square, 1px
+   lines, no shadows.
    ===================================================================== */
 
 :root {
-  /* the space the phone dock takes at the bottom of the screen (0 on desktop), for anything sized to the screen */
+  /* the space the phone's dock takes at the bottom of the screen (0 on desktop), for anything sized to the screen */
   --dock: 0px;
-  /* what is chosen among tabs and choices (a menu tab, a booking choice): a capsule of light steel with dark words,
-     one clean fall of light like the burgundy button: no line along its upper or lower edge (it had both; on a
-     capsule the lower one read as a grey rim) */
-  --steel-pill: linear-gradient(180deg, rgba(255, 255, 255, .55) 0%, rgba(255, 255, 255, 0) 62%);
-  --steel-pill-edge: 0 8px 20px -10px rgba(0, 0, 0, .85);
-  /* what is chosen in the header (the page, the language) and among tabs stands over a line of the red light: a short
-     one, centred under the word, a little above the capsule's lower edge (on the edge itself a capsule's round ends
-     cut the line: under a word as short as РУС nothing of it was left but an arc) */
-  --nav-on: linear-gradient(90deg, transparent, var(--light) 20%, var(--light) 80%, transparent) 50% calc(100% - 6px) / min(calc(100% - 24px), 30px) 1.5px no-repeat;
-  /* (dense: text that scrolls under a plate must not be read through it; the blur alone left it legible) */
-  --nav-glass: rgba(15, 16, 18, .86);
-  --nav-edge: inset 0 0 0 1px rgba(230, 231, 233, .1), inset 0 1px 0 rgba(255, 255, 255, .07);
-  --nav-lift: 0 14px 34px -18px rgba(0, 0, 0, .9);
-  --nav-blur: blur(20px) saturate(1.5);
-  /* the header's motion: quick to start, soft to land (the light under the mouse, the current section's light
+  /* the header's motion: quick to start, soft to land (the chalk line under the mouse, the current page's seam
      between pages) */
   --ease-nav: cubic-bezier(.3, .7, .1, 1);
   /* the header's line: one hairline the full width of the window along the bar's lower edge (and along the phone
-     menu's top row) */
-  --nav-rule: rgba(230, 231, 233, .15);
+     menu's top row); a little brighter than a rule between things, so it still reads over a photograph */
+  --nav-rule: rgba(236, 236, 232, .16);
+  /* Retired (2026-11-21): the smoked glass (a blur of whatever passed behind, an edge of light and a shadow) and the
+     light-steel capsule that marked a chosen tab. Other parts still name them (the hero's play mark, the gallery,
+     the question and casting forms' choices, the membership field), so they stay, painting the system's plain
+     equivalents: a smoked panel in one hairline, no blur, no shadow, no gradient. Don't use them: each part takes
+     its own out. (What is chosen is a shirt-white frame over a lit seam: global.css, .choice.) */
+  --nav-glass: var(--smoke);
+  --nav-blur: none;
+  --nav-edge: inset 0 0 0 1px var(--rule-2);
+  --nav-lift: 0 0 0 0 transparent;
+  --steel-pill: linear-gradient(transparent, transparent);
+  --steel-pill-edge: 0 0 0 0 transparent;
 }
 
-.glass {
-  background-color: var(--nav-glass);
-  -webkit-backdrop-filter: var(--nav-blur);
-  backdrop-filter: var(--nav-blur);
-  box-shadow: var(--nav-edge), var(--nav-lift);
-}
+/* (.glass was the smoked glass; the gallery's play mark and its viewer's buttons still wear it: a smoked panel now) */
+.glass { background-color: var(--smoke); box-shadow: inset 0 0 0 1px var(--rule-2); }
+
+/* ---------- The club's marks ----------
+   The logo (Logo.astro) and the lily (Flower.astro) are drawn as the club drew them; these rules only size them,
+   wherever they stand. The logo's box is its capitals' box (thin capitals set very wide: 16 times as wide as they
+   are tall), and its glowing sign is drawn outside it. --logo-ink: the letters in another tone than the club's own
+   pale grey, where the ground asks for it (the logo for dark ground only). The lily stands in no part of the
+   header any more: the logo took its place (2026-11-21). */
+.logo { display: block; width: auto; height: 12px; aspect-ratio: 756.7 / 47.4; overflow: visible; }
+.logo-light .logo-letters > * { fill: var(--logo-ink, #b0b1b3); }
+.flower { display: block; width: auto; height: 60px; aspect-ratio: 48.03 / 141.04; overflow: visible; }
 
 /* ---------- Header ---------- */
 .hdr {
@@ -46,26 +53,32 @@
 }
 /* (global.css's band and its reading line along the bottom: the bar is both now, .hdr-bar) */
 .hdr::before, .hdr::after { content: none; }
-/* tucked away on the way down (global.css, html.hdr-hide): far enough up that the current section's glow, which
+/* tucked away on the way down (global.css, html.hdr-hide): far enough up that the current page's seam, whose bloom
    reaches a little below the line, goes with it */
 html.hdr-hide .hdr { translate: 0 calc(-100% - 24px); }
 
 /* the bar: the full width of the window, whatever the page's column. Over the top of a page it is clear, only its
    line across (the hero's film and the page titles run up under it untouched); once the page moves under it, it
-   fills with smoked glass (Header.astro sets .is-scrolled). It takes the clicks that land on it, so that nothing
-   behind it can be pressed through it. */
+   is smoked: solid, a little translucent, never blurred (Header.astro sets .is-scrolled). A shade denser than the
+   site's other smoked panels (--smoke lets a big heading read through at .88): the section names on it must never
+   stand over a ghost of the words passing under them. (At .94 the Афиша's poster numbers, white and a screen wide,
+   still showed through behind the logo; at .96 what passes under is felt more than seen.) It takes the clicks that
+   land on it, so that nothing behind it can be pressed through it. */
 .hdr-bar {
   position: absolute; inset: 0; pointer-events: auto;
-  background-color: rgba(10, 10, 11, 0);
-  transition: background-color .45s ease, -webkit-backdrop-filter .45s ease, backdrop-filter .45s ease;
+  background-color: rgba(5, 5, 6, 0);
+  transition: background-color .45s ease;
 }
-.hdr.is-scrolled .hdr-bar { background-color: rgba(10, 10, 11, .8); -webkit-backdrop-filter: var(--nav-blur); backdrop-filter: var(--nav-blur); }
+.hdr.is-scrolled .hdr-bar { background-color: rgba(5, 5, 6, .96); }
+/* (without scripts nothing tells the bar the page has moved: it is smoked from the start, so the words never cross
+   the page's own) */
+html:not(.js) .hdr-bar { background-color: rgba(5, 5, 6, .96); }
 /* the line: one hairline, edge to edge of the window */
 .hdr-bar::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--nav-rule); }
 
-/* the row on the bar: three columns, the outer two always equal, so the flower stands at the very centre of the
+/* the row on the bar: three columns, the outer two always equal, so the logo stands at the very centre of the
    window whatever the words either side of it. The sections are one <nav> across all three (a subgrid: the left
-   words in the first column, the flower in the second, the right words in the third); the language shares the
+   words in the first column, the logo in the second, the right words in the third); the language shares the
    first column at its far end and "Book" the third at its far end. (As wide as the page's own column: on a very
    wide screen the language and "Book" stand over the content's edges, not out in the screen's corners.) */
 .hdr-in {
@@ -77,36 +90,26 @@ html.hdr-hide .hdr { translate: 0 calc(-100% - 24px); }
 .hdr-in > * { pointer-events: auto; }
 .hdr-lang { grid-area: 1 / 1; justify-self: start; align-self: center; }
 .hdr-nav { grid-area: 1 / 1 / auto / -1; position: relative; display: grid; grid-template-columns: subgrid; }
-/* (the <nav> spans the whole row, over the language and "Book": only its words and the flower take clicks) */
+/* (the <nav> spans the whole row, over the language and "Book": only its words and the logo take clicks) */
 .hdr-in > .hdr-nav { pointer-events: none; }
 .hdr-nav > :is(.hdr-links, .hdr-name) { pointer-events: auto; }
 
-/* the club's emblem, its glowing flower (Flower.astro): the way home. It stands free, as the club's own picture
-   of it does, with no plate and no rim: on the site's dark pages it is the lily and its glow, nothing else. Behind
-   it lies a soft patch of the page's own black with no edge to it (::before), unseen on black, so that over a
-   photograph the lily still stands on dark. (Until 2026-11-20 this was a glass plate with the name, HOTLAND with
-   its sign; the club asked for the flower here. The name with its sign is the door's, the footer card's, the
-   member cards'.) Since the fourth take of the header (2026-11-20) it stands at the centre of the bar, and of the
-   phone menu's top row. */
-.hdr-name { position: relative; isolation: isolate; justify-self: center; align-self: center; flex: none; display: grid; place-items: center; width: 48px; height: 64px; }
-.hdr-name::before {
-  content: ''; position: absolute; z-index: -1; inset: -10px -22px; border-radius: 50%; pointer-events: none;
-  background: radial-gradient(closest-side, rgba(9, 9, 10, .92) 0%, rgba(9, 9, 10, .86) 40%, rgba(9, 9, 10, .52) 70%, rgba(9, 9, 10, 0) 100%);
-}
-/* (the flower: its box is the lily's own, a third as wide as it is tall; the glow is drawn outside it) */
-.flower { display: block; width: auto; height: 60px; aspect-ratio: 48.03 / 141.04; overflow: visible; }
-.hdr-name .flower { transition: filter .35s ease; }
-@media (hover: hover) { .hdr-name:hover .flower { filter: brightness(1.18); } }
-.hdr-name:active .flower { scale: .96; }
-/* the club's logo (Logo.astro): its box is the capitals' box (thin capitals set very wide: 16 times as wide as
-   they are tall), and the glowing sign is drawn outside it. --logo-ink: the letters in another tone than the
-   club's own pale grey, where the ground asks for it (the logo for dark ground only) */
-.logo { display: block; width: auto; height: 12px; aspect-ratio: 756.7 / 47.4; overflow: visible; }
-.logo-light .logo-letters > * { fill: var(--logo-ink, #b0b1b3); }
+/* the club's logo: the way home, at the centre of the bar (and of the phone menu's top row). The club's artwork as
+   it drew it, the letters in its pale grey and the needle of red light at the L kept close to the name (sign
+   "tight", Logo.astro); it stands free, with no plate and nothing behind it. A fingertip's height to press; under
+   the pointer the letters go shirt white. (Until 2026-11-21 the club's lily stood here.) */
+.hdr-name { position: relative; justify-self: center; align-self: center; flex: none; display: grid; place-items: center; height: 44px; padding: 0 8px; }
+/* (--logo-h: the logo's capitals, a size smaller on narrower screens; the phone's seam keeps clear of it by it) */
+.hdr, .mnav { --logo-h: 11px; }
+.hdr-name .logo { height: var(--logo-h); }
+.hdr-name .logo-letters > * { transition: fill .3s ease; }
+@media (hover: hover) { .hdr-name:hover .logo { --logo-ink: var(--shirt); } }
+.hdr-name:active .logo { scale: .97; }
 
-/* the sections: the words stand straight on the bar, each the bar's full height, so that the current one's light
-   lands on the line. --lk-pad: the room either side of a word (the lights under a word are cut to it) */
-.hdr-nav { --lk-pad: 15px; }
+/* the sections: the words stand straight on the bar, each the bar's full height, so that the current one's seam
+   lands on the line. The Label: small capitals, tracked, in ash; the current one and the one under the pointer in
+   shirt white. --lk-pad: the room either side of a word (the lights under a word are cut to it) */
+.hdr-nav { --lk-pad: 14px; }
 .hdr-links { display: flex; }
 .hdr-links-l { grid-column: 1; justify-self: end; }
 .hdr-nav > .hdr-name { grid-column: 2; }
@@ -114,114 +117,153 @@ html.hdr-hide .hdr { translate: 0 calc(-100% - 24px); }
 .hdr-links a {
   position: relative; z-index: 1;
   display: inline-flex; align-items: center; padding: 0 var(--lk-pad);
-  font: 500 12px/1 var(--sans); letter-spacing: .13em; text-transform: uppercase; color: rgba(230, 231, 233, .68); white-space: nowrap;
+  font: var(--label-wght) 12px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase;
+  color: var(--ash); white-space: nowrap;
   transition: color .2s ease;
 }
 .hdr-tx { display: block; }
 @media (hover: hover) {
-  .hdr-links a:not(.on):hover { color: #fff; }
+  .hdr-links a:not(.on):hover { color: var(--shirt); }
 }
-.hdr-links a:not(.on):focus-visible { color: #fff; }
-/* (the keyboard's ring goes round the word, not round the bar's whole height) */
+.hdr-links a:not(.on):focus-visible { color: var(--shirt); }
+/* (the keyboard's line goes round the word, not round the bar's whole height) */
 .hdr-links a:focus-visible { outline: none; }
-.hdr-links a:focus-visible .hdr-tx { outline: 1.5px solid var(--light); outline-offset: 8px; border-radius: 2px; }
+.hdr-links a:focus-visible .hdr-tx { outline: var(--seam) solid var(--lit); outline-offset: 8px; }
 
-/* the current section, lit: a short tube of the red light set into the line under the word; the light it throws
-   rising into the bar as a low dome; a bloom either side of the line (a little of it falls on the page below); and
-   the word itself warmed by it. (Between pages the light glides along the line to the new section: below.) */
-.hdr-links a.on { color: #fff; text-shadow: 0 0 14px rgba(255, 43, 61, .55), 0 0 32px rgba(255, 43, 61, .3); }
+/* the current section, lit: a seam of the light set into the line under the word and a little wider than it,
+   drawn in the light's white-hot core with its own colour as a bloom (red; amber after 04:00). Nothing else in the
+   header is lit: no glow in the bar, none on the word. The seam stands in a clear box that straddles the line
+   (.hdr-light), so the page change can carry it whole, bloom and all, to the next page's word (below). */
+.hdr-links a.on { color: var(--shirt); }
 .hdr-light {
-  position: absolute; z-index: -1; inset: 0; pointer-events: none;
-  background: radial-gradient(62% 82% at 50% 100%, rgba(255, 43, 61, .26), rgba(255, 43, 61, .09) 46%, rgba(255, 43, 61, 0) 100%);
+  position: absolute; z-index: -1; left: calc(var(--lk-pad) - 6px); right: calc(var(--lk-pad) - 6px); bottom: -12px; height: 24px;
+  pointer-events: none;
 }
-.hdr-light::before, .hdr-light::after {
-  content: ''; position: absolute; left: calc(var(--lk-pad) - 6px); right: calc(var(--lk-pad) - 6px);
-  background: linear-gradient(90deg, rgba(255, 43, 61, 0), var(--light) 20%, #ff9ba4 50%, var(--light) 80%, rgba(255, 43, 61, 0));
+.hdr-light::after {
+  content: ''; position: absolute; left: 0; right: 0; top: 11px; height: var(--seam);
+  background: var(--lit-core); box-shadow: var(--seam-glow);
 }
-.hdr-light::before { bottom: -5px; height: 11px; filter: blur(6px); opacity: .9; } /* the bloom */
-.hdr-light::after { bottom: 0; height: 2px; border-radius: 2px; } /* the tube, a hair thicker than the line */
 
-/* under the mouse (or the keyboard), a faint silver light on the line that glides from word to word, across the
-   flower too (Header.astro sets --x and --w) */
+/* under the mouse (or the keyboard), a chalk line on the hairline that glides from word to word, across the logo
+   too (Header.astro sets --x and --w). Chalk, not light: the only light is the current page's. */
 .hdr-hl {
-  position: absolute; top: 0; bottom: 0; left: 0; width: var(--w, 0); translate: var(--x, 0) 0;
-  background: radial-gradient(56% 72% at 50% 100%, rgba(230, 231, 233, .07), rgba(230, 231, 233, 0));
+  position: absolute; left: 0; bottom: 0; height: 1px; width: var(--w, 0); translate: var(--x, 0) 0;
   opacity: 0; pointer-events: none;
   transition: translate .36s var(--ease-nav), width .36s var(--ease-nav), opacity .2s ease;
 }
 .hdr-hl::after {
-  content: ''; position: absolute; left: calc(var(--lk-pad) - 4px); right: calc(var(--lk-pad) - 4px); bottom: 0; height: 1px;
-  background: linear-gradient(90deg, rgba(230, 231, 233, 0), rgba(230, 231, 233, .7) 25%, rgba(230, 231, 233, .7) 75%, rgba(230, 231, 233, 0));
+  content: ''; position: absolute; top: 0; bottom: 0; left: calc(var(--lk-pad) - 6px); right: calc(var(--lk-pad) - 6px);
+  background: color-mix(in srgb, var(--shirt) 62%, transparent);
 }
 .hdr-hl.on { opacity: 1; }
 .hdr-hl.jump { transition: opacity .25s ease; }
 
+/* the current section's place on a phone, where the words are folded into the menu: its seam lit on the line where
+   its word stands on a desktop, the first three left of the logo and the other three right of it, each in its own
+   third of that side (Header.astro sets --at, and .hdr-at-r for the right side; on a desktop the word itself is lit,
+   .hdr-light). */
+.hdr-at { display: none; }
+
 .hdr-r { grid-area: 1 / 3; justify-self: end; align-self: center; display: flex; align-items: center; gap: 10px; }
 
-/* language (on the bar, and on the phone menu's top row): two plain words with a hairline between them, the
-   current one in white; the first stands at the very edge of the page's column */
-.seg { display: flex; }
+/* language (on the bar, and on the phone menu's top row): РУС / ENG, plain, in the Label; the current one in shirt
+   white, the other in ash; the first stands at the very edge of the page's column */
+.seg { display: flex; align-items: center; }
 .seg a {
-  position: relative; display: grid; place-items: center; height: 44px; padding: 0 11px;
-  font: 500 12px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase; color: rgba(230, 231, 233, .5);
+  position: relative; display: grid; place-items: center; height: 44px; padding: 0 10px;
+  font: var(--label-wght) 12px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase;
+  color: var(--ash);
   transition: color .25s ease;
 }
 .seg a:first-child { padding-left: 0; }
-.seg a + a::before { content: ''; position: absolute; left: 0; top: 50%; width: 1px; height: 12px; translate: 0 -50%; background: rgba(230, 231, 233, .24); }
-.seg a.on { color: #fff; }
+/* (the slash between them is a mark, not a word: screen readers pass it by where the browser knows how) */
+.seg a + a::before {
+  content: '/'; content: '/' / ''; position: absolute; left: 0; top: 50%; translate: -50% -50%;
+  color: color-mix(in srgb, var(--shirt) 30%, transparent);
+}
+.seg a.on { color: var(--shirt); }
 @media (hover: hover) {
-  .seg a:not(.on):hover { color: #fff; }
+  .seg a:not(.on):hover { color: var(--shirt); }
 }
 
+/* "Book": the cuff (global.css), the header's size */
 .hdr-book { height: 44px; padding: 0 22px; }
 
 /* phones: "Menu" and two lines, plain on the bar like the words on a desktop, the lines at the very edge of the
-   page's column; in the open sheet it becomes "Close" with a cross */
+   page's column; in the open sheet it becomes "Close" with a cross. 1px lines, like every line. */
 .hdr-menu {
-  display: none; align-items: center; gap: 12px; height: 44px; padding: 0 0 0 14px; border-radius: var(--pill);
-  font: 500 12px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--fg); white-space: nowrap;
+  display: none; align-items: center; gap: 12px; height: 44px; padding: 0 0 0 14px;
+  font: var(--label-wght) 12px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase;
+  color: var(--shirt); white-space: nowrap;
   transition: scale .2s ease;
 }
-.hdr-menu i { position: relative; flex: none; width: 18px; height: 8px; }
-.hdr-menu i::before, .hdr-menu i::after { content: ''; position: absolute; left: 0; right: 0; height: 1.5px; background: currentColor; }
+.hdr-menu i { position: relative; flex: none; width: 20px; height: 7px; }
+.hdr-menu i::before, .hdr-menu i::after { content: ''; position: absolute; left: 0; right: 0; height: 1px; background: currentColor; }
 .hdr-menu i::before { top: 0; }
 .hdr-menu i::after { bottom: 0; }
-.hdr-menu.is-close i::before { translate: 0 3.2px; rotate: 45deg; }
-.hdr-menu.is-close i::after { translate: 0 -3.2px; rotate: -45deg; }
+.hdr-menu.is-close i::before { translate: 0 3px; rotate: 45deg; }
+.hdr-menu.is-close i::after { translate: 0 -3px; rotate: -45deg; }
 .hdr-menu:active { scale: .96; }
 
-/* narrower desktops: the words tighten so that each side keeps to its half of the bar */
+/* narrower desktops: the words and the logo tighten so that each side keeps to its half of the bar, with room to
+   spare between the last word and "Book" (at 900px wide, in Russian, the two would otherwise meet) */
 @media (max-width: 1199px) { .hdr-nav { --lk-pad: 12px; } }
-@media (max-width: 1059px) {
+@media (max-width: 1099px) {
+  .hdr-in { column-gap: 18px; }
   .hdr-nav { --lk-pad: 10px; }
-  .hdr-links a, .hdr-lang a { font-size: 11.5px; }
-  .hdr-lang a { padding: 0 9px; }
+  .hdr, .mnav { --logo-h: 10px; }
+  .hdr-lang a { padding: 0 8px; }
   .hdr-lang a:first-child { padding-left: 0; }
   .hdr-r { gap: 8px; }
-  .hdr-book { padding: 0 16px; font-size: 12px; }
+  .hdr-book { padding: 0 16px; }
 }
-@media (min-width: 900px) and (max-width: 959px) {
+@media (min-width: 900px) and (max-width: 999px) {
+  .hdr-in { column-gap: 14px; }
   .hdr-nav { --lk-pad: 8px; }
-  .hdr-links a { font-size: 11px; letter-spacing: .1em; }
+  .hdr-name { padding: 0 4px; }
+  .hdr, .mnav { --logo-h: 9px; }
+  .hdr-links a { font-size: 11px; }
+  .hdr-book { padding: 0 14px; }
 }
 
-/* phones: the flower at the centre and "Menu" at the right, over the same line */
+/* phones: the logo at the centre and "Menu" at the right, over the same line, and the current section's seam */
 @media (max-width: 899px) {
   .hdr-lang, .hdr-links, .hdr-hl, .hdr-book { display: none; }
   .hdr-menu { display: inline-flex; }
-  .hdr-name { width: 44px; height: 52px; }
-  .hdr-name::before { inset: -8px -18px; }
-  .hdr-name .flower { height: 46px; }
+  .hdr-in { column-gap: 12px; }
+  .hdr-name { padding: 0 4px; }
+  .hdr, .mnav { --logo-h: 10px; }
+  /* (--half: half the logo and the room round it; --zone: one side of the line, from the column's edge to it) */
+  .hdr-at {
+    --half: calc(var(--logo-h) * 15.96 / 2 + 16px);
+    --zone: calc(50% - var(--half) - var(--pad));
+    display: block; position: absolute; bottom: -1px; width: 28px; height: var(--seam);
+    left: calc(var(--pad) + var(--zone) * (2 * var(--at) + 1) / 6 - 14px);
+    background: var(--lit-core); box-shadow: var(--seam-glow);
+  }
+  .hdr-at-r { left: calc(50% + var(--half) + var(--zone) * (2 * var(--at) - 5) / 6 - 14px); }
+}
+/* smaller phones: the logo a size down; the smallest: the menu's two lines alone, in a square the size of a
+   fingertip (the word stays for screen readers), and the logo a size down again, so neither ever meets it */
+@media (max-width: 389px) { .hdr, .mnav { --logo-h: 9px; } }
+@media (max-width: 374px) {
+  .hdr .hdr-menu { gap: 0; min-width: 44px; justify-content: flex-end; padding: 0; }
+  .hdr .hdr-menu span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+@media (max-width: 349px) {
+  .hdr, .mnav { --logo-h: 8px; }
+  .mnav-top .seg a { padding: 0 8px; }
+  .mnav-top .seg a:first-child { padding-left: 0; }
 }
 
 /* ---------- Phone menu: a full-screen sheet ---------- */
 .mnav {
   position: fixed; inset: 0; z-index: 70; overflow-y: auto; overscroll-behavior: contain;
-  background-color: var(--black); background-image: radial-gradient(120% 52% at 100% 0%, rgba(101, 8, 31, .3), rgba(101, 8, 31, 0) 62%), var(--stone); background-size: auto, var(--stone-size); background-blend-mode: normal, overlay, overlay;
+  background-color: var(--leather); background-image: var(--stone); background-size: var(--stone-size); background-blend-mode: overlay, overlay;
   color: var(--fg);
 }
-/* its top row stands where the header's row was: the language at the left, the flower at the centre (where the
-   header's was) and the cross at the right, over the same full-width line */
+/* its top row stands where the header's row was: the language at the left, the logo at the centre (where the
+   header's is) and the cross at the right, over the same full-width line */
 .mnav-top {
   height: var(--hdr-row); padding: 0 var(--pad);
   display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; column-gap: 12px;
@@ -236,53 +278,58 @@ html.hdr-hide .hdr { translate: 0 calc(-100% - 24px); }
   .mnav-top .hdr-menu span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 }
 
-.mnav-body { display: grid; gap: 30px; padding: 14px var(--pad) calc(40px + env(safe-area-inset-bottom)); }
-.mnav-links { display: grid; }
+.mnav-body { display: grid; gap: 32px; padding: 10px var(--pad) calc(40px + env(safe-area-inset-bottom)); }
+/* the sections in the text face, large, each over a hairline; the page you are on is lit as on a desktop: a seam of
+   the light on its line, under the word. --mn-y: a row's air above and below its word (the seam is placed by it) */
+.mnav-links { --mn-y: 13px; display: grid; }
 .mnav-links a {
-  display: block; padding: 13px 0; border-bottom: 1px solid var(--rule);
-  font: 450 clamp(28px, 8.2vw, 38px)/1.08 var(--display); letter-spacing: -.015em;
+  display: flex; padding: var(--mn-y) 0; border-bottom: 1px solid var(--rule);
+  font: 500 clamp(28px, 8.2vw, 38px)/1.08 var(--f-text); letter-spacing: -.02em;
   color: var(--fg); transition: color .25s ease;
 }
-.mnav-links a span { min-width: 0; }
-/* the page you are on, lit as the current section is on a desktop: its rule is the red light, with the light it
-   throws rising into the row and a bloom either side of the line, and the word warmed by it */
-.mnav-links a.on {
-  position: relative; z-index: 0; color: #fff; border-bottom-color: transparent; text-shadow: 0 0 22px rgba(255, 43, 61, .45);
-  background: linear-gradient(90deg, var(--light), var(--light) 70%, transparent) 0 100% / min(100%, 220px) 1.5px no-repeat;
+.mnav-links a span { position: relative; min-width: 0; }
+.mnav-links a.on span::after {
+  content: ''; position: absolute; left: -2px; right: -2px; bottom: calc(-1 * var(--mn-y) - 1px); height: var(--seam); pointer-events: none;
+  background: var(--lit-core); box-shadow: var(--seam-glow);
 }
-.mnav-links a.on::before, .mnav-links a.on::after { content: ''; position: absolute; z-index: -1; left: 0; pointer-events: none; }
-.mnav-links a.on::before { bottom: 0; width: min(100%, 300px); height: 100%; background: radial-gradient(60% 90% at 30% 100%, rgba(255, 43, 61, .16), rgba(255, 43, 61, 0)); }
-.mnav-links a.on::after { bottom: -5px; width: min(100%, 220px); height: 11px; background: linear-gradient(90deg, var(--light), var(--light) 60%, rgba(255, 43, 61, 0)); filter: blur(7px); opacity: .7; }
-.mnav-links a:active { color: #fff; }
+.mnav-links a:active { color: var(--shirt); }
+/* (a phone held sideways: landscape.css sets the rows' air to 4px; the seam follows it) */
+@media (orientation: landscape) and (max-height: 500px) { .mnav-links { --mn-y: 4px; } }
 
 .mnav-info { display: grid; gap: 24px; justify-items: start; }
 .mnav-book { width: 100%; max-width: 460px; }
 /* tablets held upright: the same sheet, a size up */
 @media (min-width: 600px) and (min-height: 700px) {
-  .mnav-links a { padding: 16px 0; font-size: clamp(40px, 6.4vw, 56px); }
+  .mnav-links { --mn-y: 16px; }
+  .mnav-links a { font-size: clamp(40px, 6.4vw, 56px); }
   .mnav-body { gap: 40px; padding-top: 24px; }
 }
-.mnav-visit { display: grid; gap: 2px; font: 400 17px/1.55 var(--sans); color: var(--fg-2); }
-.mnav-phone { margin-top: 10px; font: 600 22px/1.25 var(--sans); color: var(--fg); font-variant-numeric: lining-nums; } /* Gio's contact variant */
-/* the ways to reach the club: four plates, two to a row (one to a row where two would not fit their words) */
-/* two to a row where «Заказать звонок» with its icon fits half the sheet (from 375px wide), one to a row below.
-   (It was repeat(auto-fit, minmax(168px, 1fr)): with a max-width on the grid a browser sizes it for two columns even
-   where only one fits, so on phones under 378px wide the sheet was wider than the screen.) */
-.mnav-msg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; width: 100%; max-width: 460px; }
-.mnav-msg :is(a, button) {
-  display: flex; align-items: center; gap: 9px; min-width: 0; height: 48px; padding: 0 16px 0 14px; border-radius: var(--pill);
-  /* (14px: «Заказать звонок» with its icon then fits half of a 390px phone with room before the capsule's round end) */
-  font: 500 14px/1 var(--sans); color: var(--fg); white-space: nowrap; transition: scale .2s ease, background-color .25s ease;
+.mnav-visit { display: grid; gap: 2px; font: 400 17px/1.55 var(--f-text); color: var(--fg-2); }
+.mnav-phone { margin-top: 10px; font: 500 22px/1.25 var(--f-text); color: var(--fg); font-variant-numeric: lining-nums; } /* Gio's contact variant */
+/* the ways to reach the club: four plain frames, two to a row (one to a row where two would not fit their words),
+   a line icon in steel and the words in the text face at its reading size, 16px: the longest, «Заказать звонок»,
+   still fits its frame on a 375px phone once the frame's padding tightens under 400px; only under 375px does it
+   step down to 15px. (It was repeat(auto-fit, minmax(168px, 1fr)): with a max-width on the grid a browser sizes it
+   for two columns even where only one fits, so on phones under 378px wide the sheet was wider than the screen.) */
+.mnav-msg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; width: 100%; max-width: 460px; }
+.mnav-act {
+  display: flex; align-items: center; gap: 10px; min-width: 0; height: 48px; padding: 0 12px;
+  border: 1px solid var(--rule-2);
+  font: 400 16px/1 var(--f-text); color: var(--fg); white-space: nowrap; text-align: left;
+  transition: border-color .2s ease, scale .2s ease;
 }
-.mnav-msg :is(a, button):active { scale: .97; background-color: rgba(44, 44, 48, .7); }
-@media (max-width: 381px) { .mnav-msg :is(a, button) { gap: 8px; padding: 0 14px; font-size: 13px; } }
-@media (max-width: 374px) { .mnav-msg { grid-template-columns: minmax(0, 1fr); } .mnav-msg :is(a, button) { gap: 9px; padding: 0 16px 0 14px; font-size: 14px; } }
-.mnav-msg svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.mnav-careers { display: inline-flex; align-items: center; gap: 10px; padding: 6px 0; font: 500 16px/1 var(--sans); color: var(--fg-2); }
-.mnav-careers span { color: var(--red-text); }
+.mnav-act span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.mnav-act .fic { color: var(--steel-hi); }
+@media (hover: hover) { .mnav-act:hover { border-color: var(--shirt); } }
+.mnav-act:active { scale: .97; border-color: var(--shirt); }
+@media (max-width: 399px) { .mnav-act { gap: 8px; padding: 0 10px; } }
+@media (max-width: 374px) { .mnav-act { font-size: 15px; } }
+@media (max-width: 349px) { .mnav-msg { grid-template-columns: minmax(0, 1fr); } }
+.mnav-careers { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font: 400 16px/1 var(--f-text); color: var(--fg-2); }
+.mnav-careers span { color: var(--steel-hi); }
 
-/* the sheet drops like a curtain with a soft rounded edge, the links follow one by one, and the two lines
-   of the button turn into a cross; closing lifts it away again (Header.astro waits 340ms) */
+/* the sheet drops like a curtain, the links follow one by one, and the two lines of the button turn into a cross;
+   closing lifts it away again (Header.astro waits 340ms) */
 @keyframes nav-curtain-in { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
 @keyframes nav-curtain-out { from { clip-path: inset(0 0 0 0); } to { clip-path: inset(0 0 100% 0); } }
 @keyframes nav-x { from { translate: 0 0; rotate: 0deg; } }
@@ -292,38 +339,44 @@ html.motion .mnav:not([hidden]) .is-close i::before,
 html.motion .mnav:not([hidden]) .is-close i::after { animation: nav-x .5s var(--ease-out) .12s backwards; }
 html.motion .mnav.closing { animation: nav-curtain-out .32s cubic-bezier(.5, 0, .2, 1) both; }
 
-/* ---------- Phone action dock ---------- */
+/* ---------- Phone dock ----------
+   Blackened steel along the foot of the screen, edge to edge, with the seam of the light along its top edge (red;
+   amber after 04:00). Three plain line icons over their words in the Label, each in a cell of its own between
+   hairlines, and "Book" as the cuff at the right, the dock's full height, under the thumb. (Until 2026-11-21 it was
+   a floating capsule of frosted glass.) "Call" asks for a call back (MobileBar.astro). On a tablet the steel still
+   runs edge to edge and what stands on it keeps to the middle. Quiet words on steel are never ash (under 4.5:1
+   there): they are shirt white. */
 .mbar {
-  position: fixed; z-index: 45; left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom));
-  max-width: 540px; margin-inline: auto; /* tablets: a dock, not a bar */
-  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) auto; align-items: center;
-  padding: 5px; border-radius: var(--pill);
-  background-color: rgba(18, 19, 21, .74);
-  -webkit-backdrop-filter: blur(22px) saturate(1.6); backdrop-filter: blur(22px) saturate(1.6);
-  box-shadow: var(--nav-edge), 0 18px 44px -14px rgba(0, 0, 0, .95);
+  position: fixed; z-index: 45; left: 0; right: 0; bottom: 0;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) auto; grid-template-rows: 62px;
+  padding: 0 max(0px, (100% - 600px) / 2) env(safe-area-inset-bottom);
+  background: var(--steel);
   transition: translate .5s var(--ease-out), opacity .3s ease;
+}
+/* the seam: over the dock's top edge, the whole width, its bloom a little onto the page above */
+.mbar::before {
+  content: ''; position: absolute; z-index: 1; left: 0; right: 0; top: -1px; height: var(--seam); pointer-events: none;
+  background: var(--lit-core); box-shadow: var(--seam-glow);
 }
 /* (global.css paints the first link of the old bar crimson; here the first item is "Call", a button) */
 .mbar .mbar-act {
-  display: grid; justify-items: center; align-content: center; gap: 6px; min-width: 0; height: 52px; padding: 0;
-  border: 0; border-radius: var(--pill); background: none; box-shadow: none; filter: none;
-  font: 400 12px/1 var(--sans); letter-spacing: .01em; text-transform: none; color: var(--fg-2); white-space: nowrap;
+  position: relative; display: grid; justify-items: center; align-content: center; gap: 8px; min-width: 0; padding: 0 4px;
+  border: 0; border-right: 1px solid rgba(236, 236, 232, .12); border-radius: 0; background: none; box-shadow: none; filter: none;
+  font: var(--label-wght) 11px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase;
+  color: var(--shirt); white-space: nowrap;
 }
-.mbar .mbar-act:active { background-color: rgba(230, 231, 233, .1); filter: none; color: var(--fg); }
-.mbar-act svg { width: 21px; height: 21px; color: var(--fg); fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
-.mbar a.mbar-book { height: 52px; padding: 0 14px; font-size: 12px; letter-spacing: .12em; transition: filter .2s, scale .2s ease; }
-/* smaller phones: the labels keep their room (the dock never cuts a word) */
-@media (max-width: 389px) {
-  .mbar a.mbar-book { padding: 0 11px; font-size: 11.5px; letter-spacing: .1em; }
-  .mbar .mbar-act { font-size: 11.5px; letter-spacing: 0; }
-}
-/* the smallest phones: icons only, the words stay for screen readers */
-@media (max-width: 359px) {
-  .mbar-act span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-}
+.mbar .mbar-act:active { background-color: rgba(236, 236, 232, .08); filter: none; }
+.mbar-act .fic { width: 20px; height: 20px; }
+/* (the keyboard's line inside the cell: the cells stand edge to edge) */
+.mbar .mbar-act:focus-visible { outline-offset: -5px; }
+.mbar a.mbar-book { height: auto; padding: 0 18px; font-size: 12px; transition: scale .2s ease; }
+.mbar a.mbar-book:active { background-color: transparent; }
+.mbar a.mbar-book:focus-visible { outline-offset: -5px; }
+/* the smallest phones: the cuff a little narrower, so every word keeps its cell */
+@media (max-width: 359px) { .mbar a.mbar-book { padding: 0 13px; } }
 @media (min-width: 900px) { .mbar { display: none; } }
 @media (max-width: 899px) {
-  :root { --dock: calc(72px + env(safe-area-inset-bottom)); }
+  :root { --dock: calc(62px + env(safe-area-inset-bottom)); }
   /* room at the end of every page so the dock never covers the last lines */
   body:not(.bare) { padding-bottom: calc(var(--dock) + 14px); }
   /* while you type in a form, the dock steps out of the way */
@@ -332,27 +385,28 @@ html.motion .mnav.closing { animation: nav-curtain-out .32s cubic-bezier(.5, 0, 
   }
 }
 
-/* ---------- Between pages: the bar holds still and the light glides along the line to the new section ----------
+/* ---------- Between pages: the bar holds still and the seam glides along the line to the new section ----------
    (cross-document view transitions) The bar and its row are parts of their own in the change, so they don't dip
    through black with the page: whatever is the same on both pages stays put (the old picture and the new are added
-   to each other as they cross, so nothing blinks), and only the current section's light moves, along the line to
-   its new word. (The word doesn't travel with it: for a moment the old name and the new one would cross in
-   mid-air, «ГЛАВНФИША».) The header itself has no name, so that the bar's glass can blur what is under it. */
+   to each other as they cross, so nothing blinks), and only the current section's seam moves, along the line to
+   its new word (on a phone, to its new place on the line). (The word doesn't travel with it: for a moment the old
+   name and the new one would cross in mid-air, «ГЛАВНФИША».) */
 .hdr-bar { view-transition-name: hdr-bar; }
 .hdr-in { view-transition-name: hdr-in; }
 .hdr-light { view-transition-name: hdr-light; }
-::view-transition-group(hdr-light) { animation-duration: .45s; animation-timing-function: var(--ease-nav); }
+.hdr-at { view-transition-name: hdr-at; }
+::view-transition-group(hdr-light), ::view-transition-group(hdr-at) { animation-duration: .45s; animation-timing-function: var(--ease-nav); }
 ::view-transition-old(hdr-light), ::view-transition-new(hdr-light) { height: 100%; }
-/* (a part pictured on its own can't blur what passes behind it: for that third of a second a denser tint stands in
-   for the bar's glass; Base.astro sets html.vt) */
-html.vt .hdr-bar { -webkit-backdrop-filter: none; backdrop-filter: none; }
-html.vt .hdr.is-scrolled .hdr-bar { background-color: rgba(12, 12, 14, .94); }
+/* (global.css gives the dock a dark tint for the length of a change, from the days of its glass: it stays steel) */
+html.vt .mbar { background-color: var(--steel); }
 /* (while the phone menu is open the header lies under it: pictured on its own, it would stand over the sheet for
    the length of the change. The sheet's top row is where the header's row is, so the new page's header simply
-   comes in in its place) */
-html.mnav-open :is(.hdr-bar, .hdr-in, .hdr-light) { view-transition-name: none; }
+   comes in in its place. And while the 18+ door stands, the seam is no part of its own either, as gate.css has it
+   for the rest of the header.) */
+html.mnav-open :is(.hdr-bar, .hdr-in, .hdr-light, .hdr-at) { view-transition-name: none; }
+html.js:not(.age-ok) .hdr-at { view-transition-name: none; }
 
-/* the line draws itself out from the flower as the 18+ door opens (global.css brings the row's pieces down) */
+/* the line draws itself out from the logo as the 18+ door opens (global.css brings the row's pieces down) */
 @keyframes hdr-line { from { scale: 0 1; } }
 html.motion:has(.gate.out) .hdr-bar::after { animation: hdr-line 1.2s var(--ease-out) .9s backwards; }
 

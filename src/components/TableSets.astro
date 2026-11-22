@@ -1,11 +1,11 @@
 ---
 // The bottle sets ("Сеты для стола"): the club's three sets from content.ts `sets`, exactly as the content
 // pack has them, on one lit stage. Each bottle stands big on the black in its own spotlight, all three on the
-// same floor line; the top set, Crimson (spelt as the top VIP card is), closes the row a size larger, in crimson
+// same floor line; the top set (Bordeaux, as the content names it) closes the row a size larger, in a brighter
 // light, and its film plays on hover (desktop) or when it is in view (phones) through data-loop (scripts/site.ts).
-// Under each bottle: its name and price, what is in it, what comes with it, and the order button (the one rule
-// for a row of cards, as under the VIP cards: small pills, silver under the first sets and crimson under the top
-// one).
+// Under each bottle: its name and its price (the Dial), what is in it, what comes with it, and the order button
+// (the one rule for a row of cards: a small frame under the first sets and the cuff under the top one).
+// (2026-11-21, «Между»: white light only, the photographs in black and white: styles/sets.css.)
 // Desktop: three in a row, their lines aligned across the row (subgrid); the light moves to the set under the
 // pointer or in keyboard focus. The title and the lead share one short row over the first two sets, and the
 // stage starts right under it, so the top set's sparkler rises beside the title: the whole section fits one
@@ -28,7 +28,7 @@ const stand: Record<string, { floor: number; wide: number; size: number }> = {
   'set-3-crimson.webp': { floor: 0.845, wide: 0.58, size: 1.28 },
 };
 const fallback = { floor: 0.8, wide: 0.7, size: 1 };
-const last = sets.items.length - 1; // the dearest set closes the row and gets the crimson light
+const last = sets.items.length - 1; // the dearest set closes the row, in the brighter light
 
 // Typesetting: a short preposition or conjunction, and a number, stay on the line of the word after them
 // ("с огнём", "0,7 л", "10 купюр", "a fruit platter"). These texts aren't split by the headline animation,

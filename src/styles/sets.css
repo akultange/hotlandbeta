@@ -2,9 +2,12 @@
    Bottle sets (TableSets.astro). Loaded after global.css (Base.astro).
    Three sets on one lit stage. Each bottle stands big on the black, all three on the same floor line, each
    in its own spotlight: a soft cone of light from above and a pool of light on the floor. The top set closes
-   the row a size larger, in crimson light. The photographs blend in "lighten", so their near-black grounds
+   the row a size larger, in a brighter light. The photographs blend in "lighten", so their near-black grounds
    vanish into the page and the light behind them shows through; their edges fade out (no frames).
    Text stays under the pictures, never on them.
+   «Между» (2026-11-21): the spotlights are a plain white light, never crimson or pink; the photographs are in black
+   and white like every picture on the site (--grade, global.css); the price is the Dial (the price is the point);
+   the dots under the phone's row are hairlines, the one in front lit.
    Stage units (as in the component): a stage is 100 wide and 74 tall, the floor line 58 from its top, the
    spotlights hang 74 above it. Widths below are shares of the stage's width, heights of its height
    (58 / 74 = 78.38%). The stage is cut close over the bottles; the beams and the top set reach above it
@@ -37,15 +40,16 @@
 }
 .ts-item {
   display: grid; grid-row: span 5; grid-template-rows: subgrid; row-gap: 0; align-content: start; min-width: 0;
-  /* the light: a soft white spot for the first two, the crimson spot for the top set */
+  /* the light: a soft white spot for each, the top set's a step brighter (white light on a black stage: the
+     colour of the site's light, red and amber, is kept for its seams, its lasers and its room) */
   --beam: .55; --pool: .55; --bright: 1; --lift: 1;
-  --beam-c: rgba(255, 242, 236, .13);
-  --pool-hot: rgba(204, 112, 126, .38); --pool-c: rgba(168, 24, 46, .2);
+  --beam-c: rgba(236, 236, 232, .1);
+  --pool-hot: rgba(236, 236, 232, .26); --pool-c: rgba(236, 236, 232, .08);
 }
 .ts-top {
   --beam: 1; --pool: 1;
-  --beam-c: rgba(190, 36, 60, .24);
-  --pool-hot: rgba(214, 84, 104, .7); --pool-c: rgba(168, 24, 46, .42);
+  --beam-c: rgba(236, 236, 232, .15);
+  --pool-hot: rgba(236, 236, 232, .4); --pool-c: rgba(236, 236, 232, .12);
 }
 
 /* ---------- The stage ---------- */
@@ -89,19 +93,21 @@
   -webkit-mask-composite: source-in;
   mask-image: linear-gradient(180deg, transparent 0%, #000 7%, #000 76%, transparent 100%), linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
   mask-composite: intersect;
-  filter: brightness(var(--bright)) contrast(1.08);
+  /* (its own filter takes the place of the site's grade, so it starts with it: black and white, then the light) */
+  filter: var(--grade) brightness(var(--bright));
   transition: filter .7s ease calc(var(--dl, 0s) + var(--back, 0s)), translate 1.4s var(--ease-out) var(--dl, 0s);
 }
 .ts-shot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
 /* ---------- The words under each bottle, set close ---------- */
 .ts-title { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 18px; margin-top: 2px; }
-.ts-name { font: 500 clamp(27px, 2.25vw, 36px)/1.05 var(--display); letter-spacing: -.005em; transition: color .3s; }
+.ts-name { font: 500 clamp(27px, 2.25vw, 36px)/1.05 var(--f-text); letter-spacing: -.012em; transition: color .3s; }
+/* the price is the point: the Dial */
 .ts-price {
-  font: 450 clamp(28px, 2.44vw, 40px)/1.05 var(--display); font-variant-numeric: lining-nums;
+  font: 160 clamp(56px, 4.4vw, 72px)/.82 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums;
   white-space: nowrap; padding-right: .04em; color: var(--fg);
 }
-.ts-what { margin-top: 10px; font: 400 16px/1.55 var(--sans); color: var(--fg-2); max-width: 38ch; text-wrap: pretty; }
+.ts-what { margin-top: 10px; font: 400 16px/1.55 var(--f-text); color: var(--fg-2); max-width: 38ch; text-wrap: pretty; }
 .ts-perks { margin-top: 12px; gap: 5px; line-height: 1.5; align-self: start; color: var(--fg); text-wrap: pretty; }
 .ts-foot { margin-top: 22px; align-self: end; }
 .ts-what { --j: 1; }
@@ -122,7 +128,7 @@
 /* ---------- The entrance: the stage is dark, then the lights come up one set after another ---------- */
 html.motion .ts.ts-dark .ts-beam { opacity: 0; scale: 1 .2; }
 html.motion .ts.ts-dark .ts-pool { opacity: 0; scale: .4 1; }
-html.motion .ts.ts-dark .ts-shot { filter: brightness(.05) contrast(1.08); translate: 0 2.5%; }
+html.motion .ts.ts-dark .ts-shot { filter: var(--grade) brightness(.05); translate: 0 2.5%; }
 html.motion .ts.ts-dark .ts-item > :not(.ts-stage) { opacity: 0; translate: 0 24px; }
 .ts.ts-cue .ts-item { --dl: calc(var(--i) * .24s); --back: 0s; }
 .ts.ts-cue .ts-top { --dl: calc(var(--i) * .24s + .12s); }
@@ -144,9 +150,10 @@ html.motion .ts.ts-dark .ts-item > :not(.ts-stage) { opacity: 0; translate: 0 24
   .ts-item { scroll-snap-align: start; }
   .ts.ts-follow .ts-item:not(.on) { --beam: .08; --pool: .15; --bright: .42; }
   .ts.ts-follow .ts-item.on { --beam: 1; --pool: 1; }
-  .ts-dots { display: flex; gap: 6px; margin-top: 26px; }
-  .ts-dots i { width: 16px; height: 2px; border-radius: 2px; background: rgba(230, 231, 233, .22); transition: width .5s var(--ease-out), background-color .5s; }
-  .ts-dots i.on { width: 34px; background: var(--red); }
+  /* the dots: hairlines, the set in front's a seam of the light */
+  .ts-dots { display: flex; align-items: center; gap: 6px; height: 2px; margin-top: 26px; }
+  .ts-dots i { width: 16px; height: 1px; background: var(--rule-2); transition: width .5s var(--ease-out), background-color .5s; }
+  .ts-dots i.on { width: 34px; height: var(--seam); background: var(--lit-core); box-shadow: var(--seam-glow); }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -69,7 +69,8 @@ export function profile(dlg: HTMLElement, items: StoryItem[], hooks: StoryHooks)
     fitBig(b);
     fitName(b);
   }
-  /** The big outline name fills the width right of the portrait, no taller than a third of the screen. */
+  /** Her name, big, in the Dial's hairline behind her (styles/models.css), fills the width right of the portrait, no
+   *  taller than a third of the screen. */
   function fitBig(b = box()) {
     if (phoneQ.matches) return;
     const room = innerWidth - (b.left + b.width + gapOf()) - Math.max(24, innerWidth * 0.033);
@@ -79,10 +80,10 @@ export function profile(dlg: HTMLElement, items: StoryItem[], hooks: StoryHooks)
     big.style.setProperty('--bs', `${size.toFixed(1)}px`);
     dlg.style.setProperty('--bt', `${(b.top - size * 0.04).toFixed(1)}px`);
   }
-  /** Her name in metal keeps every letter. The metal is painted through the letters (background-clip: text), so any
-   *  part of a name running past its own box simply vanished («Снежана» lost her last «а»). Now the box takes the
-   *  name's own width (styles/models.css), which may run past the lines under it: on a desktop up to the room the
-   *  lines keep clear of the next-arrow, on a phone the screen's margins. A name longer than that is set smaller. */
+  /** Her name keeps every letter on one line. The box takes the name's own width (styles/models.css), which may run
+   *  past the lines under it: on a desktop up to the room the lines keep clear of the next-arrow, on a phone the
+   *  screen's margins. A name longer than that is set smaller. (It was painted in metal through the letters until
+   *  2026-11-21, when a box narrower than the name lost its last letters: «Снежана» lost her «а».) */
   function fitName(b = box()) {
     nameEl.style.fontSize = '';
     const room = phoneQ.matches ? info.clientWidth : innerWidth - (b.left + b.width + gapOf()) - 120;

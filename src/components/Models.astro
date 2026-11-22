@@ -4,12 +4,12 @@
 // 3:4 like the card), and the stage names and lines are ours. Swap all three for the club's own artists, their stage
 // names and their words before launch (and measure where their eyes are: `eyes`).
 //
-// The row scrolls on its own (scroll snap: a finger, a trackpad), a mouse can drag it, and the round buttons
+// The row scrolls on its own (scroll snap: a finger, a trackpad), a mouse can drag it, and the square buttons
 // under the row (beside the line and the count) and the arrow keys (on the focused row) move one artist at a time. One artist stands in the
 // light: the counter and the line under the row follow her. Without scripts the row still scrolls and the
 // controls are hidden. Desktop shows three and a half portraits, phones about one and a third.
 // With a mouse the portrait under the pointer steps into the light: it lifts, grows and leans a little toward the
-// pointer, the photograph zooms and crimson light pools under it. A click or a tap (or Enter on the row) opens her
+// pointer and the photograph zooms. A click or a tap (or Enter on the row) opens her
 // profile: the portrait flies out of the row, her name
 // stands huge behind it, with her two lines and the booking button; arrows, a swipe or the keys go to the next
 // one, Esc or a pull down closes it, and the row waits on her. On a phone the profile fills the screen like a
@@ -45,7 +45,7 @@ const frameVars = (f: Frame) =>
   data-models
   data-live-tpl={ru ? 'Артистка {i} из {n}' : 'Artist {i} of {n}'}
 >
-  <!-- the heading row as every section's (.bighead.bh-line): the title and its line; the two round buttons that turn
+  <!-- the heading row as every section's (.bighead.bh-line): the title and its line; the two square buttons that turn
        the row are in the bar under it, beside the line and the count -->
   <div class="wrap"><div class="bighead bh-line mdl-head">
     <h2 class="t-l" id="models-title">{ru ? 'Артистки' : 'Artists'}</h2>

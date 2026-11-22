@@ -1,35 +1,43 @@
 ---
-// An event night as a printed poster (styles in styles/posters.css). The poster is tall, rounded and framed:
-// the night's photograph edge to edge, and at the bottom left the date, the day in big heavy figures with the
-// month beside it reading upwards. With a mouse the poster plays its film while the pointer is on it; on a
-// phone the poster plays as soon as it is on screen, and the next as it is swiped in (scripts/site.ts). Under the poster: the weekday and doors time,
-// the entry price, the night's name and one short line about it. The whole card books that night: the booking page
-// opens with "Особый вечер" and the night's date already chosen. With a mouse, a small glass plate reading "Бронь"
-// follows beside the pointer over the poster. On a phone the home page's row of posters is a
-// row to swipe (its hold while the page scrolled on, sliding from poster to poster, is switched off: holdRow).
-import { photo } from '../data/images';
+// An event night as a printed poster (styles in styles/posters.css). Since 2026-11-21 («Между») the poster is set in
+// type, the way a club's flyer is: no photograph. The date is the picture: the day in the Poster voice, huge, at the
+// top left, the month and the weekday small beside it; one beam of light crosses the poster (red on a night of the
+// stage, amber on a night of the room: content.ts `light`), and the night's name stands at its foot, in the Poster
+// voice too. Under the poster, in the Label voice: the weekday and doors time, and the entry; then one short line
+// about the night. The whole card books that night: the booking page opens with "Особый вечер" and the night's date
+// already chosen. With a mouse, a small smoked plate reading "Бронь" follows beside the pointer over the poster. On a
+// phone the row of posters is a row to swipe (its hold while the page scrolled on, sliding from poster to poster, is
+// switched off: holdRow).
 import { type Lang, tr, ui } from '../data/i18n';
-import { media, type Event } from '../data/content';
+import { type Event } from '../data/content';
 import { site, price } from '../data/site';
-import { weekdayName, monthName, fullDate, keepShort } from '../data/format';
+import { fullDate, keepShort } from '../data/format';
 import '../styles/posters.css';
 /** here: this is the night whose page you are on (its card says so instead of the price).
- *  past: a night that has been (the events page): in black and white until the mouse is on it, «Прошёл» instead of
- *  the price, the year in the line under it, and it leads to the gallery instead of booking. */
+ *  past: a night that has been: its light is off, «Прошёл» instead of the price, the year in the line under it, and
+ *  it leads to the gallery instead of booking. */
 interface Props { e: Omit<Event, 'loop'> & { loop?: string }; lang: Lang; here?: boolean; past?: boolean }
 const { e, lang, here = false, past = false } = Astro.props;
 const t = ui[lang];
+const ru = lang === 'ru';
 const title = tr(e.title, lang);
 const [y, m, d] = e.date.split('-').map(Number);
 const date = new Date(y, m - 1, d);
+const loc = ru ? 'ru-RU' : 'en-GB';
 
-/** How long each month's name runs in the poster's type (Noto Sans Display 800 at 62.5% width, as set in
- *  posters.css; measured in Chrome), in em. A name that would run taller than the day's figures ("November",
- *  "сентября") is set a little smaller, so the month never ends above the top of the day. */
-const monthEm: Record<Lang, number[]> = {
-  ru: [2.91, 3.59, 2.53, 2.93, 1.6, 2.22, 2.23, 3.11, 3.74, 3.35, 2.94, 3.46],
-  en: [3.06, 3.55, 2.51, 1.91, 1.71, 1.75, 1.5, 2.78, 4.28, 3.16, 4.12, 3.98],
+/** How wide each capital runs in the Poster voice (Roboto Flex 1000 at width 151, tracked -.01em, as posters.css
+ *  sets it), in em: measured in Chrome with the site's own font files. The night's name is set as large as its
+ *  longest word allows, so "Courchevel" fits the poster as "Velvet" does (an unknown sign counts as a wide one). */
+const EM: Record<string, number> = {
+  A: .977, B: .874, C: 1.012, D: .917, E: .857, F: .766, G: 1.001, H: .957, I: .419, J: .802, K: 1.016, L: .731, M: 1.281,
+  N: .926, O: 1.042, P: .931, Q: 1.042, R: .968, S: .911, T: .864, U: 1.005, V: .986, W: 1.432, X: .917, Y: .964, Z: .918,
+  А: .977, Б: .882, В: .874, Г: .758, Д: .954, Е: .857, Ё: .857, Ж: 1.441, З: .894, И: .971, Й: .971, К: .996, Л: .925,
+  М: 1.281, Н: .957, О: 1.042, П: .947, Р: .931, С: 1.012, Т: .855, У: .933, Ф: 1.227, Х: .882, Ц: .981, Ч: .927,
+  Ш: 1.338, Щ: 1.372, Ъ: .953, Ы: 1.286, Ь: .892, Э: .99, Ю: 1.418, Я: .961, '-': .505, '&': .909, '’': .283, "'": .244, '.': .342,
 };
+const wordEm = (w: string) => [...w.toUpperCase()].reduce((s, c) => s + (/\d/.test(c) ? .918 : EM[c] ?? 1.05), 0);
+const len = Math.max(...title.split(/\s+/).map(wordEm), 3).toFixed(2);
+
 /** One short line for under the poster: the first sentence of the night's text, or, when that sentence runs
  *  long, the words before its colon or dash (the whole text is on the night's page). A past night's poster is
  *  narrower, so its sentence is cut sooner: the line always ends whole within its two lines, in both languages. */
@@ -40,32 +48,40 @@ const shortLine = (s: string, max = 60) => {
   return head.length >= 12 && head.length < first.length ? `${head.replace(/[,;]$/, '')}.` : first;
 };
 
-const month = monthName(e.date, lang); // Intl: "ноября" (the genitive that follows a day), "November"
-const weekday = weekdayName(e.date, lang);
+// the poster's corner: the month and the weekday, short ("дек", "сб"; "Dec", "Sat"), set in capitals by the CSS
+const short = (o: Intl.DateTimeFormatOptions) => date.toLocaleDateString(loc, o).replace(/\.$/, '');
+const mon = short({ month: 'short' });
+const wd = short({ weekday: 'short' });
+const day = String(d).padStart(2, '0');
 const doors = site.hours[(date.getDay() + 6) % 7].open; // site.hours starts on Monday
 const when = past
-  ? date.toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).replace(/\s*г\.$/, '')
-  : `${weekday.charAt(0).toUpperCase()}${weekday.slice(1)} · ${doors}`;
+  ? date.toLocaleDateString(loc, { day: 'numeric', month: 'long', year: 'numeric' }).replace(/\s*г\.$/, '')
+  : `${wd} · ${doors}`;
 const entry = price(e.entry, lang);
 const lineId = `poster-${e.slug}-line`;
 // in Russian a short word ("и", "в") never ends a line: it goes down with the word after it
 const line = keepShort(shortLine(tr(e.text, lang), past ? 50 : 60).replace(/&/g, '&amp;').replace(/</g, '&lt;'), lang);
-// how this night's photo and film sit in the poster (content.ts: zoom and drop, pos), so its girl stands at the
-// height and size of the girls on the posters beside it
-const shotStyle = [e.zoom || e.drop ? `--pz:${e.zoom ?? 1};--pdy:${e.drop ?? 0}%` : '', e.pos ? `--ppos:${e.pos}` : ''].filter(Boolean).join(';') || undefined;
-const shot = await photo(media(e.img), '(max-width: 899px) 100vw, 36vw');
+// The beam: which light (the night's own, red unless content.ts says amber), and how it crosses this poster. Each
+// date tilts it its own way and at its own height, so a row of posters never repeats one picture.
+const tone = e.light === 'amber' ? 'amber' : 'red';
+const TILT = [-6, 5, -4, 7, -7, 4, -5];
+const LEVEL = [58, 54, 61];
+const beam = `--tilt:${TILT[d % 7]}deg;--beam-y:${LEVEL[d % 3]}%;--len:${len}`;
 ---
-<article class:list={['poster', { 'is-here': here, 'is-past': past }]} data-event-date={past ? undefined : e.date}>
-  <a class="poster-link" href={past ? `/${lang}/gallery/` : `/${lang}/booking/?type=ticket&date=${e.date}`} aria-current={here ? 'page' : undefined} aria-label={past ? `${lang === 'ru' ? 'Фото вечера' : 'Photos of the night'}: ${title}, ${fullDate(e.date, lang)}` : `${lang === 'ru' ? 'Забронировать вечер' : 'Book the night'}: ${title}, ${fullDate(e.date, lang)}, ${doors}. ${t.entry} ${entry}`} aria-describedby={lineId}>
-    <span class="poster-frame">
-      <span class="poster-shot" data-loop={e.loop ? media(e.loop) : undefined} style={shotStyle}><img src={media(e.img)} {...shot} alt={tr(e.alt, lang)} width="1100" height="1956" loading="lazy" decoding="async" /></span>
-      <span class="poster-date" aria-hidden="true"><span class="poster-day">{d}</span><span class="poster-month" style={`--em:${monthEm[lang][m - 1]}`}>{month}</span></span>
+<article class:list={['poster', `poster-${tone}`, { 'is-here': here, 'is-past': past }]} data-event-date={past ? undefined : e.date}>
+  <a class="poster-link" href={past ? `/${lang}/gallery/` : `/${lang}/booking/?type=ticket&date=${e.date}`} aria-current={here ? 'page' : undefined} aria-label={past ? `${ru ? 'Фото вечера' : 'Photos of the night'}: ${title}, ${fullDate(e.date, lang)}` : `${ru ? 'Забронировать вечер' : 'Book the night'}: ${title}, ${fullDate(e.date, lang)}, ${doors}. ${t.entry} ${entry}`} aria-describedby={lineId}>
+    <span class="poster-frame" style={beam} aria-hidden="true">
+      <span class="poster-beam"><i></i></span>
+      <span class="poster-top">
+        <span class="poster-day">{day}</span>
+        <span class="poster-mw"><span>{mon}</span><span>{wd}</span></span>
+      </span>
+      <span class="poster-name">{title}</span>
     </span>
     <span class="poster-row" aria-hidden="true">
       <span class="poster-when">{when}</span>
-      {past ? <span class="poster-past">{lang === 'ru' ? 'Прошёл' : 'Past'}</span> : here ? <span class="poster-here">{lang === 'ru' ? 'Вы здесь' : 'You are here'}</span> : <span class="poster-price"><span>{t.entry}</span> {entry}</span>}
+      {past ? <span class="poster-past">{ru ? 'Прошёл' : 'Past'}</span> : here ? <span class="poster-here">{ru ? 'Вы здесь' : 'You are here'}</span> : <span class="poster-price">{t.entry} {entry}</span>}
     </span>
-    <span class="poster-title" aria-hidden="true">{title}</span>
     <span class="poster-line" id={lineId} set:html={line} />
   </a>
 </article>
@@ -76,7 +92,7 @@ const shot = await photo(media(e.img), '(max-width: 899px) 100vw, 36vw');
   // With a mouse: over a poster a small plate beside the pointer reads "Бронь" (the card books that night). It
   // glides after the pointer; for reduced motion it simply sits by it. When a scroll moves the poster from under a
   // still pointer the plate goes, and the next move over a poster brings it back.
-  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  if (matchMedia('(hover: hover) and (pointer: fine)').matches && !document.querySelector('.poster-cursor')) {
     const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const disc = document.createElement('div');
     disc.className = 'poster-cursor';
@@ -110,7 +126,7 @@ const shot = await photo(media(e.img), '(max-width: 899px) 100vw, 36vw');
       });
       frame.addEventListener('pointerleave', () => show(false));
     });
-    // the page moved under a still pointer (smooth scrolling): the disc stays while a poster is still under the
+    // the page moved under a still pointer (smooth scrolling): the plate stays while a poster is still under the
     // pointer and goes the moment none is, rather than float over the wrong thing
     addEventListener('scroll', () => {
       if (rq || !disc.classList.contains('on')) return;
@@ -120,17 +136,6 @@ const shot = await photo(media(e.img), '(max-width: 899px) 100vw, 36vw');
       });
     }, { passive: true });
   }
-
-  // A poster's film takes over from its photograph on its first frame, where the two match (Courchevel's film then
-  // moves in close on her and back out). So once a film has stopped and faded out (the pointer left the poster, or on
-  // a phone the poster left the middle of the screen), it goes back to its start, and the next time it takes over
-  // the girl doesn't jump. (scripts/site.ts adds the films later, so each poster listens for its film's pause.)
-  document.querySelectorAll<HTMLElement>('.poster-shot[data-loop]').forEach((shot) => {
-    shot.addEventListener('pause', (e) => {
-      const film = e.target as HTMLVideoElement;
-      setTimeout(() => { if (film.paused && !shot.classList.contains('looping')) film.currentTime = 0; }, 700);
-    }, true);
-  });
 
   // Phones, home page: the weekend's posters could hold still in the middle of the screen while the page scrolls
   // on, sliding from one night to the next and resting on each (holdRow, below). Switched off on 2026-11-13: the

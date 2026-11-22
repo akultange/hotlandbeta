@@ -1,20 +1,22 @@
 ---
 // «Шоу» on the home page (styles in styles/shows.css): what the artists do, as a programme to choose from.
-// The six kinds of number (pole, show ballet, burlesque, live vocals, aerial, duets) are tabs, each with its 3D
-// icon; the chosen one's photograph stands beside the list and plays its film while it is on screen, and its two
-// lines sit under the list. One screen tall. Desktop: the list on the left, the picture on the right. Phones: the
-// six as a row of pills to swipe, then the picture, then the words.
+// The six kinds of number (pole, show ballet, burlesque, live vocals, aerial, duets) are tabs, each with its serial
+// number in the Label; the chosen one's photograph (in black and white, as every picture is until the new shoot)
+// stands beside the list and plays its film while it is on screen, and its two lines sit under the list. Between the
+// list and the stage, on a wide screen, the guest seen from behind under the laser (the line art's "shoulder"): the
+// laser follows the hour, off after four. One screen tall. Desktop: the list on the left, the picture on the right.
+// Phones: the six as a row of framed tabs to swipe, then the picture, then the words.
 import { photo } from '../data/images';
 import { type Lang, tr } from '../data/i18n';
 import { acts, cast, media } from '../data/content';
-import Icon3d from './Icon3d.astro';
+import LineArt from './LineArt.astro';
 import '../styles/shows.css';
 import { keepShort } from '../data/format';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ru = lang === 'ru';
-const icons = ['pole', 'stiletto', 'lips', 'mic', 'emblem', 'cherries'] as const;
+const pad2 = (n: number) => String(n).padStart(2, '0');
 /** Where each number's girl has her face in her photo and film, as a share of its height from the top (the burlesque
  *  dancer's eyes above her fan, the aerialist's head in her hoop), and how much closer a desktop shows her. The frame
  *  then sets every face at one height (styles/shows.css), so the girls don't jump up and down as the numbers take
@@ -45,11 +47,12 @@ const shots = await Promise.all(acts.map((a) => photo(media(a.img), '(max-width:
       <div class="shw-list" role="tablist" aria-label={ru ? 'Номера шоу' : 'The numbers'} data-lenis-prevent-horizontal>
         {acts.map((a, i) => (
           <button type="button" role="tab" class="shw-tab" id={`shw-t${i}`} aria-controls={`shw-p${i}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}>
-            <Icon3d name={icons[i] ?? 'emblem'} size={96} class="shw-ic" />
+            <span class="shw-no" aria-hidden="true">{pad2(i + 1)}</span>
             <span class="shw-name">{tr(a.title, lang)}</span>
           </button>
         ))}
       </div>
+      <LineArt name="shoulder" class="shw-art" />
       <div class="shw-stage">
         <div class="photo shw-photo">
           {acts.map((a, i) => (
@@ -74,7 +77,7 @@ const shots = await Promise.all(acts.map((a) => photo(media(a.img), '(max-width:
 <script>
   // The tabs: a click (or the arrow keys, Home and End) chooses a number; its picture comes up and its film plays
   // while the picture is on screen. Nothing plays for reduced motion or when the phone asks to save data.
-  // On their own the numbers take turns: the chosen one's crimson line is a progress bar that fills while the
+  // On their own the numbers take turns: the chosen one's line of light is a progress bar that fills while the
   // section is on screen (.auto.run, styles/shows.css), and when it is full the next number comes up. The first
   // press on a tab (or the arrow keys, or a swipe of the pills on a phone) stops that for good: from then on the
   // visitor chooses. Never for reduced motion.

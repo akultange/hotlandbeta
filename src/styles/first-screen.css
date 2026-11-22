@@ -1,166 +1,157 @@
 /* =====================================================================
-   The first screen's skeleton, shared by the 18+ door (AgeGate.astro, on every page) and the home page's header
-   (Hero.astro, its take v3).
-   The door and the header are one composition in two materials. The door's name stands where the header's does,
-   its question where the header's words are, its two buttons where the header's two are. So when the door
-   opens, nothing has to travel: the concrete leaves, and each thing is already in its place.
-   Here: the screen's box (.hv, and the door's copy of it, .gate-in), where the big word or the gap sits in it
-   (--mw --mh --cx --cy), the words under it (.hv-copy), and the name as the wall carries it (.wall-name).
-   Everything else about the header is in hero.css, about the door in gate.css.
+   The first screen's skeleton and its door, shared by the 18+ question (AgeGate.astro, on every page) and the home
+   page's door (Hero.astro). «Между», 2026-11-21: they are one door. The 18+ door is the same two leaves of formwork
+   concrete, shut, with the red seam between them; on the home page, answering opens them to exactly where the home
+   page's own leaves stand, so when the question goes nothing has to jump: the leaves are already in place.
+   Here: the screen's box (.hv, and the question's copy of it, .gate-in), where the door, its floor and its words stand
+   (the variables below), the concrete of a leaf (.door-leaf), the light along its edge (.door-edge), and the name as
+   the door carries it (.wall-name). The question's own pieces are in gate.css, the home page's in hero.css.
    ===================================================================== */
 
 /* ---------- The screen ---------- */
 .hv, .gate-in {
   height: 100svh; min-height: 600px;
   container-type: size;
-  /* the side margins (the page's own column on very wide screens), the space under the last line, the gap above
-     the name, and the name's height (the word is --wr as tall as it is wide) */
+  /* the side margins (the page's own column on very wide screens), the air under the last line on the floor, and
+     between the door's foot and the first line on the floor */
   --inl: max(var(--pad), calc((100cqw - var(--max)) / 2 + var(--pad)));
   --hv-pb: clamp(28px, 2.8vw, 40px);
-  --hv-gap: clamp(26px, 3.2vw, 46px);
-  --wh: calc((100cqw - 2 * var(--inl)) * var(--wr));
-}
-
-/* ---------- The words: a line in the title's face, a line of text, two buttons ---------- */
-.hv-copy { position: relative; z-index: 1; display: grid; justify-items: start; gap: clamp(10px, 1vw, 14px); }
-.hero-tag { font: 450 clamp(34px, 3.4vw, 54px)/1.05 var(--display); letter-spacing: -.012em; color: var(--fg); }
-.hv-lead { max-width: 36ch; color: #cfd0d3; text-wrap: pretty; }
-.hv-act { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 14px; margin-top: clamp(10px, 1.2vw, 18px); }
-
-/* ---------- Where things stand (the header's take v3, and the door) ----------
-   The big word as wide as the page's column, the words centred under it, and the free room split two to one above
-   the word and below the words. --copy-h is a close guess at the words' height as the door has them (the question, the one line under it
-   and the two buttons: 148 to 189px), so the word can be placed before anything is measured; the words themselves
-   always sit exactly --hv-gap under the word. */
-.hv3, .gate-in {
-  --mw: calc(100cqw - 2 * var(--inl));
-  --mh: calc(var(--mw) * var(--wr));
+  --sill: clamp(24px, 2.6vw, 38px);
+  /* --copy-h is a close guess at the question's words as they stand on the floor (the question, its one line and the
+     two buttons: 148 to 189px). The floor is as deep as they need; the door stands on it. */
   --copy-h: clamp(160px, 12.5vw, 190px);
-  --cx: 50cqw;
-  --cy: calc(var(--hdr) + max(0px, 100cqh - var(--hdr) - var(--mh) - var(--hv-gap) - var(--copy-h)) * 2 / 3 + var(--mh) / 2);
-  /* the name in fine capitals (the door's; on an upright phone the header's too): its height and where its middle
-     is. (--nh0 is the skeleton's own figure; the door then sets its --nh and --ny from it so that the whole logo,
-     sign and all, stands clear above its question: gate.css, Where the logo stands.) */
-  --nh0: min(clamp(34px, 4.3cqw, 64px), calc((50cqw - var(--inl)) * 735 / var(--wl)));
+  /* where the door begins and ends: --top the lintel, the header's own line (the 18+ door covers the header too, so
+     there its leaves run up to the top of the screen); --fy the floor, the leaves' foot */
+  --top: var(--hdr);
+  --fy: calc(100cqh - var(--hv-pb) - var(--copy-h) - var(--sill));
+  /* how far the home page's door stands open: the gap between its leaves */
+  --gap: clamp(200px, 24cqw, 460px);
+  /* the formwork: the tie holes every --tx by --ty, a panel (and its joint) every two */
+  --ty: clamp(76px, calc(var(--fy) * .155), 124px);
+  --tx: calc(var(--ty) * 1.07);
+  /* the name on the door, the club's logo (data/wordmark.ts, nameHalves): --nh0 its height where it stands whole with
+     its sign, a needle of light ten times as tall (4.59 above its middle and 5.47 below), in the room the door gives
+     it (--lt to --lb); never taller than lets LAND, the longer half, end inside the page's column; --ny where its
+     middle stands. Each part may set its own --nh from it. */
+  --lt: max(12px, 2.4cqh);
+  --lb: calc(var(--fy) - max(10px, 1.6cqh));
+  --nh0: min(clamp(20px, 4.3cqw, 96px), calc((50cqw - var(--inl)) * 735 / var(--wl)), calc((var(--lb) - var(--lt)) / 10.06));
   --nh: var(--nh0);
-  --ny: var(--cy);
+  --ny: calc((var(--lt) + var(--lb)) / 2 - .44 * var(--nh0));
 }
-.hv3 .hv-copy, .gate-in .hv-copy {
-  position: absolute; left: var(--inl); right: var(--inl); top: calc(var(--cy) + var(--mh) / 2 + var(--hv-gap));
-  justify-items: center; text-align: center;
-}
-.hv3 .hv-lead, .gate-in .hv-lead { max-width: 60ch; text-wrap: balance; text-shadow: 0 1px 20px rgba(0, 0, 0, .6); }
-.hv3 .hv-act, .gate-in .hv-act { justify-content: center; }
 
-/* ---------- The name as the wall carries it ----------
-   HOT and LAND in fine steel capitals set wide, one outline per letter (data/wordmark.ts, nameHalves), either side
-   of a line of light: the T stands one letter-space (--ngu, in the outlines' units) before the line, and the L
-   begins on it. Lit from the upper left, as the wall is: the steel's own gradient is its light edge, and its shadow
-   falls down and to the right (a white edge drawn up and to the left of each letter read as a grey ghost of it).
-   Where the two halves stand is the door's and the header's own business. */
+/* ---------- The words: the question (or the home page's line), one line of text, two buttons ----------
+   They stand on the floor, centred under the door. */
+.hv-copy { position: absolute; z-index: 5; left: var(--inl); right: var(--inl); display: grid; justify-items: center; text-align: center; gap: clamp(10px, 1vw, 14px); }
+.hero-tag { font: 500 clamp(34px, 3.4vw, 54px)/1.05 var(--f-text); letter-spacing: -.022em; color: var(--fg); text-wrap: balance; }
+.hv-lead { max-width: 60ch; color: var(--fg-2); text-wrap: balance; }
+.hv-act { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 14px; margin-top: clamp(10px, 1.2vw, 18px); }
+
+/* ---------- A leaf of the door ----------
+   Formwork concrete, as the shuttering left it: the site's own stone (the grain and its clouds) over the concrete's
+   grey, the tie holes in their rows, a joint every second row and column, and the light from above falling off
+   towards the floor. Every layer is anchored at the leaf's inner edge, so the concrete moves with the leaf: the 18+
+   door's leaf, opened to where the home page's stands, is the home page's leaf to the pixel. Each leaf is half the
+   screen; the home page's are moved apart by the gap (hero.css). */
+.door-leaf {
+  position: absolute; top: 0; width: 50%; height: var(--fy);
+  background-color: var(--concrete);
+  background-image:
+    radial-gradient(circle, rgba(5, 5, 6, .6) 0 2.6px, rgba(5, 5, 6, .22) 3.4px, rgba(236, 236, 232, .07) 4.2px, transparent 5.2px),
+    linear-gradient(90deg, rgba(5, 5, 6, .5) 0 1px, rgba(236, 236, 232, .06) 1px 2px, transparent 2px),
+    linear-gradient(180deg, rgba(5, 5, 6, .46) 0 1px, rgba(236, 236, 232, .05) 1px 2px, transparent 2px),
+    var(--stone),
+    linear-gradient(180deg, rgba(236, 236, 232, .05) 0%, rgba(5, 5, 6, .18) 55%, rgba(5, 5, 6, .46) 100%);
+  background-size: var(--tx) var(--ty), calc(var(--tx) * 2) 100%, 100% calc(var(--ty) * 2), var(--stone-size), 100% 100%;
+  background-blend-mode: normal, normal, normal, overlay, overlay, normal;
+}
+.door-leaf-l { left: 0; background-position: right 0 top 0; }
+.door-leaf-r { right: 0; background-position: left 0 top 0; }
+/* the light along a leaf's inner edge: the edge itself catching it (a seam of the light, --lit: red, amber after
+   04:00), and a little of it raking the concrete beside it. (Its side is its own class, not its leaf's: the 18+ door
+   lays a copy of it over the home page's when it hands its light over, AgeGate.astro.) */
+.door-edge { position: absolute; top: 0; bottom: 0; width: 26px; pointer-events: none; }
+.door-edge::before, .door-edge::after { content: ''; position: absolute; top: 0; bottom: 0; }
+.door-edge::before { width: 100%; mix-blend-mode: screen; opacity: .9; }
+.door-edge::after { width: var(--seam); background: var(--lit-core); box-shadow: var(--seam-glow); }
+.door-edge-l { right: 0; }
+.door-edge-l::before { right: 0; background: linear-gradient(270deg, color-mix(in srgb, var(--lit) 30%, transparent), color-mix(in srgb, var(--lit) 8%, transparent) 9px, transparent 26px); }
+.door-edge-l::after { right: 0; }
+.door-edge-r { left: 0; }
+.door-edge-r::before { left: 0; background: linear-gradient(90deg, color-mix(in srgb, var(--lit) 30%, transparent), color-mix(in srgb, var(--lit) 8%, transparent) 9px, transparent 26px); }
+.door-edge-r::after { left: 0; }
+
+/* ---------- The name as the door carries it ----------
+   HOT and LAND in the logo's own thin capitals, one outline per letter (data/wordmark.ts, nameHalves), either side
+   of the line of light: the T stands one letter-space (--ngu, in the outlines' units) before the line, and the L
+   begins on it, the light running along its stem as the needle does in the club's logo. Steel letters fixed to the
+   concrete: the logo's own pale grey, and the small shadow a letter standing off the wall casts. Where the two halves
+   stand is the door's and the home page's own business. */
 .wall-name {
   --ng: calc(var(--nh) * var(--ngu) / 735);
   /* (where the light stands from the L's left edge: in the club's logo the sign's needle runs along the stem's
      outer edge, a hair to its left, so --nsu is a small negative number: nameHalves().axis) */
   --ns: calc(var(--nh) * var(--nsu, -6) / 735);
-  position: absolute; z-index: 2; left: 0; right: 0; top: var(--ny); height: 0; pointer-events: none;
+  position: absolute; z-index: 3; left: 0; right: 0; top: var(--ny); height: 0; pointer-events: none;
 }
-.wall-name svg {
+.wall-name svg, svg.wall-half {
   position: absolute; top: 0; height: var(--nh); width: auto; translate: 0 -50%; overflow: visible; fill: url(#g-steel);
-  filter: drop-shadow(1px 1.5px 1px rgba(0, 0, 0, .85)) drop-shadow(2px 6px 10px rgba(0, 0, 0, .55));
+  filter: drop-shadow(1px 1.5px 0 rgba(5, 5, 6, .55)) drop-shadow(2px 5px 7px rgba(5, 5, 6, .35));
 }
 
 /* ---------- Phones ---------- */
 @media (max-width: 899px) {
-  /* the screen ends where the phone's action dock begins: what lies under the dock is already the next section,
-     so once the page moves there is no empty band between the name and Афиша */
-  /* (never shorter than 480px: on a 320 x 568 phone the screen's 496px above the dock then hold it all, and the
-     buttons keep their air above the dock) */
-  .hv, .gate-in { height: calc(100svh - var(--dock)); min-height: 480px; --hv-pb: 24px; --hv-gap: 22px; }
+  /* the screen ends where the phone's action dock begins: what lies under the dock is already the next section, so
+     once the page moves there is no empty band under the door's floor */
+  /* (never shorter than 480px: on a 320 x 568 phone the screen's 496px above the dock then hold it all) */
+  .hv, .gate-in { height: calc(100svh - var(--dock)); min-height: 480px; --hv-pb: 24px; --sill: 22px; }
   .hero-tag { font-size: clamp(27px, 8.6vw, 42px); }
-  /* the line under the name (under the door's question) stays one line down to the narrowest phone (17px from 370
-     wide up) */
+  /* the line under the question stays one line down to the narrowest phone (17px from 370 wide up) */
   .hv-lead { font-size: min(17px, 4.6vw); }
   .hv-copy { gap: 10px; }
   .hv-act { gap: 10px; margin-top: 8px; }
   .hv-act .btn { height: 50px; padding: 0 22px; }
 }
-/* narrower phones (360 and 375 wide are common): the two buttons still share one row, their wide-set capitals a step
-   tighter; the narrowest (320), another step */
+/* narrower phones (360 and 375 wide are common): the two buttons still share one row, a step tighter; the narrowest
+   (320), another step */
 @media (max-width: 389px) {
   .hv-act { gap: 8px; }
-  .hv-act .btn { padding: 0 15px; font-size: 12px; letter-spacing: .11em; }
+  .hv-act .btn { padding: 0 15px; font-size: 12px; }
 }
 @media (max-width: 339px) {
-  .hv-act .btn { padding: 0 11px; font-size: 11.5px; letter-spacing: .07em; }
+  .hv-act .btn { padding: 0 11px; font-size: 11.5px; }
 }
 
 /* ---------- A phone held upright ----------
-   The line of light is the picture. On the door it is the joint; in the header it has grown into a gap, --mw wide
-   and --mh tall from the top of the screen, the film sharp inside it. The name stands across it at mid-height, and
-   the words sit at the foot of the screen, where the gap has frosted over again. */
+   The door is tall and narrow: on the home page it stands open by a slit (--gap), the film sharp inside it. The name
+   stands across the door in its upper part, so that the hours can run down the leaves under it (hero.css). */
 @media (max-width: 899px) and (orientation: portrait) {
-  .hv3, .gate-in {
-    /* the words' height: the door's question and the one line under it (their sizes here, each on one line), the buttons' row,
-       and the gaps between them */
+  .hv, .gate-in {
+    /* the question's words: the question and the one line under it (their sizes here, each on one line), the
+       buttons' row, and the gaps between them */
     --copy-h: calc(clamp(27px, 8.6vw, 42px) * 1.05 + min(17px, 4.6vw) * 1.6 + 78px);
-    --mw: clamp(56px, 17.5cqw, 88px);
-    /* the gap runs from the top of the screen to just above the words (on the door: to just behind the question) */
-    --mh: calc(100cqh - var(--hv-pb) - var(--copy-h) + 28px);
-    --cx: 50cqw;
-    --cy: calc(var(--mh) / 2);
-    /* the name: as tall as LAND (--wl wide, in the outlines' units) can be between the gap and the screen's edge */
-    /* (LAND starts 2.5px past the gap's edge: that much less room, so its D ends inside the page's column) */
-    /* (a tablet held upright has the room for a taller name: up to 48px) */
-    --nh0: min(clamp(34px, 5.6cqw, 48px), calc((50cqw - var(--mw) / 2 - var(--inl) - 3px) * 735 / var(--wl)));
-    --nh: var(--nh0);
-    --ny: calc(var(--mh) / 2);
+    --gap: clamp(56px, 17.5cqw, 88px);
+    --ty: clamp(62px, calc(var(--fy) * .125), 100px);
+    /* the name as large as LAND fits between the line and the screen's edge, with 22px to spare (a tablet held
+       upright: up to 36px), its middle a little over a fifth of the way down the door */
+    --nh0: min(36px, calc((50cqw - 22px) * 735 / var(--wl)));
+    --ny: calc(var(--top) + (var(--fy) - var(--top)) * .22);
   }
-  .hv3 .hv-copy, .gate-in .hv-copy { top: auto; bottom: var(--hv-pb); }
-  /* The home header has no buttons of its own here (below): the name, the film in the gap and one line of words.
-     So its gap runs further down than the door's, to just above that line: the clear window in the frost (--zh,
-     hero.css) and the two lights along its edges. The door keeps its two buttons, so the shared --mh and with it
-     the name's place stay as they are for both. */
-  .hero .hv3 { --free: 70px; --zh: calc(var(--mh) + var(--free)); }
-  .hero .hv3 .hv3-gap { height: calc(var(--mh) + var(--free)); }
 }
 
 /* ---------- A phone held sideways (or any screen as short) ---------- */
 @media (orientation: landscape) and (max-height: 500px) {
-  .hv, .gate-in { height: 100svh; min-height: 300px; --hv-pb: max(14px, env(safe-area-inset-bottom, 0px)); --hv-gap: 12px; }
+  .hv, .gate-in { height: 100svh; min-height: 300px; --hv-pb: max(14px, env(safe-area-inset-bottom, 0px)); --sill: 12px; --copy-h: 116px; }
   .hv-copy { gap: 6px; }
   .hero-tag { font-size: clamp(26px, 8svh, 36px); }
   .hv-lead { font-size: 14px; line-height: 1.45; max-width: 46ch; }
   .hv-act { margin-top: 2px; }
-  /* the word on one line (34% of the height at most), the words centred under it, the free room split two to one
-     (--copy-h: a close guess at the words' height on a short screen) */
-  .hv3, .gate-in {
-    --mw: min(calc(100cqw - 2 * var(--inl)), calc(34cqh / var(--wr))); --mh: calc(var(--mw) * var(--wr));
-    --copy-h: 116px;
-    --cx: 50cqw;
-    --cy: calc(var(--hdr) + max(0px, 100cqh - var(--hdr) - var(--mh) - var(--hv-gap) - var(--copy-h)) * 2 / 3 + var(--mh) / 2);
-    --nh0: clamp(20px, 7cqh, 34px);
-    --nh: var(--nh0);
-    --ny: var(--cy);
-  }
 }
 
-
-/* ---------- A phone's header has no buttons of its own (2026-11-20) ----------
+/* ---------- The home page's door has no buttons on a phone (2026-11-20) ----------
    On a phone a "Book" is always on the screen already: the dock under the thumb (under 900px wide), or the bar's own
-   button on a phone held sideways. With the header's "Book a table" there were two on one screen, and its second
-   button only led to the section that begins right under the header. So here the header is the name, the film and
-   one line of words. From 900px up (a screen that is not short) the header keeps its two buttons. */
+   button on a phone held sideways. So there the home page's floor carries its one line of words and no buttons. From
+   900px up (a screen that is not short) it keeps its two. The question keeps its two everywhere. */
 @media (max-width: 899px), (orientation: landscape) and (max-height: 500px) {
   .hero .hv-act { display: none; }
-}
-/* Where the big word stands on one line (not the upright phone's gap), the header's words are now one line, not the
-   door's three: the word is placed with that height, so the free room is again split two to one above the word and
-   under the line. (The door's name then stands a little higher than the header's word; on these screens it sinks
-   as the door opens, nothing is handed over.) */
-@media (max-width: 899px) and (orientation: landscape) {
-  .hero .hv3 { --copy-h: 28px; }
-}
-@media (orientation: landscape) and (max-height: 500px) {
-  .hero .hv3 { --copy-h: 21px; }
 }

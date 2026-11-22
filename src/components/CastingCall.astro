@@ -3,17 +3,15 @@
 // styles/casting.css). The company is being cast, and this is where the artists, hosts and the rest of the team
 // find the way in. Behind the words: the dressing room, an empty
 // chair at a bulb-lit mirror. When the section comes into view the room is dark; the mirror's bulbs come on
-// one by one around the frame and the room warms up. Over the dark half of the room: the call, the roles (each
-// opens the application with that role already chosen, each with its 3D icon) and the two ways to apply.
+// one by one around the frame and the room comes up (in black and white, as every picture is until the new shoot).
+// Over the dark half of the room: the call, the roles (each opens the application with that role already chosen)
+// and the two ways to apply. (2026-11-21, «Между»: the roles' glossy 3D icons, a stiletto, cherries and the like,
+// are gone; a role is its name, a link whose underline catches the light.)
 import { photo } from '../data/images';
 import { type Lang, tr } from '../data/i18n';
 import { careers } from '../data/content';
 import { site } from '../data/site';
-import Icon3d from './Icon3d.astro';
 import '../styles/casting.css';
-// Each role with its 3D icon: the show (a stiletto), the hosts at the door (the keyhole), the waiters (a coupe),
-// the bar (the cocktail cherries), the floor managers (the key to the hall).
-const roleIcons = ['stiletto', 'keyhole', 'coupe', 'cherries', 'key'] as const;
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -45,7 +43,6 @@ const room = await photo('/media/casting-room.webp', '(max-width: 899px) 225vw, 
         {careers.roles.map((r, i) => (
           <li>
             <a class="cc-role" href={`/${lang}/careers/?role=${i}#apply`} data-apply data-apply-role={i}>
-              <Icon3d name={roleIcons[i] ?? 'emblem'} size={96} class="cc-role-ic" />
               <span>{tr(r, lang)}</span>
             </a>
           </li>

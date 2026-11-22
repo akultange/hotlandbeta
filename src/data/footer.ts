@@ -1,5 +1,6 @@
 // What every footer version lists (Footer.astro and its v4 / v5 takes): the sections, the smaller links, the
-// legal pages, and the line icons for the ways to reach the club (24-unit drawings, stroked, no fill).
+// legal pages, and the line icons for the ways to reach the club (24-unit drawings, stroked, no fill). The icons
+// serve the phone's dock and the menu sheet too (FooterIcon.astro draws one).
 import { type Lang, ui } from './i18n';
 
 export type FLink = { label: string; href: string };
@@ -29,12 +30,16 @@ export function footerLinks(lang: Lang) {
   };
 }
 
+// (2026-11-21, «Между»: plain line icons, square where the thing is square, drawn with the line art's pen: no
+// brand marks. A chat is a square speech bubble, WhatsApp's as well; a question is the bubble with its mark; the
+// way here is a turning arrow, as on the board's dock. The words beside each icon say what it is.)
 export const ICONS = {
-  whatsapp: ['M3.5 20.5 4.8 16A8.6 8.6 0 1 1 8 19.3z', 'M9.3 8.3c.3-.4.9-.4 1.2 0l.8 1.5c.2.3.1.7-.1 1l-.5.5c.6 1.2 1.5 2.1 2.7 2.7l.5-.5c.3-.2.7-.3 1-.1l1.5.8c.4.3.4.9 0 1.2-.6.6-1.5.9-2.4.7-2.4-.6-4.3-2.5-4.9-4.9-.2-.9.1-1.8.7-2.4z'],
-  telegram: ['M20.6 3.6 2.9 10.4c-.8.3-.8 1.4 0 1.7l4.4 1.6 1.7 5.4c.2.7 1.1.9 1.6.4l2.5-2.4 4.4 3.2c.6.4 1.4.1 1.6-.6l3-14.6c.2-.9-.7-1.6-1.5-1.5z', 'm7.3 13.7 9.4-6.2-6.6 7.4'],
-  mail: ['M4 6h16a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5H4a.5.5 0 0 1-.5-.5v-11A.5.5 0 0 1 4 6z', 'm3.8 6.6 8.2 6.4 8.2-6.4'],
-  phone: ['M8.4 3.6 9.9 7c.3.7.1 1.5-.5 2l-1.3 1.1a11.6 11.6 0 0 0 5.8 5.8l1.1-1.3c.5-.6 1.3-.8 2-.5l3.4 1.5c.7.3 1.1 1.1.9 1.9l-.5 2.1c-.2.8-.9 1.4-1.8 1.4C10.6 21 3 13.4 3 4.9c0-.9.6-1.6 1.4-1.8l2.1-.5c.8-.2 1.6.2 1.9 1z'],
-  ask: ['M5 4.5h14a1.5 1.5 0 0 1 1.5 1.5v9a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 3.5v-3.5H5A1.5 1.5 0 0 1 3.5 15V6A1.5 1.5 0 0 1 5 4.5z'],
+  whatsapp: ['M4 4.5h16v11.5H10.5L6 19.5V16H4z'],
+  telegram: ['M20.5 3.5 14.7 20.5l-3.4-7.8-7.8-3.4z', 'm20.5 3.5-9.2 9.2'],
+  mail: ['M3.5 5.5h17v13h-17z', 'm3.5 5.5 8.5 7 8.5-7'],
+  phone: ['M6.9 3.5H9l1.5 4-2.1 1.6c1.2 2.6 3.3 4.7 5.9 5.9l1.6-2.1 4 1.5v2.6a1.9 1.9 0 0 1-1.9 1.9C10.8 18.9 5 13.1 5 5.4a1.9 1.9 0 0 1 1.9-1.9z'],
+  ask: ['M4 4.5h16v11.5H10.5L6 19.5V16H4z', 'M10 8.6a2 2 0 1 1 2.9 1.8c-.5.3-.9.7-.9 1.3v.4', 'M12 13.9v.1'],
+  route: ['M5.5 20v-6.5A3.5 3.5 0 0 1 9 10h10.5', 'm15.5 6 4 4-4 4'],
   pin: ['M12 21.2s-6.8-5.9-6.8-11.4a6.8 6.8 0 0 1 13.6 0c0 5.5-6.8 11.4-6.8 11.4z', 'M12 7.3a2.5 2.5 0 1 1 0 5a2.5 2.5 0 1 1 0-5z'],
 } as const;
 export type IconName = keyof typeof ICONS;

@@ -1,11 +1,12 @@
 /* =====================================================================
    The artists, take two: the spotlight stage (ModelsStage.astro). A dark stage, one screen tall: the artist in the
-   light shown whole in the middle; her neighbours on either side smaller, dim and nearly colourless, each in her
-   own hard-cut frame; under the stage her two lines and every name, the one in the light in white over a line of
-   red light that fills while she stands there. The script sets each artist's place, size and light from where the
-   light is. (Until 2026-11-20 the neighbours were blurred ovals dissolving into the dark, with a warm cone of
-   light, a pool of it on the floor and her name huge in outline behind: soft and warm beside the cut plates, and a
-   blur on seven portraits every frame.)
+   light shown whole in the middle; her neighbours on either side smaller and dim, each in her own hard-cut frame
+   (all of them in black and white until the new shoot: the grade, global.css); under the stage her two lines and
+   every name in the Label's small capitals, as the header's sections are, the one in the light in white over a
+   seam of the light that fills while she stands there (the red of the show; amber after 04:00, as every line).
+   The script sets each artist's place, size and light from where the light is. (Until 2026-11-20 the neighbours
+   were blurred ovals dissolving into the dark, with a warm cone of light, a pool of it on the floor and her name
+   huge in outline behind: soft and warm beside the cut plates, and a blur on seven portraits every frame.)
    ===================================================================== */
 
 .mst {
@@ -21,18 +22,18 @@
   touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab; outline: none;
 }
 .mst-stage.drag { cursor: grabbing; }
-.mst-stage:focus-visible .mst-a.on { outline: 1.5px solid var(--light); outline-offset: 8px; }
+.mst-stage:focus-visible .mst-a.on { outline: var(--seam) solid var(--lit); outline-offset: 8px; }
 
 /* the line of artists: each one stands on the floor, set in place by the script */
 .mst-cam { position: absolute; inset: 0; transform-origin: 50% 85%; }
 .mst-a {
   --e: 1;
   position: absolute; left: 50%; bottom: 24px; width: var(--mst-cw); height: var(--mst-ch); margin: 0;
-  overflow: hidden; border-radius: var(--r-4); background: #0b0b0c;
+  overflow: hidden; background: var(--lacquer);
   transform-origin: 50% 100%; will-change: transform, filter, opacity;
 }
-/* each frame's edge: a hairline of light just inside it, as on a poster (it shows where a dim picture ends) */
-.mst-a::after { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; box-shadow: inset 0 0 0 1px rgba(230, 231, 233, .16), inset 0 1px 0 rgba(255, 255, 255, .06); }
+/* each frame's edge: a hairline just inside it, as on a poster (it shows where a dim picture ends) */
+.mst-a::after { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; box-shadow: inset 0 0 0 1px var(--rule); }
 .mst-a img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; -webkit-user-drag: none; }
 /* framed as the row frames her (styles/models.css): zoomed in around her eyes, which stand at the same point on every
    card, her face one size, so she fills her frame; her second photograph puts her eyes at the very same point. The
@@ -67,21 +68,27 @@
 
 /* under the stage: her two lines, then every name */
 .mst-foot { display: grid; justify-items: center; gap: clamp(14px, 1.6vw, 22px); margin-top: clamp(14px, 1.6vw, 22px); text-align: center; }
-.mst-lines { min-height: 3.1em; margin: 0; font: 400 16px/1.55 var(--sans); color: var(--fg-2); }
+.mst-lines { min-height: 3.1em; margin: 0; font: 400 16px/1.55 var(--f-text); color: var(--fg-2); }
 .mst-names {
   display: flex; gap: clamp(16px, 2.6vw, 40px); max-width: 100%; padding: 6px 4px 12px; overflow-x: auto;
   scrollbar-width: none; overscroll-behavior-x: contain;
 }
 .mst-names::-webkit-scrollbar { display: none; }
-.mst-n { position: relative; flex: none; padding: 4px 0; font: 500 clamp(16px, 1.31vw, 20px)/1.05 var(--display); letter-spacing: -.01em; color: rgba(230, 231, 233, .6); cursor: pointer; transition: color .3s ease; }
+/* every name: the Label's small capitals, as the header's sections are (the names are the stage's own sections) */
+.mst-n {
+  position: relative; flex: none; padding: 6px 0;
+  font: var(--label-wght) 13px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase;
+  color: var(--ash); cursor: pointer; transition: color .3s ease;
+}
 .mst-n:hover { color: var(--fg); }
 .mst-n.on { color: #fff; }
-.mst-n:focus-visible { outline: 1.5px solid var(--light); outline-offset: 4px; }
-/* the line under the name in the light: the red light, filling while she stands there when the line moves on its own */
-.mst-n i { position: absolute; left: 0; right: 0; bottom: -6px; height: 1.5px; background: rgba(230, 231, 233, .14); overflow: hidden; opacity: 0; transition: opacity .3s ease; }
+.mst-n:focus-visible { outline-offset: 4px; }
+/* the line under the name in the light: a hairline, and on it the seam of the light, filling while she stands
+   there when the line moves on its own */
+.mst-n i { position: absolute; left: 0; right: 0; bottom: -6px; height: var(--seam); background: var(--rule); opacity: 0; transition: opacity .3s ease; }
 .mst-n.on i { opacity: 1; }
-@media (pointer: coarse) { .mst-n::after { content: ''; position: absolute; inset: -10px -7px; } }
-.mst-n i::before { content: ''; position: absolute; inset: 0; background: var(--light); transform-origin: 0 50%; }
+@media (pointer: coarse) { .mst-n::after { content: ''; position: absolute; inset: -14px -8px; } }
+.mst-n i::before { content: ''; position: absolute; inset: 0; background: var(--lit-core); box-shadow: var(--seam-glow); transform-origin: 0 50%; }
 .mst.auto .mst-n.on i::before { animation: mst-fill var(--mst-hold, 6s) linear both paused; }
 .mst.auto.run .mst-n.on i::before { animation-play-state: running; }
 @keyframes mst-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }

@@ -1,10 +1,10 @@
 ---
-import { photo } from '../data/images';
 import { type Lang, ui, tr } from '../data/i18n';
 import { site } from '../data/site';
 import FooterCard from './FooterCard.astro';
 import FooterNight from './FooterNight.astro';
 import FooterClassic from './FooterClassic.astro';
+import LineArt from './LineArt.astro';
 import VariantSwitch from './VariantSwitch.astro';
 import { choosing, show } from '../data/variants';
 import { closing } from '../data/content';
@@ -13,18 +13,16 @@ import { keepShort } from '../data/format';
 const { lang, cta = true } = Astro.props as { lang: Lang; cta?: boolean };
 const t = ui[lang];
 const p = (s: string) => `/${lang}/${s}/`;
-// (the invitation's picture shows a little over half the page's column wide; the whole of it on a phone)
-const invite = await photo('/media/invite-table.webp', '(min-width: 900px) min(54vw, 760px), 100vw');
 ---
 <footer class:list={['ft', { 'no-cta': !cta }]}>
   <div class="wrap">
     {cta && (
       <div class="ft-cta">
         <!-- The invitation: one card on the page's column. Its words stand in one stack on the left, the title at
-             the card's head and the line with the two buttons at its foot; beside them the hall from a guest's
-             seat, a table with its champagne and the stage behind it, as a picture with clean edges in its own
-             colour. (It was three things apart: the hall edge to edge and dimmed, a "your table" tag pinned on it
-             just over the title, and the line and the buttons alone in the far third of the page.) -->
+             the card's head and the line with the two buttons at its foot; beside them, drawn in chalk on lacquer,
+             the table that is waiting: a low round table and its lamp, lit amber (LineArt "lamp"; styles:
+             footers.css). Until 2026-11-21 a photograph stood there, champagne before the stage with guests' faces
+             in the room behind it; the club shows the room, never its guests. -->
         <div class="cta-card">
           <div class="cta-words">
             <p class="t-xl cta-h" set:html={tr(closing.title, lang)} />
@@ -36,14 +34,14 @@ const invite = await photo('/media/invite-table.webp', '(min-width: 900px) min(5
               </div>
             </div>
           </div>
-          <div class="photo cta-shot" aria-hidden="true"><img src="/media/invite-table.webp" {...invite} alt="" loading="lazy" decoding="async" /></div>
+          <div class="cta-art"><LineArt name="lamp" class="cta-lamp" /></div>
         </div>
       </div>
     )}
 
     <!-- the last screen: the links, the contacts and the small print, never taller than the screen. While the
-         client chooses, four takes (data/variants.ts, 'footer'): v4 the calling card, v5 the night's programme,
-         and the four columns over Luka's 3D sign or Gio's steel HOTLAND -->
+         client chose, four takes (data/variants.ts, 'footer', settled on v4): v4 the calling card, v5 the night's
+         programme, and the four columns over the club's logo (Luka's and Gio's rounds) -->
     <div class:list={['ft-host', { 'vx-host': choosing('footer') }]}>
       {show('footer', 'v4') && <div class="vx-part" data-v="footer:v4"><FooterCard lang={lang} /></div>}
       {show('footer', 'v5') && <div class="vx-part" data-v="footer:v5"><FooterNight lang={lang} /></div>}
@@ -53,4 +51,3 @@ const invite = await photo('/media/invite-table.webp', '(min-width: 900px) min(5
     </div>
   </div>
 </footer>
-
