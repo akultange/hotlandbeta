@@ -6,15 +6,21 @@
    bulb at any size. The room starts dark; .lit (CastingCall.astro) turns the bulbs on one by one around the
    mirror, then the room itself comes up. The room, the bulbs and the light they throw are one picture, graded to
    black and white together (--grade, on .cc-stage): a bulb's glow is white light, never warm paint over the page.
+   The room comes out of the page and goes back into it at its top and foot (a mask, not a band of flat black), so
+   the page's concrete runs on round it: a flat black section on the grained page showed its edges as a band.
    ===================================================================== */
 
-.cc { position: relative; isolation: isolate; overflow: clip; background: var(--black); margin-block: var(--sec-y); }
+.cc { position: relative; isolation: isolate; overflow: clip; margin-block: var(--sec-y); }
 /* (the room is a band of its own, edge to edge, so the air every section has above and below it, --sec-y, is
    kept outside it: the black between it and the sections around is the same as between any two sections. On a
    computer the room's foot sinks into black over its last fifth, and the first stretch of that already reads as
    air, so the air under the band is that much shorter.) */
 @media (min-width: 900px) { .cc { margin-bottom: calc(var(--sec-y) - 24px); } }
-.cc-room { position: absolute; inset: 0; z-index: 0; overflow: hidden; container-type: size; }
+.cc-room {
+  position: absolute; inset: 0; z-index: 0; overflow: hidden; container-type: size;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 16%, #000 80%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 16%, #000 80%, transparent 100%);
+}
 .cc-stage {
   --fx: .5; --fy: .15;
   position: absolute; left: 0; top: 0;
@@ -25,17 +31,18 @@
 /* the room's own light: dark until the bulbs are on */
 .cc-dark { position: absolute; inset: 0; background: #000; opacity: .84; transition: opacity 2.4s ease .9s; }
 .cc.lit .cc-dark { opacity: .08; }
-/* the light the mirror throws into the room */
+/* the light the mirror throws into the room: the room's amber (shown white while the grade is on, as the room is) */
 .cc-spill {
   position: absolute; inset: 0; mix-blend-mode: screen; opacity: 0; transition: opacity 2s ease 1.1s;
-  background: radial-gradient(34% 50% at 76% 30%, rgba(255, 208, 150, .2) 0%, rgba(255, 208, 150, 0) 72%);
+  background: radial-gradient(34% 50% at 76% 30%, color-mix(in srgb, var(--amber-core) 20%, transparent) 0%, transparent 72%);
 }
 .cc.lit .cc-spill { opacity: 1; }
-/* each bulb's glow, over the bulb in the photo */
+/* each bulb's glow, over the bulb in the photo: a point of light, white-hot in its middle, the room's amber round
+   it (a bulb is round: the one round thing here is light) */
 .cc-bulb {
   position: absolute; left: var(--x); top: var(--y);
   width: calc(var(--s) * 2.4%); aspect-ratio: 1; translate: -50% -50%; border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(255, 248, 232, .95) 0%, rgba(255, 228, 184, .6) 32%, rgba(255, 196, 140, .18) 64%, rgba(255, 190, 130, 0) 100%);
+  background: radial-gradient(closest-side, rgba(255, 255, 255, .95) 0%, color-mix(in srgb, var(--amber-core) 60%, transparent) 32%, color-mix(in srgb, var(--amber) 18%, transparent) 64%, transparent 100%);
   mix-blend-mode: screen; opacity: 0; pointer-events: none;
 }
 .cc.lit .cc-bulb { opacity: 1; }
@@ -44,12 +51,10 @@ html.motion .cc.lit .cc-bulb { animation: cc-on .6s ease-out calc(.35s + var(--i
 /* (no motion at all: the room is simply lit) */
 html:not(.motion) .cc-dark { opacity: .08; }
 html:not(.motion) :is(.cc-bulb, .cc-spill) { opacity: 1; }
-/* the dark half for the words, and soft edges into the page above and below */
+/* the dark half for the words (the soft edges into the page above and below are the room's mask) */
 .cc-room::after {
   content: ''; position: absolute; inset: 0; pointer-events: none;
-  background:
-    linear-gradient(180deg, var(--black) 0%, rgba(0, 0, 0, 0) 16%, rgba(0, 0, 0, 0) 80%, var(--black) 100%),
-    linear-gradient(90deg, rgba(0, 0, 0, .78) 0%, rgba(0, 0, 0, .5) 34%, rgba(0, 0, 0, 0) 56%);
+  background: linear-gradient(90deg, rgba(0, 0, 0, .78) 0%, rgba(0, 0, 0, .5) 34%, rgba(0, 0, 0, 0) 56%);
 }
 
 .cc-in {
@@ -87,7 +92,11 @@ html:not(.motion) :is(.cc-bulb, .cc-spill) { opacity: 1; }
 @media (max-width: 899px) {
   .cc-room { position: relative; inset: auto; height: min(125vw, 70svh); }
   .cc-stage { --fx: .93; --fy: .3; }
-  .cc-room::after { background: linear-gradient(180deg, var(--black) 0%, rgba(0, 0, 0, 0) 14%, rgba(0, 0, 0, 0) 60%, var(--black) 96%); }
+  .cc-room {
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 14%, #000 60%, transparent 96%);
+    mask-image: linear-gradient(180deg, transparent 0%, #000 14%, #000 60%, transparent 96%);
+  }
+  .cc-room::after { content: none; }
   /* the heading starts in the room's last few pixels, where it has already sunk into black, so no word sits on the
      photo; under the buttons, the band's own air (--sec-y) and no more */
   .cc-in { min-height: 0; margin-top: -16px; padding-top: 0; padding-bottom: 0; }

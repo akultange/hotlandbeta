@@ -175,16 +175,21 @@ html.motion .vfield:not(.vf-ready) :is(.vcard, .vtier-body) { opacity: 0; animat
 
 /* ---------- The membership page (membership/index.astro): the cloth the whole width of the page ----------
    The page's name is the cards' heading, so the cloth starts close under it and holds its own air. After the cards,
-   over a hairline, the two things a member carries in, drawn in chalk (LineArt.astro): the card, with the way to ask
-   for one, and the cuff and watch, with the dress code. Side by side on a wide screen, one under the other on a
-   phone; each drawing in a box of one shape, so their words stand on one line. */
+   the two things a member carries in, drawn in chalk (LineArt.astro): the card, with the way to ask for one, and the
+   cuff and watch, with the dress code. Side by side on a wide screen, one under the other on a phone. Each hangs in
+   one hairline, as every drawing on the site does, but with no lacquer behind it: the chalk lies on the suit's own
+   cloth, the way a tailor marks it, and the cuff's chalk stripe runs beside the cloth's. Both plates are one shape
+   (the cuff's own, 10:7: his sleeve comes in at the plate's edge, so the cut is the frame's), the card stands in its
+   plate with a mat of air round it, and their words stand on one line under them. */
 .ptitle + .sec.cloth.mem-suit { margin-top: clamp(40px, 5vw, 80px); padding-top: clamp(48px, 5.6vw, 96px); }
 .mem-pair {
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 56px var(--gap);
-  margin-top: var(--sec-y); padding-top: clamp(40px, 4vw, 64px); border-top: 1px solid var(--rule);
+  margin-top: var(--sec-y);
 }
-.mem-fig { display: grid; align-content: start; justify-items: start; gap: clamp(20px, 2.2vw, 32px); min-width: 0; }
-.mem-art { width: min(100%, 560px); aspect-ratio: 10 / 7; }
+.mem-fig { display: grid; align-content: start; justify-items: stretch; gap: clamp(20px, 2.2vw, 32px); min-width: 0; }
+.mem-plate { display: grid; place-items: center; aspect-ratio: 10 / 7; overflow: hidden; box-shadow: inset 0 0 0 1px var(--rule); }
+.mem-plate .la-cuff { width: 100%; }
+.mem-plate .la-card { width: 78%; }
 .mem-cap { display: grid; justify-items: start; gap: 10px; }
 /* what it is, quietly, in the text face; then what to know, larger */
 .mem-k { font: 400 15px/1.4 var(--f-text); color: var(--ash); }
@@ -192,5 +197,4 @@ html.motion .vfield:not(.vf-ready) :is(.vcard, .vtier-body) { opacity: 0; animat
 .mem-cap .lnk { margin-top: 10px; }
 @media (max-width: 899px) {
   .mem-pair { grid-template-columns: minmax(0, 1fr); }
-  .mem-art { width: 100%; }
 }

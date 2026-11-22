@@ -12,6 +12,7 @@ import { choosing, show } from '../../data/variants';
 import MemberCards from '../../components/MemberCards.astro';
 import CastingCall from '../../components/CastingCall.astro';
 import GalleryPeek from '../../components/GalleryPeek.astro';
+import LineArt from '../../components/LineArt.astro';
 import { type Lang, tr, langPaths, ui } from '../../data/i18n';
 import { keepShort } from '../../data/format';
 import { site } from '../../data/site';
@@ -44,7 +45,9 @@ const schema = {
   <Hero lang={lang} />
 
   <!-- WHAT'S ON: the weekend's three nights as large posters, full width under the heading. On phones the row
-       holds still while the page scrolls on and slides from one poster to the next (PosterCard.astro) -->
+       holds still while the page scrolls on and slides from one poster to the next (PosterCard.astro). Once every
+       night on the list has passed (scripts/site.ts), the row gives way to a quiet line (more nights soon, the show
+       every night) beside the cigar resting in its ashtray, its smoke rising (LineArt.astro) -->
   <section class="sec" id="program">
     <div class="wrap">
       <div class="bighead bh-line">
@@ -59,7 +62,10 @@ const schema = {
           <div class="posters in-wrap" data-events data-lenis-prevent-horizontal>
             {events.map((e) => <PosterCard e={e} lang={lang} />)}
           </div>
-          <p class="body" data-events-empty hidden>{ru ? 'Новые особые вечера скоро. А шоу-балет каждую ночь в 23:30 и 01:30.' : 'New special nights are coming. The dance show is on every night at 23:30 and 01:30.'}</p>
+          <div class="prow-quiet" data-events-empty hidden>
+            <LineArt name="cigar" class="prow-quiet-art" />
+            <p class="body">{ru ? 'Новые особые вечера скоро. А шоу-балет каждую ночь в 23:30 и 01:30.' : 'New special nights are coming. The dance show is on every night at 23:30 and 01:30.'}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -114,4 +120,16 @@ const schema = {
       (#contacts). To bring it back here: import Visit from '../../components/Visit.astro' and put <Visit lang={lang} />
       after the casting call. */}
 </Base>
+
+<style>
+  /* The Афиша with no nights left on it: the drawing beside the line, standing on the same floor as the words (on a
+     phone, the drawing over the line). Hairlines on black, no frame: the drawing is the picture. */
+  .prow-quiet { display: grid; grid-template-columns: minmax(170px, 320px) minmax(0, 46ch); align-items: end; gap: clamp(24px, 3vw, 48px); padding-top: clamp(8px, 1.4vw, 20px); }
+  .prow-quiet > p { padding-bottom: clamp(18px, 2.4vw, 34px); }
+  @media (max-width: 599px) {
+    .prow-quiet { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .prow-quiet :global(.prow-quiet-art) { width: min(58vw, 220px); }
+    .prow-quiet > p { padding-bottom: 0; }
+  }
+</style>
 

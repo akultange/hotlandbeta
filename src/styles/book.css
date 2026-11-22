@@ -2,19 +2,21 @@
    The booking (Book.astro): the job application's full-screen page (apply.css: the picture on the left, the
    count and the cross, the line of light, the step under it, the buttons at the foot), with the little the
    booking adds (the night line, the guests: a minus, the number, a plus; shorter wishes) and how it is dressed.
-   «Между» (2026-11-21). apply.css still dresses the windows the old way (plates, steel pills, a burgundy haze); the
-   booking's window takes the club's own here, scoped to .bk, so it holds whatever the other windows do:
+   «Между» (2026-11-21). apply.css dresses every window alike (lacquer, a plate inside one hairline for each
+   control); the booking's window takes its own here, scoped to .bk, so it holds whatever the other windows do:
    - the ground is the site's black (leather and its concrete), the picture's side lacquer, one hairline between;
-   - the picture is the table with its lamp, drawn (LineArt.astro). The lamp is out while you book, lit only when
-     the room is (--room: after 04:00), and when the request has gone it lights, amber, and stays (a booked table is
-     amber at any hour);
-   - the step's number is the Dial, the line over the step a seam of the light that fills as you go (--lit: red,
-     amber after 04:00);
+   - the picture is the table with its lamp, drawn (LineArt.astro), standing on the floor's line. The lamp comes up
+     with the request: out at the first step, a glow at the second, warmer at the third, and when the request has
+     gone it lights, amber, and stays (a booked table is amber at any hour; after 04:00 it is never darker than the
+     room, --room);
+   - the step's count is a serial number in the Label, the line over the step a seam of the light that fills as you
+     go (--lit: red, amber after 04:00);
    - every control is square and drawn in 1px lines, never filled: the kinds are rows over hairlines, the chosen
      one lit along its left edge; the guests' minus and plus are frames round the number, which is the Dial on its
      own line; the pills are frames, the chosen one in shirt white over its lit seam; a field is a line that lights
      when you write in it; the consent a square frame with a chalk tick;
-   - words in the text face, the labels too; the buttons are the site's (the cuff to go on and to send).
+   - words in the text face, the labels too; the buttons are the site's (its main button, .btn-crimson, to go on
+     and to send; global.css dresses it).
    ===================================================================== */
 
 html.bk-lock { overflow: hidden; background: var(--lacquer); } /* (the window's own black in the scrollbar's strip: apply.css) */
@@ -23,12 +25,19 @@ html.bk-lock { overflow: hidden; background: var(--lacquer); } /* (the window's 
 
 /* ---------- The picture: the table and its lamp ----------
    A computer's: the left of the window, lacquer black, one hairline where the steps begin; the drawing stands in
-   its middle. (A phone has no picture; its sent step has the table of its own, below.) */
+   its middle, on the floor: one fine line across the panel just under the table's shadow (its foot is 447 of the
+   drawing's 500, the shadow ends at 457), meeting the hairline at the steps' edge. (A phone has no picture; its sent
+   step has the table of its own, below.) */
 .bk .bk-pic { background: var(--lacquer); box-shadow: inset -1px 0 0 var(--rule); }
 @media (min-width: 900px) { .bk .bk-pic { display: grid; place-items: center; } }
-.bk .bk-lamp { width: min(68%, 54vh, 460px); }
-/* the lamp's light (its haze, its pool on the table, the lit rim of its shade): the room's until the request goes */
-.bk .bk-lamp .la-light { opacity: var(--room); transition: opacity 1.8s cubic-bezier(.4, 0, .2, 1) .2s; }
+.bk .bk-stage { position: relative; width: min(68%, 54vh, 460px); }
+.bk .bk-stage::after { content: ''; position: absolute; left: -100vw; right: -100vw; top: 93.5%; height: 1px; background: var(--rule); pointer-events: none; }
+/* The lamp's light (its haze, its pool on the table, the lit rim of its shade) comes up with the request, like a
+   lamp on a dimmer: out at the first step, a glow at the second, warmer at the third (and if sending fails, the
+   request is still in hand), lit when it has gone. Never darker than the room's own light, after 04:00. */
+.bk .bk-lamp .la-light { opacity: var(--room); transition: opacity 1.6s cubic-bezier(.4, 0, .2, 1) .15s; }
+.bk:has(.apl-box[data-step="2"]) .bk-lamp .la-light { opacity: max(var(--room), .16); }
+.bk:has(.apl-box:is([data-step="3"], [data-step="fail"])) .bk-lamp .la-light { opacity: max(var(--room), .34); }
 .bk:has(.apl-box[data-step="done"]) .bk-lamp .la-light { opacity: 1; }
 
 /* ---------- The steps' page ---------- */
@@ -77,7 +86,10 @@ html.bk-lock { overflow: hidden; background: var(--lacquer); } /* (the window's 
 .bk .apl-roles label:active span { scale: 1; }
 
 /* 2: what and which night, then the guests: the number in the Dial on its own line (a real field: it can be typed
-   into, and it keeps to 1 to 200), a square frame either side for the minus and the plus */
+   into, and it keeps to 1 to 200), a square frame either side for the minus and the plus. The Dial's figures are
+   hairlines, so the number is set large and at the voice's heaviest (200): smaller, a 4 or a 1 read as a stray
+   stroke. The field is only a little taller than the figure, so the figure stands centred between the frames with
+   its line just under it. */
 .bk-chosen { display: grid; gap: 6px; }
 .bk .apl-chosen { font: 400 16px/1.45 var(--f-text); color: var(--ash); }
 .bk .apl-chosen b { font-weight: 500; color: var(--shirt); }
@@ -98,9 +110,9 @@ html.bk-lock { overflow: hidden; background: var(--lacquer); } /* (the window's 
 .bk-pm[aria-disabled="true"]:hover { box-shadow: inset 0 0 0 1px var(--rule-2); }
 .bk-pm svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.25; }
 .bk-count input {
-  box-sizing: border-box; width: calc(3ch + 24px); height: 92px; margin: 0; padding: 0 0 8px;
+  box-sizing: border-box; width: calc(3ch + 28px); height: 88px; margin: 0; padding: 0;
   border: 0; border-bottom: 1px solid var(--rule-2); border-radius: 0; background: none; color: var(--fg); text-align: center;
-  font: 180 84px/1 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; caret-color: var(--lit);
+  font: 200 104px/1 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; caret-color: var(--lit);
   appearance: textfield; -moz-appearance: textfield; transition: border-color .3s ease;
 }
 .bk-count input::-webkit-inner-spin-button, .bk-count input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
@@ -141,15 +153,21 @@ html.bk-lock { overflow: hidden; background: var(--lacquer); } /* (the window's 
 /* what is wrong: white words beside a line of the red light, as every form on the site says it (.form-error) */
 .bk .apl-err { padding-left: 12px; border-left: var(--seam) solid var(--light); font: 400 16px/1.4 var(--f-text); color: var(--shirt); }
 
-/* sent, on a phone: the table, its lamp lit, over the words (a computer's lights on the left instead) */
-.bk .bk-lamp-done { width: min(52vw, 210px); margin: 0 0 6px -8px; }
-@media (min-width: 900px) { .bk .bk-lamp-done { display: none; } }
+/* sent, on a phone: the table, its lamp lit, over the words, standing on its floor line as on a computer's panel
+   (there the one on the left lights instead) */
+.bk .bk-done-table { position: relative; width: min(52vw, 210px); margin: 0 0 10px -8px; }
+.bk .bk-done-table::after {
+  content: ''; position: absolute; left: 0; right: -30%; top: 93.5%; height: 1px; pointer-events: none;
+  background: linear-gradient(90deg, var(--rule-2), var(--rule-2) 60%, transparent);
+}
+.bk .bk-lamp-done { width: 100%; }
+@media (min-width: 900px) { .bk .bk-done-table { display: none; } }
 
 /* ---------- Phones ---------- */
 @media (max-width: 599px) {
   .bk .apl-roles span { min-height: clamp(56px, 8svh, 64px); }
   .bk .apl-pill span { padding: 0 6px; font-size: 16px; }
-  .bk-count input { height: 80px; font-size: 72px; font-weight: 200; }
+  .bk-count input { height: 76px; font-size: 88px; }
 }
 /* the smallest phones: the five kinds still whole on a 320x568 screen */
 @media (max-width: 599px) and (max-height: 600px) {
@@ -158,3 +176,21 @@ html.bk-lock { overflow: hidden; background: var(--lacquer); } /* (the window's 
 @media (prefers-reduced-motion: reduce) {
   .bk .apl-roles span::before, .bk .apl-roles span::after { transition: none; }
 }
+
+/* ---------- The booking form in a page (BookingForm.astro: kept for a page that wants the form in place, shown on
+   none now) ----------
+   It is the shared form (global.css, Forms: lines for fields, square tiles framed in shirt white over their lit seam
+   for the kinds, the main button to send); only its names, the kinds and the consent are set here at the text face's reading
+   size, a step up from the shared form's, and its consent box is the dialog's square frame with a chalk tick (the
+   browser's own box was the one rounded thing left in it). */
+#book-form :is(legend.label, .field label, .consent) { font-size: 16px; }
+#book-form .choice-tiles span { font: 400 16px/1.25 var(--f-text); }
+#book-form .consent input {
+  appearance: none; -webkit-appearance: none; width: 22px; height: 22px; margin: 1px 0 0; border: 0; border-radius: 0;
+  background: none; box-shadow: inset 0 0 0 1px var(--rule-2); cursor: pointer;
+}
+#book-form .consent input:checked {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22'%3E%3Cpath d='M5.8 11.4l3.5 3.5 7-7.9' fill='none' stroke='%23ecece8' stroke-width='1.5' stroke-linecap='square'/%3E%3C/svg%3E") 50% 50% / 22px 22px no-repeat;
+  box-shadow: inset 0 0 0 1px var(--shirt);
+}
+#book-form .consent input:focus-visible { outline: var(--seam) solid var(--lit); outline-offset: 3px; }

@@ -34,7 +34,8 @@ html.js:not(.age-ok) :is(.hdr-bar, .hdr-in, .hdr-light, .mbar) { view-transition
 /* Where scrollbars take room (Windows), that room is kept beside the door too (global.css) and the door cannot
    cover it: it shows the page's ground, one flat colour. While the door stands, the ground is the concrete's tone at
    the right leaf's outer edge (--gate-end; the leaf settles into exactly that tone over its last few pixels), so the
-   door runs to the edge of the window. */
+   door runs to the edge of the window. Only there (html.gutter, AgeGate.astro): where no scrollbar keeps room (a
+   phone, a Mac), the settling would only darken the door's right edge. */
 html { --gate-end: #262729; }
 html.js:not(.age-ok) { background-color: var(--gate-end); }
 
@@ -50,8 +51,8 @@ html.js:not(.age-ok) { background-color: var(--gate-end); }
 .gate-in .hv-copy { pointer-events: auto; }
 .gate-slab { z-index: 0; will-change: transform; }
 .gate-slab-l { width: calc(50% + 1px); } /* (a hair over the right leaf: no line of the page between them) */
-/* the right leaf's last pixels settle into the tone the window's edge has (above) */
-.gate-slab-r::before { content: ''; position: absolute; top: 0; bottom: 0; right: 0; width: 48px; background: linear-gradient(270deg, var(--gate-end), rgba(38, 39, 41, 0)); pointer-events: none; }
+/* the right leaf's last pixels settle into the tone the window's edge has, where a scrollbar keeps its room (above) */
+html.gutter .gate-slab-r::before { content: ''; position: absolute; top: 0; bottom: 0; right: 0; width: 48px; background: linear-gradient(270deg, var(--gate-end), rgba(38, 39, 41, 0)); pointer-events: none; }
 /* what a leaf casts on the page once it has left the seam (the script fades it in) */
 .gate-shade { position: absolute; top: 0; bottom: 0; width: 40px; opacity: 0; pointer-events: none; }
 .gate-slab-l .gate-shade { left: 100%; background: linear-gradient(90deg, rgba(5, 5, 6, .4), rgba(5, 5, 6, .1) 45%, rgba(5, 5, 6, 0)); }

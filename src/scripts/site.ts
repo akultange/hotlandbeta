@@ -1,6 +1,6 @@
 // Small site-wide behaviours, loaded on every page.
 import { track, linkEvent } from './track';
-import { clubHour } from '../data/hero';
+import { clubHour, pinnedHour } from '../data/hero';
 import { site } from '../data/site';
 
 // 1. Count the page view and every tap on a booking, call, messenger or directions link.
@@ -248,11 +248,13 @@ document.addEventListener('click', (e) => {
 //    page's head set html[data-hour] before the first paint (AgeGate.astro carries that script, on every page with the
 //    18+ door); a page without the door gets it here. While the page stays open the hour is read again at every turn
 //    of the minute and whenever the tab comes back, and when it changes the light changes with it (global.css) and
-//    the page is told (hotland:hour: the home page's door shuts at closing and opens at the opening).
+//    the page is told (hotland:hour: the home page's door shuts at closing and opens at the opening). (In dev and
+//    preview builds ?hour= can pin it for the visit: data/hero.ts.)
 (() => {
   const root = document.documentElement;
+  const pin = pinnedHour();
   const check = () => {
-    const hour = clubHour(Date.now(), site.hours).hour;
+    const hour = pin ?? clubHour(Date.now(), site.hours).hour;
     if (root.dataset.hour === hour) return;
     root.dataset.hour = hour;
     dispatchEvent(new Event('hotland:hour'));

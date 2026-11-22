@@ -1,8 +1,9 @@
 ---
 // After a booking (the booking form's own page; the dialog says the same in its last step, Book.astro): the table
-// with its lamp, lit amber, as a booked table is at any hour; the two words; what happens next; where to go from here.
-// The same table stands on the booking page with its lamp out (booking/index.astro). The drawing is the line art
-// (LineArt.astro): with motion it draws itself in and the lamp comes on last; without, it is simply lit.
+// with its lamp, lit amber, as a booked table is at any hour, standing on its floor line; the two words; what happens
+// next; where to go from here. The same table stands on the booking page with its lamp out (booking/index.astro).
+// The drawing is the line art (LineArt.astro): with motion it draws itself in and the lamp comes on last; without,
+// it is simply lit.
 import Base from '../../../layouts/Base.astro';
 import LineArt from '../../../components/LineArt.astro';
 import { type Lang, langPaths } from '../../../data/i18n';
@@ -18,7 +19,7 @@ const ru = lang === 'ru';
 <Base lang={lang} title={ru ? 'Заявка принята' : 'Request received'} noindex closing={false}>
   <section class="thanks thanks-sent">
     <div class="wrap stack center">
-      <LineArt name="lamp" class="thanks-lamp" />
+      <div class="thanks-table" aria-hidden="true"><LineArt name="lamp" class="thanks-lamp" /></div>
       <h1 class="t-xl" set:html={ru ? 'Заявка <em>принята</em>' : 'Request <em>received</em>'} />
       <p class="lead" set:html={keepShort(ru ? 'Менеджер перезвонит и подтвердит бронь, обычно в течение 15 минут. Если срочно, напишите нам.' : 'Your manager will call to confirm, usually within 15 minutes. If it’s urgent, message us.', lang)} />
       <div class="btns">
@@ -33,10 +34,20 @@ const ru = lang === 'ru';
 <style is:global>
   /* The moment after a booking: the table with its lamp lit, the two words, what happens next and where to go from
      here, one under another on the page's middle line. (The 404 is set the same way: pages/404.astro.) */
+  .thanks-sent { overflow-x: clip; }
   .thanks-sent .stack { gap: clamp(20px, 2vw, 28px); }
   /* the table, a size that leaves the words and the first button on the first screen; the lamp lit (the drawing's
-     own light, at full: a booked table is amber at any hour) */
-  .thanks-sent .thanks-lamp { width: min(64vw, 30vh, 260px); margin-bottom: clamp(0px, 1vw, 8px); }
+     own light, at full: a booked table is amber at any hour). It stands on the floor: a fine line just under its
+     shadow (its foot is 447 of the drawing's 500, the shadow ends at 457), fading out either side, as the window's
+     floor runs across its panel (book.css). */
+  .thanks-sent .thanks-table { position: relative; width: min(64vw, 34vh, 300px); margin-bottom: clamp(0px, 1vw, 8px); }
+  .thanks-sent .thanks-table::after {
+    content: ''; position: absolute; left: -45%; right: -45%; top: 93.5%; height: 1px; pointer-events: none;
+    background: linear-gradient(90deg, transparent, var(--rule-2) 32%, var(--rule-2) 68%, transparent);
+  }
+  .thanks-sent .thanks-lamp { width: 100%; }
+  /* (a phone: a shorter floor, clear of the screen's edges, so it never reads as a rule across the page) */
+  @media (max-width: 599px) { .thanks-sent .thanks-table::after { left: -18%; right: -18%; } }
   .thanks-sent .t-xl { text-wrap: balance; }
   /* (the lead's lines even, so the last is never a word or two) */
   .thanks-sent .lead { text-wrap: balance; }

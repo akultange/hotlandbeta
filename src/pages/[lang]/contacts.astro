@@ -1,5 +1,6 @@
 ---
-// Contacts now live on the club page (/about/#contacts). This old address sends visitors there.
+// Contacts now live on the club page (/about/#contacts). This old address sends visitors there. (For the moment it
+// shows, it is in the site's leather black and shirt white: the page loads none of the site's styles.)
 import { type Lang, langPaths } from '../../data/i18n';
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
@@ -15,5 +16,5 @@ const to = `/${lang}/about/#contacts`;
     <title>HOTLAND</title>
     <script is:inline define:vars={{ to }}>location.replace(to);</script>
   </head>
-  <body style="background:#000;color:#e6e7e9;font-family:sans-serif"><a href={to} style="color:inherit">{lang === 'ru' ? 'Контакты здесь' : 'Contacts are here'}</a></body>
+  <body style="background:#0e0d0d;color:#ecece8;font-family:sans-serif"><a href={to} style="color:inherit">{lang === 'ru' ? 'Контакты здесь' : 'Contacts are here'}</a></body>
 </html>

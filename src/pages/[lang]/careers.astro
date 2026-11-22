@@ -138,8 +138,9 @@ const steps = ru ? ['Роль', 'Контакты', 'Пара слов о се�
   .cr-apply-head .lead { max-width: 30ch; text-wrap: pretty; }
   .cr-steps { list-style: none; margin: 0; padding: 0; width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 clamp(10px, 1.6cqw, 20px); }
   .cr-steps li { display: grid; align-content: start; gap: 10px; padding-top: 14px; border-top: 1px solid var(--rule-2); font: 400 16px/1.35 var(--f-text); color: var(--fg); }
-  /* (a step's number: the Dial, as the watch's hours are) */
-  .cr-steps span { font: 200 clamp(40px, 4cqw, 56px)/.8 var(--f-flex); font-stretch: var(--dial-wdth); color: var(--fg); font-variant-numeric: lining-nums tabular-nums; }
+  /* (a step's number: the Dial, as the watch's hours are; never under 44px and a touch apart, or its narrow 0 and 1
+     run together into two bars) */
+  .cr-steps span { font: 200 clamp(44px, 4cqw, 56px)/.8 var(--f-flex); font-stretch: var(--dial-wdth); letter-spacing: .05em; color: var(--fg); font-variant-numeric: lining-nums tabular-nums; }
   /* (the dressing room: the mirror and its bulbs stand in the picture's right half, the free chair to their left) */
   .cr-apply .cta-shot img { object-position: 86% 50%; transform: none; }
   @media (max-width: 899px) {

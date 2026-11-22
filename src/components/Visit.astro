@@ -1,10 +1,10 @@
 ---
 // Finding the club (styles in styles/visit.css): the About page's contacts (and the end of the home page, when the
-// club brings it back there). Read top to bottom: the heading, the address, the facts as a plain list (hours,
-// shows, dress code, entry) and the two ways to get here. Beside them the car at the side door, drawn (LineArt):
-// a long black saloon, the door's red seam behind it caught on the roof, the shoulder and the wet asphalt.
-// (2026-11-21, «Между»: it was a round peephole with a film of the door; the drawing says how a guest arrives, and
-// a drawing never shows a face or a number plate.)
+// club brings it back there). Read top to bottom: the heading and the address; the car at the side door, drawn
+// (LineArt), as a band across the page: a long black saloon, the door's red seam behind it caught on the roof, the
+// shoulder and the wet asphalt; under it the facts in a row (hours, shows, dress code, entry) and the ways to get
+// here. (2026-11-21, «Между»: it was a round peephole with a film of the door; the drawing says how a guest arrives,
+// and a drawing never shows a face or a number plate.)
 // Whatever the page puts inside <Visit> sits under the block, in the same section (About: the ways to reach us).
 import LineArt from './LineArt.astro';
 import { visit } from '../data/content';
@@ -46,7 +46,7 @@ import VariantSwitch from './VariantSwitch.astro';
 import { choosing, show } from '../data/variants';
 import '../styles/visit.css';
 ---
-<!-- VISIT: one column to read top to bottom (where, when, the rules, the way there) beside the car at the side door -->
+<!-- VISIT: read top to bottom: where, the car at the side door across the page, then when and the way there -->
 <section class:list={['sec vs', { 'vx-host': choosing('contact') }]} id={id} aria-labelledby={`${id}-h`} data-visit>
   <VariantSwitch name="contact" />
   <div class="wrap vs-wrap">
@@ -57,8 +57,8 @@ import '../styles/visit.css';
     <figure class="vs-plate">
       <LineArt name="car" class="vs-car" />
     </figure>
-    <!-- the four facts as a plain list, in the order a guest asks: when, the show, what to wear, the door -->
-    <dl class="vs-facts">
+    <!-- the facts in the order a guest asks: when, the show, what to wear, the door (--n: how many, for the row) -->
+    <dl class="vs-facts" style={`--n:${facts.length}`}>
       {facts.map((f) => <div class="vs-fact"><dt>{f.k}</dt><dd><b class:list={{ whole: f.whole }}>{f.v}</b>{f.note && <span>, {f.note}</span>}</dd></div>)}
     </dl>
     <div class="btns vs-btns">

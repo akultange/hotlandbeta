@@ -1,27 +1,42 @@
 /* Finding the club (Visit.astro): the About page's contacts (and the home page's end, when it comes back there).
    Loaded after global.css (Base.astro); its classes start with .vs.
 
-   Easy to read, top to bottom: the heading, the address, the facts as a plain list (a label, then the answer) and
-   the two ways to get here. Beside them the car at the side door, drawn: a long black saloon on wet asphalt, the
-   door's red seam behind it. It hangs as every drawing on the site does, on lacquer inside one hairline. Phones:
-   one column in the same order, the drawing after the address. The air above and below is every section's (.sec,
-   --sec-y). (2026-11-21, «Между»: the round peephole with its film of the door gave way to the drawing, and the
-   street in brushed metal letters to plain shirt white.) */
+   Read top to bottom: the heading and the address; the car at the side door, drawn, as a band across the page (a
+   long black saloon on wet asphalt, the door's red seam behind it, caught on the roof, the shoulder and the
+   asphalt); under the band the facts in a row, like the line of figures under a drawing (a label, then the answer),
+   and at the row's far end the way there. The drawing hangs on a drawing sheet, as every drawing on these pages
+   does (about.css, .ab-plate): lacquer inside one hairline, a mat of air, a mark in each corner. Phones: one column
+   in the same order, the facts one under another. The air above and below is every section's (.sec, --sec-y).
+   (2026-11-21, «Между»: the round peephole with its film of the door gave way to the drawing, and the street in
+   brushed metal letters to plain shirt white. 2026-11-22: the car came out from beside the words to run the width
+   of the page, as large as the drawing deserves; the words were a column beside a small plate.) */
 
-/* desktop: the car on the left, wide; the words in one column on the right, centred on it */
-.vs-wrap {
-  display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); grid-template-rows: 1fr auto auto auto 1fr;
-  column-gap: clamp(36px, 5vw, 88px); align-items: start;
+/* desktop: the heading row, the band, then the facts with the way there at the row's end */
+.vs-wrap { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: clamp(32px, 4vw, 64px); align-items: end; }
+.vs-head { grid-column: 1 / -1; display: grid; justify-items: start; gap: clamp(10px, 1vw, 14px); }
+.vs-plate { grid-column: 1 / -1; }
+.vs-facts { grid-column: 1; }
+.vs-btns { grid-column: 2; }
+
+/* ---------- The drawing: the band, on its sheet ---------- */
+.vs-plate {
+  --mark: color-mix(in srgb, var(--shirt) 45%, transparent);
+  --arm: clamp(10px, 1.1vw, 16px);
+  margin: var(--head-gap) 0 0; padding: clamp(18px, 3.4vw, 56px) clamp(18px, 6vw, 112px);
+  background:
+    linear-gradient(var(--mark), var(--mark)) 0 0 / var(--arm) 1px no-repeat,
+    linear-gradient(var(--mark), var(--mark)) 0 0 / 1px var(--arm) no-repeat,
+    linear-gradient(var(--mark), var(--mark)) 100% 0 / var(--arm) 1px no-repeat,
+    linear-gradient(var(--mark), var(--mark)) 100% 0 / 1px var(--arm) no-repeat,
+    linear-gradient(var(--mark), var(--mark)) 0 100% / var(--arm) 1px no-repeat,
+    linear-gradient(var(--mark), var(--mark)) 0 100% / 1px var(--arm) no-repeat,
+    linear-gradient(var(--mark), var(--mark)) 100% 100% / var(--arm) 1px no-repeat,
+    linear-gradient(var(--mark), var(--mark)) 100% 100% / 1px var(--arm) no-repeat,
+    var(--lacquer);
+  box-shadow: inset 0 0 0 1px var(--rule);
 }
-.vs-plate { grid-column: 1; grid-row: 1 / -1; align-self: center; }
-.vs-wrap > :not(.vs-plate) { grid-column: 2; max-width: 600px; }
-.vs-head { grid-row: 2; display: grid; justify-items: start; gap: clamp(10px, 1vw, 14px); }
-.vs-facts { grid-row: 3; }
-.vs-btns { grid-row: 4; }
-
-/* ---------- The drawing: on lacquer, one hairline, square ---------- */
-.vs-plate { margin: 0; padding: clamp(14px, 2.2vw, 32px); background: var(--lacquer); box-shadow: inset 0 0 0 1px var(--rule); }
-.vs-car { width: 100%; }
+/* (the car no wider than its lines stay fine at: past about a thousand pixels the band only grows taller) */
+.vs-car { width: min(100%, 1000px); margin-inline: auto; }
 
 /* ---------- The address: clear and big, but no bigger than the heading's company ---------- */
 .vs-addr {
@@ -33,31 +48,39 @@
 /* the city is the address's quiet half, said as a title's second half is: the same face and weight, in ash */
 .vs-city { color: var(--quiet); }
 
-/* ---------- The facts: a label, then the answer, one per line ---------- */
-.vs-facts { display: grid; width: 100%; margin: clamp(22px, 2.4vw, 34px) 0 0; }
-.vs-fact {
-  display: grid; grid-template-columns: minmax(7.5em, 9.5em) minmax(0, 1fr); align-items: baseline; gap: 4px 20px;
-  padding: 14px 0; border-top: 1px solid var(--rule);
+/* ---------- The facts: a row under the band, each a label over its answer, a hairline over each ----------
+   (--n, Visit.astro: how many; each column as wide as a fact needs and no wider, so two facts don't drift apart
+   across the page) */
+.vs-facts {
+  display: grid; grid-template-columns: repeat(var(--n, 2), minmax(0, 18em)); column-gap: var(--gap);
+  width: 100%; margin: clamp(24px, 2.6vw, 40px) 0 0;
 }
-.vs-fact:first-child { border-top-color: var(--rule-2); }
-.vs-fact:last-child { border-bottom: 1px solid var(--rule); }
+.vs-fact { display: grid; align-content: start; gap: 6px; padding-top: 14px; border-top: 1px solid var(--rule-2); }
 .vs-fact dt { font: 400 16px/1.45 var(--f-text); color: var(--ash); }
 .vs-fact dd { margin: 0; font: 400 18px/1.45 var(--f-text); color: var(--fg-2); }
 .vs-fact dd b { font-weight: 500; color: var(--fg); font-variant-numeric: lining-nums tabular-nums; }
 .vs-fact dd b.whole { white-space: nowrap; }
 
-/* ---------- Buttons ---------- */
-.vs-btns { margin-top: clamp(24px, 2.6vw, 36px); }
+/* ---------- The way there: at the row's far end, standing on the facts' last line ---------- */
+.vs-btns { margin-top: clamp(24px, 2.6vw, 40px); justify-content: flex-end; }
 
 /* ---------- Whatever the page adds under the block (About: the ways to reach the club) ---------- */
 .vs-more { margin-top: clamp(40px, 4.4vw, 64px); }
 
-/* ---------- Phones and tablets: one column, the drawing after the address ---------- */
+/* ---------- Phones and tablets: one column, the band after the address, the facts one under another ---------- */
 @media (max-width: 899px) {
-  .vs-wrap { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
-  .vs-wrap > * { grid-column: 1 !important; grid-row: auto !important; max-width: none; }
-  .vs-plate { margin-top: 26px; }
-  .vs-facts { margin-top: 26px; }
+  .vs-wrap { grid-template-columns: minmax(0, 1fr); }
+  .vs-wrap > * { grid-column: 1 !important; }
+  .vs-plate { margin-top: 26px; padding: clamp(14px, 4vw, 28px); }
+  .vs-car { width: 100%; }
+  .vs-facts { grid-template-columns: minmax(0, 1fr); margin-top: 26px; }
+  .vs-fact {
+    grid-template-columns: minmax(7.5em, 9.5em) minmax(0, 1fr); align-items: baseline; gap: 4px 20px;
+    padding: 14px 0; border-top-color: var(--rule);
+  }
+  .vs-fact:first-child { border-top-color: var(--rule-2); }
+  .vs-fact:last-child { border-bottom: 1px solid var(--rule); }
+  .vs-btns { justify-content: flex-start; }
 }
 @media (max-width: 699px) {
   /* the street on one line, the city under it (two lines of an address, so the comma between them goes); the
@@ -67,6 +90,7 @@
   .vs-addr { font-size: min(clamp(30px, 9vw, 44px), calc((100vw - 2 * var(--pad)) / (var(--len, 18) * .57))); line-height: 1.1; }
   .vs-city { display: block; }
   .vs-sep { display: none; }
+  .vs-plate { --arm: 9px; }
   .vs-fact { grid-template-columns: 6.6em minmax(0, 1fr); gap: 12px; padding: 12px 0; }
   .vs-fact dd { font-size: 16.5px; }
   .vs-btns { margin-top: 26px; }
@@ -78,7 +102,7 @@ html.motion .vs-wait:not(.vs-on) .vs-fact { opacity: 0; }
 html.motion .vs-on .vs-fact { animation: rv-up 1.1s var(--ease-out) var(--d, .4s) backwards; }
 .vs-fact:nth-child(1) { --d: .3s; } .vs-fact:nth-child(2) { --d: .38s; } .vs-fact:nth-child(3) { --d: .46s; } .vs-fact:nth-child(4) { --d: .54s; }
 
-/* ---------- A phone held sideways (or any screen as short): the drawing within the screen ---------- */
+/* ---------- A phone held sideways (or any screen as short): the band within the screen ---------- */
 @media (orientation: landscape) and (max-height: 500px) {
-  .vs-plate { width: min(100%, calc((100svh - var(--hdr) - 24px) * 2.2)); }
+  .vs-car { width: min(100%, calc((100svh - var(--hdr) - 72px) * 2.29)); }
 }

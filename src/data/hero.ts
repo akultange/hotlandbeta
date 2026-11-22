@@ -49,7 +49,26 @@ export function clubHour(now: number, hours: Hours): HourNow {
   return { hour: 'closed' };
 }
 
+/* Dev and preview builds only (the same switch as data/variants.ts): ?hour=open, late or closed pins the hour for the
+   rest of the visit (kept in this tab), so that each state of the light can be seen on every page at any time of
+   day; ?hour=now gives the clock back. A production build never pins. */
+const TEST = import.meta.env.DEV || import.meta.env.PUBLIC_NOINDEX === '1';
+/** The pinned hour, if any. Self-contained, like clubHour: the page's head runs it too. */
+function pinned(): Hour | null {
+  try {
+    const q = new URLSearchParams(location.search).get('hour');
+    if (q === 'now') sessionStorage.removeItem('hl-hour');
+    else if (q === 'open' || q === 'late' || q === 'closed') sessionStorage.setItem('hl-hour', q);
+    const s = sessionStorage.getItem('hl-hour');
+    return s === 'open' || s === 'late' || s === 'closed' ? s : null;
+  } catch {
+    return null;
+  }
+}
+/** The hour pinned for this visit (dev and preview builds only), or null: the clock decides. */
+export const pinnedHour = (): Hour | null => (TEST ? pinned() : null);
+
 /** The inline script that sets html[data-hour] before the page is first drawn (AgeGate.astro carries it, at the top
  *  of every page that has the door; scripts/site.ts covers the rest). It leaves the answer in window.__hlHour for the
  *  home page's door, which says when the club opens. */
-export const hourScript = `(function (r) { try { var h = (${clubHour.toString()})(Date.now(), ${JSON.stringify(site.hours)}); r.setAttribute('data-hour', h.hour); window.__hlHour = h; } catch (e) {} })(document.documentElement);`;
+export const hourScript = `(function (r) { try { var h = (${clubHour.toString()})(Date.now(), ${JSON.stringify(site.hours)});${TEST ? ` var pin = (${pinned.toString()})(); if (pin) h = { hour: pin };` : ''} r.setAttribute('data-hour', h.hour); window.__hlHour = h; } catch (e) {} })(document.documentElement);`;

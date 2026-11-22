@@ -57,8 +57,9 @@ const ru = lang === 'ru';
 </Base>
 
 <style is:global>
-  /* (the name's two words stand a little apart, so the capitals of two lines never touch) */
-  main:has(> .legal) .ptitle-name { line-height: .86; }
+  /* (the name's two words stand a little apart, so the capitals of two lines never touch; and, on one line, the
+     Dial's narrow space is widened a touch, so «Политика конфиденциальности» never reads as one word) */
+  main:has(> .legal) .ptitle-name { line-height: .86; word-spacing: .1em; }
   /* the first part's heading gets the air every part's heading has above it (the text's own 18px and the heading's
      24px), not the closer gap a page's first line of content keeps under the page's name */
   main:has(> .legal) .ptitle + .sec-t.legal { padding-top: 42px; }

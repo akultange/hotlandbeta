@@ -53,9 +53,10 @@ html.apl-lock { overflow: hidden; background: var(--lacquer); }
   background: var(--lacquer);
 }
 .apl-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-/* the count: the step's number in the Dial, how many in the Label */
+/* the count: the step's number in the Dial, how many in the Label (the number at 48px and a touch apart: at 40px
+   the Dial's narrow 0 and 1 ran together into two bars) */
 .apl-count { display: flex; align-items: baseline; gap: 8px; margin: 0; font: var(--label-wght) 13px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); color: var(--ash); font-variant-numeric: tabular-nums; }
-.apl-count b { font: 200 40px/.8 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; letter-spacing: 0; color: var(--fg); }
+.apl-count b { font: 200 48px/.8 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; letter-spacing: .05em; color: var(--fg); }
 /* the cross: a square plate */
 .apl-x {
   display: grid; place-items: center; flex: none; width: 48px; height: 48px; color: var(--fg-2);

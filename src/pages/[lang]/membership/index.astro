@@ -1,9 +1,10 @@
 ---
 // Membership and parties. «Между», 2026-11-21: the cards stand on the suit's own cloth (global.css .cloth, the navy
 // with its chalk stripe), the whole width of the page, and under them, in fine chalk lines, the two things a member
-// carries in: the card (with the way to ask for one) and the cuff and watch (with the dress code). Then the club's
-// zones, a plain list on black, and the parties. Styles: styles/vip.css (the cards and this page's cloth),
-// styles/zones.css, styles/parties.css.
+// carries in: the card (with the way to ask for one) and the cuff and watch (with the dress code). Each drawing hangs
+// in one hairline, as every drawing on the site does, but here on the cloth itself, like a tailor's chalk on the
+// suit. Then the club's zones, a plain list on black, and the parties. Styles: styles/vip.css (the cards and this
+// page's cloth), styles/zones.css, styles/parties.css.
 import Base from '../../../layouts/Base.astro';
 import PageTitle from '../../../components/PageTitle.astro';
 import MemberCards from '../../../components/MemberCards.astro';
@@ -38,7 +39,7 @@ const dress = visit.rows.find((r) => r.k.en === 'Dress code')!;
       <MemberCards lang={lang} />
       <div class="mem-pair">
         <div class="mem-fig">
-          <LineArt name="card" class="mem-art" />
+          <div class="mem-plate"><LineArt name="card" class="mem-art" /></div>
           <div class="mem-cap">
             <span class="mem-k">{tr(card, lang)}</span>
             <span class="mem-v">{t.priceOnRequest}</span>
@@ -46,7 +47,7 @@ const dress = visit.rows.find((r) => r.k.en === 'Dress code')!;
           </div>
         </div>
         <div class="mem-fig">
-          <LineArt name="cuff" class="mem-art" />
+          <div class="mem-plate"><LineArt name="cuff" class="mem-art" /></div>
           <div class="mem-cap">
             <span class="mem-k">{tr(dress.k, lang)}</span>
             <span class="mem-v">{tr(dress.v, lang)}</span>

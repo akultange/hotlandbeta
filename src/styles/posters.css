@@ -192,13 +192,38 @@ html.motion .poster.is-in .poster-beam i { animation: poster-beam-on 1.1s var(--
   .posters, .posters.three { grid-auto-columns: min(46vw, 300px); }
 }
 
+/* ---------- The Афиша page: the nights month by month (program/index.astro) ----------
+   Each month's name stands over its row of posters in the Poster voice, as a printed programme has it, on a hairline
+   the width of the page's column, with the year at the line's far end in the Label. The month is the first thing
+   under the page's title: a breath of air under the title's button, not the double air of a new section that
+   global.css gives a section with a heading of its own, so the dates still reach the first screen. */
+.ptitle + .sec.afisha { padding-top: clamp(40px, 4vw, 64px); }
+.afisha-month + .afisha-month { margin-top: clamp(56px, 6vw, 96px); }
+/* (the name is never wider than its line leaves it beside the year: a capital of this voice is at most about one em
+   wide in a long month's name, so the size is the column, less the year, over the letters, --n, from the page) */
+.afisha-month > .wrap { container-type: inline-size; }
+.afisha-mname {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+  margin-bottom: clamp(20px, 2.2vw, 32px); padding-bottom: clamp(14px, 1.4vw, 20px); border-bottom: 1px solid var(--rule-2);
+  font-family: var(--f-flex); font-weight: var(--poster-wght); font-stretch: var(--poster-wdth);
+  font-size: min(clamp(44px, 6vw, 96px), (100cqw - 60px) / var(--n, 8)); line-height: .84; letter-spacing: -.01em;
+  text-transform: uppercase; color: var(--shirt); white-space: nowrap;
+}
+.afisha-mname span {
+  font: var(--label-wght) 13px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track);
+  font-variant-numeric: tabular-nums lining-nums; color: var(--ash);
+}
+
 /* ---------- The Афиша page: every night's programme, the four acts by the hour (program/index.astro) ----------
    Desktop: the guest under the laser on the left (the line art, LineArt.astro), the acts on the right, one to a row:
    the hour in the Dial, large and hairline, as a timetable has it; the act's name and its line in the text face.
-   Phones: the drawing a size smaller, over the list. */
-.nightly-in { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: var(--gap); align-items: end; }
-.nightly-art { width: min(100%, 460px); }
-.nightly-acts { list-style: none; margin: 0; padding: 0; }
+   The drawing hangs as every drawing on the site does: on lacquer inside one hairline, in its own 4:5, his jacket
+   running out at the plate's foot (so the cut is the frame's, not the pen's). The plate and the list stand on one
+   line: their feet meet, and while the plate is the taller the acts share its height in equal rows, so the list's
+   top rule meets the plate's top too. Phones: the plate a size smaller, over the list. */
+.nightly-in { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: var(--gap); }
+.nightly-art { align-self: end; width: min(100%, 500px); background: var(--lacquer); box-shadow: inset 0 0 0 1px var(--rule); }
+.nightly-acts { list-style: none; margin: 0; padding: 0; display: grid; grid-auto-rows: 1fr; }
 .nightly-act.row { grid-template-columns: clamp(84px, 7.4vw, 116px) minmax(0, 1fr); gap: 8px clamp(16px, 2.4vw, 40px); align-items: start; padding: clamp(20px, 2.2vw, 30px) 0; }
 .nightly-time {
   font: var(--dial-wght) clamp(64px, 7vw, 108px)/.8 var(--f-flex); font-stretch: var(--dial-wdth);
@@ -209,7 +234,7 @@ html.motion .poster.is-in .poster-beam i { animation: poster-beam-on 1.1s var(--
 .nightly-x { font: 400 16px/1.55 var(--f-text); color: var(--fg-2); max-width: 46ch; text-wrap: pretty; }
 @media (max-width: 899px) {
   .nightly-in { grid-template-columns: minmax(0, 1fr); row-gap: 28px; }
-  .nightly-art { width: min(74%, 300px); }
+  .nightly-art { width: min(80%, 320px); }
   .nightly-act.row { grid-template-columns: 72px minmax(0, 1fr); column-gap: 16px; }
   /* (under 40px the hairline breaks up on a phone: at this size the Dial takes 200) */
   .nightly-time { font-size: 58px; font-weight: 200; }

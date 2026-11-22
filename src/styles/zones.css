@@ -11,9 +11,10 @@
    ===================================================================== */
 
 .zones-list { list-style: none; margin: 0; padding: 0; }
+/* (the number's column is as narrow as its compressed figures allow, so each number stays with its name) */
 .zone.row {
   position: relative;
-  grid-template-columns: clamp(64px, 6vw, 92px) minmax(0, 5fr) minmax(0, 6fr) auto;
+  grid-template-columns: clamp(44px, 4vw, 60px) minmax(0, 5fr) minmax(0, 6fr) auto;
   grid-template-areas: "no name text go";
   align-items: baseline; gap: 8px clamp(16px, 2.4vw, 40px);
   padding: clamp(20px, 2.2vw, 30px) 0;
@@ -46,11 +47,11 @@
 
 /* a tablet (and a small laptop): the line under the name */
 @media (max-width: 1023px) {
-  .zone.row { grid-template-columns: clamp(76px, 10vw, 110px) minmax(0, 1fr) auto; grid-template-areas: "no name go" "no text go"; row-gap: 6px; }
+  .zone.row { grid-template-columns: clamp(48px, 6vw, 64px) minmax(0, 1fr) auto; grid-template-areas: "no name go" "no text go"; row-gap: 6px; }
 }
 /* a phone: the number on the left; the name, its line and the link under one another beside it */
 @media (max-width: 599px) {
-  .zone.row { grid-template-columns: 64px minmax(0, 1fr); grid-template-areas: "no name" "no text" "no go"; align-items: start; column-gap: 14px; }
+  .zone.row { grid-template-columns: 40px minmax(0, 1fr); grid-template-areas: "no name" "no text" "no go"; align-items: start; column-gap: 14px; }
   /* (under 40px the hairline breaks up on a phone: at this size the Dial takes 200) */
   .zone-no { font-size: 54px; font-weight: 200; }
   .zone-name { font-size: 22px; padding-top: 2px; }

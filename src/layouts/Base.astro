@@ -3,6 +3,7 @@
 // carries only the parts it shows. landscape.css stays last.
 import '../styles/fonts.css';
 import '../styles/global.css';
+import '../styles/cut.css';
 import '../styles/nav.css';
 import '../styles/ask.css';
 import '../styles/apply.css';
@@ -14,6 +15,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import AgeGate from '../components/AgeGate.astro';
 import MobileBar from '../components/MobileBar.astro';
+import SiteSwitch from '../components/SiteSwitch.astro';
 import Ask from '../components/Ask.astro';
 import Apply from '../components/Apply.astro';
 import Book from '../components/Book.astro';
@@ -226,6 +228,7 @@ const preload = lang === 'ru'
     <main id="main" tabindex="-1"><slot /></main>
     {!bare && <Footer lang={lang} cta={closing} />}
     {!bare && <MobileBar lang={lang} />}
+    <SiteSwitch />
     {!bare && <Ask lang={lang} />}
     {!bare && <Apply lang={lang} />}
     {!bare && <Book lang={lang} />}

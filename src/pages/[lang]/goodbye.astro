@@ -47,23 +47,35 @@ const ru = lang === 'ru';
   }
   .bye-in { display: grid; justify-items: center; width: 100%; }
   /* the club's logo, its sign kept close to the name (sign="tight": about a capital above the letters and under
-     them); --cap is a capital's height. The letters' shadow falls down and right, as on the wall. */
+     them); --cap is a capital's height. The logo stands as the club drew it: no shadow under its letters. */
   .bye { --cap: clamp(15px, 1.3vw, 20px); }
   .bye .bye-name { height: var(--cap); margin-top: var(--cap); }
-  .bye .bye-name .logo-letters { filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, .8)); }
   /* the door is shut: the sign burns low. It comes up while the way back is under the pointer or has the focus */
   .bye .bye-name .logo-sign, .bye .bye-name .logo-heat { opacity: .6; transition: opacity .7s ease; }
   .bye-in:has(.bye-back:hover, .bye-back:focus-visible) .bye-name :is(.logo-sign, .logo-heat) { opacity: 1; }
-  /* the door, drawn: on lacquer inside one hairline, as every drawing on the site hangs */
+  /* the door, drawn, on a drawing sheet, as on About (about.css, .ab-plate): lacquer inside one hairline, a mat of
+     air, and a mark in each corner in the shirt white of the drawing's own details */
   .bye-door {
-    width: min(100%, 520px); margin: calc(1.6 * var(--cap) + clamp(16px, 2.4vh, 28px)) 0 0; padding: clamp(10px, 1.6vw, 22px);
-    background: var(--lacquer); box-shadow: inset 0 0 0 1px var(--rule);
+    --mark: color-mix(in srgb, var(--shirt) 45%, transparent);
+    --arm: clamp(9px, 1vw, 14px);
+    width: min(100%, 560px); margin: calc(1.6 * var(--cap) + clamp(16px, 2.4vh, 28px)) 0 0; padding: clamp(14px, 2.2vw, 30px);
+    background:
+      linear-gradient(var(--mark), var(--mark)) 0 0 / var(--arm) 1px no-repeat,
+      linear-gradient(var(--mark), var(--mark)) 0 0 / 1px var(--arm) no-repeat,
+      linear-gradient(var(--mark), var(--mark)) 100% 0 / var(--arm) 1px no-repeat,
+      linear-gradient(var(--mark), var(--mark)) 100% 0 / 1px var(--arm) no-repeat,
+      linear-gradient(var(--mark), var(--mark)) 0 100% / var(--arm) 1px no-repeat,
+      linear-gradient(var(--mark), var(--mark)) 0 100% / 1px var(--arm) no-repeat,
+      linear-gradient(var(--mark), var(--mark)) 100% 100% / var(--arm) 1px no-repeat,
+      linear-gradient(var(--mark), var(--mark)) 100% 100% / 1px var(--arm) no-repeat,
+      var(--lacquer);
+    box-shadow: inset 0 0 0 1px var(--rule);
   }
   /* the title: the Dial, as every page's name is (a hairline at 200 under 900px, so it holds on a phone's screen) */
   .bye-h {
     margin-top: clamp(22px, 3.4vh, 36px);
     font: 140 clamp(72px, 8vw, 120px)/.8 var(--f-flex); font-stretch: var(--dial-wdth); text-transform: uppercase;
-    font-variant-numeric: lining-nums; letter-spacing: 0;
+    font-variant-numeric: lining-nums; letter-spacing: 0; word-spacing: .1em;
   }
   @media (max-width: 899px) { .bye-h { font-weight: 180; } }
   .bye-line { max-width: 34ch; margin-top: clamp(14px, 1.8vh, 20px); font: 400 clamp(16px, 1.3vw, 19px)/1.6 var(--f-text); color: var(--fg-2); text-wrap: balance; }

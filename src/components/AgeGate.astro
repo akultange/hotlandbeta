@@ -10,10 +10,11 @@
 // The door stands on the same skeleton as the home page's door (styles/first-screen.css): the same leaves, the same
 // floor, the same name. What the leaves do on "Yes" depends on what stands behind them:
 //   - the home page's door, standing open (the club's hours: open or late): the leaves open exactly to where the home
-//     page's own leaves stand, their light comes to rest on its lit edges, and the name is carried onto its name;
-//     then the question's door gives way to the home page's, which is the same door to the pixel;
-//   - the home page's door, shut (the club is closed): the leaves stay shut; the question goes and the door gives
-//     way to the home page's, shut too, which says when the club opens;
+//     page's own leaves stand and their light comes to rest on its lit edges; the name sinks into the dark on the way
+//     (that door carries no name: the header's mark stands over it); then the question's door gives way to the home
+//     page's, which is the same door to the pixel;
+//   - the home page's door, shut (the club is closed): the leaves stay shut, and so does the seam's light; the
+//     question goes and the door gives way to the home page's, shut too, which says when the club opens;
 //   - any other page (or the home page opened part-way down): the leaves part and leave the screen, their light and
 //     the name with them.
 // The page's own pieces then come in behind it (the header's plates, the phone's dock: global.css, "The door opens";
@@ -39,6 +40,8 @@ const shape = (h: { paths: string[]; width: number }) =>
   `url("data:image/svg+xml,${`<svg xmlns='http://www.w3.org/2000/svg' viewBox='${nm.box(h.width)}'><path d='${h.paths.join(' ')}'/></svg>`.replace(/</g, '%3C').replace(/>/g, '%3E').replace(/#/g, '%23')}")`;
 ---
 <script is:inline set:html={hourScript} />
+{/* (a scrollbar that keeps its room beside the door: the right leaf settles into the tone of that room, gate.css) */}
+<script is:inline>(function (r) { try { if (innerWidth - r.clientWidth > 0) r.classList.add('gutter'); } catch (e) {} })(document.documentElement);</script>
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title" aria-describedby="gate-text" tabindex="-1" data-lenis-prevent
   style={`--wl:${nm.land.width};--ngu:${nm.gap};--nsu:${nm.axis}`}>
   <div class="gate-in">
@@ -175,17 +178,6 @@ const shape = (h: { paths: string[]; width: number }) =>
     const fits = (a: number) => Number.isFinite(a) && a > -2 && a < W / 2;
     const mode: 'keep' | 'shut' | 'plain' = !door || !fits(aL) || !fits(aR) ? 'plain' : aL > 2 && aR > 2 ? 'keep' : 'shut';
     root.classList.add(mode === 'plain' ? 'gate-plain' : `gate-${mode}`);
-    // The name: where the leaves open onto the home page's door, it is carried onto the home page's own name, each
-    // half to its place and to its size (the home page's may be the smaller: its LAND has to fit beside the gap).
-    // Measured, not worked out: half a pixel off showed as a tick when the door was taken away.
-    const theirs = mode === 'keep' ? Array.from(door!.querySelectorAll('.dr-half')) : [];
-    const onto = (mine: Element, to: Element | undefined, guess: number) => {
-      const m = mine.getBoundingClientRect(), t = to?.getBoundingClientRect();
-      const x = t ? t.left + t.width / 2 - (m.left + m.width / 2) : NaN, y = t ? t.top + t.height / 2 - (m.top + m.height / 2) : NaN;
-      const s = t && m.width ? t.width / m.width : NaN;
-      return [x, y, s].every(Number.isFinite) && s > 0.4 && s < 1.6 && Math.abs(x) < W / 2 && Math.abs(y) < gate.clientHeight / 2 ? { x, y, s } : { x: guess, y: 0, s: 1 };
-    };
-    const nL = onto(nameL, theirs[0], -aL), nR = onto(nameR, theirs[1], aR);
     const dimR = shown(nameR) || 1; // (LAND stands a step dimmer on the door: gate.css)
 
     // The one movement, sampled.
@@ -262,13 +254,14 @@ const shape = (h: { paths: string[]; width: number }) =>
       light(edgeL, -1, aL, theirEdges[0]);
       light(edgeR, 1, aR, theirEdges[1]);
     }
-    // The name. Where the leaves open onto the home page's door it goes with them, to the home page's own name, and
-    // LAND comes up to full (the light the letters took from the sign goes with the sign, below). Where they leave, it
-    // leaves with them, sinking into the dark as it goes.
-    const carry = (to: { x: number; y: number; s: number }, u: number) => ({ x: to.x * u, y: to.y * u, s: 1 + (to.s - 1) * u });
+    // The name goes with the leaves, sinking into the dark as it goes (the light the letters took from the sign goes
+    // with the sign, below). Where they open onto the home page's door it has gone by the time they stand where that
+    // door's leaves stand: that door carries no name (the header's mark, coming down over it as the door opens, is the
+    // logo there). Where they leave the screen, it leaves with them.
     if (mode === 'keep') {
-      play(nameL, (p) => carry(nL, k(p)));
-      play(nameR, (p) => ({ ...carry(nR, k(p)), o: dimR + (1 - dimR) * k(p) }));
+      const sink = (p: number) => 1 - c01(k(p) / 0.7);
+      play(nameL, (p) => ({ x: -aL * k(p), o: sink(p) }));
+      play(nameR, (p) => ({ x: aR * k(p), o: dimR * sink(p) }));
     } else if (mode === 'plain') {
       const sink = (p: number) => 1 - c01((p - W * 0.12) / (W * 0.3));
       play(nameL, (p) => ({ x: -p, o: sink(p) }));
@@ -282,9 +275,11 @@ const shape = (h: { paths: string[]; width: number }) =>
     // the light answers along the seam: on the leaves, so it leaves with them, and out before the lights have settled.
     // The light runs the length of the seam: the two lit edges come up out of the sign, growing from the name to
     // their full length, while the sign itself goes, and with it the light the letters took from it and the seam.
+    // (Shut, the seam stays: the door gives way to the home page's, whose own seam stands in the same place, so the
+    // light never dips.)
     const sign = q('.gate-sign');
     run(lights, [{ opacity: 0, transform: 'scaleY(.3)' }, { opacity: 1, transform: 'scaleY(1)' }], { duration: 320, easing: out });
-    [sign, q('.gate-seam')].forEach((el) => run(el, [{ opacity: shown(el) }, { opacity: 0 }], { duration: 460, delay: 90, easing: 'ease-in' }));
+    (mode === 'shut' ? [sign] : [sign, q('.gate-seam')]).forEach((el) => run(el, [{ opacity: shown(el) }, { opacity: 0 }], { duration: 460, delay: 90, easing: 'ease-in' }));
     all('.gate-heat').forEach((el) => run(el, [{ opacity: shown(el) }, { opacity: 0 }], { duration: 460, delay: 90, easing: 'ease-in' }));
     const copy = q('.gate-copy'), foot = q('.gate-foot');
     run(copy, [{ opacity: 1, transform: 'translate3d(0,0,0)' }, { opacity: 0, transform: 'translate3d(0,8px,0)' }], { duration: 240, easing: 'cubic-bezier(.55, .06, .68, .19)' });

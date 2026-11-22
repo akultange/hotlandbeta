@@ -21,6 +21,10 @@ import Logo from './Logo.astro';
 import '../styles/vip.css';
 const { lang } = Astro.props as { lang: Lang };
 const finish = ['cloth', 'steel', 'nappa'];
+/** The number on each card: a specimen, the ones on the approved «Между» board (no member's number is ever shown;
+ *  the host at the door knows whose a number is). A card added later takes a plain one of its own. */
+const serial = ['0412', '0186', '0418'];
+const numberOf = (i: number) => serial[i] ?? String(i + 1).padStart(4, '0');
 const hasHead = Astro.slots.has('head');
 const pad2 = (n: number) => String(n).padStart(2, '0');
 /** The tiers' names: under the section's own heading when it has one, else straight under the page's title. */
@@ -36,7 +40,7 @@ const Title = hasHead ? 'h3' : 'h2';
             {finish[i % finish.length] === 'nappa' && <span class="vcard-seam"></span>}
             <span class="vcard-tier">{p.name}</span>
             <Logo class="vcard-logo" sign="tight" />
-            <span class="vcard-no"><span>№</span>0001</span>
+            <span class="vcard-no"><span>№</span>{numberOf(i)}</span>
           </div>
         </div>
         <div class="vtier-body">

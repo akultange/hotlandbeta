@@ -27,8 +27,8 @@
   height: calc(var(--wy) + var(--sag) + 25px + 5.4 * var(--paper) + 24 * var(--u) + 18px);
 }
 .gpk-wire { position: absolute; left: 0; top: var(--wy); width: 100%; height: var(--sag); overflow: visible; pointer-events: none; }
-/* (the wire's steel gradient is named on the path itself: its id follows the section's, GalleryPeek.astro) */
-.gpk-wire path { fill: none; stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+/* (the wire is plain blackened steel's bright edge: 2026-11-22, its polished highlight along the middle is gone) */
+.gpk-wire path { fill: none; stroke: var(--steel-hi); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
 
 /* a print: its top is the point where the clip hangs on the wire; it hangs, tilted, from there */
 .gpk-print {

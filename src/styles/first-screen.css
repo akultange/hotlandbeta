@@ -5,7 +5,8 @@
    page's own leaves stand, so when the question goes nothing has to jump: the leaves are already in place.
    Here: the screen's box (.hv, and the question's copy of it, .gate-in), where the door, its floor and its words stand
    (the variables below), the concrete of a leaf (.door-leaf), the light along its edge (.door-edge), and the name as
-   the door carries it (.wall-name). The question's own pieces are in gate.css, the home page's in hero.css.
+   the 18+ door carries it (.wall-name; the home page's door stands under the header's mark instead). The question's
+   own pieces are in gate.css, the home page's in hero.css.
    ===================================================================== */
 
 /* ---------- The screen ---------- */
@@ -85,8 +86,8 @@
    HOT and LAND in the logo's own thin capitals, one outline per letter (data/wordmark.ts, nameHalves), either side
    of the line of light: the T stands one letter-space (--ngu, in the outlines' units) before the line, and the L
    begins on it, the light running along its stem as the needle does in the club's logo. Steel letters fixed to the
-   concrete: the logo's own pale grey, and the small shadow a letter standing off the wall casts. Where the two halves
-   stand is the door's and the home page's own business. */
+   concrete: the logo's own pale grey, and the small shadow a letter standing off the wall casts. Only the 18+ door
+   carries it (gate.css places the halves); the home page's door has the header's mark over it. */
 .wall-name {
   --ng: calc(var(--nh) * var(--ngu) / 735);
   /* (where the light stands from the L's left edge: in the club's logo the sign's needle runs along the stem's
@@ -94,7 +95,7 @@
   --ns: calc(var(--nh) * var(--nsu, -6) / 735);
   position: absolute; z-index: 3; left: 0; right: 0; top: var(--ny); height: 0; pointer-events: none;
 }
-.wall-name svg, svg.wall-half {
+.wall-name svg {
   position: absolute; top: 0; height: var(--nh); width: auto; translate: 0 -50%; overflow: visible; fill: url(#g-steel);
   filter: drop-shadow(1px 1.5px 0 rgba(5, 5, 6, .55)) drop-shadow(2px 5px 7px rgba(5, 5, 6, .35));
 }
@@ -130,7 +131,7 @@
     /* the question's words: the question and the one line under it (their sizes here, each on one line), the
        buttons' row, and the gaps between them */
     --copy-h: calc(clamp(27px, 8.6vw, 42px) * 1.05 + min(17px, 4.6vw) * 1.6 + 78px);
-    --gap: clamp(56px, 17.5cqw, 88px);
+    --gap: clamp(56px, 17.5cqw, 150px); /* (a phone's slit; a tablet held upright, a wider one) */
     --ty: clamp(62px, calc(var(--fy) * .125), 100px);
     /* the name as large as LAND fits between the line and the screen's edge, with 22px to spare (a tablet held
        upright: up to 36px), its middle a little over a fifth of the way down the door */

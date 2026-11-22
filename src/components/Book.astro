@@ -15,8 +15,9 @@
 // Arriving at /booking/ itself (a shared link, a new tab) opens it straight away, with that page's query.
 // It sends to /api/booking (the managers' Telegram), as the booking form did. Personal data never goes into the URL.
 // «Между» (2026-11-21): the picture on the left (a computer's) is the table with its lamp, drawn (LineArt.astro), in
-// place of the photograph of an artist on the bar. The lamp is out while you book (lit only when the room is, after
-// 04:00), and lights, amber, the moment the request has gone; on a phone the sent step has the same table of its own.
+// place of the photograph of an artist on the bar, standing on the floor's line. Its lamp comes up with the request:
+// out at the first step, warming through the next two, lit amber the moment the request has gone, and staying lit
+// (never below the room's own light after 04:00); on a phone the sent step has the same table of its own.
 // The window is dressed in styles/book.css.
 import LineArt from './LineArt.astro';
 import { type Lang, ui, tr } from '../data/i18n';
@@ -66,7 +67,7 @@ const script = {
 <dialog class="apl bk" id="book-dlg" aria-labelledby="bk-title" data-lenis-prevent data-wa={site.whatsapp} data-l={JSON.stringify(script)} data-nights={JSON.stringify(nights)}>
   <h2 class="sr-only" id="bk-title">{L.title}</h2>
   <div class="apl-in">
-    <figure class="apl-pic bk-pic" aria-hidden="true"><LineArt name="lamp" class="bk-lamp" /></figure>
+    <figure class="apl-pic bk-pic" aria-hidden="true"><div class="bk-stage"><LineArt name="lamp" class="bk-lamp" /></div></figure>
     <form class="apl-box" novalidate data-step="1">
       <header class="apl-top">
         <p class="apl-count" aria-hidden="true"><b data-bk-n>01</b><span>/&nbsp;03</span></p>
@@ -139,7 +140,7 @@ const script = {
 
         <!-- sent: the table's lamp lights (a phone's own drawing; on a computer the one on the left lights) -->
         <div class="apl-step apl-end" data-s="done" role="status" hidden>
-          <LineArt name="lamp" class="bk-lamp-done" />
+          <div class="bk-done-table" aria-hidden="true"><LineArt name="lamp" class="bk-lamp-done" /></div>
           <p class="apl-h" tabindex="-1">{L.doneH}</p>
           <p class="apl-lead">{L.doneText}</p>
           <div class="btns"><button class="btn btn-crimson" type="button" data-bk-close>{L.ok}</button></div>

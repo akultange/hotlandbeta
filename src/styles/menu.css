@@ -191,10 +191,10 @@ section.bm, .ptitle + section.bm { padding-top: var(--head-gap); }
 }
 @media (prefers-reduced-motion: reduce) { .bm-tabs { transition: none; } }
 
-/* ---------- A phone held sideways, or any screen as short (landscape.css): the case no taller than the
-   screen ---------- */
+/* ---------- A phone held sideways, or any screen as short (landscape.css): the case and its caption no taller
+   than the screen ---------- */
 @media (orientation: landscape) and (max-height: 500px) {
-  .bm .bm-case { aspect-ratio: auto; height: calc(100svh - var(--hdr) - 48px); }
+  .bm .bm-case { aspect-ratio: auto; height: calc(100svh - var(--hdr) - 96px); }
 }
 
 /* ---------- The hookah lounge: its picture (4:5) is the section's last thing on a computer, so the section ends

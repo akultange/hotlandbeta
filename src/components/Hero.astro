@@ -2,20 +2,18 @@
 // The home page's first screen: the door («Между», 2026-11-21; styles in styles/hero.css). The same two leaves of
 // formwork concrete as the 18+ door (AgeGate.astro), standing open: between them, the room behind the door, the
 // club's own film in black and white and dark, red lasers sweeping through the haze, and the room's amber spilling
-// through the gap onto the floor. The club's logo is fixed across the leaves, HOT on the left and LAND on the right,
-// the gap's lit edge running along the L as the logo's needle does; under the name the club's hours are painted on
-// the leaves, 22:00 and 06:00, in the Poster's capitals (running down the leaves on a phone). On the floor, the line
-// that says what the place is, and the two buttons.
+// through the gap onto the floor. The club's hours are painted on the leaves, 22:00 and 06:00, in the Poster's
+// capitals (running down the leaves on a phone). The club's logo is the header's mark, standing over the door: centred
+// on the gap, its needle on the gap's line, the header's line the door's lintel. On the floor, the line that says what
+// the place is, and the two buttons.
 // The door keeps the club's hours (html[data-hour], data/hero.ts): open, the lasers in the gap; after 04:00 the
-// lasers rest and the gap glows amber; after 06:00 the door is shut, its seam the only light and the logo whole
-// across it, and the floor says when the club opens again, with a table for tonight.
+// lasers rest and the gap glows amber; after 06:00 the door is shut, its seam the only light, and the floor says when
+// the club opens again, with a table for tonight.
 // The 18+ door stands on the same skeleton (styles/first-screen.css), so "Yes" opens it straight into this one.
 // (The earlier takes, v1 the film with HOTLAND in steel, v2 the film inside the letters and v3 the frosted glass,
 // are in the history up to 2026-11-21: «Между» retired their chrome, frost and burgundy haze.)
 import { type Lang, ui } from '../data/i18n';
 import { HERO_PHONE } from '../data/hero';
-import { nameHalves } from '../data/wordmark';
-import { signGlow as art } from '../data/art';
 import { site } from '../data/site';
 import '../styles/first-screen.css';
 import '../styles/hero.css';
@@ -25,9 +23,6 @@ const t = ui[lang];
 const ru = lang === 'ru';
 const p = (s: string) => `/${lang}/${s}/`;
 
-// the name as the door carries it (data/wordmark.ts, nameHalves): the same lockup as on the 18+ door
-const nm = nameHalves();
-const SIGN_BOX = art.box.join(' ');
 // the club's hours, as every night has them (the header's menu sheet says them the same way)
 const { open, close } = site.hours[0];
 const film = {
@@ -57,7 +52,7 @@ const beams: [number, number, number, number, number][] = [
 // below), so its megabytes never hold up the first screen, and only the one cut the screen needs.
 const starter = `(function (v) { v.poster = matchMedia('${HERO_PHONE}').matches ? v.dataset.posterPhone : v.dataset.poster; })(document.currentScript.previousElementSibling);`;
 ---
-<section class="hero" style={`--wl:${nm.land.width};--ngu:${nm.gap};--nsu:${nm.axis}`}>
+<section class="hero">
   <h1 class="sr-only">{ru ? 'HOTLAND, премиальный мужской клуб в Москве' : 'HOTLAND, a premium gentlemen’s club in Moscow'}</h1>
   <p class="sr-only">{t.door.hours.replace('{open}', open).replace('{close}', close)}</p>
   <div class="hv hv-door">
@@ -76,22 +71,17 @@ const starter = `(function (v) { v.poster = matchMedia('${HERO_PHONE}').matches 
     {/* the floor at the door's foot: the room's light spilling through the gap onto it; when the door is shut, the
         seam's red under it */}
     <div class="dr-floor" aria-hidden="true"><i class="dr-spill"></i><i class="dr-leak"></i></div>
-    {/* the two leaves, each with its lit edge, its half of the name and its half of the hours */}
+    {/* the two leaves, each with its lit edge and its half of the hours */}
     <div class="dr-leaf door-leaf door-leaf-l" aria-hidden="true">
       <i class="door-edge door-edge-l"></i>
-      <svg class="wall-half dr-half" viewBox={nm.box(nm.hot.width)} focusable="false">{nm.hot.paths.map((d) => <path d={d} />)}</svg>
       <span class="dr-hr">{open}</span>
     </div>
     <div class="dr-leaf door-leaf door-leaf-r" aria-hidden="true">
       <i class="door-edge door-edge-r"></i>
-      <svg class="wall-half dr-half" viewBox={nm.box(nm.land.width)} focusable="false">{nm.land.paths.map((d) => <path d={d} />)}</svg>
       <span class="dr-hr">{close}</span>
     </div>
-    {/* the door shut: the seam between the leaves, and where it crosses the L the logo's own sign (as on the 18+ door) */}
+    {/* the door shut: the seam between the leaves */}
     <i class="dr-seam" aria-hidden="true"></i>
-    <div class="dr-sign" aria-hidden="true">
-      <svg viewBox={SIGN_BOX} focusable="false" set:html={art.aura + art.sign + art.core} />
-    </div>
     {/* the wall over the door, where the header stands: the page's own ground, the header's line its lintel */}
     <div class="dr-lintel" aria-hidden="true"></div>
     <div class="hv-copy dr-copy">
@@ -212,13 +202,14 @@ const starter = `(function (v) { v.poster = matchMedia('${HERO_PHONE}').matches 
   });
 
   /* ---------- As the page moves on (with motion only): the leaves part a little further, as if you were walking
-     in, and the room dims behind them. Scrubbed with the scroll, from the hero's top to its foot. ---------- */
+     in, and the room dims behind them. Scrubbed with the scroll, from the hero's top to its foot. Only custom
+     properties are moved (--walk on the door, which hero.css adds to the leaves' place; --dim on the room): a tween
+     of the leaves themselves writes their transform inline and holds them shut, and the 18+ door measures where they
+     stand. ---------- */
   if (root.classList.contains('motion') && door) {
-    const leaves = door.querySelectorAll<HTMLElement>('.dr-leaf');
     const room = door.querySelector<HTMLElement>('.dr-room');
     const away = () => ({ trigger: door, start: 'top top', end: 'bottom top', scrub: true });
-    gsap.fromTo(leaves[0], { x: 0 }, { x: () => -innerWidth * 0.08, ease: 'none', scrollTrigger: away() });
-    gsap.fromTo(leaves[1], { x: 0 }, { x: () => innerWidth * 0.08, ease: 'none', scrollTrigger: away() });
+    gsap.fromTo(door, { '--walk': 0 }, { '--walk': 1, ease: 'none', scrollTrigger: away() });
     if (room) gsap.fromTo(room, { '--dim': 0 }, { '--dim': 0.6, ease: 'none', scrollTrigger: away() });
   }
 </script>

@@ -170,7 +170,7 @@ html.lens-in:not(.lens-vt) body::after {
    page they came from. */
 .gnext { padding: var(--sec-y) 0; background: var(--black); }
 .gnext-in { display: grid; justify-items: center; gap: 18px; text-align: center; }
-.gnext-kick { font: 400 clamp(16px, 1.2vw, 18px)/1.5 var(--sans); color: var(--fg-2); }
+.gnext-kick { font: 400 clamp(16px, 1.2vw, 18px)/1.5 var(--f-text); color: var(--fg-2); }
 /* (the site's own button, .btn: its height and its small wide capitals; only the arrow's room is its own) */
 .gnext-go { gap: 12px; padding: 0 22px 0 26px; }
 .gnext-arrow { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: square; stroke-linejoin: miter; transition: translate .4s var(--ease-out); }

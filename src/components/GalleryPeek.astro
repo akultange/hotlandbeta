@@ -42,9 +42,8 @@ const picks = ['gal-04-blue-velvet-chair', 'gal-08-over-the-shoulder', 'gal-02-d
   .filter((s): s is (typeof galleryPhotos)[number] => Boolean(s));
 const to = after ?? { id: 'models', label: ru ? 'Артистки' : 'Artists', kick: ru ? 'Дальше на\u00a0главной' : 'Next on the home page' };
 const next = { 'data-next': to.id, 'data-next-label': to.label, 'data-next-kick': to.kick };
-// the heading's and the wire's ids follow the section's, so they stay unique too
+// the heading's id follows the section's, so it stays unique too
 const titleId = `${id}-title`;
-const steelId = `${id}-steel`;
 const prints = await Promise.all(picks.map((s) => photo(s.thumb ?? s.src, '(max-width: 899px) 44vw, 18vw')));
 ---
 <section class:list={['sec gpk', { 'vx-host': choosing('gallery') }]} id={id} aria-labelledby={titleId}>
@@ -64,16 +63,7 @@ const prints = await Promise.all(picks.map((s) => photo(s.thumb ?? s.src, '(max-
   <div class="gpk-run" data-lenis-prevent-horizontal>
     <div class="gpk-line" data-gpk-line>
       <svg class="gpk-wire" viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true">
-        <defs>
-          <linearGradient id={steelId} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1000" y2="0">
-            <stop offset="0" stop-color="#5d5e63" />
-            <stop offset=".22" stop-color="#c9cace" />
-            <stop offset=".5" stop-color="#f1f1f3" />
-            <stop offset=".78" stop-color="#c9cace" />
-            <stop offset="1" stop-color="#5d5e63" />
-          </linearGradient>
-        </defs>
-        <path d="M0,0 Q500,200 1000,0" stroke={`url(#${steelId})`} />
+        <path d="M0,0 Q500,200 1000,0" />
       </svg>
       {picks.map((s, i) => (
         <a class="gpk-print" href={href} tabindex="-1" aria-hidden="true" style={`--ar:${s.ratio};--i:${i}`} {...next}>

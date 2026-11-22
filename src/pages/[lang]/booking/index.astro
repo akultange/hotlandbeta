@@ -1,8 +1,8 @@
 ---
 // The booking page. The booking itself is the full-screen dialog (Book.astro), which opens straight away here; the
-// page under it is what stays when it is closed: the three steps and their button, the table with its lamp (the
-// line art, out until the table is booked: the thanks page lights it), and beside them the call-back card and the
-// terms in short.
+// page under it is what stays when it is closed: the three steps and their button, the table with its lamp standing
+// in a case as the menu's drawings do (the line art, its lamp out until the table is booked: the thanks page lights
+// it), and beside them the call-back card and the terms in short.
 import Base from '../../../layouts/Base.astro';
 import Logo from '../../../components/Logo.astro';
 import PageTitle from '../../../components/PageTitle.astro';
@@ -38,8 +38,8 @@ import { keepShort } from '../../../data/format';
         <div class="btns">
           <button class="btn btn-crimson" type="button" data-book aria-haspopup="dialog">{ru ? 'Забронировать' : 'Book a table'}</button>
         </div>
-        <!-- the table waiting: its lamp is out (lit only when the room is, after 04:00) -->
-        <LineArt name="lamp" class="bk-page-lamp" />
+        <!-- the table waiting, in its case: its lamp is out (lit only when the room is, after 04:00) -->
+        <div class="bkp-case" aria-hidden="true"><LineArt name="lamp" class="bkp-lamp" /></div>
       </div>
       <aside class="stack" style="grid-column: 9 / span 4; gap: 56px">
         <div class="invite">
@@ -49,7 +49,7 @@ import { keepShort } from '../../../data/format';
             <div class="vx-part" data-v="contact:luka">
               <p class="t-s">{ru ? 'Удобнее по телефону или есть вопрос?' : 'Prefer to talk, or have a question?'}</p>
               <div class="btns invite-ask">
-                <!-- (frames, as in «Как нас найти»: «Забронировать» stays the page's one cuff) -->
+                <!-- (frames, as in «Как нас найти»: «Забронировать» stays the page's one main button) -->
                 <button class="btn btn-line btn-sm" type="button" data-contact="callback">{ru ? 'Заказать звонок' : 'Request a call'}</button>
                 <button class="btn btn-line btn-sm" type="button" data-contact="question">{ru ? 'Задать вопрос' : 'Ask a question'}</button>
               </div>
@@ -82,11 +82,27 @@ import { keepShort } from '../../../data/format';
   /* a computer: the three steps, their button and the table are short beside the card and the terms, so they stay
      in view, under the header, while the taller column passes (the left half of the screen is never left empty) */
   @media (min-width: 900px) and (min-height: 600px) { .bk-cta { position: sticky; top: calc(var(--hdr) + 32px); } }
-  /* the table with its lamp, under the button: as tall as the screen allows beside the steps, a little smaller on a
-     phone. Its light is the room's (--room, global.css: after 04:00); a booked table's is lit (the thanks page). */
-  .bk-cta :global(.bk-page-lamp) { width: min(100%, 340px, 40vh); margin-top: clamp(4px, 1.6vw, 24px); }
-  .bk-cta :global(.bk-page-lamp .la-light) { opacity: var(--room); transition: opacity 1.2s ease; }
-  @media (max-width: 899px) { .bk-cta :global(.bk-page-lamp) { width: min(64vw, 260px); } }
+  /* The table with its lamp, under the button, in a case of lacquer black, as the menu's drawings stand (menu.css):
+     one hairline round it, and the front edge of the floor it stands on a fine line across the case a little below
+     its foot. The case is as tall as the screen leaves under the steps, so the column that stays in view is always
+     whole; on a phone it is a little wider than tall. Its light is the room's (--room, global.css: after 04:00), and
+     with it the floor's edge catches the amber under the lamp; a booked table's is lit (the thanks page).
+     (--q: the drawing's height, as a share of the case's; --fb: how far its box runs below its foot, 447 of 500) */
+  .bkp-case {
+    --q: .76; --fb: .1052;
+    position: relative; width: 100%; height: clamp(240px, 100svh - 470px, 460px); margin-top: clamp(8px, 1.6vw, 24px);
+    overflow: hidden; background: var(--lacquer); box-shadow: inset 0 0 0 1px var(--rule);
+  }
+  .bkp-case::after {
+    content: ''; position: absolute; left: 1px; right: 1px; bottom: 12%; height: 1px; pointer-events: none;
+    background: linear-gradient(90deg, var(--rule), var(--rule-2) 34%, color-mix(in srgb, var(--amber-core) calc(var(--room) * 62%), var(--rule-2)) 50%, var(--rule-2) 66%, var(--rule));
+  }
+  .bkp-case :global(.bkp-lamp) {
+    position: absolute; left: 50%; translate: -50% 0; width: auto; height: calc(var(--q) * 100%); aspect-ratio: 440 / 500;
+    bottom: calc(19% - var(--q) * var(--fb) * 100%);
+  }
+  .bkp-case :global(.bkp-lamp .la-light) { opacity: var(--room); transition: opacity 1.2s ease; }
+  @media (max-width: 899px) { .bkp-case { height: auto; aspect-ratio: 6 / 5; } }
   /* The card beside the steps, square-cut like every plate. Its buttons stand in one column of one width: the two
      requests one under the other, the two messengers side by side under them, each half that width. (Left to wrap
      by themselves, the two requests stacked at two different widths.) */
@@ -95,4 +111,7 @@ import { keepShort } from '../../../data/format';
   .invite .btns { display: grid; gap: 10px; width: min(100%, 264px); }
   .invite .invite-msg { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .invite .btn { padding-inline: 10px; }
+  /* the terms in short are read, so they are the text face at its reading size (the shared rows set them a step
+     smaller) */
+  .fine .row .k { font-size: 16px; }
 </style>

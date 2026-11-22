@@ -30,7 +30,7 @@
 .pa-name::before, .pa-name::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--rule-2); }
 .pa-name::after { display: none; }
 .pa-cap { display: grid; justify-items: start; }
-.pa-cap .body { max-width: 62ch; }
+.pa-cap .body { max-width: 62ch; text-wrap: pretty; } /* (never one word alone on the last line: «…выбираете вы.») */
 /* the picture of an open panel (every card on a phone) leads where "Подробнее" leads; it wakes a moment
    after the panel opens, so the click that opened it doesn't also follow it */
 .pa-more::before { content: ''; position: absolute; z-index: 2; left: 0; top: 0; width: 100%; visibility: hidden; }

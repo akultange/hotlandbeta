@@ -3,8 +3,9 @@
 // The six kinds of number (pole, show ballet, burlesque, live vocals, aerial, duets) are tabs, each with its serial
 // number in the Label; the chosen one's photograph (in black and white, as every picture is until the new shoot)
 // stands beside the list and plays its film while it is on screen, and its two lines sit under the list. Between the
-// list and the stage, on a wide screen, the guest seen from behind under the laser (the line art's "shoulder"): the
-// laser follows the hour, off after four. One screen tall. Desktop: the list on the left, the picture on the right.
+// list and the stage, on a wide screen, the guest seen from behind under the laser (the line art's "shoulder"), on a
+// plate as tall as the stage, the dark of the room over him: the laser follows the hour, off after four. One screen
+// tall. Desktop: the list on the left, the picture on the right.
 // Phones: the six as a row of framed tabs to swipe, then the picture, then the words.
 import { photo } from '../data/images';
 import { type Lang, tr } from '../data/i18n';
@@ -52,7 +53,7 @@ const shots = await Promise.all(acts.map((a) => photo(media(a.img), '(max-width:
           </button>
         ))}
       </div>
-      <LineArt name="shoulder" class="shw-art" />
+      <div class="shw-art"><LineArt name="shoulder" class="shw-man" /></div>
       <div class="shw-stage">
         <div class="photo shw-photo">
           {acts.map((a, i) => (
