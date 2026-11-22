@@ -12,6 +12,7 @@ import { photo } from '../data/images';
 import { type Lang, tr } from '../data/i18n';
 import { careers } from '../data/content';
 import { site } from '../data/site';
+import { headClass } from '../data/format';
 import '../styles/casting.css';
 
 interface Props { lang: Lang }
@@ -38,7 +39,7 @@ const room = await photo('/media/casting-room.webp', '(max-width: 899px) 225vw, 
   </div>
   <div class="wrap cc-in">
     <div class="cc-txt">
-      <h2 class="t-l" id="cc-h" set:html={tr(careers.title, lang)} />
+      <h2 class={headClass(tr(careers.title, lang))} id="cc-h" set:html={tr(careers.title, lang)} />
       <p class="body">{keep(tr(careers.lead, lang))}</p>
       <ul class="cc-roles" role="list" aria-label={ru ? 'Кого мы ищем' : 'Who we’re looking for'}>
         {careers.roles.map((r, i) => (

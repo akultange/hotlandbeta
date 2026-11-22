@@ -1,17 +1,15 @@
 ---
 // «Шоу» on the home page (styles in styles/shows.css): what the artists do, as a programme to choose from.
 // The six kinds of number (pole, show ballet, burlesque, live vocals, aerial, duets) are tabs, each with its serial
-// number in the Label; the chosen one's photograph (in black and white, as every picture is until the new shoot)
-// stands beside the list and plays its film while it is on screen, and its two lines sit under the list. Between the
-// list and the stage, on a wide screen, the guest seen from behind under the laser (the line art's "shoulder"), an
-// accent: no plate and no frame (2026-11-22: a drawing alone in a tall black plate read as a picture still to come),
-// he stands at the foot of the column in the page's own dark, looking at the stage: the laser follows the hour, off
-// after four. One screen tall. Desktop: the list on the left, the picture on the right.
+// number in the Label; the chosen one's photograph (a torn print, cut.css, in the colour its own light gives it,
+// colour.css) stands beside the list and plays its film while it is on screen, and its two lines sit under the list.
+// Two parts on the page's twelve columns, one screen tall. Desktop: the list on the left, the picture on the right,
+// the larger part (2026-11-23, the client: the three columns, with the guest under the laser drawn between the list
+// and the picture, were too much and a strange layout; the drawing is gone from here).
 // Phones: the six as a row of framed tabs to swipe, then the picture, then the words.
 import { photo } from '../data/images';
 import { type Lang, tr } from '../data/i18n';
 import { acts, cast, media } from '../data/content';
-import LineArt from './LineArt.astro';
 import '../styles/shows.css';
 import { keepShort } from '../data/format';
 
@@ -22,7 +20,8 @@ const pad2 = (n: number) => String(n).padStart(2, '0');
 // a hyphenated word never breaks at its hyphen ("шоу-балет", "дресс-код")
 const nb = (s: string) => s.replace(/(\S)-(?=\S)/g, '$1\u2011');
 /** Where each number's girl has her face in her photo and film, as a share of its height from the top (the burlesque
- *  dancer's eyes above her fan, the aerialist's head in her hoop), and how much closer a desktop shows her. The frame
+ *  dancer's eyes above her fan, the aerialist's head in her hoop), and how much closer the narrowest desktop frame
+ *  shows her (from 1024px the frame is wide enough without). The frame
  *  then sets every face at one height (styles/shows.css), so the girls don't jump up and down as the numbers take
  *  turns, and no one's eyes are cut off on a phone. */
 const focus: Record<string, { face: number; zoom?: number }> = {
@@ -37,7 +36,8 @@ const focusOf = (img: string) => {
   const f = focus[img];
   return f ? `--face:${f.face};--zoom:${f.zoom ?? 1}` : undefined;
 };
-const shots = await Promise.all(acts.map((a) => photo(media(a.img), '(max-width: 899px) 96vw, 42vw')));
+// (the picture: the screen's width on a phone; seven of the twelve columns from 1024px, six under that)
+const shots = await Promise.all(acts.map((a) => photo(media(a.img), '(max-width: 899px) 96vw, (max-width: 1023px) 48vw, min(54vw, 780px)')));
 ---
 <section class="sec shw" id="show" aria-labelledby="shw-title" data-shw>
   <div class="wrap">
@@ -56,7 +56,14 @@ const shots = await Promise.all(acts.map((a) => photo(media(a.img), '(max-width:
           </button>
         ))}
       </div>
-      <div class="shw-art"><LineArt name="shoulder" class="shw-man" /></div>
+      {/* (the words right after their tabs, for a screen reader; the picture last, placed by the grid) */}
+      <div class="shw-panels">
+        {acts.map((a, i) => (
+          <div class="shw-panel" role="tabpanel" id={`shw-p${i}`} aria-labelledby={`shw-t${i}`} tabindex="0" hidden={i !== 0}>
+            <p class="body" set:html={keepShort(nb(tr(a.text, lang)), lang)} />
+          </div>
+        ))}
+      </div>
       <div class="shw-stage">
         <div class="photo shw-photo">
           {acts.map((a, i) => (
@@ -66,13 +73,6 @@ const shots = await Promise.all(acts.map((a) => photo(media(a.img), '(max-width:
             </div>
           ))}
         </div>
-      </div>
-      <div class="shw-panels">
-        {acts.map((a, i) => (
-          <div class="shw-panel" role="tabpanel" id={`shw-p${i}`} aria-labelledby={`shw-t${i}`} tabindex="0" hidden={i !== 0}>
-            <p class="body" set:html={keepShort(nb(tr(a.text, lang)), lang)} />
-          </div>
-        ))}
       </div>
     </div>
   </div>

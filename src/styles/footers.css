@@ -8,20 +8,22 @@
    ===================================================================== */
 
 /* ---------- The closing invitation's drawing ----------
-   The card (.cta-card, global.css) holds the words on the left and, on the right, the table that is waiting: a low
-   round table with its lamp lit, in chalk on lacquer (LineArt "lamp"; its amber is lit at any hour: the table is
-   yours). It took the place of a photograph: champagne before the stage, with guests' faces in the room behind. It
-   hangs as the drawings on the site's other pages hang (about.css, .ab-plate: the chair, the door, the car): an
-   architect's sheet, lacquer inside one hairline, a mat of air round the drawing and a fine mark in each corner, in
-   the shirt white of the drawing's own details (45%), painted, two hairlines a corner. Inside the card's own line it
-   reads as a drawing mounted in its frame. The drawing stands a little above the panel's middle, the way a table is
-   seen from the door, and fills most of the panel's width, so the lamp's pool of light is the one warm thing on the
-   screen; on a phone the panel stands above the words. */
+   The card (.cta-card, global.css) holds the words on the left and, on the right, the guest at his table, in chalk
+   on lacquer (LineArt "guest", 2026-11-23, the client's wish): the low table set for him with its lamp lit amber (lit
+   at any hour: the table is yours), the man in a dark suit standing by it, seen from behind, and between them the
+   logo's needle as a seam of red light in the back wall, caught on the table's edge, his glass and his shoulder.
+   When the card comes into view the pen draws it, then the needle is struck, then the lamp comes on (lineart.css).
+   It hangs as the drawings on the site's other pages hang (about.css, .ab-plate: the chair, the door, the car): an
+   architect's sheet, lacquer inside one hairline, a fine mark in each corner, in the shirt white of the drawing's
+   own details (45%), painted, two hairlines a corner. The scene fills the sheet, with only a narrow mat of air round
+   it, so it carries its half of the card (a small drawing in a large black frame reads as a placeholder); on a
+   phone the sheet stands above the words, the drawing its full width. Before it stood the table and its lamp alone
+   (LineArt "lamp"), and before that a photograph: champagne before the stage, guests' faces in the room behind. */
 .cta-art {
   --mark: color-mix(in srgb, var(--shirt) 45%, transparent);
   --arm: clamp(10px, 1.1vw, 16px);
   display: grid; place-items: center; min-width: 0;
-  min-height: clamp(300px, 37cqw, 520px); padding: clamp(28px, 3.4cqw, 48px) 16px clamp(36px, 4.4cqw, 60px);
+  min-height: clamp(300px, 37cqw, 520px); padding: clamp(12px, 1.8cqw, 26px);
   background:
     linear-gradient(var(--mark), var(--mark)) 0 0 / var(--arm) 1px no-repeat,
     linear-gradient(var(--mark), var(--mark)) 0 0 / 1px var(--arm) no-repeat,
@@ -34,10 +36,10 @@
     var(--lacquer);
   box-shadow: inset 0 0 0 1px var(--rule);
 }
-.cta-lamp { width: min(80%, 460px); }
+.cta-guest { width: 100%; height: 100%; }
 @media (max-width: 899px) {
-  .cta-art { order: -1; min-height: 0; padding: 30px 16px 24px; }
-  .cta-lamp { width: min(66%, 300px); }
+  .cta-art { order: -1; min-height: 0; padding: 12px; }
+  .cta-guest { height: auto; }
 }
 
 /* ---------- The surface ----------
@@ -124,9 +126,9 @@
 .fv4-nav { display: grid; grid-template-columns: minmax(0, 1fr); border-top: 1px solid var(--rule); }
 .fv4-nav a {
   position: relative; display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 56px; border-bottom: 1px solid var(--rule);
-  font: 500 clamp(20px, 1.6vw, 24px)/1.1 var(--f-text); letter-spacing: -.015em; color: var(--fg);
+  font: 500 var(--item)/1.15 var(--f-text); letter-spacing: -.012em; color: var(--fg);
 }
-.fv4-nav a::after { content: '→'; font: 400 16px/1 var(--f-text); color: var(--steel-hi); transition: translate .45s var(--ease-out); }
+.fv4-nav a::after { content: ''; display: inline-block; vertical-align: middle; flex: none; width: 22px; height: 11px; background: var(--steel-hi); -webkit-mask: var(--arrow) center / 100% 100% no-repeat; mask: var(--arrow) center / 100% 100% no-repeat; transition: translate .45s var(--ease-out); }
 @media (hover: hover) { .fv4-nav a:hover::after { translate: 5px 0; } }
 
 /* the small print: still the text face at its reading size (16px; the site's .label is 14px), the 18+ mark and
@@ -150,7 +152,7 @@
   .fv4-main { grid-template-columns: 1fr; padding: 32px 0 36px; }
   .fv4-stage { padding: 4px 0 8px; }
   .fv4-card { width: min(100%, 440px); }
-  .fv4-nav a { min-height: 52px; font-size: 21px; }
+  .fv4-nav a { min-height: 52px; }
   .fv4-bottom { flex-direction: column; align-items: flex-start; gap: 12px; padding-bottom: 8px; }
 }
 /* (smaller phones: the icon a little closer to its words; the smallest: one way to a row, where two to a row would

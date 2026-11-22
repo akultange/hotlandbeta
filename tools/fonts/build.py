@@ -4,9 +4,9 @@ Google's stylesheet held up the first paint (another server to reach before anyt
 alone pulled in a 300 KB "latin-ext" file. Here the faces come from the site itself, under the SIL Open Font License
 (Google's own fonts, which the Fontsource packages mirror).
 
-The faces of «Между» (2026-11-21): four voices from two fonts.
+The faces of «Между» (2026-11-21; three voices since 2026-11-23): two fonts.
   Inter Tight          Text: everything a guest reads, 400 and 500.
-  Roboto Flex          Poster and Dial: the big voices. Its widths (25 to 151) and weights (100 to 1000) stay
+  Roboto Flex          Dial: the big voice (page names, section headings, numbers). Its widths (25 to 151) and weights (100 to 1000) stay
                        variable; its optical size is set to 144, the drawing for display sizes. (Roboto Flex changes
                        a great deal with optical size: at 14, its narrowest width is barely narrow and its hairline
                        is a text weight. The approved board was drawn at 144 for everything big, so that is the cut.)
@@ -14,8 +14,9 @@ The faces of «Между» (2026-11-21): four voices from two fonts.
                        font cut once more at the optical size of small type (14), at the one width (40) and weight
                        (600) the voice uses, so it is a single small file.
 Roboto Flex's other axes (grade, slant and the parametric ones) are set to their defaults.
-Geologica and Geologica Sharp (the faces of the burgundy site, until 2026-11-20) stay buildable and their files stay
-in public/fonts while pages move off them; no page preloads them any more.
+(Geologica and Geologica Sharp, the faces of the burgundy site until 2026-11-20, were taken out on 2026-11-23: no part
+used them.) The Dial's faces wait for their file (font-display: block; the first screen preloads them): in a
+stand-in a hairline condensed title came up heavy and wide, then jumped. The text and the Label show at once (swap).
 
 Each face comes in two files per alphabet: a core with every letter and sign the pages use today (the Russian
 alphabet; plain Latin, the digits and the punctuation in use, and the ruble sign, moved in from Google's latin-ext
@@ -23,11 +24,11 @@ file), and the rest of that alphabet in a second file, fetched only by a page th
 bar menu's Moët). The core is what a page needs; at a third lighter, the first screen comes sooner.
 
 Run it again only to change the fonts:
-  cd tools/fonts && npm i @fontsource-variable/inter-tight @fontsource-variable/roboto-flex @fontsource-variable/geologica --no-save --prefix .
+  cd tools/fonts && npm i @fontsource-variable/inter-tight @fontsource-variable/roboto-flex --no-save --prefix .
   python3 build.py [face ...]     (needs fonttools and brotli: pip install fonttools brotli)
 (--prefix . keeps the packages in tools/fonts/node_modules, out of the site's own node_modules.)
 With no names it rebuilds every face whose package is installed. With names (the files' stems: inter-tight,
-roboto-flex, roboto-flex-label, geologica, geologica-sharp) it rebuilds only those, and every other face keeps its
+roboto-flex, roboto-flex-label) it rebuilds only those, and every other face keeps its
 files and its rules exactly as they are, so a new face doesn't reissue the others under new names.
 It writes public/fonts/*.woff2 (named by their contents, so they can be cached for good), src/styles/fonts.css, and
 the files to preload into src/data/fonts.json (Base.astro picks the ones the first screen needs).
@@ -69,12 +70,6 @@ FACES = [
      {'wght': (100, 400, 1000), 'wdth': (25, 100, 151)}, {'opsz': 144}),
     ('Roboto Flex Label', 'roboto-flex', 'roboto-flex-{}-full-normal', 'roboto-flex-label',
      {}, {'opsz': 14, 'wdth': 40, 'wght': 600}),
-    # Two families cut from the one font: the text's (soft joints, SHRP 0) and the titles' (cut sharp, SHRP 100), so
-    # a rule only has to name its family; nothing depends on font-variation-settings, which the font shorthand resets.
-    ('Geologica', 'geologica', 'geologica-{}-full-normal', 'geologica',
-     {'wght': (300, 400, 600)}, {'CRSV': 0, 'slnt': 0, 'SHRP': 0}),
-    ('Geologica Sharp', 'geologica', 'geologica-{}-full-normal', 'geologica-sharp',
-     {'wght': (300, 400, 700)}, {'CRSV': 0, 'slnt': 0, 'SHRP': 100}),
 ]
 
 
@@ -201,7 +196,7 @@ def face(family, file, rng, keep, pins):
     return ('@font-face {\n'
             f"  font-family: '{family}';\n  font-style: normal;\n  font-weight: {weight};\n"
             + (f'  font-stretch: {stretch};\n' if stretch else '')
-            + f"  font-display: swap;\n  src: url('/fonts/{file}') format('woff2');\n  unicode-range: {rng};\n}}")
+            + f"  font-display: {'block' if family == 'Roboto Flex' else 'swap'};\n  src: url('/fonts/{file}') format('woff2');\n  unicode-range: {rng};\n}}")
 
 
 def current():
@@ -263,9 +258,10 @@ def main(names):
                 out.append(face(family, file, CORE[part] if out is core_css else as_range(cps), keep, pins))
     head = ['/* The site\'s web fonts, served by the site itself (tools/fonts/build.py writes this file and public/fonts).',
             '   Per face and alphabet: the core (what the pages use) and the rest (fetched only where a page uses it).',
-            '   Inter Tight is the text; Roboto Flex (cut at the optical size for display) is the Poster and the Dial;',
-            '   Roboto Flex Label (cut at the optical size of small type, one width and weight) is the Label. Geologica and',
-            '   Geologica Sharp stay for parts not yet moved off them. */']
+            '   Inter Tight is the text; Roboto Flex (cut at the optical size for display) is the Dial; Roboto Flex Label (cut at',
+            '   the optical size of small type, one width and weight) is the Label. The Dial waits for its own face (font-display:',
+            '   block, a moment at most: the first screen preloads it) where the text and the Label show at once in a stand-in:',
+            '   in Arial a hairline condensed title came up heavy and wide, then jumped to the Dial. */']
     with open(CSS, 'w', encoding='utf-8', newline='\n') as f:
         f.write('\n'.join(head + core_css + rest_css) + '\n')
     with open(JSON, 'w', encoding='utf-8', newline='\n') as f:

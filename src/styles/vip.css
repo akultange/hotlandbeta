@@ -1,78 +1,144 @@
-/* The club's cards (MemberCards.astro): three cards on the navy cloth. Loaded after global.css (Base.astro). The
-   classes are the component's own (vfield, vdeck, vtier, vcard), so the older .mem-card rules in global.css (Motion)
-   don't reach them; the motion is in the component.
-   «Между», 2026-11-21: the burgundy field with its dots, the brushed-steel card, the bordeaux lacquer, the glare and
-   the band of light that crossed the metal are gone. The field is the suit's cloth, the cards are a black-on-black
-   set (cloth, blackened steel, black nappa with its seam of red light), and the only light on them is the logo's
-   needle and that seam. */
+/* The club's cards (MemberCards.astro): one card at a time, of metal, on the steel field. Loaded after global.css
+   (Base.astro). The classes are the component's own (vfield, vstage, vtabs, vdeck, vcard, vpanel), so the older
+   .mem-card rules in global.css (Motion) don't reach them; the motion is in the component.
+   2026-11-23, at the client's word: the navy cloth behind the cards is gone, stripe and twill, and the field is the
+   «Выдержка 18» card's own steel (global.css .cloth). The section is one large card with the three tiers as tabs over
+   it, the other two cards fanned behind it, and its words beside it. The cards are three finishes of metal, a step
+   darker with each age: 12 brushed steel, 18 blackened steel bead-blasted (as it was), 25 black metal polished to a
+   mirror, with its seam of red light. Each has a bright machined edge and a sheen across its face that moves a little
+   as the card leans under the pointer. No colour but the logo's needle and that seam; no glare, no gloss; square
+   corners. (2026-11-21 the burgundy field, the old brushed-steel card with its glare and the bordeaux lacquer went;
+   until 2026-11-23 the three stood side by side in charcoal cloth, blackened steel and black nappa.) */
 
-/* ---------- The field: a panel of the navy cloth (global.css .cloth), square, in one hairline ---------- */
+/* the pointer's place over a card, -1 to 1 across and down (MemberCards.astro sets it as the card leans): the sheen
+   and the edge's glint follow it, eased like the lean itself */
+@property --vc-sx { syntax: '<number>'; inherits: true; initial-value: 0; }
+@property --vc-sy { syntax: '<number>'; inherits: true; initial-value: 0; }
+
+/* ---------- The field: a panel of the steel (global.css .cloth), square, in one hairline ---------- */
 .vfield {
   --vf-x: clamp(20px, 3.9vw, 64px);
-  /* the materials' grain, drawn (no pictures to fetch): a fine speckle for the bead-blasted steel, a sparse pebble
-     for the nappa */
-  --grain-fine: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 .4 0 0 0 -.19'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
-  --grain-pebble: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 .13 0 0 0 -.055'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
   position: relative; isolation: isolate; overflow: hidden; overflow: clip;
   /* the air above and below follows the screen's height too, so a wide, low laptop screen still holds the field */
   padding: clamp(28px, min(3.4vw, 5vh), 52px) var(--vf-x) clamp(30px, min(3.1vw, 4.6vh), 48px);
+  /* (the hairline round it; its top edge, catching the light, is the steel's own: .cloth) */
   box-shadow: inset 0 0 0 1px var(--rule);
 }
-/* (in a section that is cloth already, the membership page's, the field paints nothing of its own: one cloth, one
-   stripe; the row to swipe on a phone then runs to the screen's edges) */
+/* (in a section that is the steel already, the membership page's, the field paints nothing of its own: one plate) */
 .cloth .vfield { --vf-x: var(--pad); padding: 0; background: none; box-shadow: none; overflow: visible; }
 /* (the page's heading for the cards stands inside the field, over them: MemberCards.astro, slot "head") */
-.vfield > .bighead { margin-bottom: clamp(24px, 3vw, 44px); }
+.vfield > .bighead { margin-bottom: var(--head-gap); } /* (every heading row’s gap) */
 
-/* ---------- The three cards, each with its words under it ---------- */
-.vdeck { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px clamp(20px, 2.6vw, 44px); }
-.vtier { display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+/* ---------- The stage: the tiers as tabs; under them the chosen card, large, the other two fanned behind it; beside
+   it what that card gives. Wide screens: the card on the left, its words on the right. ---------- */
+.vstage {
+  display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); grid-template-areas: "tabs tabs" "deck panel";
+  column-gap: clamp(40px, 5.6vw, 96px); row-gap: clamp(24px, 2.6vw, 40px); align-items: center;
+}
+/* the tabs: plain words in the Label's capitals on one hairline, the chosen one in shirt white over a line of the
+   light (global.css .tabs, .tabs-ink), as the menu page sets its own; each word a finger's height and a little wider
+   than itself to the touch. Without scripts there are none: the words of all three cards stand one under another. */
+.vtabs { grid-area: tabs; min-width: 0; background: linear-gradient(var(--rule-2), var(--rule-2)) 0 100% / 100% 1px no-repeat; }
+.vtabs .tabs { display: flex; gap: clamp(28px, 3vw, 44px); padding: 0; overflow: visible; background: none; box-shadow: none; }
+.vtabs .tabs button { height: 52px; padding: 0; font-size: 13px; }
+.vtabs .tabs button::before { content: ''; position: absolute; inset: 0 -14px; }
+.vtabs .tabs button:focus-visible { outline-offset: 6px; }
+html:not(.js) .vtabs { display: none; }
 
-/* the card: a holder that is dealt (GSAP) and a face inside it that leans (--rx, --ry). The face is set as a club
+/* the deck: the chosen card in front, flat; the other two behind it, each a step higher, a little to the right,
+   smaller and turned a degree or two more, so their top edges fan out over it like a hand of cards; and a little
+   darker, as further from the light. Which card lies where is its slot (MemberCards.astro sets it and plays the move
+   between two). The room over the card holds the fan; the page scrolls up and down under a finger on it, and a swipe
+   across it is the deck's. */
+.vdeck { grid-area: deck; position: relative; min-width: 0; padding-top: 9.5%; touch-action: pan-y; }
+.vdeck-in { position: relative; isolation: isolate; aspect-ratio: 1.586; }
+
+/* the card: a holder that lies in its slot and a face inside it that leans (--rx, --ry). The face is set as a club
    card: which card it is at its head, the club's logo at its foot on the left, the member's number at its foot on
-   the right. One hairline of light round its edge, a little brighter along the top, so the black ones stand off the
-   cloth; a soft shadow under it, as under any card lying on cloth. */
-.vcard { position: relative; aspect-ratio: 1.586; perspective: 900px; }
+   the right. Over its metal, a sheen (::before) and a machined edge (::after); a soft shadow under it, as under any
+   card lying on a table. */
+.vcard { position: absolute; inset: 0; perspective: 1400px; transform-origin: 50% 100%; transition: filter .5s ease; }
+.vcard[data-slot="0"] { z-index: 3; }
+.vcard[data-slot="1"] { z-index: 2; transform: translate(2.2%, -8.5%) rotate(1.6deg) scale(.968); filter: brightness(.86); }
+.vcard[data-slot="2"] { z-index: 1; transform: translate(4.4%, -17%) rotate(3.2deg) scale(.936); filter: brightness(.74); }
+html.js .vcard:not([data-slot="0"]) { cursor: pointer; }
+/* (the cards behind show their metal and its edge, not their small print, which would stand sliced at their top) */
+.vcard :is(.vcard-tier, .vcard-no, .vcard-logo) { transition: opacity .4s ease; }
+.vcard:not([data-slot="0"]) :is(.vcard-tier, .vcard-no, .vcard-logo) { opacity: 0; }
 .vcard-in {
   --vc-ink: rgba(236, 236, 232, .82);   /* the card's small print */
+  /* the machined edge: the top bevel, where the light falls; the sides; the foot, turned away from the light. Each
+     finish sets its own. */
+  --edge-top: .5; --edge-side: .14; --edge-foot: rgba(0, 0, 0, .4);
   position: absolute; inset: 0; overflow: hidden; isolation: isolate; container-type: inline-size;
   background-color: var(--graphite);
   transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
-  transition: transform .7s var(--ease-out), box-shadow .5s ease;
-  box-shadow: inset 0 0 0 1px rgba(236, 236, 232, .1), inset 0 1px 0 rgba(236, 236, 232, .16), 0 30px 50px -30px rgba(0, 0, 0, .95), 0 6px 14px -6px rgba(0, 0, 0, .55);
+  transition: transform .7s var(--ease-out), box-shadow .5s ease, --vc-sx .7s var(--ease-out), --vc-sy .7s var(--ease-out);
+  box-shadow: 0 30px 50px -30px rgba(0, 0, 0, .95), 0 6px 14px -6px rgba(0, 0, 0, .55);
 }
 .vcard.tilting .vcard-in {
-  transition: transform .12s linear, box-shadow .3s ease;
-  box-shadow: inset 0 0 0 1px rgba(236, 236, 232, .1), inset 0 1px 0 rgba(236, 236, 232, .16), 0 40px 64px -30px rgba(0, 0, 0, .95), 0 8px 18px -8px rgba(0, 0, 0, .55);
+  transition: transform .12s linear, box-shadow .3s ease, --vc-sx .12s linear, --vc-sy .12s linear;
+  box-shadow: 0 40px 64px -30px rgba(0, 0, 0, .95), 0 8px 18px -8px rgba(0, 0, 0, .55);
 }
-/* the three finishes, black on black. Silver: charcoal cloth, a chalk stripe every few millimetres and the twill
-   under it, the light falling off from the top. */
-.vtier-cloth .vcard-in {
-  background-color: #17181b;
+/* the sheen: the finish's band of light across the face (--vc-band) and the light from above. As the card leans, the
+   band slides against the pointer, as a reflection does when the metal turns, and the top takes a little more light
+   as it tips back towards the lamp. */
+.vcard-in::before {
+  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background-image: var(--vc-band, none), linear-gradient(180deg, rgba(255, 255, 255, calc(.03 * (1 - var(--vc-sy)))), transparent 55%);
+  background-size: 260% 100%, auto;
+  background-position: calc(50% + var(--vc-sx) * 12%) 0, 0 0;
+  background-repeat: no-repeat;
+}
+/* the machined edge: a hairline of bright metal round the face, brightest along the top, with a glint on it that
+   slides with the sheen; the sides fading down to the foot */
+.vcard-in::after {
+  content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, calc(var(--edge-top) * (1 - var(--vc-sy) * .3))) calc(34% - var(--vc-sx) * 14%), rgba(255, 255, 255, .1)) top / 100% 1px no-repeat,
+    linear-gradient(180deg, rgba(255, 255, 255, var(--edge-side)), rgba(255, 255, 255, calc(var(--edge-side) * .5)) 60%, var(--edge-foot)) left / 1px 100% no-repeat,
+    linear-gradient(180deg, rgba(255, 255, 255, var(--edge-side)), rgba(255, 255, 255, calc(var(--edge-side) * .5)) 60%, var(--edge-foot)) right / 1px 100% no-repeat,
+    linear-gradient(var(--edge-foot), var(--edge-foot)) bottom / 100% 1px no-repeat;
+}
+/* the three finishes, a step darker with each age.
+   Выдержка 12: brushed steel. Long fine lines drawn across it (two layers of stretched noise, one lighter, one
+   darker: nothing to fetch), the steel a shade lighter where the brushing catches the light, and its band of light
+   standing across the lines, as it does on brushed metal. */
+.vcard-brushed .vcard-in {
+  --edge-top: .62; --edge-side: .2; --edge-foot: rgba(0, 0, 0, .45);
+  --vc-band: linear-gradient(100deg, transparent 31%, rgba(255, 255, 255, .05) 41%, rgba(255, 255, 255, .1) 47.5%, rgba(255, 255, 255, .045) 54%, transparent 65%);
+  --brush-hi: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='360'%3E%3Cfilter id='b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.002 .9' numOctaves='3' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 .4 0 0 0 -.19'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23b)'/%3E%3C/svg%3E");
+  --brush-lo: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='360'%3E%3Cfilter id='b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.002 .9' numOctaves='3' seed='9' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -.4 0 0 0 .21'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23b)'/%3E%3C/svg%3E");
+  background-color: #36393e;
   background-image:
-    linear-gradient(180deg, rgba(236, 236, 232, .06), transparent 42%, rgba(0, 0, 0, .3)),
-    repeating-linear-gradient(90deg, rgba(236, 236, 232, .075) 0 1px, transparent 1px 3.4cqw),
-    repeating-linear-gradient(135deg, rgba(255, 255, 255, .022) 0 1px, transparent 1px 3px);
+    linear-gradient(180deg, rgba(255, 255, 255, .04), transparent 45%, rgba(0, 0, 0, .26)),
+    var(--brush-hi), var(--brush-lo),
+    linear-gradient(100deg, #2e3135, #3d4045 42%, #35383d 72%, #2b2e32);
+  background-size: auto, 720px 360px, 720px 360px, auto;
 }
-/* Black: blackened steel, bead-blasted to a fine matte grain, one bright edge along the top */
-.vtier-steel .vcard-in {
+/* Выдержка 18: blackened steel, bead-blasted to a fine matte grain (--grain-fine, the field's: global.css .cloth),
+   its band of light broad and soft, as on any matte metal */
+.vcard-blasted .vcard-in {
+  --edge-top: .4; --edge-side: .11; --edge-foot: rgba(0, 0, 0, .5);
+  --vc-band: linear-gradient(108deg, transparent 20%, rgba(255, 255, 255, .035) 36%, rgba(255, 255, 255, .08) 47%, rgba(255, 255, 255, .035) 58%, transparent 74%);
   background-color: #1c1e21;
   background-image:
-    linear-gradient(180deg, rgba(236, 236, 232, .26) 0 1px, transparent 1px),
-    linear-gradient(162deg, rgba(255, 255, 255, .07), transparent 46%, rgba(0, 0, 0, .34)),
+    linear-gradient(162deg, rgba(255, 255, 255, .06), transparent 46%, rgba(0, 0, 0, .34)),
     var(--grain-fine);
-  background-size: auto, auto, 180px 180px;
+  background-size: auto, 180px 180px;
 }
-/* Bordeaux: black nappa, its soft pebble catching a little light, and its seam (below) */
-.vtier-nappa .vcard-in {
-  background-color: #0b0b0c;
+/* Выдержка 25: black metal polished to a mirror. The light lies on it as clean reflections, a broad one and a thin
+   one beside it, sharp at their edges, as on a flat mirror (never a rounded gloss); and its seam (below) */
+.vcard-polished .vcard-in {
+  --edge-top: .5; --edge-side: .12; --edge-foot: rgba(255, 255, 255, .05);
+  --vc-band: linear-gradient(112deg, transparent 40.6%, rgba(255, 255, 255, .085) 40.9%, rgba(255, 255, 255, .05) 44%, rgba(255, 255, 255, .03) 46.6%, transparent 46.9%, transparent 48.4%, rgba(255, 255, 255, .026) 48.6%, rgba(255, 255, 255, .026) 49.6%, transparent 49.8%);
+  background-color: #08080a;
   background-image:
-    linear-gradient(158deg, rgba(255, 255, 255, .055), transparent 40%, rgba(0, 0, 0, .4)),
-    var(--grain-pebble);
-  background-size: auto, 220px 220px;
+    linear-gradient(180deg, rgba(255, 255, 255, .03), transparent 30%),
+    linear-gradient(160deg, #121316, #060607 62%);
 }
-/* the nappa's seam: a welt stitched down the card, its middle a line of the red light (the club's own, at any hour,
-   like the logo's needle), the stitches either side of it in thread */
+/* the seam of Выдержка 25: a channel milled down the polished face with a line of the red light in it (the club's
+   own, at any hour, like the logo's needle); the channel's lips catch the light, its walls fall into shadow */
 .vcard-seam { position: absolute; z-index: 1; top: -1px; bottom: -1px; left: 64%; width: 13px; translate: -50% 0; pointer-events: none; }
 .vcard-seam::before {
   content: ''; position: absolute; top: 0; bottom: 0; left: 6px; width: 1px;
@@ -82,13 +148,13 @@
 .vcard-seam::after {
   content: ''; position: absolute; inset: 0;
   background:
-    repeating-linear-gradient(180deg, rgba(236, 236, 232, .16) 0 3px, transparent 3px 7px) 0 0 / 1px 100% no-repeat,
-    repeating-linear-gradient(180deg, rgba(236, 236, 232, .16) 0 3px, transparent 3px 7px) 100% 0 / 1px 100% no-repeat;
+    linear-gradient(90deg, rgba(236, 236, 232, .16) 0 1px, rgba(0, 0, 0, .7) 1px 2px, transparent 2px),
+    linear-gradient(270deg, rgba(236, 236, 232, .09) 0 1px, rgba(0, 0, 0, .7) 1px 2px, transparent 2px);
 }
 /* at its head, which card it is: the Label, small */
 .vcard-tier {
   position: absolute; z-index: 2; left: 7%; top: 10%;
-  font: var(--label-wght) 11px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase;
+  font: var(--label-wght) clamp(11px, 2cqw, 13px)/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase;
   color: var(--vc-ink);
 }
 /* at its foot on the left, the club's logo as the club drew it (Logo.astro), its needle kept close to the name */
@@ -97,22 +163,38 @@
    it in the Label, level with the figures' top */
 .vcard-no {
   position: absolute; z-index: 2; right: 7%; bottom: 10%; display: flex; align-items: flex-start; gap: 1.6cqw;
-  font-family: var(--f-flex); font-weight: 140; font-stretch: var(--dial-wdth); font-size: 16cqw; line-height: .74;
+  font-family: var(--f-flex); font-weight: var(--dial-wght); font-stretch: var(--dial-wdth); font-size: 16cqw; line-height: .74;
   font-variant-numeric: tabular-nums lining-nums; color: var(--vc-ink);
 }
-.vcard-no span { font: var(--label-wght) 10px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); }
+.vcard-no span { font: var(--label-wght) clamp(10px, 1.8cqw, 12px)/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); }
 
-/* the entrance (MemberCards.astro): out of sight until the component takes over (.vf-ready), and back on
+/* the entrance (MemberCards.astro): the stage out of sight until the component takes over (.vf-ready), and back on
    its own after a few seconds should the component never start */
 @keyframes vf-show { to { opacity: 1; } }
-html.motion .vfield:not(.vf-ready) :is(.vcard, .vtier-body) { opacity: 0; animation: vf-show .3s ease 3.5s both; }
+html.motion .vfield:not(.vf-ready) :is(.vtabs, .vdeck, .vpanels) { opacity: 0; animation: vf-show .3s ease 3.5s both; }
 
-/* the words under the card, set close; the buttons line up along the bottom of the three */
-.vtier-body { display: flex; flex-direction: column; align-items: flex-start; margin-top: clamp(18px, 1.6vw, 24px); }
-.vtier .card-title { font: 500 var(--sub)/1.1 var(--f-text); letter-spacing: -.012em; }
-.vtier-sub { margin-top: 4px; font: 400 16px/1.45 var(--f-text); color: var(--fg-2); }
-.vtier .lily-list { gap: 6px; margin-top: 14px; line-height: 1.5; color: var(--fg); text-wrap: balance; }
-.vtier-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 10px clamp(14px, 1.4vw, 22px); margin-top: auto; padding-top: clamp(18px, 1.5vw, 22px); }
+/* ---------- What the chosen card gives, beside it: what it is, what comes with it, the request and the price ----------
+   The three share one place, so the tallest holds it and nothing under them moves when the tier changes; the chosen
+   one rises in. Without scripts, the three stand one under another, each under its card's name. */
+.vpanels { grid-area: panel; display: grid; align-items: center; min-width: 0; }
+.vpanel { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; }
+html.js .vpanel { grid-area: 1 / 1; }
+html.js .vpanel:not(.is-on) { visibility: hidden; opacity: 0; pointer-events: none; }
+html:not(.js) .vpanel + .vpanel { margin-top: 44px; }
+@keyframes vp-in { from { opacity: 0; translate: 0 12px; } }
+@media (prefers-reduced-motion: no-preference) {
+  html.js .vpanel.is-on { animation: vp-in .6s var(--ease-out) both; }
+}
+.vpanel-name {
+  margin-bottom: 12px;
+  font: var(--label-wght) 12px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase;
+  color: var(--ash);
+}
+html.js .vpanel-name { display: none; }
+/* what the card is, in the text face, large; what comes with it under it */
+.vpanel-h { font: 500 var(--item)/1.15 var(--f-text); letter-spacing: -.012em; color: var(--fg); text-wrap: balance; }
+.vpanel .lily-list { gap: 10px; margin-top: clamp(18px, 1.8vw, 26px); font-size: var(--lead); line-height: 1.5; color: var(--fg); text-wrap: pretty; }
+.vtier-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 12px clamp(16px, 1.6vw, 24px); margin-top: clamp(26px, 2.6vw, 40px); }
 .vtier-foot .btn { flex: none; }
 /* the price, in the Label as prices are */
 .vtier-price {
@@ -120,66 +202,38 @@ html.motion .vfield:not(.vf-ready) :is(.vcard, .vtier-body) { opacity: 0; animat
   color: var(--ash);
 }
 
-/* ---------- Tablets and phones: a row to swipe, the next card showing at the edge, a meter under it ---------- */
-.vmeter { display: none; align-items: center; gap: 14px; margin-top: 18px; }
-.vmeter-bar { position: relative; flex: 1; height: 1px; background: var(--rule-2); overflow: hidden; }
-.vmeter-bar i { position: absolute; top: 0; bottom: 0; left: 0; width: var(--w, 38%); background: var(--shirt); translate: var(--x, 0%) 0; }
-.vmeter-n {
-  min-width: 56px; text-align: right;
-  font: var(--label-wght) 12px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track);
-  color: var(--fg-2); font-variant-numeric: tabular-nums;
-}
-@media (max-width: 1023px) {
-  .vdeck {
-    grid-template-columns: none; grid-auto-flow: column; gap: 16px;
-    margin-inline: calc(-1 * var(--vf-x)); padding: 0 var(--vf-x) 8px;
-    overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory; scroll-padding-inline: var(--vf-x); scrollbar-width: none;
-  }
-  .vdeck::-webkit-scrollbar { display: none; }
-  /* the card peeking in fades at the right; room after the last card, so it comes to rest at the start too. The
-     card's width is taken from the screen (the panel spans the page column), not from the row's own box, which
-     that end room changes. */
-  .vdeck {
-    --vd-card: min(calc(100vw - 2 * var(--pad) - 2 * var(--vf-x) - 28px), 336px);
-    grid-auto-columns: var(--vd-card);
-    -webkit-mask-image: var(--peek-fade); mask-image: var(--peek-fade);
-    padding-inline-end: calc(100vw - 2 * var(--pad) - var(--vf-x) - var(--vd-card));
-  }
-  /* (a field that is the section itself: the row's edges are the screen's) */
-  .cloth .vfield .vdeck {
-    --vd-card: min(calc(100vw - 2 * var(--pad) - 28px), 336px);
-    padding-inline-end: calc(100vw - var(--pad) - var(--vd-card));
-  }
-  .vtier { scroll-snap-align: start; }
-  /* the next card peeks in as a clean edge of its plate: its words and its small print wait unseen until it is
-     the card in front (MemberCards.astro marks it), so nothing is ever sliced mid-word at the screen's edge */
-  .vfield.vf-ready .vtier :is(.vtier-body, .vcard-tier, .vcard-no, .vcard-logo) { transition: opacity .35s ease; }
-  .vfield.vf-ready .vtier:not(.is-front) :is(.vtier-body, .vcard-tier, .vcard-no, .vcard-logo) { opacity: 0; }
-  .vtier-body { margin-top: 18px; }
-  .vtier .lily-list { margin-top: 10px; }
-  .vtier-foot { padding-top: 16px; }
-  html.js .vmeter { display: flex; }
+/* ---------- Tablets and phones: the tabs, the card under them, its words under it ---------- */
+@media (max-width: 899px) {
+  .vstage { grid-template-columns: minmax(0, 1fr); grid-template-areas: "tabs" "deck" "panel"; row-gap: 22px; align-items: start; }
+  .vdeck { width: min(100%, 540px); }
+  /* (the fan a little narrower: the card is as wide as the column, and the cards behind stay inside the screen) */
+  .vcard[data-slot="1"] { transform: translate(1.4%, -8.5%) rotate(1.2deg) scale(.968); }
+  .vcard[data-slot="2"] { transform: translate(2.8%, -17%) rotate(2.4deg) scale(.936); }
 }
 @media (max-width: 699px) {
   .vfield { --vf-x: 20px; padding-top: 24px; padding-bottom: 22px; }
   .cloth .vfield { --vf-x: var(--pad); padding: 0; }
-  .vdeck { gap: 14px; }
 }
-/* a wide, low screen (a 720px laptop): the cards a little flatter, so the cards, their lists and their buttons
-   all stand on one screen under the header */
-@media (min-width: 1024px) and (max-height: 760px) {
-  .vcard { aspect-ratio: 1.9; }
+/* a phone: the three tabs across the field, edge to edge */
+@media (max-width: 599px) {
+  .vtabs .tabs { width: 100%; justify-content: space-between; gap: 12px; overflow-x: auto; }
+  .vtabs .tabs button { height: 48px; font-size: 12px; }
+  .vtier-foot { margin-top: 24px; }
 }
-@media (prefers-reduced-motion: reduce) { .vcard-in { transition: none; } }
+/* a wide, low screen (a 720px laptop): the card a little smaller, so the tabs, the card and its words stand on one
+   screen under the header */
+@media (min-width: 900px) and (max-height: 760px) {
+  .vstage { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); }
+}
+@media (prefers-reduced-motion: reduce) { .vcard, .vcard-in, .vcard :is(.vcard-tier, .vcard-no, .vcard-logo) { transition: none; } }
 
-/* ---------- The membership page (membership/index.astro): the cloth the whole width of the page ----------
-   The page's name is the cards' heading, so the cloth starts close under it and holds its own air. At the cloth's
+/* ---------- The membership page (membership/index.astro): the steel the whole width of the page ----------
+   The page's name is the cards' heading, so the steel starts close under it and holds its own air. At the steel's
    foot, under a hairline, the two things a member carries in: the card, with the way to ask for one, and the cuff and
    watch, with the dress code. Each is a line of words with its drawing beside it (LineArt.astro), small and with no
-   frame: the chalk lies on the suit's own cloth, the way a tailor marks it. Side by side on a wide screen, one under
-   the other on a phone. (Until 2026-11-22 each drawing hung large in a plate of its own, and read as a picture still
-   to come; the line art is the site's accent, never its pictures.) */
+   frame, straight on the metal like an engraving. Side by side on a wide screen, one under the other on a phone.
+   (Until 2026-11-22 each drawing hung large in a plate of its own, and read as a picture still to come; the line art
+   is the site's accent, never its pictures.) */
 .ptitle + .sec.cloth.mem-suit { margin-top: clamp(40px, 5vw, 80px); padding-top: clamp(48px, 5.6vw, 96px); }
 .mem-notes {
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px var(--gap);
@@ -190,7 +244,7 @@ html.motion .vfield:not(.vf-ready) :is(.vcard, .vtier-body) { opacity: 0; animat
 .mem-cap { display: grid; justify-items: start; gap: 8px; min-width: 0; }
 /* what it is, quietly, in the text face; then what to know, larger */
 .mem-k { font: 400 15px/1.4 var(--f-text); color: var(--ash); }
-.mem-v { font: 500 clamp(21px, 1.7vw, 28px)/1.18 var(--f-text); letter-spacing: -.014em; color: var(--fg); text-wrap: balance; }
+.mem-v { font: 500 var(--item)/1.15 var(--f-text); letter-spacing: -.012em; color: var(--fg); text-wrap: balance; }
 .mem-cap .lnk { margin-top: 12px; }
 @media (max-width: 899px) {
   .mem-notes { grid-template-columns: minmax(0, 1fr); }

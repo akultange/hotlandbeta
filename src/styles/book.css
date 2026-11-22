@@ -52,7 +52,7 @@ html.bk-lock { overflow: hidden; background: var(--lacquer); } /* (the window's 
 .bk-count input {
   box-sizing: border-box; width: calc(3ch + 28px); height: 88px; margin: 0; padding: 0;
   border: 0; border-bottom: 1px solid var(--rule-2); border-radius: 0; background: none; color: var(--fg); text-align: center;
-  font: 200 104px/1 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; caret-color: var(--lit);
+  font: var(--dial-wght) 104px/1 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; caret-color: var(--lit);
   appearance: textfield; -moz-appearance: textfield; transition: border-color .3s ease;
 }
 .bk-count input::-webkit-inner-spin-button, .bk-count input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }

@@ -46,6 +46,31 @@ html.motion .la.la-in:not(.la-done) :is(.la-shade, .la-light) { animation: la-up
 @keyframes la-pen { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @keyframes la-up { from { opacity: 0; } }
 
+/* ---------- The club's needle (the closing card's drawing, "guest") ----------
+   A drawing with the logo's needle in it (its light grouped as .la-needle, then .la-warm) lights in turn once the
+   pen is done, as the door's sign does: the needle is struck at the floor (its foot and the L's spur catch first,
+   it falters once, then runs up the joint), its glow flares and settles, and its light comes onto what stands near
+   it (.la-catch); then the room's own light, the lamp's amber (.la-warm). After that the needle's glow breathes, very
+   slowly, while it is in sight (LineArt.astro sets .la-off when it is not), in small steps a few times a second, so
+   it asks for little drawing. Each piece is one animation of one property on its own element. With less motion
+   asked for, or without the draw-in, it is all simply lit and still (the flare stays dark: it exists only to
+   flare). LineArt.astro gives such a drawing longer before .la-done. */
+html.motion .la.la-in:not(.la-done) .la-light:has(> .la-needle) { animation: none; }
+html.motion .la.la-in:not(.la-done) .la-needle .la-foot { animation: la-up .5s ease-out 1.4s both; }
+html.motion .la.la-in:not(.la-done) .la-needle .la-flick { animation: la-flick .5s linear 1.45s both; }
+html.motion .la.la-in:not(.la-done) .la-needle .la-blade { transform-box: fill-box; transform-origin: 50% 100%; animation: la-strike .7s cubic-bezier(.6, 0, .2, 1) 1.75s both; }
+html.motion .la.la-in:not(.la-done) .la-needle .la-aura { animation: la-up 1.1s ease-out 1.95s both; }
+html.motion .la.la-in:not(.la-done) .la-needle .la-flare { animation: la-flare 1.5s ease-out 2.05s both; }
+html.motion .la.la-in:not(.la-done) .la-needle .la-catch { animation: la-up 1s ease-out 2.25s both; }
+html.motion .la.la-in:not(.la-done) .la-warm { animation: la-up 1.3s ease-in-out 3.1s both; }
+html.motion .la.la-in .la-needle .la-breath { animation: la-breath 8s steps(16) 4.4s infinite; }
+html.motion .la.la-off .la-needle .la-breath { animation-play-state: paused; }
+@keyframes la-flick { 0% { opacity: 0; } 20% { opacity: 1; } 38% { opacity: .15; } 60%, 100% { opacity: 1; } }
+@keyframes la-strike { from { transform: scaleY(.04); } }
+@keyframes la-flare { 0% { opacity: 0; } 30% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes la-breath { 0%, 100% { opacity: 1; } 25%, 75% { opacity: .85; } 50% { opacity: .7; } }
+
 /* (printed, or in a high-contrast mode, every drawing is complete and its line takes the system's colour) */
 @media print { html.motion .la > * { opacity: 1 !important; animation: none !important; } }
+@media print { html.motion .la .la-light * { animation: none !important; } }
 @media (forced-colors: active) { .la .la-s { stroke: CanvasText; } }

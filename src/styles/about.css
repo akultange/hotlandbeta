@@ -36,7 +36,7 @@ html.motion [data-rise]:not(.is-in) { opacity: 0; }
 /* a room: its serial number in the Label, its name in the text face, one line under it; a hairline above each */
 .ab-room { display: grid; gap: 6px; padding: clamp(14px, 1.5vw, 20px) 0; border-top: 1px solid var(--rule); }
 .ab-room:first-child { border-top-color: var(--rule-2); }
-.ab-room dt { display: flex; align-items: baseline; gap: 14px; font: 500 clamp(20px, 1.64vw, 25px)/1.1 var(--f-text); letter-spacing: -.01em; color: var(--fg); }
+.ab-room dt { display: flex; align-items: baseline; gap: 14px; font: 500 var(--item)/1.15 var(--f-text); letter-spacing: -.012em; color: var(--fg); }
 .ab-room-n { flex: none; width: 2.4em; font: var(--label-wght) 12px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); color: var(--steel-hi); font-variant-numeric: tabular-nums lining-nums; }
 .ab-room dd { margin: 0 0 0 calc(2.4 * 12px + 14px); font: 400 16px/1.5 var(--f-text); color: var(--fg-2); text-wrap: pretty; }
 /* phones and tablets: the photograph, then the rooms under it */
@@ -62,7 +62,7 @@ html.motion [data-rise]:not(.is-in) { opacity: 0; }
   font: var(--dial-wght) clamp(64px, 5.4vw, 88px)/.8 var(--f-flex); font-stretch: var(--dial-wdth);
   font-variant-numeric: tabular-nums lining-nums; color: var(--fg);
 }
-.ab-rule-t { font: 500 clamp(20px, 1.64vw, 25px)/1.06 var(--f-text); letter-spacing: -.01em; color: var(--fg); }
+.ab-rule-t { font: 500 var(--item)/1.15 var(--f-text); letter-spacing: -.012em; color: var(--fg); }
 .ab-rule-x { max-width: 40ch; font: 400 16px/1.6 var(--f-text); color: var(--fg-2); text-wrap: pretty; }
 .ab-nw { white-space: nowrap; }
 /* phones and tablets: the door first, under the heading, then the four rules */
@@ -101,7 +101,7 @@ html.motion [data-rise]:not(.is-in) { opacity: 0; }
   transform: scaleX(0); transform-origin: 0 50%; transition: transform .45s var(--ease-io);
 }
 .ab-way-ic { width: 24px; height: 24px; margin-bottom: 16px; fill: none; stroke: var(--steel-hi); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; transition: stroke .3s ease; }
-.ab-way-k { font: 500 clamp(17px, 1.39vw, 21px)/1.1 var(--f-text); letter-spacing: -.01em; }
+.ab-way-k { font: 500 var(--item-s)/1.25 var(--f-text); letter-spacing: -.01em; }
 /* words break only where a line may: between words, or after the @ of the address */
 .ab-way-v { margin-top: 6px; font: 400 15px/1.45 var(--f-text); color: var(--ash); font-variant-numeric: lining-nums; overflow-wrap: normal; text-wrap: balance; transition: color .3s ease; }
 .ab-way:active { scale: .98; }

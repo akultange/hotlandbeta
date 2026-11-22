@@ -59,7 +59,7 @@ const requestSteps = [
     <div class="wrap">
       <div class="g12">
         <div class="occ-words">
-          <h2 class="t-l" id="occ-in-h" set:html={ru ? 'Что входит <em>в&nbsp;праздник</em>' : 'What comes <em>with a party</em>'} />
+          <h2 class="t-l" id="occ-in-h" set:html={ru ? 'Что входит <em>в&nbsp;праздник</em>' : 'What’s <em>included</em>'} />
           <div class="rows">
             {parties.included.map((x, i) => <div class="row num"><span class="n">0{i + 1}</span><span class="k">{keep(tr(x, lang))}</span><span></span></div>)}
           </div>

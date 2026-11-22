@@ -32,7 +32,7 @@ export const houseRules: L[] = [
 export type Act = { time: string; title: L; text: L; img: string; imgPhone: string; film: string; filmPhone: string; alt: L };
 
 export const night = {
-  title: { ru: 'Одна ночь в четырёх актах', en: 'One night in four acts' } as L,
+  title: { ru: 'Ночь в\u00a0четырёх актах', en: 'A\u00a0night in\u00a0four acts' } as L, // (three words to the Dial: a preposition, an article, holds to its word)
   lead: { ru: 'Двери открываются в 22:00. Потом ужин, два шоу и бар до утра. Антракт можно взять когда угодно.', en: 'Doors open at 22:00. Then dinner, two shows and the bar until morning. Take an interval whenever you like.' } as L,
   acts: [
     {
@@ -110,21 +110,19 @@ export const g = (n: number) => gallery[n - 1];
 
 export const eventsLead: L = { ru: 'Особые вечера только по\u00a0брони. Выберите вечер, и\u00a0менеджер подтвердит ваш стол.', en: 'Special nights are by reservation only. Choose a night and your manager will confirm your table.' };
 
-/** (Since 2026-11-21 the posters are set in type and show no photograph: img, loop, alt, zoom, drop and pos wait for
- *  the new shoot, and say how the poster framed its photo until then.)
+/** Each night's poster shows its photograph, img (with its alt), and plays its short film, loop, over it
+ *  (PosterCard.astro; since 2026-11-23 again, after two days of posters set in type alone).
  *  zoom and drop: how much closer the poster frames its photo and film, and how far it lowers them (% of the poster's
  *  height; the black at the top of the shot fades into the poster; a negative drop raises them), so the girl stands as
  *  big and as low as on the other posters. Courchevel's shot is wider than the rest, with her face high up.
  *  pos: which part of a photo taller than the poster shows (CSS object-position, photo and film alike; the posters
- *  show the top of the shot unless told otherwise), for a girl who stands lower in her photo than the others do.
- *  light: the beam across the night's poster (PosterCard.astro): red, the stage's light (the default), or amber, the
- *  room's (candles, the bar until morning). */
-export type Event = { slug: string; date: string; title: L; text: L; entry: number; dress?: L; zoom?: number; drop?: number; pos?: string; light?: 'red' | 'amber' } & Shot & { loop: string };
+ *  show the top of the shot unless told otherwise), for a girl who stands lower in her photo than the others do. */
+export type Event = { slug: string; date: string; title: L; text: L; entry: number; dress?: L; zoom?: number; drop?: number; pos?: string } & Shot & { loop: string };
 
 export const events: Event[] = [
   // the coming nights (placeholders until the club confirms them; moved from November to December on 2026-11-14)
   {
-    slug: 'courchevel', date: '2026-12-11', entry: 3000, zoom: 1.2, drop: 18, light: 'amber',
+    slug: 'courchevel', date: '2026-12-11', entry: 3000, zoom: 1.2, drop: 18,
     title: { ru: 'Courchevel', en: 'Courchevel' },
     text: { ru: 'Альпийская ночь: белый мех и ледяное шампанское до утра.', en: 'An Alpine night: white fur and iced champagne until morning.' },
     img: 'poster-2-courchevel.webp', loop: 'poster-2-courchevel-loop.mp4',
@@ -139,7 +137,7 @@ export const events: Event[] = [
     alt: { ru: 'Velvet: артистка в бархатном корсете и длинных перчатках на фоне багрового занавеса', en: 'Velvet: an artist in a velvet corset and opera gloves before a crimson curtain' },
   },
   {
-    slug: 'ritual', date: '2026-12-13', entry: 3500, light: 'amber',
+    slug: 'ritual', date: '2026-12-13', entry: 3500,
     title: { ru: 'Ritual', en: 'Ritual' },
     text: { ru: 'Фирменная ночь HOTLAND: свечи и маски. О ней потом не рассказывают.', en: 'HOTLAND’s signature night: candles and masks. Nobody talks about it afterwards.' },
     img: 'poster-3-ritual.webp', loop: 'poster-3-ritual-loop.mp4',
@@ -209,7 +207,7 @@ export const zones: ({ title: L; text: L; book: 'table' | 'card' | 'lounge'; cta
 /* ---------- Parties ---------- */
 
 export const parties = {
-  title: { ru: 'Ваш праздник, <em>ваш сценарий</em>', en: 'Your party, <em>your script</em>' } as L,
+  title: { ru: 'Ваш праздник, <em>ваш\u00a0сценарий</em>', en: 'Your party, <em>your\u00a0script</em>' } as L, // (two lines in the Dial, as «Ваш стол уже ждёт»)
   lead: { ru: 'Повод ваш, остальное на нас: банкет, напитки, шоу-программа и менеджер от первого звонка до машины домой.', en: 'The occasion is yours, the rest is ours: the banquet, the drinks, the show and a manager from the first call to the car home.' } as L,
   included: [
     { ru: 'Банкетное меню нашей кухни', en: 'A banquet menu from our kitchen' },
@@ -424,7 +422,7 @@ export const visit = {
 /* ---------- Careers ---------- */
 
 export const careers = {
-  title: { ru: 'Собираем <em>первый состав</em>', en: 'Hiring <em>the first team</em>' } as L,
+  title: { ru: 'Собираем <em>первый состав</em>', en: 'Hiring <em>the\u00a0first team</em>' } as L,
   lead: { ru: 'HOTLAND открывается, и мы собираем команду: артисток, хостес, бар и зал. Расскажите о себе, портфолио пригодится.', en: 'HOTLAND is opening, and we are hiring the first team: artists, hostesses, the bar and the floor. Tell us about yourself; a portfolio helps.' } as L,
   roles: [
     { ru: 'Артистки шоу', en: 'Show artists' },

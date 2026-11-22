@@ -104,7 +104,7 @@
 .ts-name { font: 500 clamp(27px, 2.25vw, 36px)/1.05 var(--f-text); letter-spacing: -.012em; transition: color .3s; }
 /* the price is the point: the Dial */
 .ts-price {
-  font: 160 clamp(56px, 4.4vw, 72px)/.82 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums;
+  font: var(--dial-wght) clamp(56px, 4.4vw, 72px)/.82 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums;
   white-space: nowrap; padding-right: .04em; color: var(--fg);
 }
 .ts-what { margin-top: 10px; font: 400 16px/1.55 var(--f-text); color: var(--fg-2); max-width: 38ch; text-wrap: pretty; }

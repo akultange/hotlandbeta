@@ -113,7 +113,7 @@ const steps = ru ? ['Роль', 'Как связаться', 'Пара слов 
   .cr-shot img { object-position: var(--at, 50% 50%); transform-origin: var(--at, 50% 50%); transform: scale(var(--zoom, 1)); }
   /* (a role's number is a serial number: the Label; its way in, a control: the Label too, the arrow in steel) */
   .cr-n { font: var(--label-wght) 12px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); color: var(--steel-hi); font-variant-numeric: lining-nums tabular-nums; }
-  .cr-k { font: 500 clamp(16px, 1.45vw, 21px)/1.2 var(--f-text); text-wrap: balance; }
+  .cr-k { font: 500 var(--item-s)/1.25 var(--f-text); text-wrap: balance; } /* (a name in a small card: the text face's item-s) */
   .cr-go { grid-column: 2; display: inline-flex; align-items: center; gap: 8px; margin-top: 2px; font: var(--label-wght) 12px/1.2 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase; color: var(--fg-2); transition: color .3s ease, gap .3s var(--ease-out); }
   .cr-go i { font: 400 14px/1 var(--f-text); font-style: normal; letter-spacing: 0; color: var(--steel-hi); }
   @media (hover: hover) {
@@ -133,19 +133,20 @@ const steps = ru ? ['Роль', 'Как связаться', 'Пара слов 
   /* ---------- Applying ----------
      The invitation's card (global.css, .cta-card) with this page's words: the title a step smaller than the
      invitation's (its first word is longer), the three steps as a short ruled row, the two buttons. */
-  /* (the card's title is a section's heading here, not the page's name: the text face, as every section's) */
-  .cr-apply .cta-h { font-size: clamp(30px, 5.5cqw, 76px); font-weight: 500; }
+  /* (the card's title is a section's heading here, not the page's name: the Dial at a section heading's size and
+     weight, global.css .t-l, and its two halves on one line, never a word to a line) */
+  .cr-apply .cta-h { font-size: var(--dial-head); font-weight: var(--dial-head-wght); }
+  .cr-apply .cta-h :global(em) { display: inline; }
   .cr-apply-head { display: grid; gap: clamp(12px, 1.6cqw, 20px); }
   .cr-apply-head .lead { max-width: 30ch; text-wrap: pretty; }
   .cr-steps { list-style: none; margin: 0; padding: 0; width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 clamp(10px, 1.6cqw, 20px); }
   .cr-steps li { display: grid; align-content: start; gap: 10px; padding-top: 14px; border-top: 1px solid var(--rule-2); font: 400 16px/1.35 var(--f-text); color: var(--fg); }
   /* (a step's number: the Dial, as the watch's hours are; never under 44px and a touch apart, or its narrow 0 and 1
      run together into two bars) */
-  .cr-steps span { font: 200 clamp(44px, 4cqw, 56px)/.8 var(--f-flex); font-stretch: var(--dial-wdth); letter-spacing: .05em; color: var(--fg); font-variant-numeric: lining-nums tabular-nums; }
+  .cr-steps span { font: var(--dial-num-s-wght) var(--dial-num-s)/.8 var(--f-flex); font-stretch: var(--dial-wdth); letter-spacing: .05em; color: var(--fg); font-variant-numeric: lining-nums tabular-nums; }
   /* (the dressing room: the mirror and its bulbs stand in the picture's right half, the free chair to their left) */
   .cr-apply .cta-shot img { object-position: 86% 50%; transform: none; }
   @media (max-width: 899px) {
-    .cr-apply .cta-h { font-size: clamp(30px, 12cqw, 64px); }
     .cr-apply .cta-shot img { object-position: 80% 50%; }
   }
 </style>

@@ -1,11 +1,11 @@
 ---
-// Membership and parties. «Между»: the cards stand on the suit's own cloth (global.css .cloth, the navy with its chalk
-// stripe), the whole width of the page, and at the cloth's foot the two things a member carries in, each a line of
-// words with its drawing in chalk beside it, small, straight on the cloth like a tailor's mark (LineArt.astro): the
-// card, with the way to ask for one, and the cuff and watch, with the dress code. (Until 2026-11-22 the two drawings
-// hung large, each in a plate of its own, and read as pictures still to come.) Then the club's rooms, a plain list
-// beside a photograph of the hall (Zones.astro), and the parties. Styles: styles/vip.css (the cards and this page's
-// cloth), styles/zones.css, styles/parties.css.
+// Membership and parties. «Между»: the cards stand on a plate of blackened steel, bead-blasted (global.css .cloth: until
+// 2026-11-23 the navy cloth with its chalk stripe), the whole width of the page, and at the plate's foot the two things
+// a member carries in, each a line of words with its drawing beside it, small, straight on the metal like an engraving
+// (LineArt.astro): the card, with the way to ask for one, and the cuff and watch, with the dress code. (Until
+// 2026-11-22 the two drawings hung large, each in a plate of its own, and read as pictures still to come.) Then the
+// club's rooms, a plain list beside a photograph of the hall (Zones.astro), and the parties. Styles: styles/vip.css
+// (the cards and this page's steel), styles/zones.css, styles/parties.css.
 import Base from '../../../layouts/Base.astro';
 import PageTitle from '../../../components/PageTitle.astro';
 import MemberCards from '../../../components/MemberCards.astro';
@@ -42,7 +42,7 @@ const description = ru
     <a class="btn btn-crimson" href={request}>{tr(vip.request, lang)}</a>
   </PageTitle>
 
-  <!-- 01 The cards, on the navy cloth (the suit section); at its foot the two things a member carries in -->
+  <!-- 01 The cards, on the steel (the section is the plate); at its foot the two things a member carries in -->
   <section class="sec cloth mem-suit">
     <div class="wrap">
       <MemberCards lang={lang} />

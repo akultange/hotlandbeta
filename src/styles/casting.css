@@ -64,9 +64,10 @@ html:not(.motion) :is(.cc-bulb, .cc-spill) { opacity: 1; }
 }
 .cc-txt { display: grid; justify-items: start; gap: clamp(18px, 1.8vw, 26px); width: min(600px, 48%); }
 .cc-txt .t-l { margin: 0; text-wrap: balance; }
-.cc-txt .body { max-width: 46ch; font-size: clamp(16px, 1.15vw, 18px); color: var(--fg-2); }
-/* the roles, each a link: its name over a 1px underline that catches the light (as a link in running text does),
-   three across (two below a laptop's width). Each
+.cc-txt .body { max-width: 56ch; font-size: var(--lead); color: var(--fg-2); } /* (every lead’s size and measure) */
+/* the roles, each a link: its name and, after it, the drawn arrow in steel that every way on carries (the footer’s rows,
+   the heading rows’ buttons), which moves on and lights under the pointer (until 2026-11-23 an underline: the client
+   asked for no more underlined links standing in for buttons), three across (two below a laptop's width). Each
    column is as wide as its widest name and the gap between columns is the same, so the roles stand evenly spaced
    whatever their names' lengths (equal columns left «Официанты» a whole column away from short «Хостес»). The last
    role, when it falls in the middle column («Менеджеры зала», the longest), runs on across the empty cell beside it,
@@ -81,12 +82,13 @@ html:not(.motion) :is(.cc-bulb, .cc-spill) { opacity: 1; }
 .cc-role {
   /* (the padding and the margin that takes it back: a 44px touch area round one line of text) */
   display: inline-flex; align-items: center; padding: 12px 0; margin: -10px 0;
-  font: 500 17px/1.25 var(--f-text); color: var(--fg);
+  font: 500 var(--item-s)/1.25 var(--f-text); color: var(--fg);
   transition: color .25s ease;
 }
-.cc-role span { text-decoration: underline 1px; text-decoration-color: var(--rule-2); text-underline-offset: .32em; transition: text-decoration-color .25s ease; }
+.cc-role::after { content: ''; flex: none; width: 22px; height: 11px; margin-left: 12px; background: var(--steel-hi); -webkit-mask: var(--arrow) center / 100% 100% no-repeat; mask: var(--arrow) center / 100% 100% no-repeat; transition: translate .45s var(--ease-out), background-color .25s ease; }
 .cc-role:hover, .cc-role:focus-visible { color: #fff; }
-.cc-role:hover span, .cc-role:focus-visible span { text-decoration-color: var(--lit); }
+.cc-role:hover::after, .cc-role:focus-visible::after { translate: 5px 0; background-color: var(--lit); }
+@media (prefers-reduced-motion: reduce) { .cc-role::after { transition: background-color .25s ease; } .cc-role:hover::after, .cc-role:focus-visible::after { translate: none; } }
 .cc-txt .btns { margin-top: 10px; }
 
 /* ---------- Phones: the room on top, the words under it ---------- */

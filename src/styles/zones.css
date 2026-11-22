@@ -23,11 +23,11 @@
 }
 .zone-no {
   grid-area: no;
-  font: var(--dial-wght) clamp(56px, 5.6vw, 88px)/.8 var(--f-flex); font-stretch: var(--dial-wdth);
+  font: var(--dial-num-s-wght) var(--dial-num-s)/.8 var(--f-flex); font-stretch: var(--dial-wdth); /* (a number in a row, as the times and the prices) */
   font-variant-numeric: tabular-nums lining-nums; color: var(--fg);
 }
-.zone-name { grid-area: name; font: 500 clamp(24px, 2.1vw, 32px)/1.12 var(--f-text); letter-spacing: -.015em; color: var(--fg); transition: color .3s ease; }
-.zone-text { grid-area: text; font: 400 clamp(16px, 1.15vw, 18px)/1.5 var(--f-text); color: var(--fg-2); max-width: 40ch; text-wrap: pretty; }
+.zone-name { grid-area: name; font: 500 var(--item)/1.15 var(--f-text); letter-spacing: -.012em; color: var(--fg); transition: color .3s ease; }
+.zone-text { grid-area: text; font: 400 16px/1.6 var(--f-text); color: var(--fg-2); max-width: 40ch; text-wrap: pretty; }
 .zone-go { grid-area: go; justify-self: end; align-self: center; white-space: nowrap; }
 /* the link answers for its whole row (its touch area is the row, on any pointer) */
 .zones .zone .zone-go { position: static; }
@@ -56,9 +56,6 @@
 /* a phone: the number on the left; the name, its line and the link under one another beside it */
 @media (max-width: 599px) {
   .zone.row { grid-template-columns: 40px minmax(0, 1fr); grid-template-areas: "no name" "no text" "no go"; align-items: start; column-gap: 14px; }
-  /* (under 40px the hairline breaks up on a phone: at this size the Dial takes 200) */
-  .zone-no { font-size: 54px; font-weight: 200; }
-  .zone-name { font-size: 22px; padding-top: 2px; }
-  .zone-text { font-size: 16px; }
+  .zone-name { padding-top: 2px; }
   .zone-go { justify-self: start; align-self: start; margin-top: 8px; }
 }

@@ -7,23 +7,36 @@
    - black and white with the club's red kept (the filter #keep-red in Base.astro): the pictures where red is the
      light or the colour that matters (red smoke, curtains, velvet, the red coat, the red stage, candles, the mask);
    - black and white (the site's --grade): everything else, the blue, purple and pink neon among it.
-   It works by setting --grade on the frame that holds the picture, so every rule that paints with --grade (the
-   shared frames, the gallery's prints, the artists' stage, the table sets) follows, and a film playing over its
+   It works by setting --grade on the frame that holds the picture (its direct parent, and any of the shared frames
+   it stands in, however deep: a frame inside a frame takes the same treatment, or the outer one would grey the
+   inner one's colour), so every rule that paints with --grade (the shared frames, the gallery's prints, the
+   artists' stage, the table sets) follows, and a film playing over its
    photograph takes the same treatment. A new picture is black and white until its name joins a list below.
    ===================================================================== */
 
 /* in colour */
-:has(> :is(img, video):is(
+:is(
+  :has(> :is(img, video):is(
   [src*="night-1-2200-doors"], [src*="night-2-2330-first-show"], [src*="night-3-0130-second-show"], [src*="night-4-0600-till-morning"],
   [src*="party-1-birthday"], [src*="party-2-bachelor"], [src*="party-2-whisky"], [src*="party-3-corporate"],
   [src*="gallery-11-champagne-tower"], [src*="gallery-07-glove-champagne"], [src*="gal-03-on-the-bar"],
   [src*="gallery-02-backstage-mirror"], [src*="gallery-08-hostess-door"], [src*="gallery-09-singer"], [src*="gallery-12-staircase"],
   [src*="contacts-door"], [src*="casting-room"], [src*="careers"], [src*="hookah-lounge"],
   [src*="set-1-classic"], [src*="set-2-premier"]
-)) { --grade: saturate(.9) contrast(1.04); }
+)),
+  :is(.photo, .pt-frame, .cw, .ptitle-media, .film-media, .poster-shot, .gxd-ph, .graded):has(:is(img, video):is(
+  [src*="night-1-2200-doors"], [src*="night-2-2330-first-show"], [src*="night-3-0130-second-show"], [src*="night-4-0600-till-morning"],
+  [src*="party-1-birthday"], [src*="party-2-bachelor"], [src*="party-2-whisky"], [src*="party-3-corporate"],
+  [src*="gallery-11-champagne-tower"], [src*="gallery-07-glove-champagne"], [src*="gal-03-on-the-bar"],
+  [src*="gallery-02-backstage-mirror"], [src*="gallery-08-hostess-door"], [src*="gallery-09-singer"], [src*="gallery-12-staircase"],
+  [src*="contacts-door"], [src*="casting-room"], [src*="careers"], [src*="hookah-lounge"],
+  [src*="set-1-classic"], [src*="set-2-premier"]
+))
+) { --grade: saturate(.9) contrast(1.04); }
 
 /* black and white, the red kept */
-:has(> :is(img, video):is(
+:is(
+  :has(> :is(img, video):is(
   [src*="artist-2-burlesque"], [src*="artist-3-aerial"], [src*="artist-4-show-ballet"], [src*="artist-5-live-vocal"], [src*="artist-6-duets"],
   [src*="gal-01-pole-red-smoke"], [src*="gal-02-duet-red-blue"], [src*="gal-04-blue-velvet-chair"], [src*="gal-07-red-stripes"],
   [src*="gal-09-duet-curtain"], [src*="gal-10-red-light"], [src*="gal-12-corset-chair"], [src*="gal-13-blue-stripes"],
@@ -36,4 +49,23 @@
   [src*="poster-1-velvet"], [src*="poster-3-ritual"], [src*="manifesto"], [src*="invite-table"],
   [src*="bar-menu-kitchen"], [src*="bar-menu-entry"], [src*="bar-menu-bar"],
   [src*="party-4-whole-club"], [src*="set-3-crimson"]
-)) { --grade: url(#keep-red) contrast(1.08); }
+)),
+  :is(.photo, .pt-frame, .cw, .ptitle-media, .film-media, .poster-shot, .gxd-ph, .graded):has(:is(img, video):is(
+  [src*="artist-2-burlesque"], [src*="artist-3-aerial"], [src*="artist-4-show-ballet"], [src*="artist-5-live-vocal"], [src*="artist-6-duets"],
+  [src*="gal-01-pole-red-smoke"], [src*="gal-02-duet-red-blue"], [src*="gal-04-blue-velvet-chair"], [src*="gal-07-red-stripes"],
+  [src*="gal-09-duet-curtain"], [src*="gal-10-red-light"], [src*="gal-12-corset-chair"], [src*="gal-13-blue-stripes"],
+  [src*="gal-14-armchair-duet"], [src*="gal-15-behind-the-curtain"],
+  [src*="gallery-01-velvet-wall"], [src*="gallery-03-vip-sofa"], [src*="gallery-06-light-stripe"], [src*="gallery-10-aerial-silks"],
+  [src*="gallery-15-pink-champagne"], [src*="gallery-16-company"], [src*="gallery-19-red-arches"], [src*="gallery-21-flame-bar"],
+  [src*="gallery-23-eclipse"],
+  [src*="model-02-corridor"], [src*="model-03-blonde-bar"], [src*="model-04-bar-stool"], [src*="model-05-close-up"],
+  [src*="model-08-red-coat"], [src*="model-13-goth-pole"],
+  [src*="poster-1-velvet"], [src*="poster-3-ritual"], [src*="manifesto"], [src*="invite-table"],
+  [src*="bar-menu-kitchen"], [src*="bar-menu-entry"], [src*="bar-menu-bar"],
+  [src*="party-4-whole-club"], [src*="set-3-crimson"]
+))
+) { --grade: url(#keep-red) contrast(1.08); }
+
+/* Luka's hero (2026-11-22, the client's call: "hero black and white, I don't like it"): the film inside the letters,
+   and the film behind «Смотреть», play as they were shot, in colour */
+.hero { --grade: none; }

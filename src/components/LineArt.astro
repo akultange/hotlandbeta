@@ -9,9 +9,10 @@
 // proportions; its lines stay hairlines at any size. Inline SVG, no pictures to fetch. Styles: styles/lineart.css.
 //
 // The draw-in: the first time a drawing is well in view, the pen draws its lines (contour, details, reflections)
-// and the light comes up last, about a second and a half in all; only for visitors who allow motion (html.motion,
-// Base.astro), and only after the 18+ door has opened. Without scripts, with less motion asked for, or with
-// draw={false}, the drawing is complete from the start.
+// and the light comes up last, about a second and a half in all (a drawing with the club's needle in it, the closing
+// card's, lights the needle and then the room, about four seconds in all, and the needle breathes after that); only
+// for visitors who allow motion (html.motion, Base.astro), and only after the 18+ door has opened. Without scripts,
+// with less motion asked for, or with draw={false}, the drawing is complete from the start.
 import { lineArt, type LineArtName } from '../data/lineart';
 import '../styles/lineart.css';
 interface Props {
@@ -46,14 +47,15 @@ const weights = [[1, art.lines.contour], [2, art.lines.detail], [3, art.lines.hi
   const waiting = () => Array.from(document.querySelectorAll<SVGSVGElement>('svg.la[data-draw]:not(.la-in)'));
   const complete = (svg: SVGSVGElement) => svg.classList.add('la-in', 'la-done');
   // While it draws, a line is drawn in the drawing's own units: --la-u is one screen pixel in them, so it keeps the
-  // width it will have. When the pen and the light are done, it is a fixed hairline again (.la-done).
+  // width it will have. When the pen and the light are done, it is a fixed hairline again (.la-done). A drawing with
+  // the club's needle in it lights in turn after the pen (the needle, then the room: lineart.css), so it is done later.
   const drawIn = (svg: SVGSVGElement) => {
     const box = svg.viewBox.baseVal, r = svg.getBoundingClientRect();
     const px = box && box.width && r.width ? Math.min(r.width / box.width, r.height / box.height) : 0;
     if (!px) return complete(svg);
     svg.style.setProperty('--la-u', (1 / px).toFixed(4));
     svg.classList.add('la-in');
-    setTimeout(() => svg.classList.add('la-done'), 2300);
+    setTimeout(() => svg.classList.add('la-done'), svg.querySelector('.la-needle') ? 4700 : 2300);
   };
   if (root.classList.contains('motion') && waiting().length) {
     if (!('IntersectionObserver' in window)) waiting().forEach(complete);
@@ -69,6 +71,9 @@ const weights = [[1, art.lines.contour], [2, art.lines.detail], [3, art.lines.hi
         first = false;
       }, { threshold: 0.25, rootMargin: '0px 0px -6% 0px' });
       const watch = () => waiting().forEach((svg) => io.observe(svg));
+      // (a drawing whose needle breathes rests while it is out of sight: lineart.css, .la-off)
+      const rest = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('la-off', !e.isIntersecting)));
+      waiting().forEach((svg) => svg.querySelector('.la-needle') && rest.observe(svg));
       const gate = document.getElementById('gate');
       if (gate && !root.classList.contains('age-ok') && !gate.classList.contains('out')) addEventListener('hotland:gate', watch, { once: true });
       else watch();

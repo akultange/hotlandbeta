@@ -19,3 +19,9 @@ export const fullDate = (s: string, lang: Lang) =>
  *  span); use with set:html on our own copy only. */
 export const keepShort = (s: string, lang: Lang) =>
   lang !== 'ru' ? s : s.replace(/(^|\s)((?:(?:в|во|на|за|до|по|с|со|к|ко|и|а|о|у|не|ни|из|от|для|без|под)\s)+[^\s<]+)/gi, '$1<span style="white-space:nowrap">$2</span>');
+
+/** A section's heading and its voice (global.css, Type): one to three words are the Dial (.t-l), four or more read
+ *  in the text face (.t-l.long). Words are counted at ordinary spaces, so a pair held by a no-break space counts as
+ *  one ("в&nbsp;праздник"). Takes the heading as it is set, its second half in <em>. */
+export const headClass = (html: string) =>
+  html.replace(/<[^>]*>/g, ' ').trim().split(/[ \t\r\n]+/).length > 3 ? 't-l long' : 't-l';

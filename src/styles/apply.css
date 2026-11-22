@@ -114,7 +114,7 @@ html.apl-lock { overflow: hidden; background: var(--lacquer); }
   background: var(--lit-core); box-shadow: var(--seam-glow);
   transform: scaleY(0); transition: transform .4s var(--ease-io);
 }
-.apl-roles span::after { content: '→'; flex: none; font: 400 16px/1 var(--f-text); color: var(--steel-hi); transition: translate .45s var(--ease-out); }
+.apl-roles span::after { content: ''; display: inline-block; vertical-align: middle; flex: none; width: 22px; height: 11px; background: var(--steel-hi); -webkit-mask: var(--arrow) center / 100% 100% no-repeat; mask: var(--arrow) center / 100% 100% no-repeat; transition: translate .45s var(--ease-out); }
 @media (hover: hover) {
   .apl-roles label:hover input:not(:checked) + span { color: var(--fg); }
   .apl-roles label:hover span::after { translate: 5px 0; }

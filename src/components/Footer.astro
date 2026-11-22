@@ -20,9 +20,12 @@ const p = (s: string) => `/${lang}/${s}/`;
       <div class="ft-cta">
         <!-- The invitation: one card on the page's column. Its words stand in one stack on the left, the title at
              the card's head and the line with the two buttons at its foot; beside them, drawn in chalk on lacquer,
-             the table that is waiting: a low round table and its lamp, lit amber (LineArt "lamp"; styles:
-             footers.css). Until 2026-11-21 a photograph stood there, champagne before the stage with guests' faces
-             in the room behind it; the club shows the room, never its guests. -->
+             the guest at his table (LineArt "guest", 2026-11-23, the client's wish): the low table set for him, its
+             lamp lit amber, the man in a dark suit standing by it, seen from behind, and between them the logo's
+             needle as a seam of red light in the back wall. When the card comes into view the pen draws it, then the
+             needle is struck, then the lamp comes on (styles: footers.css, lineart.css). Before it, the table and
+             its lamp alone ("lamp", now on the booking pages); until 2026-11-21 a photograph, champagne before the
+             stage with guests' faces in the room behind it: the club shows the room, never its guests. -->
         <div class="cta-card">
           <div class="cta-words">
             <p class="t-xl cta-h" set:html={tr(closing.title, lang)} />
@@ -34,7 +37,7 @@ const p = (s: string) => `/${lang}/${s}/`;
               </div>
             </div>
           </div>
-          <div class="cta-art"><LineArt name="lamp" class="cta-lamp" /></div>
+          <div class="cta-art"><LineArt name="guest" class="cta-guest" /></div>
         </div>
       </div>
     )}

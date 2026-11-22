@@ -7,7 +7,7 @@
 // on screen plays. Reduced motion: the posters only. A click opens the film full screen (GalleryViewer).
 import { type Lang, tr } from '../data/i18n';
 import { galleryFilms, galleryText } from '../data/gallery';
-import { keepShort } from '../data/format';
+import { keepShort, headClass } from '../data/format';
 import '../styles/gallery.css';
 
 interface Props { lang: Lang }
@@ -24,7 +24,7 @@ const rpl = num(lastFilm.ratioPhone ?? lastFilm.ratio);
   <div class="gxf-pin">
   <div class="gxf-stage">
     <div class="wrap gxf-head">
-      <h2 class="t-l" id="gxf-h">{tr(galleryText.films, lang)}</h2>
+      <h2 class={headClass(tr(galleryText.films, lang))} id="gxf-h">{tr(galleryText.films, lang)}</h2>
       <p class="gxf-lead" set:html={keepShort(tr(galleryText.filmsLead, lang), lang)} />
     </div>
     <ul class="gxf-rail" role="list" style={`--rpl:${rpl}`}>

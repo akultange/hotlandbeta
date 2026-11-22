@@ -132,7 +132,7 @@ export const galleryText = {
   title: { ru: 'Галерея', en: 'Gallery' } as L,
   description: { ru: 'Фото и фильмы из HOTLAND: сцена, артистки, бар и ночь до утра. В зале не снимают, остальное только вживую.', en: 'Photographs and films from HOTLAND: the stage, the artists, the bar and the night until morning. No cameras inside: the rest, in person only.' } as L,
   photos: { ru: 'Фото', en: 'Photos' } as L,
-  films: { ru: 'Фильмы ночи', en: 'Films of the night' } as L,
+  films: { ru: 'Фильмы ночи', en: 'Films of\u00a0the night' } as L,
   filmsLead: { ru: 'Короткие сцены из клуба, от дверей до утра. Любую можно открыть на весь экран.', en: 'Short scenes from the club, from the doors until morning. Any of them opens full screen.' } as L,
   /** The page's last word before the footer's invitation. */
   end: { ru: 'Остальное только вживую: в\u00a0зале не\u00a0снимают.', en: 'The rest, in person only: no cameras inside.' } as L,

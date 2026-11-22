@@ -32,10 +32,11 @@ figure.vs-fig .vs-plate {
 /* (the car no wider than its lines stay fine at: past about a thousand pixels the band only grows taller) */
 .vs-car { width: min(100%, 1000px); margin-inline: auto; }
 
-/* ---------- The address: clear and big, but no bigger than the heading's company ---------- */
+/* ---------- The address: the sub-heading under the section's heading (the text face at 500, a step under the
+   Dial heading above it, never as large: 2026-11-23) ---------- */
 .vs-addr {
   max-width: 100%;
-  font: 500 clamp(26px, 2.6vw, 42px)/1.08 var(--f-text); letter-spacing: -.012em; color: var(--fg);
+  font: 500 var(--item)/1.1 var(--f-text); letter-spacing: -.012em; color: var(--fg);
   text-wrap: balance;
 }
 .vs-street { padding-right: .02em; }
@@ -82,7 +83,7 @@ figure.vs-fig .vs-plate {
      street never breaks (no-break spaces, Visit.astro), so it is set no larger than fits the screen: --len letters
      at about .57em each. The lines stand far enough apart that the street's tails (у, р, the comma inside it)
      clear the city's capitals. */
-  .vs-addr { font-size: min(clamp(30px, 9vw, 44px), calc((100vw - 2 * var(--pad)) / (var(--len, 18) * .57))); line-height: 1.1; }
+  .vs-addr { font-size: min(var(--item), calc((100vw - 2 * var(--pad)) / (var(--len, 18) * .57))); line-height: 1.15; }
   .vs-city { display: block; }
   .vs-sep { display: none; }
   .vs-fact { grid-template-columns: 6.6em minmax(0, 1fr); gap: 12px; padding: 12px 0; }

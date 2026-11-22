@@ -25,7 +25,9 @@
   /* (a page's name is the Dial: narrow enough that a quarter of the screen's height still fits the longest word) */
   .t-xl { font-size: clamp(72px, 24svh, 120px); }
   .t-xxl { font-size: clamp(80px, 28svh, 136px); }
-  .t-l { font-size: clamp(28px, 8svh, 40px); }
+  /* (a section's heading is the Dial too, at the size it has on an upright phone; a long one is the text face) */
+  .t-l { font-size: clamp(48px, 13svh, 60px); }
+  .t-l.long { font-size: clamp(28px, 8svh, 40px); }
   .btn { height: 46px; padding: 0 22px; }
 
   /* ---------- Films: the wide cut, never taller than the screen ---------- */

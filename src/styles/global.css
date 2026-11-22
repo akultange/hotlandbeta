@@ -4,16 +4,16 @@
    for less pink and more whisky: a gentlemen's club, not a strip club; premium, never glossy; underground,
    techno, industrial).
    Black first. Leather black is the ground (the concrete's texture lies over it, as before), lacquer is depth,
-   graphite and blackened steel are panels and controls, the navy cloth with its chalk stripe dresses the suit
-   sections (membership). Words are shirt white; the quieter ones ash. Nothing burgundy, pink, purple, peach or brown.
+   graphite and blackened steel are panels and controls, a field of bead-blasted steel carries the membership
+   sections. Words are shirt white; the quieter ones ash. Nothing burgundy, pink, purple, peach or brown.
    Colour only arrives as light, through a gap: red (the door's seam, the lasers, the current page's line, keyboard
    focus, the needle in the logo) and amber (the room, the glass, a booked table, the whole site after 04:00).
    Light is never a fill, a wash, a glow behind words or a button's colour. Red and amber meet at the door.
-   Four voices: Poster, Dial, Label, Text (Type, below). The logo is the club's own (Logo.astro).
+   Three voices: Dial, Label, Text (Type, below). The logo is the club's own (Logo.astro).
    Square corners, 1px lines, no shadows under interface parts, no frosted glass: matte black or smoked, one hairline.
-   Every photograph and film is black and white until the new shoot (--grade). Line art (LineArt.astro) stands in
-   where a photograph is wrong.
-   Surfaces: leather (default) · graphite concrete (.soot) · navy cloth (.cloth) · blackened steel (.velvet / .plate)
+   A photograph or film is black and white (--grade), in colour, or black and white with the club's red kept, by its
+   own light (colour.css). Line art (LineArt.astro) stands in where a photograph is wrong.
+   Surfaces: leather (default) · graphite concrete (.soot) · the steel field (.cloth) · blackened steel (.velvet / .plate)
    ===================================================================== */
 
 :root {
@@ -29,14 +29,13 @@
 
   /* ---------- Colour: black first ----------
      Every grey is neutral or a little cool. Words on these grounds: shirt 11 to 17:1; ash 5.3 to 6.3:1 on leather,
-     lacquer, graphite and navy, but under 4.5:1 on steel and on concrete (there, --fg-2 or shirt). */
+     lacquer, graphite and the steel field, but under 4.5:1 on steel and on concrete (there, --fg-2 or shirt). */
   --leather: #0e0d0d;  /* the ground of every page: black calf */
   --lacquer: #050506;  /* depth: behind the door, inside a poster, a matte panel */
   --graphite: #1a1b1f; /* a section or a panel set apart */
   --steel: #2c2e32;    /* blackened steel: controls, the dock, a card made of metal */
   --steel-hi: #9ba0a7; /* steel's one bright edge; small marks (arrows, counters, separators) */
   --concrete: #4a4b4e; /* the door and the wall: formwork concrete (until 2026-11-21 this name was a grey for words: those are --ash now) */
-  --navy: #0b0e13;     /* midnight-navy cloth: the suit sections only (.cloth) */
   --shirt: #ecece8;    /* shirt white: the words, and the cuff */
   --ash: #8c8f94;      /* the quieter words: notes, captions, the second half of a title */
 
@@ -97,25 +96,54 @@
   /* a smoked panel: solid and a little translucent, never blurred, with one hairline (--rule-2) */
   --smoke: rgba(5, 5, 6, .88);
 
-  /* ---------- Type: four voices ----------
-     Poster  Roboto Flex 1000, width 151, capitals: the home page's hours and the Афиша (the months, the dates and
-             the names on posters). Nowhere else.
-     Dial    Roboto Flex 100 to 200, width 25, tabular figures: page titles (very large, hairline, compressed: quiet
-             and expensive) and big numbers (card numbers, hours, ages, steps, a price where the price is the point).
+  /* ---------- Type: three voices ----------
+     (2026-11-23, the client: too many types; «Ваш стол уже ждёт» is the one he likes. The Poster, Roboto Flex 1000
+     at width 151, is retired.)
+     Dial    Roboto Flex, width 25, capitals, tabular figures: the one display voice, for short words only. Page titles
+             (giant, hairline), section headings of one to three words, big numbers. Never a sentence, a quote, a
+             lead, a caption, a list item or a longer heading: those are the text.
      Label   Roboto Flex Label 600, width 40, capitals tracked +6%, 11 to 15px and never larger: navigation, buttons,
              short dates, prices in lists, serial numbers.
-     Text    Inter Tight 400 and 500, sentence case, from 16px (18 for long reading on a desktop): everything a guest
-             reads, section headings included.
-     .t-poster, .t-dial, .t-label and .t-text set a voice whole (Voices, below); the tokens are for a part's own
-     rules. A font shorthand puts font-stretch back to normal: set the width after it. No monospace, no gradient in
-     a letter, no wide-tracked label over every block. Roboto Flex is cut at the optical size of display type, Roboto
-     Flex Label at that of small type (tools/fonts/build.py). */
+     Text    Inter Tight 400 and 500, sentence case, from 16px (17 to 18 for a lead, 18 for long reading on a
+             desktop): everything a guest reads, and the small headings where the Dial would be too thin to read (a
+             sub-heading, a card's title, a list item's name, a dialog's heading, a heading of four words or more).
+     The order on every page: the page's name (Dial, giant) → a section's heading (Dial, large, short) → a
+     sub-heading (Text 500) → the words (Text 400) → small capitals (Label).
+     The Dial's scale: four steps, each a size and its weight. The smaller the step, the heavier, so the strokes still
+     read on black (the hairline only at the giant sizes):
+       page     a page's name (.t-xl)                                  clamp(120px, 17vw, 260px)  120, 170 on a phone
+       closing  the closing card's title (.cta-h), by the card's width   up to 220px              150, 180 on a phone
+       head     a section's heading (.t-l)                              --dial-head               --dial-head-wght
+       num      a big number (.fact b, a rule's numeral, a card's)      --dial-num                --dial-wght
+       num-s    a number in a row (a time, a price, a step, the phone)  --dial-num-s              --dial-num-s-wght
+     .t-dial, .t-label and .t-text set a voice whole (Voices, below); the tokens are for a part's own rules. A font
+     shorthand puts font-stretch back to normal: set the width after it. No monospace, no gradient in a letter, no
+     wide-tracked label over every block. Roboto Flex is cut at the optical size of display type, Roboto Flex Label
+     at that of small type (tools/fonts/build.py). */
   --f-text: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif;
   --f-flex: 'Roboto Flex', 'Helvetica Neue', Arial, sans-serif;
   --f-label: 'Roboto Flex Label', 'Roboto Flex', 'Helvetica Neue', Arial, sans-serif;
-  --poster-wght: 1000; --poster-wdth: 151%;
-  --dial-wght: 150; --dial-wdth: 25%;
+  --dial-wdth: 25%;
+  --dial-head: clamp(60px, 6.6vw, 104px); --dial-head-wght: 240;
+  --dial-num: clamp(56px, 6.4vw, 110px); --dial-wght: 200;
+  --dial-num-s: clamp(44px, 3.6vw, 56px); --dial-num-s-wght: 240; /* (never under 44px: its narrow 0 and 1 would run together) */
+  /* a Dial title's second half: ash lifted a step, so its strokes still read (8:1 on leather and on the steel field, 7:1 on
+     graphite, 5.6:1 on steel, where ash would stand at 4.2:1) */
+  --quiet-dial: #a4a7ac;
   --label-wght: 600; --label-wdth: 40%; --label-track: .06em;
+  /* The text face's steps (2026-11-23, the client: too many sizes; one size for one job, on every page):
+       statement  a line said aloud: the artists' quote, the gallery's last line (.t-statement)          400
+       item       an item's name (.t-m): a zone, a room, a rule, a menu's group, a panel, an act, a show,
+                  a party, a section in the footer, the address                                             500
+       item-s     a name in a small card or a list of links: a way to reach the club, a role, a film       500
+       lead       the line under a heading (.lead), a panel's words, a list's rows                         400
+       body       everything else (.body), 16px; a card's second line 15px                                 400
+     The Label has two sizes: 12px for a mark (a kicker, a volume, a tag), 13px for an action or a number in
+     a row (a button, a step, a price). */
+  --statement: clamp(28px, 2.6vw, 40px);
+  --item: clamp(22px, 1.9vw, 30px);
+  --item-s: 18px;
+  --lead: clamp(17px, 1.25vw, 18px);
   /* (older names: every rule that named them is in the text face now; Geologica is no longer used) */
   --sans: var(--f-text);
   --display: var(--f-text);
@@ -130,6 +158,10 @@
   --hair: 1px; /* every rule, frame and edge */
   /* the cuff's cut corner, the top left, at the angle of a notch lapel */
   --cut: polygon(9px 0, 100% 0, 100% 100%, 0 100%, 0 16px);
+  /* the frame's corner (2026-11-22): the same lapel angle, at the opposite corner, bottom right */
+  --cut-2: polygon(0 0, 100% 0, 100% calc(100% - 16px), calc(100% - 9px) 100%, 0 100%);
+  /* the arrow (2026-11-22): a long shaft and a clean, open head, drawn once and painted in any colour (a mask) */
+  --arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 12'%3E%3Cpath d='M0 6h24.6M19 .8 24.6 6 19 11.2' fill='none' stroke='%23000' stroke-width='1.5'/%3E%3C/svg%3E");
 
   --max: 1440px;
   --pad: clamp(16px, 3.2vw, 48px);
@@ -202,15 +234,24 @@
     background-position: 0 110px, 0 110px, 0 0, 0 0, 0 0, 0 0;
   }
 }
-/* Navy cloth: the suit sections only (membership). Midnight navy with a chalk stripe, one pixel every 14mm or so, at
-   about 5% over the cloth, and the twill's diagonal underneath, barely there. Only the background: the section's
-   own padding, layout and pseudo-elements stay its own. The ash words keep 5.9:1 on it. */
+/* The steel field: the membership sections only (the club's cards stand on it: vip.css). Blackened steel
+   bead-blasted to a fine matte grain, the «Выдержка 18» card's own metal, a step darker and quieter than the card so
+   the cards stand off it: the light falls off from the top, one bright edge along the top and a faint one at the
+   foot, the grain (--grain-fine, drawn: nothing to fetch) under a veil of the steel's own colour. (Until 2026-11-23
+   this was the navy cloth with its chalk stripe and twill, gone at the client's word; the class keeps the cloth's
+   name.) Only the background: the section's own padding, layout and pseudo-elements stay its own. Words on it: ash
+   keeps 5:1 at the lit top and more below it, shirt 14:1. */
 .cloth {
-  --bg: var(--navy);
-  background-color: var(--navy);
+  --bg: #101114;
+  --grain-fine: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 .4 0 0 0 -.19'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-color: var(--bg);
   background-image:
-    repeating-linear-gradient(90deg, rgba(236, 236, 232, .05) 0 1px, transparent 1px var(--stripe, 54px)),
-    repeating-linear-gradient(135deg, rgba(255, 255, 255, .016) 0 1px, transparent 1px 3px);
+    linear-gradient(180deg, rgba(236, 236, 232, .2) 0 1px, transparent 1px),
+    linear-gradient(0deg, rgba(236, 236, 232, .06) 0 1px, transparent 1px),
+    linear-gradient(180deg, rgba(236, 236, 232, .06), rgba(236, 236, 232, .018) 26%, transparent 50%, rgba(0, 0, 0, .32)),
+    linear-gradient(rgba(16, 17, 20, .3), rgba(16, 17, 20, .3)),
+    var(--grain-fine);
+  background-size: auto, auto, auto, auto, 180px 180px;
   color: var(--fg);
 }
 /* Blackened steel: a plate set apart, matte, with its one bright edge along the top. (.velvet and .plate were the
@@ -270,22 +311,21 @@ main:focus { outline: none; }
 .metal, .steel, .metal-sm { color: var(--fg); }
 
 /* ---------- A title's second half ----------
-   Two-part titles («Только между нами», «Ваш праздник, ваш сценарий») say their second half more quietly: the same
-   face and weight, in ash. No colour, no slant, no glow. */
+   Two-part titles («Частная территория», «Ваш стол уже ждёт») say their second half more quietly: the same face and
+   weight, in ash; in the Dial a step lighter than ash (--quiet-dial), so its strokes still read. No colour, no
+   slant, no glow. */
 .accent, .t-xxl em, .t-xl em, .t-l em, .t-m em, .hero-tag em, .fact b i {
   font-style: normal; color: var(--quiet); -webkit-text-fill-color: currentColor;
 }
+.t-xxl em, .t-xl em, .t-l:not(.long) em { color: var(--quiet-dial); }
 /* a point of light (a recording, a night that's on): a lamp, its core and its own small bloom */
 .rec::before { content: ''; display: inline-block; width: 6px; height: 6px; margin-right: 10px; border-radius: 50%; background: var(--light-core); vertical-align: 1px; box-shadow: 0 0 3px 1px var(--light), 0 0 10px 2px color-mix(in srgb, var(--light) 40%, transparent); }
 
 /* ---------- Voices ----------
-   The four voices whole (what each is for: :root, Type). A part may set one with a class, or with the tokens in its
-   own rules. */
-/* Poster: black, wide capitals. The home page's hours and the Афиша (the months, the dates, the names on the
-   posters). Never small, never anywhere else. */
-.t-poster { font-family: var(--f-flex); font-weight: var(--poster-wght); font-stretch: var(--poster-wdth); text-transform: uppercase; line-height: .84; letter-spacing: -.01em; font-variant-numeric: lining-nums; }
-/* Dial: the hairline of a watch's dial. Page titles (very large, compressed, quiet) and big numbers. At 40px and
-   under give it 200, or the hairline breaks up on a phone's screen. */
+   The three voices whole (what each is for: :root, Type). A part may set one with a class, or with the tokens in its
+   own rules. (The Poster's class, .t-poster, is gone with it: 2026-11-23.) */
+/* Dial: a watch's dial, compressed capitals. Page titles, section headings of one to three words, big numbers; never
+   a sentence. Its weight follows its size (:root, Type): the hairline only at the giant sizes. */
 .t-dial { font-family: var(--f-flex); font-weight: var(--dial-wght); font-stretch: var(--dial-wdth); line-height: .8; letter-spacing: 0; font-variant-numeric: tabular-nums lining-nums; }
 /* Label: small capitals, tracked. Navigation, buttons, short dates, prices in lists, serial numbers; 11 to 15px. */
 .t-label { font-family: var(--f-label); font-weight: var(--label-wght); font-stretch: var(--label-wdth); font-size: 13px; line-height: 1.2; letter-spacing: var(--label-track); text-transform: uppercase; font-variant-numeric: tabular-nums lining-nums; }
@@ -293,8 +333,9 @@ main:focus { outline: none; }
 .t-text { font-family: var(--f-text); font-weight: 400; font-stretch: normal; font-size: 16px; line-height: 1.6; letter-spacing: 0; text-transform: none; }
 
 /* ---------- Type ----------
-   Text for every word a guest reads, sections' titles included (sentence case: a title is a sentence said quietly,
-   not shouted in capitals); the Dial for the page's own name; the Label for controls. */
+   The Dial for the page's own name and a section's heading of one to three words; the text face for every word a
+   guest reads, sub-headings included (sentence case: said quietly, not shouted in capitals); the Label for
+   controls. The steps, from the top: .t-xl, .t-l, .t-m, the words (.lead, .body), the Label. */
 .label { font: 400 14px/1.45 var(--sans); color: var(--muted); }
 .label-bone { color: var(--fg); }
 .label-red { color: var(--red-text); }
@@ -304,14 +345,22 @@ main:focus { outline: none; }
 .t-xxl { font-size: clamp(96px, 19vw, 300px); line-height: .8; overflow-wrap: normal; }
 .t-xl { font-size: clamp(88px, 15vw, 240px); line-height: .8; }
 @media (max-width: 899px) { .t-xxl, .t-xl { font-weight: 170; } }
-/* A section's title: the text face at its heavier weight, large and quiet; no capitals, no gradient */
-.t-l { font-family: var(--f-text); font-weight: 500; font-size: clamp(30px, 3.4vw, 52px); line-height: 1.06; letter-spacing: -.022em; color: var(--fg); }
-.t-m { font-family: var(--f-text); font-size: clamp(22px, 1.9vw, 30px); font-weight: 500; letter-spacing: -.012em; line-height: 1.15; }
-.t-s { font: 400 18px/1.5 var(--sans); }
-.t-statement { font: 400 clamp(22px, 2.3vw, 34px)/1.3 var(--sans); letter-spacing: -.012em; color: var(--fg); max-width: 34em; }
+/* A section's heading (.t-l): the Dial a clear step under the page's name, in capitals, weighted to read on black
+   (240; 280 on a phone, where it is smaller). One to three words: so narrow a face sets the longest of them some
+   300px wide, never a word to a line (balance evens one that must wrap). A heading of four words or more is .t-l.long:
+   the text face at 500, a size above a sub-heading. */
+.t-l { font-family: var(--f-flex); font-weight: var(--dial-head-wght); font-stretch: var(--dial-wdth); font-size: var(--dial-head); line-height: .86; letter-spacing: 0; text-transform: uppercase; color: var(--fg); text-wrap: balance; }
+.t-l.long { font-family: var(--f-text); font-weight: 500; font-stretch: normal; font-size: clamp(30px, 3.4vw, 52px); line-height: 1.06; letter-spacing: -.022em; text-transform: none; }
+@media (max-width: 899px) { :root { --dial-head-wght: 280; } }
+/* A sub-heading (.t-m): the text face at 500, the step between a section's heading and its words */
+.t-m { font-family: var(--f-text); font-size: var(--item); font-weight: 500; letter-spacing: -.012em; line-height: 1.15; text-wrap: balance; }
+.t-s { font: 400 var(--lead)/1.6 var(--sans); }
+.t-statement { font: 400 var(--statement)/1.25 var(--sans); letter-spacing: -.012em; color: var(--fg); max-width: 34em; }
 .t-statement em { font-style: normal; color: var(--quiet); }
-.lead { font: 400 clamp(17px, 1.35vw, 20px)/1.55 var(--sans); color: var(--fg-2); max-width: 46ch; }
-.body { font: 400 16px/1.65 var(--sans); color: var(--fg-2); max-width: 54ch; }
+.lead { font: 400 var(--lead)/1.6 var(--sans); color: var(--fg-2); max-width: 56ch; }
+.body { font: 400 16px/1.6 var(--sans); color: var(--fg-2); max-width: 54ch; }
+/* (the line straight under a section's heading is its lead, 17 to 18px, as in every heading row: .bighead-side) */
+.t-l + .body { font-size: var(--lead); line-height: 1.6; }
 .small { font-size: 14px; line-height: 1.6; }
 .muted { color: var(--muted); }
 /* small numbers (a step's, a card's) are serial numbers: the Label */
@@ -340,8 +389,9 @@ h1, h2, .t-xxl, .t-xl, .t-l { overflow-wrap: break-word; }
 /* ---------- Buttons & links ----------
    (2026-11-21, «Между») Square, in the Label's capitals. The main action is the cuff: a band of shirt white with one
    corner cut at the angle of a notch lapel (--cut), its words black. The second is the frame: one pixel of shirt
-   white round the words. On hover, or under the keyboard, a seam of the light runs along the lower edge of either,
-   left to right (::after). No colour in a fill, no shadow, no glass. (2026-11-22: the client tried a red key and a
+   white round the words. On hover, or under the keyboard, a line of the light draws itself round the button's
+   outline, its cut corner too, and stays lit (::after; 2026-11-22, the client asked for a stroke). No colour in a
+   fill, no shadow, no glass. (2026-11-22: the client tried a red key and a
    steel one, and chose the cuff.)
    The classes stay as every page already writes them: .btn-crimson is the cuff (or .btn-cuff), .btn-line and
    .btn-silver the frame (or .btn-frame), .btn-sm the smaller size. A part that draws on a button's ::before or
@@ -355,42 +405,81 @@ h1, h2, .t-xxl, .t-xl, .t-l { overflow-wrap: break-word; }
   transition: color .2s, border-color .2s, scale .2s ease;
 }
 .btn:active { scale: .98; }
-/* the seam: under the lower edge, unlit until the pointer or the keyboard comes */
-.btn::after {
-  content: ''; position: absolute; left: -1px; right: -1px; bottom: -1px; height: var(--seam); pointer-events: none;
-  background: var(--lit-core); box-shadow: var(--seam-glow);
-  transform: scaleX(0); transform-origin: 0 50%; transition: transform .45s var(--ease-io);
+/* the stroke: a line of the light (red, amber after four) that draws itself round the outline from the bottom left
+   corner, up, across, down and back along the foot, when the pointer or the keyboard comes, and stays lit; it fades
+   when it goes. The line is the outline's own 1px with a glow inside it; a conic sweep (--trace) reveals it. */
+@property --trace { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+.btn::after, .lnk::before {
+  content: ''; position: absolute; inset: -1px; z-index: 1; pointer-events: none;
+  border: 1px solid var(--lit);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lit) 28%, transparent);
+  -webkit-mask: conic-gradient(from 225deg, #000 var(--trace), transparent 0);
+  mask: conic-gradient(from 225deg, #000 var(--trace), transparent 0);
+  opacity: 0; transition: --trace .7s var(--ease-io), opacity .25s ease;
 }
-@media (hover: hover) { .btn:hover::after { transform: scaleX(1); } }
-.btn:focus-visible::after { transform: scaleX(1); }
+@media (hover: hover) { :is(.btn:hover::after, .lnk:hover::before) { --trace: 360deg; opacity: 1; } }
+:is(.btn:focus-visible::after, .lnk:focus-visible::before) { --trace: 360deg; opacity: 1; }
+@media (prefers-reduced-motion: reduce) { :is(.btn::after, .lnk::before) { transition: opacity .2s ease; } }
 /* the cuff: the band is drawn behind the words (::before), so its cut corner never cuts the seam or the focus line */
 .btn-crimson, .btn-cuff, .hdr-book { color: var(--lacquer); }
 :is(.btn-crimson, .btn-cuff, .hdr-book)::before {
   content: ''; position: absolute; inset: -1px; z-index: -1; pointer-events: none;
-  background: var(--shirt); clip-path: var(--cut); transition: background-color .2s;
+  background: var(--shirt); clip-path: var(--cut); transition: clip-path .55s var(--ease-io);
 }
-@media (hover: hover) { :is(.btn-crimson, .btn-cuff, .hdr-book):hover::before { background: #fff; } }
-/* the frame */
-.btn-line, .btn-silver, .btn-frame, .btn-bone { color: var(--fg); border-color: color-mix(in srgb, var(--shirt) 55%, transparent); }
-@media (hover: hover) { :is(.btn-line, .btn-silver, .btn-frame, .btn-bone):hover { border-color: var(--shirt); } }
+/* the hover (2026-11-22, the client: "fancier"): the white band slides away to the right as the stroke draws the
+   outline round, and the words turn white: the cuff becomes its own outline of light. Its stroke follows the cut. */
+:is(.btn-crimson, .btn-cuff, .hdr-book)::after { clip-path: var(--cut); background: linear-gradient(to bottom right, transparent calc(50% - 1px), var(--lit) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)) 0 0 / 9px 16px no-repeat border-box; }
+.btn-crimson, .btn-cuff, .hdr-book { transition: color .35s ease .1s, scale .2s ease; }
+@media (hover: hover) {
+  :is(.btn-crimson, .btn-cuff, .hdr-book):hover { color: var(--shirt); }
+  :is(.btn-crimson, .btn-cuff, .hdr-book):hover::before { clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%, 100% 16px); }
+}
+/* the frame: one pixel of shirt white, its bottom right corner cut at the cuff's lapel angle (--cut-2; 2026-11-22,
+   the client's call), the cut drawn as a hairline of its own. Cut by clip-path, so the keyboard's focus is drawn
+   inside the edge, and its stroke turns the cut corner too. */
+:is(.btn-line, .btn-silver, .btn-frame, .btn-bone) {
+  --frame-c: color-mix(in srgb, var(--shirt) 55%, transparent);
+  color: var(--fg); border-color: var(--frame-c); clip-path: var(--cut-2);
+  background: linear-gradient(to bottom right, transparent calc(50% - 1px), var(--frame-c) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)) 100% 100% / 9px 16px no-repeat border-box;
+}
+@media (hover: hover) { :is(.btn-line, .btn-silver, .btn-frame, .btn-bone):hover { --frame-c: var(--shirt); } }
+:is(.btn-line, .btn-silver, .btn-frame, .btn-bone):focus-visible { outline: none; }
+/* the hover: shirt white fills the frame from the left, its words turn black, as the stroke draws round it */
+:is(.btn-line, .btn-silver, .btn-frame, .btn-bone)::before {
+  content: ''; position: absolute; inset: -1px; z-index: -1; pointer-events: none; background: var(--shirt);
+  clip-path: polygon(0 0, 0 0, 0 calc(100% - 16px), 0 100%, 0 100%); transition: clip-path .55s var(--ease-io);
+}
+:is(.btn-line, .btn-silver, .btn-frame, .btn-bone) { transition: color .35s ease .1s, border-color .2s, scale .2s ease; }
+@media (hover: hover) {
+  :is(.btn-line, .btn-silver, .btn-frame, .btn-bone):hover { color: var(--lacquer); }
+  :is(.btn-line, .btn-silver, .btn-frame, .btn-bone):hover::before { clip-path: var(--cut-2); }
+}
+:is(.btn-line, .btn-silver, .btn-frame, .btn-bone)::after, .lnk::before { background: linear-gradient(to bottom right, transparent calc(50% - 1px), var(--lit) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)) 100% 100% / 9px 16px no-repeat border-box; }
 .btn-sm { height: 44px; padding: 0 18px; font-size: 12px; }
-/* A link of its own (a section's way on: «Вся афиша»): the Label's capitals over a hairline that catches the light
-   from the left on hover; the arrow is steel */
+/* A section's way on («Вся афиша», «Вся галерея»): the frame, small, with an arrow (2026-11-22: the client retired
+   the underlined link; on a section's heading row it stands at the right, see Section headings) */
 .lnk {
-  display: inline-flex; align-items: center; gap: 12px; padding-bottom: 8px;
-  background: linear-gradient(var(--lit), var(--lit)) 0 100% / 0 1px no-repeat, linear-gradient(var(--rule-2), var(--rule-2)) 0 100% / 100% 1px no-repeat;
-  transition: background-size .6s var(--ease-out);
-  font: var(--label-wght) 13px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase; color: var(--fg);
+  --frame-c: color-mix(in srgb, var(--shirt) 55%, transparent);
+  position: relative; isolation: isolate;
+  display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+  height: 44px; padding: 0 18px; border: 1px solid var(--frame-c); clip-path: var(--cut-2);
+  background:
+    linear-gradient(to bottom right, transparent calc(50% - 1px), var(--frame-c) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)) 100% 100% / 9px 16px no-repeat border-box,
+    linear-gradient(var(--shirt), var(--shirt)) 0 0 / 0% 100% no-repeat border-box;
+  font: var(--label-wght) 12px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase; white-space: nowrap; color: var(--fg);
+  transition: border-color .2s, background-size .55s var(--ease-io), color .35s ease .1s, scale .2s ease;
 }
-.lnk::after { content: '→'; letter-spacing: 0; font: 400 14px/1 var(--f-text); color: var(--red-text); transition: translate .45s var(--ease-out); }
-.lnk:hover, .lnk:focus-visible { background-size: 100% 1px, 100% 1px; }
-/* under a finger a line of small capitals is a small target: its touch area grows to 44px tall, unseen (a party's
-   "more" link already answers to its whole card: parties.css) */
-@media (pointer: coarse) {
-  .lnk:not(.pa-more) { position: relative; }
-  .lnk:not(.pa-more)::before { content: ''; position: absolute; inset: -12px -6px -10px; }
+.lnk::after {
+  content: ''; flex: none; width: 22px; height: 11px; background: var(--steel-hi);
+  -webkit-mask: var(--arrow) center / 100% 100% no-repeat; mask: var(--arrow) center / 100% 100% no-repeat;
+  transition: translate .45s var(--ease-out), background-color .2s;
 }
-.lnk:hover::after { translate: 5px 0; }
+@media (hover: hover) {
+  .lnk:hover { --frame-c: var(--shirt); color: var(--lacquer); background-size: 9px 16px, 100% 100%; }
+  .lnk:hover::after { translate: 5px 0; background-color: var(--lacquer); }
+}
+.lnk:focus-visible { outline: none; }
+.lnk:active { scale: .98; }
 /* A link in running text (.tl, and every link in a document's text): a 1px underline that catches the red */
 .tl, .prose a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .28em; text-decoration-color: var(--rule-2); transition: text-decoration-color .2s; }
 :is(.tl, .prose a):is(:hover, :focus-visible) { text-decoration-color: var(--lit); }
@@ -402,11 +491,21 @@ h1, h2, .t-xxl, .t-xl, .t-l { overflow-wrap: break-word; }
    far side of the screen. (2026-11-13: the client found the old row, the title on the left with the line and the
    link spread across to the right, a bad layout, and asked for one new layout for every section.) Buttons that
    book or request something belong to the section's content, not to its heading row. No overline labels, no
-   rules above. */
-.bighead { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: start; row-gap: clamp(14px, 1.3vw, 20px); margin-bottom: var(--head-gap); }
+   rules above.
+   (2026-11-22: the client asked for the section's way on as a framed button at the right side; from 900px wide the
+   .lnk of a heading row stands at the row's right edge, level with the foot of its line. On a phone it stays under
+   the line.) */
+.bighead { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: start; row-gap: clamp(16px, 1.5vw, 22px); margin-bottom: var(--head-gap); } /* (one gap down the row: title, line, link; .shead the same) */
 .bighead-side { display: grid; justify-items: start; gap: clamp(16px, 1.5vw, 22px); }
-.bighead-side .body { max-width: 56ch; font-size: clamp(16px, 1.15vw, 18px); line-height: 1.6; text-wrap: balance; }
+/* (one measure for every section's line, 56 characters: lines wrap, never balanced to a narrower box; no word alone
+   on the last line) */
+.bighead-side .body { max-width: 56ch; font-size: clamp(17px, 1.25vw, 18px); line-height: 1.6; text-wrap: pretty; }
 .bighead-side .n { font-size: 15px; }
+@media (min-width: 900px) {
+  .bighead:has(> .bighead-side > .lnk) { position: relative; }
+  .bighead > .bighead-side > .lnk { position: absolute; right: 0; bottom: 0; }
+  .bighead:has(> .bighead-side > .lnk) > .bighead-side .body { max-width: min(56ch, calc(100vw - 2 * var(--pad) - 280px)); }
+}
 /* (the plain heading with a link, SecIndex: the same order, the link under the title) */
 .shead { display: grid; justify-items: start; row-gap: clamp(16px, 1.5vw, 22px); margin-bottom: var(--head-gap); }
 
@@ -505,12 +604,12 @@ a:hover .photo img { transform: scale(1.03); }
 /* ---------- Facts ---------- */
 .facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 var(--gap); margin-top: clamp(28px, 3.6vw, 56px); border-top: 1px solid var(--rule-2); }
 .fact { display: grid; gap: 14px; align-content: start; padding-top: 24px; }
-.fact b { font: var(--dial-wght) clamp(56px, 6.4vw, 110px)/.82 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; white-space: nowrap; padding-right: .05em; }
+.fact b { font: var(--dial-wght) var(--dial-num)/.82 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; white-space: nowrap; padding-right: .05em; }
 .fact b i { font-style: normal; }
 @media (max-width: 899px) { .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 32px; } }
 /* the smaller set on an event page: doors, shows, entry, dress code */
 .facts-sm { margin-top: 0; }
-.facts-sm .fact b { font-size: clamp(32px, 3.2vw, 50px); line-height: .9; white-space: normal; }
+.facts-sm .fact b { font-size: var(--dial-num-s); font-weight: var(--dial-num-s-wght); line-height: .9; white-space: normal; }
 .facts-btns { margin-top: clamp(36px, 4vw, 56px); }
 
 /* ---------- Program ---------- */
@@ -520,7 +619,7 @@ a:hover .photo img { transform: scale(1.03); }
   gap: clamp(20px, 3vw, 48px); align-items: start; padding: clamp(18px, 2vw, 28px) 0; border-top: 1px solid var(--rule-2);
 }
 .ev-date { display: grid; gap: 10px; align-self: start; }
-.ev-day { font: var(--dial-wght) clamp(64px, 7.4vw, 124px)/.82 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; padding-right: .04em; }
+.ev-day { font: var(--dial-wght) var(--dial-num)/.82 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; padding-right: .04em; }
 .ev-body { display: grid; gap: 12px; justify-items: start; padding-top: clamp(6px, 1vw, 14px); }
 .ev-title { font: 500 clamp(28px, 3.44vw, 59px)/1.05 var(--display); letter-spacing: -.01em; transition: color .2s; }
 .ev:hover .ev-title { color: #fff; }
@@ -603,7 +702,7 @@ a:hover .photo img { transform: scale(1.03); }
   border-bottom: 1px solid var(--rule); transition: padding .25s, color .25s;
   font: 500 clamp(28px, 2.6vw, 42px)/1.1 var(--display);
 }
-.occ-list a::after { content: '→'; font: 400 20px var(--sans); }
+.occ-list a::after { content: ''; display: inline-block; vertical-align: middle; flex: none; width: 26px; height: 13px; background: currentColor; -webkit-mask: var(--arrow) center / 100% 100% no-repeat; mask: var(--arrow) center / 100% 100% no-repeat; }
 .occ-list a:hover { color: #fff; }
 .occ-list a::after { color: var(--red-text); }
 .velvet-in { display: grid; justify-items: center; gap: 28px; text-align: center; }
@@ -614,17 +713,17 @@ a:hover .photo img { transform: scale(1.03); }
 /* ---------- Price lists: name, dotted leader, price ---------- */
 .mrows { display: grid; margin-top: 26px; }
 .mrow { display: flex; align-items: baseline; gap: 12px; padding: 9px 0; }
-.mrow .nm { font: 400 17px/1.35 var(--sans); color: var(--fg); }
+.mrow .nm { font: 400 var(--lead)/1.4 var(--sans); color: var(--fg); }
 .mrow .nm small { display: block; margin-top: 3px; font: 400 14px/1.5 var(--sans); color: var(--muted); }
 .mrow .dots { flex: 1; min-width: 24px; border-bottom: 1px dotted var(--rule-2); transform: translateY(-6px); }
 /* (a price in a list is the Label: small capitals, tabular, so the prices stand in one column) */
-.mrow .pr { font: var(--label-wght) 15px/1.05 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; color: var(--fg); }
+.mrow .pr { font: var(--label-wght) 13px/1.05 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; color: var(--fg); }
 .mrow .pr.req { font: 400 14px/1 var(--sans); color: var(--muted); }
 @media (max-width: 599px) { .mrow { gap: 10px; } .mrow .dots { min-width: 12px; } }
 
 /* ---------- A list's group heading (the menu page's lists and the hookah's flavours; the card itself is styled in
    menu.css, loaded by the menu page) ---------- */
-.mgroup-h { margin-bottom: 6px; font: 500 clamp(24px, 2.1vw, 32px)/1.1 var(--display); }
+.mgroup-h { margin-bottom: 6px; font: 500 var(--item)/1.15 var(--display); letter-spacing: -.012em; }
 
 /* tabs: a smoked panel with one hairline (solid, never blurred); the one you are on stands over a line of the light,
    as the current page does in the header, and the line slides to it */
@@ -653,17 +752,15 @@ a:hover .photo img { transform: scale(1.03); }
 @media (max-width: 399px) { .lily-list.two { grid-template-columns: 1fr; } }
 
 /* titles of the open cards: VIP cards, sets, the acts */
-/* (--sub: the one size for a name under a picture or over a list, wherever it is: a party, a night, a card, an act,
-   a link in the footer) */
-:root { --sub: clamp(24px, 1.95vw, 28px); }
-.card-title { font: 450 var(--sub)/1.1 var(--display); letter-spacing: -.01em; }
+/* (the item's size, the text face's steps in :root: a name under a picture or over a list, wherever it is) */
+.card-title { font: 500 var(--item)/1.15 var(--display); letter-spacing: -.012em; }
 
 /* ---------- Visit ---------- */
-.visit-addr { max-width: 18ch; font: 500 clamp(21px, 1.97vw, 30px)/1.05 var(--display); overflow-wrap: normal; }
+.visit-addr { max-width: 18ch; font: 500 var(--item)/1.1 var(--display); overflow-wrap: normal; }
 .dl { display: grid; width: 100%; border-top: 1px solid var(--rule-2); }
 .dl > div { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 15px 0; border-bottom: 1px solid var(--rule); }
 .dl dt.label { font: 400 15px/1.4 var(--sans); letter-spacing: 0; text-transform: none; color: var(--muted); }
-.dl dd { font: 400 17px/1.35 var(--sans); text-align: right; color: var(--fg); }
+.dl dd { font: 400 var(--lead)/1.4 var(--sans); text-align: right; color: var(--fg); }
 @media (max-width: 599px) { .dl { grid-template-columns: 1fr; } }
 
 /* ---------- Rows, schedules, tables ---------- */
@@ -671,13 +768,13 @@ a:hover .photo img { transform: scale(1.03); }
 .row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 24px; align-items: baseline; padding: 18px 0; border-bottom: 1px solid var(--rule); }
 .row.num { grid-template-columns: 44px minmax(0, 1fr) auto; }
 @media (max-width: 599px) { .row.num { grid-template-columns: 28px minmax(0, 1fr) auto; column-gap: 12px; } }
-.row .k { font: 400 17px/1.5 var(--sans); color: var(--fg); }
+.row .k { font: 400 var(--lead)/1.45 var(--sans); color: var(--fg); }
 .row .k small { display: block; margin-top: 4px; font: 400 14px/1.5 var(--sans); color: var(--muted); }
 .row .v { color: var(--fg-2); text-align: right; }
 a.row:hover .k { color: #fff; }
 .sched { width: 100%; border-top: 1px solid var(--rule-2); }
 .sched-row { display: grid; grid-template-columns: clamp(110px, 12vw, 170px) minmax(0, 1fr); gap: clamp(20px, 3vw, 48px); align-items: baseline; padding: 22px 0; border-bottom: 1px solid var(--rule); }
-.sched-time { font: 200 clamp(40px, 4vw, 60px)/.82 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; }
+.sched-time { font: var(--dial-num-s-wght) var(--dial-num-s)/.82 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; }
 .sched-row .stack { gap: 10px; }
 @media (max-width: 599px) { .sched-row { grid-template-columns: 1fr; gap: 12px; } }
 .week { width: 100%; border-collapse: collapse; }
@@ -713,7 +810,7 @@ a.row:hover .k { color: #fff; }
   .zz-item > * { grid-column: 1 / -1 !important; grid-row: auto !important; }
 }
 .steps-inline { display: flex; flex-wrap: wrap; gap: 10px 0; font: 500 22px/1.25 var(--display); }
-.steps-inline span + span::before { content: '→'; margin: 0 14px; color: var(--red-text); font: 400 15px var(--sans); }
+.steps-inline span + span::before { content: ''; display: inline-block; vertical-align: middle; flex: none; width: 20px; height: 10px; background: var(--steel-hi); -webkit-mask: var(--arrow) center / 100% 100% no-repeat; mask: var(--arrow) center / 100% 100% no-repeat; margin: 0 14px; }
 
 .extras { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 0; margin-top: clamp(32px, 4vw, 56px); padding-top: 20px; border-top: 1px solid var(--rule-2); }
 .extras .label { margin-right: 28px; color: var(--fg); }
@@ -805,7 +902,7 @@ a.row:hover .k { color: #fff; }
 /* (the club's logo at its head, Logo.astro, sign="tight": room for the sign above the letters and under them) */
 .invite > .logo { margin: 8px 0 12px; }
 /* (the number is the point here: the Dial) */
-.invite .phone { font: 200 clamp(38px, 3.4vw, 52px)/1 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; }
+.invite .phone { font: var(--dial-num-s-wght) var(--dial-num-s)/1 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; }
 .fine { gap: 20px; }
 .fine .row { padding: 13px 0; }
 .fine .row .k { font-size: 15px; color: var(--fg-2); }
@@ -849,14 +946,15 @@ a.row:hover .k { color: #fff; }
 /* ---------- Footer ---------- */
 /* The closing invitation is a section like any other: the section's air (--sec-y) above it, and again under its
    buttons before the footer's own surface begins (footers.css), as a band of charcoal has it */
-.ft { padding-top: var(--sec-y); background: var(--black); overflow-x: clip; } /* (the sign's light reaches past its column; it must never widen the page) */
+.ft { padding-top: var(--sec-y); overflow-x: clip; } /* (the sign's light reaches past its column; it must never widen the page. No surface of its own: the page's concrete runs on under the invitation to the footer's own black; until 2026-11-23 it was flat black there, and the concrete stopped short above the card) */
 /* ---------- The closing invitation (Footer.astro) ----------
    One card on the page's column, like the site's other cards: a matte graphite panel, square, inside one hairline,
    and inside it, a little in from its edge, two halves. On the left the words in one stack: the title at the card's
-   head, the line and the two buttons at its foot. On the right the hall from a guest's seat, a picture with clean
-   edges (in black and white, as every picture is until the new shoot). Everything is sized by the card's own width
-   (cqw), so the title always fits its half, in Russian and in English, from a tablet to the widest screen. A phone:
-   the picture on top, the words under it, the two buttons the card's width. */
+   head, the line and the two buttons at its foot. On the right, drawn in chalk on lacquer, the guest at his table
+   and the club's light between them (LineArt "guest", footers.css; on the careers page a picture, .cta-shot).
+   Everything is sized by the card's own width (cqw), so the title always fits its half, in Russian and in English,
+   from a tablet to the widest screen. A phone: the drawing on top, the words under it, the two buttons the card's
+   width. */
 .ft-cta { padding-bottom: var(--sec-y); }
 .cta-card {
   --cta-in: clamp(8px, .9vw, 12px);
@@ -979,7 +1077,7 @@ html.motion .sign.lit .sign-light {
 .prose { max-width: 720px; display: grid; gap: 18px; }
 /* (long reading: 18px on a desktop) */
 @media (min-width: 900px) { .prose { font-size: 18px; line-height: 1.6; } }
-.prose h2 { margin-top: 24px; font: 500 clamp(25px, 2.46vw, 36px)/1.1 var(--display); letter-spacing: -.018em; }
+.prose h2 { margin-top: 24px; font: 500 var(--item)/1.15 var(--display); letter-spacing: -.012em; }
 .prose > :first-child { margin-top: 0; } /* (the text starts the heading gap under the page's name, as every page's content does) */
 .prose p { color: var(--fg-2); }
 /* (an aside's rule is a hairline: red is only light) */
@@ -1011,7 +1109,7 @@ html.motion .sign.lit .sign-light {
 .set { display: grid; gap: 8px; align-content: start; justify-items: start; min-width: 0; }
 .set .fig { width: 100%; margin-bottom: 8px; }
 .set-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 20px; width: 100%; margin-top: 22px; }
-.set-price { font: 200 clamp(40px, 4vw, 60px)/.9 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; color: var(--fg); white-space: nowrap; }
+.set-price { font: var(--dial-num-s-wght) var(--dial-num-s)/.9 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; color: var(--fg); white-space: nowrap; }
 
 /* ---------- Hookah lounge: offers priced in crimson ---------- */
 
@@ -1029,7 +1127,7 @@ html.motion .sign.lit .sign-light {
 .acts4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gap); }
 .act4 { display: grid; gap: 14px; align-content: start; min-width: 0; }
 .act4 .photo { aspect-ratio: 4 / 5; }
-.act4-time { font: 200 clamp(40px, 3.8vw, 58px)/.82 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; padding-right: .04em; }
+.act4-time { font: var(--dial-num-s-wght) var(--dial-num-s)/.82 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; padding-right: .04em; }
 .act4-title { font: 500 clamp(20px, 1.64vw, 25px)/1.05 var(--display); letter-spacing: -.01em; }
 @media (max-width: 1099px) { .acts4 { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 40px; } }
 @media (max-width: 699px) {
@@ -1110,13 +1208,16 @@ html.motion .ft .mast.is-in { animation: rv-open 1.8s var(--ease-io) backwards; 
 /* Headlines rise out of a mask (split by motion.ts, hidden until then) */
 /* (not inside the parts motion.ts leaves alone: the header, the door, the phone's menu, the windows, the rooms) */
 html.motion :where(.t-xxl, .t-xl, .t-l):not(.split, .has-ic *, .hero *, .gate *, .mnav *, dialog *, .zn *) { opacity: 0; }
-:is(h1, h2, h3, p).split-l { display: flex; flex-direction: column; align-items: stretch; gap: 0; }
+/* (the split lines stand one under another, their masks' margins summed, never collapsed. Only while the lines are
+   there: when the split is taken back and made again (a window resized, a font arriving late: autoSplit), the words
+   are measured in the heading's own flow; measured inside the column, every word stood on a line of its own) */
+:is(h1, h2, h3, p).split-l:has(> .sl-mask) { display: flex; flex-direction: column; align-items: stretch; gap: 0; }
 /* the masks reach past the line box so tall letters, descenders and italics aren't cut */
 .sl-mask { padding: .18em .2em .3em .06em; margin: -.18em -.2em -.3em -.06em; }
 .xw-mask { padding: .18em .12em .3em .04em; margin: -.18em -.12em -.3em -.04em; }
 /* (the Dial's letters stand upright and narrow, and a page's name is set very large in it: a mask reaching .2em past
    the line ran past the screen's edge; a twentieth of an em is room enough for them) */
-:is(.t-xxl, .t-xl) :is(.sl-mask, .xw-mask) { padding-right: .05em; margin-right: -.05em; }
+:is(.t-xxl, .t-xl, .t-l) :is(.sl-mask, .xw-mask) { padding-right: .05em; margin-right: -.05em; }
 
 /* The club statement lights up word by word as you read */
 html.motion .t-statement:not(.sw-on, .hero *) { opacity: .32; }

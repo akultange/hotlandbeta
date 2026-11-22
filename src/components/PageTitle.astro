@@ -33,7 +33,11 @@ const hasActions = Astro.slots.has('default');
 // (a no-break space joins its words into one that never breaks, "и&nbsp;контакты", so it counts as one word)
 const plain = title.replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&#160;/gi, ' ').replace(/&[a-z#0-9]+;/gi, ' ');
 const longest = Math.max(...plain.split(/[ \t\n\r\f\v–-]+/).map((w) => w.length));
-const fit = Math.max(0.6, longest * 0.16).toFixed(2);
+// A name of two or three words stands on one line, never a word to a line (the client, 2026-11-23): the whole name is
+// fitted too, at 0.135em a letter or space (the Dial at a phone's weight, 170, runs 0.12 to 0.135). So on a phone
+// «Политика конфиденциальности» stands a little smaller, on one line.
+const whole = plain.trim().split(/\s+/).length <= 3 ? plain.trim().replace(/\s+/g, ' ').length * 0.135 : 0;
+const fit = Math.max(0.6, longest * 0.16, whole).toFixed(2);
 const showBand = band && img;
 // The lead is plain text. In Russian a short word stays on the line of the word after it ("не обязательно").
 const leadHtml = lead && keepShort(lead.replace(/&/g, '&amp;').replace(/</g, '&lt;'), /[а-яё]/i.test(lead) ? 'ru' : 'en');

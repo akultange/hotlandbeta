@@ -18,7 +18,7 @@
 
 /* ---------- The panels (shared) ---------- */
 /* (a strip is a seventh of the row wide, and «Клуб целиком» must fit it: a step under the site's --sub) */
-.pa { --nf: clamp(20px, 1.67vw, 25px); }
+.pa { --nf: var(--item); }
 .pa-item { position: relative; min-width: 0; }
 .pa-btn { display: block; width: 100%; text-align: left; -webkit-tap-highlight-color: transparent; }
 .photo.pa-shot { display: block; }
@@ -105,7 +105,7 @@
   .pa::-webkit-scrollbar { display: none; }
   .pa-item { scroll-snap-align: start; }
   .photo.pa-shot { aspect-ratio: 4 / 5; }
-  .pa-name { margin-top: 14px; font-size: 24px; }
+  .pa-name { margin-top: 14px; }
   .pa-cap { gap: 12px; padding-top: 8px; }
   .pa-more::before { aspect-ratio: 4 / 5; visibility: visible; }
 }

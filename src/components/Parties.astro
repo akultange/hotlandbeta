@@ -7,6 +7,7 @@
 import { photo } from '../data/images';
 import { parties, occasions, media } from '../data/content';
 import { type Lang, ui, tr } from '../data/i18n';
+import { headClass } from '../data/format';
 import '../styles/parties.css';
 interface Props {
   lang: Lang;
@@ -28,7 +29,7 @@ const shots = await Promise.all(occasions.map((o) => photo(media(o.img), '(max-w
 <section class="sec pty" id={id}>
   <div class="wrap pty-in">
     <div class="bighead bh-line pty-head">
-      <h2 class="t-l pty-title" set:html={tr(parties.title, lang)} />
+      <h2 class={`${headClass(tr(parties.title, lang))} pty-title`} set:html={tr(parties.title, lang)} />
       <div class="bighead-side"><p class="body pty-lead">{keep(tr(parties.lead, lang))}</p></div>
     </div>
     <div class="pa" data-pa data-lenis-prevent-horizontal>

@@ -2,10 +2,12 @@
    The artists, take two: the spotlight stage (ModelsStage.astro). A dark stage, one screen tall: the artist in the
    light shown whole in the middle; her neighbours on either side smaller and dim. Every portrait is a print cut
    from the newspaper, as every photograph on the site is (2026-11-22: the torn edge with its white fibre, the dot
-   screen and a slight tilt, drawn from cut.css's own tears; the one in the light stands straight), and all of them
-   in black and white until the new shoot (the grade, global.css); under the stage her two lines and
-   every name in the Label's small capitals, as the header's sections are, the one in the light in white over a
-   seam of the light that fills while she stands there (the red of the show; amber after 04:00, as every line).
+   screen and a slight tilt, drawn from cut.css's own tears; the one in the light stands straight), each in the
+   colour its own light gives it (colour.css). Top to bottom (2026-11-23, the client asked for the names on top, the
+   quote bigger and a clearer order): the heading row; every name, a row of tabs over the stage in the Label's small
+   capitals, as the header's sections are, the one in the light in white over a seam of the light that fills while
+   she stands there (the red of the show; amber after 04:00, as every line); the stage; her two lines under it,
+   large, in the text face, shirt white.
    The script sets each artist's place, size and light from where the light is. (Until 2026-11-20 the neighbours
    were blurred ovals dissolving into the dark, with a warm cone of light, a pool of it on the floor and her name
    huge in outline behind: soft and warm beside the cut plates, and a blur on seven portraits every frame.)
@@ -20,7 +22,7 @@
 .mst-stage {
   /* (a stacking context of its own: the artists, the light and the arrows layer up inside it, and never over the
      header or her story, which opens above the page) */
-  position: relative; isolation: isolate; height: calc(var(--mst-ch) + 36px); margin-top: clamp(4px, 1vw, 14px);
+  position: relative; isolation: isolate; height: calc(var(--mst-ch) + 36px); margin-top: clamp(10px, 1.4vw, 20px);
   touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab; outline: none;
 }
 .mst-stage.drag { cursor: grabbing; }
@@ -99,42 +101,59 @@
 .mst-prev { left: max(var(--pad), calc((100% - var(--max)) / 2 + var(--pad))); }
 .mst-next { right: max(var(--pad), calc((100% - var(--max)) / 2 + var(--pad))); }
 
-/* under the stage: her two lines, then every name */
-.mst-foot { display: grid; justify-items: center; gap: clamp(14px, 1.6vw, 22px); margin-top: clamp(14px, 1.6vw, 22px); text-align: center; }
-.mst-lines { min-height: 3.1em; margin: 0; font: 400 16px/1.55 var(--f-text); color: var(--fg-2); }
+/* Over the stage, every name: a row of tabs on the page's column, one hairline along its foot. The stage's own
+   sections, so set as the header's are: the Label's small capitals in ash, the one in the light in shirt white
+   over a seam of the light set into the line, filling while she stands there when the line moves on its own. The
+   names share the row's width; a cast too long for it scrolls sideways (the script keeps the one in the light in
+   view), and the row keeps room under its line for the seam's bloom (a scroller clips what reaches past it). */
 .mst-names {
-  display: flex; gap: clamp(16px, 2.6vw, 40px); max-width: 100%; padding: 6px 4px 12px; overflow-x: auto;
-  scrollbar-width: none; overscroll-behavior-x: contain;
+  --nm-bloom: 12px;
+  display: flex; margin-bottom: calc(-1 * var(--nm-bloom)); padding-bottom: var(--nm-bloom);
+  overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain;
+  background: linear-gradient(var(--rule-2), var(--rule-2)) 0 calc(100% - var(--nm-bloom)) / 100% 1px no-repeat;
 }
 .mst-names::-webkit-scrollbar { display: none; }
-/* every name: the Label's small capitals, as the header's sections are (the names are the stage's own sections) */
 .mst-n {
-  position: relative; flex: none; padding: 6px 0;
+  position: relative; flex: 1 1 0; min-width: max-content; height: 52px; padding: 0 clamp(14px, 1.6vw, 24px);
   font: var(--label-wght) 13px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase;
-  color: var(--ash); cursor: pointer; transition: color .3s ease;
+  color: var(--ash); white-space: nowrap; cursor: pointer; transition: color .3s ease;
 }
-.mst-n:hover { color: var(--fg); }
-.mst-n.on { color: #fff; }
-.mst-n:focus-visible { outline-offset: 4px; }
-/* the line under the name in the light: a hairline, and on it the seam of the light, filling while she stands
-   there when the line moves on its own */
-.mst-n i { position: absolute; left: 0; right: 0; bottom: -6px; height: var(--seam); background: var(--rule); opacity: 0; transition: opacity .3s ease; }
+@media (hover: hover) { .mst-n:not(.on):hover { color: var(--fg); } }
+.mst-n.on { color: var(--shirt); }
+.mst-n:focus-visible { outline: var(--seam) solid var(--lit); outline-offset: -6px; }
+/* the seam under the name in the light, set into the row's line (filling while she stands there when the line
+   moves on its own) */
+.mst-n i { position: absolute; left: 0; right: 0; bottom: -1px; height: var(--seam); opacity: 0; transition: opacity .3s ease; }
 .mst-n.on i { opacity: 1; }
-@media (pointer: coarse) { .mst-n::after { content: ''; position: absolute; inset: -14px -8px; } }
 .mst-n i::before { content: ''; position: absolute; inset: 0; background: var(--lit-core); box-shadow: var(--seam-glow); transform-origin: 0 50%; }
 .mst.auto .mst-n.on i::before { animation: mst-fill var(--mst-hold, 6s) linear both paused; }
 .mst.auto.run .mst-n.on i::before { animation-play-state: running; }
 @keyframes mst-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* Under the stage, her two lines: large, in the text face (sentence case, shirt white), so they read at a glance
+   and carry the section after the picture. (2026-11-23: set first in the Dial's hairline, they could not be read;
+   the Dial stays for short display words and numbers.) Always two lines high, so the page never jumps as the
+   artists take turns. */
+.mst-foot { display: grid; justify-items: center; margin-top: clamp(6px, .7vw, 10px); text-align: center; }
+.mst-lines {
+  --q: var(--statement);
+  min-height: calc(2 * 1.2 * var(--q)); margin: 0; max-width: 100%;
+  font: 400 var(--q)/1.2 var(--f-text); letter-spacing: -.012em; text-wrap: balance; color: var(--shirt);
+}
+.mst-lines > * { display: block; }
 
 /* ---------- Phones: the artist in the light about two thirds of the width, the arrows a step smaller ---------- */
 @media (max-width: 699px) {
   .mst { --mst-ch: clamp(320px, 88vw, 460px); }
   .mst-arrow { width: 46px; height: 46px; margin-top: -23px; }
   .mst-arrow svg { width: 18px; height: 18px; }
-  /* the names: a row to swipe, from the page's own left edge to the screen's, where the next name fades out */
+  /* the names: a row to swipe, the first name on the page's own left edge, running to the screen's, where the next
+     name fades out; each a fingertip's height */
   .mst-names {
-    justify-content: flex-start; width: auto; max-width: none; align-self: stretch; justify-self: stretch;
-    margin-inline: calc(-1 * var(--pad)); padding-inline: var(--pad) calc(var(--pad) + 60px); scroll-padding-inline: var(--pad);
+    --nm-in: 14px;
+    margin-inline: calc(-1 * var(--pad)); padding-inline: calc(var(--pad) - var(--nm-in)) calc(var(--pad) + 60px); scroll-padding-inline: var(--pad);
     -webkit-mask-image: var(--peek-fade); mask-image: var(--peek-fade);
   }
+  .mst-n { flex: none; height: 48px; padding: 0 var(--nm-in); }
+  .mst-lines { letter-spacing: -.005em; }
 }

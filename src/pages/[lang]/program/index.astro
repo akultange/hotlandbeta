@@ -1,8 +1,9 @@
 ---
-// The Афиша: the special nights as posters set in type (PosterCard.astro), month by month, as a printed programme
-// has them, then every night's own programme: the four acts by the hour beside a photograph of the show (torn like
-// every picture on the site: Photo.astro, cut.css). Once every night on the list has passed, the months give way to a
-// quiet line beside the rocks glass in chalk (the line art, an accent). Styles: styles/posters.css.
+// The Афиша: the special nights as posters, each with the night's own photograph and film (PosterCard.astro), month
+// by month, as a printed programme has them, then every night's own programme: the four acts by the hour beside a
+// photograph of the show (torn like every picture on the site: Photo.astro, cut.css). Once every night on the list
+// has passed, the months give way to a quiet line beside the rocks glass in chalk (the line art, an accent). Styles:
+// styles/posters.css.
 import Base from '../../../layouts/Base.astro';
 import PageTitle from '../../../components/PageTitle.astro';
 import PosterCard from '../../../components/PosterCard.astro';
@@ -11,7 +12,7 @@ import LineArt from '../../../components/LineArt.astro';
 import { type Lang, ui, tr, langPaths } from '../../../data/i18n';
 import { events, eventsLead, night, media, type Event } from '../../../data/content';
 import { site } from '../../../data/site';
-import { keepShort } from '../../../data/format';
+import { keepShort, headClass } from '../../../data/format';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
@@ -20,7 +21,7 @@ const ru = lang === 'ru';
 const shows = site.showTimes;
 // a hyphenated word never breaks at its hyphen ("шоу-балет", "дресс-код")
 const nb = (s: string) => s.replace(/(\S)-(?=\S)/g, '$1\u2011');
-// The nights by month, in date order: each month's name (in the Poster voice, as month names are on the Афиша) over
+// The nights by month, in date order: each month's name (in the Dial, the one display voice) over
 // its own row of posters. A month carries the date of its last night, so the site's script (scripts/site.ts, "Events
 // that have passed") takes its name away with its posters once that night has been.
 const months: { key: string; name: string; year: string; last: string; nights: Event[] }[] = [];
@@ -69,7 +70,7 @@ const stage = {
     <div data-events>
       {months.map((m) => (
         <div class="afisha-month" data-event-date={m.last}>
-          <div class="wrap"><h2 class="afisha-mname" style={`--n:${[...m.name].length}`}>{m.name}<span>{m.year}</span></h2></div>
+          <div class="wrap"><h2 class="afisha-mname">{m.name}<span>{m.year}</span></h2></div>
           <div class="posters" data-lenis-prevent-horizontal>
             {m.nights.map((e) => <PosterCard e={e} lang={lang} />)}
           </div>
@@ -88,7 +89,7 @@ const stage = {
   <section class="sec nightly" aria-labelledby="nightly-h">
     <div class="wrap">
       <div class="bighead bh-line">
-        <h2 class="t-l" id="nightly-h">{tr(night.title, lang)}</h2>
+        <h2 class={headClass(tr(night.title, lang))} id="nightly-h">{tr(night.title, lang)}</h2>
         <div class="bighead-side"><p class="body" set:html={keepShort(nb(tr(night.lead, lang)), lang)} /></div>
       </div>
       <div class="nightly-in">

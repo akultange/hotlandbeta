@@ -54,8 +54,8 @@ const abs = (p: string) => new URL(p, Astro.site).href;
 // The fonts the first screen needs (styles/fonts.css, the site's own), fetched alongside the page instead of after its
 // stylesheet. Every first screen has all three faces: the text (Inter Tight), the labels of the header and the
 // buttons (Roboto Flex Label) and the big voice of a page's title or the hours (Roboto Flex); each in the page's
-// letters, and in Latin, where the digits, the spaces and the signs are. The small ones first. (Geologica, the
-// burgundy site's face, is on no first screen now: its files stay for parts not yet moved off it, unpreloaded.)
+// letters, and in Latin, where the digits, the spaces and the signs are. The small ones first. (The Dial's
+// faces wait for their file, font-display: block: preloaded, the wait is a moment at most.)
 const preload = lang === 'ru'
   ? [fonts['inter-tight-cyr'], fonts['inter-tight-lat'], fonts['roboto-flex-label-cyr'], fonts['roboto-flex-label-lat'], fonts['roboto-flex-cyr'], fonts['roboto-flex-lat']]
   : [fonts['inter-tight-lat'], fonts['roboto-flex-label-lat'], fonts['roboto-flex-lat']];

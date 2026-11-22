@@ -1,76 +1,97 @@
 ---
-// The club's three cards (membership; styles in styles/vip.css), on the navy cloth with its chalk stripe (global.css,
-// .cloth: the suit sections). «Между», 2026-11-21: the three are a black-on-black set, each made of what a good suit
-// and a good car are made of. Выдержка 12 (until 2026-11-22 Silver) is charcoal cloth with a chalk stripe; Выдержка 18
-// (Black) is blackened steel, bead-blasted, with one bright edge; Выдержка 25 (Bordeaux) is black nappa with a seam of
-// red light down it. Their names read like the age on a bottle (content.ts, tiers). Each is set as a real club card:
-// which card it is at the head in the Label, the club's logo at the foot as the club drew it (Logo.astro, with its
-// needle of red light at the L), and the member's number in the Dial, hairline and tall like a watch's figures. A
-// number, never a name. Under each card: its name, what it is, what comes with it, a request button and the price.
-// The buttons follow the one rule for a row of cards: the frame under the first cards, the cuff under the last, the
-// top one.
-// From 1024px: the cards are dealt out of one stack as the field arrives, then lean a little under the pointer.
-// Tablets and phones: a row to swipe, with a meter under it; only the card in front shows its words, the next one is
-// a clean edge of its plate. Nothing moves for reduced motion.
-// A page can set a heading for the cards; it stands inside the field, over the cards, on their left edge:
+// The club's three cards (membership; styles in styles/vip.css), on a field of blackened steel, bead-blasted
+// (global.css, .cloth: until 2026-11-23 the navy cloth with its chalk stripe).
+// 2026-11-23, at the client's word, the section is one card at a time. The three tiers are tabs (the site's tabs, as on
+// the menu page: plain words on one hairline, the chosen one over a line of the light). Under them, the chosen card,
+// large, in front of the other two, which lie fanned behind it; beside it, what that card gives: what it is, what comes
+// with it, the request and the price. Choosing a tier deals its card to the front: it comes up out of the fan and down
+// in front, and the others close up behind it. A card peeking out of the fan can be clicked; on a phone, a swipe across
+// the card deals the next one.
+// The cards are metal, a step darker with each age: Выдержка 12 brushed steel; Выдержка 18 blackened steel,
+// bead-blasted to a fine matte grain (the field is its metal); Выдержка 25 black metal polished to a mirror, with a seam
+// of red light down it. Each has a bright machined edge and a sheen across its face; the card in front leans a little
+// under the pointer and the sheen slides as it leans. (Until 2026-11-23 the three stood side by side, a row to swipe on
+// a phone, in charcoal cloth, blackened steel and black nappa.) Their names read like the age on a bottle (content.ts,
+// tiers). Each is set as a real club card: which card it is at the head in the Label, the club's logo at the foot as the
+// club drew it (Logo.astro, with its needle of red light at the L), and the member's number in the Dial, hairline and
+// tall like a watch's figures. A number, never a name.
+// Wide screens: the tabs over the card, the words to its right. Phones: the tabs, the card, the words under it.
+// Without scripts: no tabs, the front card alone, the three cards' words one under the other. Nothing moves for
+// reduced motion: the card in front simply changes.
+// A page can set a heading for the cards; it stands inside the field, over the tabs, on their left edge:
 //   <MemberCards lang={lang}><div slot="head" class="bighead bh-line">…</div></MemberCards>
-// Inside a section that is cloth already (the membership page), the field paints nothing of its own (vip.css).
+// Inside a section that is the steel already (the membership page), the field paints nothing of its own (vip.css).
+// (One to a page: the tabs' ids are the component's own, "vc-…".)
 import { type Lang, ui, tr } from '../data/i18n';
 import { keepShort } from '../data/format';
 import { tiers, vip } from '../data/content';
 import Logo from './Logo.astro';
 import '../styles/vip.css';
 const { lang } = Astro.props as { lang: Lang };
-const finish = ['cloth', 'steel', 'nappa'];
+const ru = lang === 'ru';
+/** Each card's metal, in the tiers' order (vip.css, .vcard-…). */
+const finish = ['brushed', 'blasted', 'polished'];
 /** The number on each card: a specimen, the ones on the approved «Между» board (no member's number is ever shown;
  *  the host at the door knows whose a number is). A card added later takes a plain one of its own. */
 const serial = ['0412', '0186', '0418'];
 const numberOf = (i: number) => serial[i] ?? String(i + 1).padStart(4, '0');
 const hasHead = Astro.slots.has('head');
-const pad2 = (n: number) => String(n).padStart(2, '0');
 // a hyphenated word never breaks at its hyphen ("ужин-сет")
-const nb = (s: string) => s.replace(/(\S)-(?=\S)/g, '$1\u2011');
-/** The tiers' names: under the section's own heading when it has one, else straight under the page's title. */
+const nb = (s: string) => s.replace(/(\S)-(?=\S)/g, '$1‑');
+/** Each card's heading: under the section's own heading when it has one, else straight under the page's title. */
 const Title = hasHead ? 'h3' : 'h2';
 ---
-<div class="vfield cloth">
+<div class="vfield cloth" data-vfield>
   {hasHead && <slot name="head" />}
-  <div class="vdeck" data-deal data-lenis-prevent-horizontal>
-    {tiers.map((p, i) => (
-      <article class:list={['vtier', `vtier-${finish[i % finish.length]}`]}>
-        <div class="vcard" aria-hidden="true">
-          <div class="vcard-in">
-            {finish[i % finish.length] === 'nappa' && <span class="vcard-seam"></span>}
-            <span class="vcard-tier">{tr(p.name, lang)}</span>
-            <Logo class="vcard-logo" sign="tight" />
-            <span class="vcard-no"><span>№</span>{numberOf(i)}</span>
+  <div class="vstage">
+    <div class="vtabs">
+      <div class="tabs" role="tablist" aria-label={ru ? 'Карты клуба' : 'The club cards'}>
+        <span class="tabs-ink" aria-hidden="true"></span>
+        {tiers.map((p, i) => (
+          <button type="button" role="tab" id={`vc-tab-${i}`} aria-controls={`vc-card-${i}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}>{tr(p.name, lang)}</button>
+        ))}
+      </div>
+    </div>
+    <div class="vdeck" aria-hidden="true">
+      <div class="vdeck-in">
+        {tiers.map((p, i) => (
+          <div class:list={['vcard', `vcard-${finish[i % finish.length]}`]} data-slot={i}>
+            <div class="vcard-in">
+              {finish[i % finish.length] === 'polished' && <span class="vcard-seam"></span>}
+              <span class="vcard-tier">{tr(p.name, lang)}</span>
+              <Logo class="vcard-logo" sign="tight" />
+              <span class="vcard-no"><span>№</span>{numberOf(i)}</span>
+            </div>
           </div>
-        </div>
-        <div class="vtier-body">
-          <Title class="card-title">{tr(p.name, lang)}</Title>
-          <p class="vtier-sub" set:html={keepShort(nb(tr(p.sub, lang)), lang)} />
+        ))}
+      </div>
+    </div>
+    <div class="vpanels">
+      {tiers.map((p, i) => (
+        <article class:list={['vpanel', { 'is-on': i === 0 }]} id={`vc-card-${i}`} role="tabpanel" aria-labelledby={`vc-tab-${i}`}>
+          <p class="vpanel-name">{tr(p.name, lang)}</p>
+          <Title class="vpanel-h" set:html={keepShort(nb(tr(p.sub, lang)), lang)} />
           <ul class="lily-list">{p.items.map((x) => <li><span set:html={keepShort(nb(tr(x, lang)), lang)} /></li>)}</ul>
           <div class="vtier-foot">
-            <a class:list={['btn btn-sm', i === tiers.length - 1 ? 'btn-crimson' : 'btn-line']} href={`/${lang}/booking/?type=card`} aria-label={`${tr(vip.request, lang)}: ${tr(p.name, lang)}`}>{tr(vip.request, lang)}</a>
+            <a class="btn btn-crimson" href={`/${lang}/booking/?type=card`} aria-label={`${tr(vip.request, lang)}: ${tr(p.name, lang)}`}>{tr(vip.request, lang)}</a>
             <span class="vtier-price">{ui[lang].priceOnRequest}</span>
           </div>
-        </div>
-      </article>
-    ))}
+        </article>
+      ))}
+    </div>
   </div>
-  <div class="vmeter" aria-hidden="true"><span class="vmeter-bar"><i></i></span><span class="vmeter-n">{pad2(1)} / {pad2(tiers.length)}</span></div>
 </div>
 
 <script>
-  import { gsap } from 'gsap';
-
   const root = document.documentElement;
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const mouse = matchMedia('(hover: hover) and (pointer: fine)').matches;
-  const pad2 = (n: number) => String(n).padStart(2, '0');
+  /** the site's --ease-out */
+  const EASE = 'cubic-bezier(.16, 1, .3, 1)';
+  const LEAN = ['--rx', '--ry', '--vc-sx', '--vc-sy'];
 
   /** After the 18+ question, once the page has loaded and its web fonts are in (never waiting long for either),
-   *  so the cards are dealt where they end up and never behind the door. */
+   *  so the fan opens where it ends up and never behind the door. */
   function whenSettled(fn: () => void) {
     const wait = (p: Promise<unknown>, ms: number) => Promise.race([p, new Promise((r) => setTimeout(r, ms))]);
     const loaded = new Promise((r) => (document.readyState === 'complete' ? r(0) : addEventListener('load', r, { once: true })));
@@ -83,121 +104,165 @@ const Title = hasHead ? 'h3' : 'h2';
     else addEventListener('hotland:gate', go, { once: true });
   }
 
-  /** Phones: the meter under the row says how far along it is and which card is in front. */
-  function meter(field: HTMLElement, deck: HTMLElement, tiers: HTMLElement[]) {
-    const thumb = field.querySelector<HTMLElement>('.vmeter i');
-    const count = field.querySelector<HTMLElement>('.vmeter-n');
-    if (!thumb || !count) return;
-    let queued = 0;
-    const frontNow = () => {
-      const step = tiers.length > 1 ? tiers[1].offsetLeft - tiers[0].offsetLeft : 0;
-      return step > 0 ? Math.max(0, Math.min(tiers.length - 1, Math.round(deck.scrollLeft / step))) : 0;
-    };
-    const measure = () => {
-      queued = 0;
-      const max = deck.scrollWidth - deck.clientWidth;
-      const seen = Math.min(1, deck.clientWidth / Math.max(1, deck.scrollWidth));
-      const p = max > 0 ? deck.scrollLeft / max : 0;
-      thumb.style.setProperty('--w', `${(seen * 100).toFixed(2)}%`);
-      thumb.style.setProperty('--x', `${(seen < 1 ? ((1 - seen) / seen) * p * 100 : 0).toFixed(2)}%`);
-      const now = frontNow();
-      count.textContent = `${pad2(now + 1)} / ${pad2(tiers.length)}`;
-      // (only the card in front shows its words: vip.css)
-      tiers.forEach((t, i) => t.classList.toggle('is-front', i === now));
-    };
-    const queue = () => { if (!queued) queued = requestAnimationFrame(measure); };
-    deck.addEventListener('scroll', queue, { passive: true });
-    addEventListener('resize', queue);
-    measure();
-  }
+  function setUp(field: HTMLElement) {
+    const tabs = Array.from(field.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const panels = tabs.map((t) => document.getElementById(t.getAttribute('aria-controls') || ''));
+    const deck = field.querySelector<HTMLElement>('.vdeck');
+    const cards = Array.from(field.querySelectorAll<HTMLElement>('.vcard'));
+    const ink = field.querySelector<HTMLElement>('.tabs-ink');
+    if (!deck || !tabs.length || cards.length !== tabs.length) return;
+    let now = Math.max(0, tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true'));
+    const faceOf = (i: number) => cards[i].querySelector<HTMLElement>('.vcard-in');
 
-  /** A mouse: the card leans a little under the pointer, as a card does when it is picked up. (The light that
-   *  used to slide across it is gone: nothing glossy.) */
-  function tilt(cards: HTMLElement[]) {
-    cards.forEach((card) => {
-      const face = card.querySelector<HTMLElement>('.vcard-in');
-      if (!face) return;
-      card.addEventListener('pointermove', (e) => {
-        if (e.pointerType === 'touch') return;
-        const r = card.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width;
-        const y = (e.clientY - r.top) / r.height;
-        card.classList.add('tilting');
-        face.style.setProperty('--ry', `${((x - 0.5) * 10).toFixed(2)}deg`);
-        face.style.setProperty('--rx', `${((0.5 - y) * 8).toFixed(2)}deg`);
-      });
-      card.addEventListener('pointerleave', () => {
-        card.classList.remove('tilting');
-        face.style.removeProperty('--rx');
-        face.style.removeProperty('--ry');
-      });
-    });
-  }
+    /** the chosen tab's line of light, under its word */
+    const moveInk = () => {
+      const t = tabs[now];
+      if (!ink || !t) return;
+      ink.style.setProperty('--x', `${t.offsetLeft}px`);
+      ink.style.setProperty('--w', `${t.offsetWidth}px`);
+    };
 
-  /** The entrance, once, as the field arrives. Desktop: the cards are dealt out of one fanned stack on the
-   *  middle card. Phones: they rise into the row. Then the words follow. Until this runs, CSS keeps the cards out
-   *  of sight (html.motion, vip.css); `.vf-ready` hands them over. The start is watched with an
-   *  IntersectionObserver, so pictures loading above can't make it late. */
-  function entrance(deck: HTMLElement, cards: HTMLElement[], bodies: HTMLElement[]) {
-    gsap.matchMedia().add({ wide: '(min-width: 1024px)', narrow: '(max-width: 1023px)' }, (ctx) => {
-      if (deck.getBoundingClientRect().bottom < 0) return; // already scrolled past: leave them in place
-      const wide = Boolean(ctx.conditions?.wide);
-      gsap.set(cards, { opacity: 0 });
-      gsap.set(bodies, { opacity: 0, y: 26 });
-      // recorded in the context (so a change of layout reverts it) but run only when the field arrives
-      const play = ctx.add('deal', () => {
-        const tl = gsap.timeline({ onComplete: () => gsap.set([...cards, ...bodies], { clearProps: 'all' }) });
-        if (wide) {
-          const mid = Math.floor(cards.length / 2);
-          const centre = (el: HTMLElement) => { const r = el.getBoundingClientRect(); return r.left + r.width / 2; };
-          const xs = cards.map(centre);
-          gsap.set(cards, {
-            x: (i: number) => xs[mid] - xs[i],
-            y: 44,
-            rotation: (i: number) => (i - mid) * 6,
-            scale: 0.94,
-            zIndex: (i: number) => (i === mid ? 3 : 1),
-            transformOrigin: '50% 85%',
-          });
-          // the hand rises into the middle, then the outer cards are dealt to their places
-          tl.to(cards, { opacity: 1, y: 0, duration: 0.35, ease: 'power3.out' }, 0)
-            .to(cards, { x: 0, rotation: 0, scale: 1, duration: 0.8, ease: 'expo.out', stagger: { each: 0.04, from: 'center' } }, 0.14)
-            .to(bodies, { opacity: 1, y: 0, duration: 0.6, ease: 'expo.out', stagger: 0.06 }, 0.3);
-        } else {
-          // (the row to swipe: only the card in front has words to bring in; the others' wait unseen, vip.css)
-          gsap.set(cards, { y: 34 });
-          tl.to(cards, { opacity: 1, y: 0, duration: 0.7, ease: 'expo.out', stagger: 0.06 }, 0)
-            .to(bodies.slice(0, 1), { opacity: 1, y: 0, duration: 0.6, ease: 'expo.out' }, 0.12);
+    /** the card back at rest, flat, its sheen where the light leaves it */
+    const rest = (i: number) => {
+      cards[i].classList.remove('tilting');
+      const f = faceOf(i);
+      if (f) LEAN.forEach((p) => f.style.removeProperty(p));
+    };
+
+    /** Card k to the front. Each card's slot in the fan is CSS (vip.css, [data-slot]); the move between two slots is
+     *  played over it, from where the card is seen now (so a second choice mid-move carries on from there). The
+     *  chosen card comes up out of the fan, still behind the others, and down in front of them; the others close up
+     *  behind it. */
+    const deal = (k: number) => {
+      const order = [k, ...cards.map((_, i) => i).filter((i) => i !== k)];
+      const from = cards.map((c) => getComputedStyle(c).transform);
+      cards.forEach((c) => c.getAnimations().forEach((a) => a.cancel()));
+      cards.forEach((c, i) => (c.dataset.slot = String(order.indexOf(i))));
+      if (still || typeof cards[k].animate !== 'function') return;
+      const to = cards.map((c) => getComputedStyle(c).transform);
+      const lift = 'translate(2%, -20%) rotate(-1.4deg) scale(1.015)';
+      cards.forEach((c, i) => {
+        if (i === k) {
+          c.animate([
+            { transform: from[i], zIndex: 0, easing: 'cubic-bezier(.45, 0, .4, 1)' },
+            { transform: lift, zIndex: 0, offset: 0.42 },
+            { transform: lift, zIndex: 5, offset: 0.43, easing: EASE },
+            { transform: to[i], zIndex: 5 },
+          ], { duration: 860 });
+        } else if (from[i] !== to[i]) {
+          c.animate([{ transform: from[i] }, { transform: to[i] }], { duration: 680, easing: EASE });
         }
       });
-      // (as soon as a sliver of the row is on screen: a reader who stops with the field just in view must not
-      // look at an empty one)
-      const io = new IntersectionObserver((entries) => {
-        if (!entries.some((e) => e.isIntersecting)) return;
-        io.disconnect();
-        play();
-      }, { rootMargin: '0px 0px -6% 0px' });
-      let live = true;
-      whenSettled(() => live && io.observe(deck));
-      return () => { live = false; io.disconnect(); };
+    };
+
+    const select = (k: number, focus = false) => {
+      if (k !== now) {
+        rest(now);
+        now = k;
+        tabs.forEach((t, i) => {
+          t.setAttribute('aria-selected', i === k ? 'true' : 'false');
+          t.tabIndex = i === k ? 0 : -1;
+        });
+        panels.forEach((p, i) => p?.classList.toggle('is-on', i === k));
+        moveInk();
+        deal(k);
+      }
+      if (focus) tabs[k].focus();
+    };
+
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => select(i));
+      t.addEventListener('keydown', (e) => {
+        const n = ({ ArrowRight: (i + 1) % tabs.length, ArrowLeft: (i - 1 + tabs.length) % tabs.length, Home: 0, End: tabs.length - 1 } as Record<string, number>)[e.key];
+        if (n === undefined) return;
+        e.preventDefault();
+        select(n, true);
+      });
     });
+    // a phone: a swipe across the card deals the next card, or the one before (the deck lets the page scroll up and
+    // down under the finger: vip.css, touch-action)
+    let x0 = 0, y0 = 0, swipe = false, swiped = 0;
+    deck.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'touch') return;
+      swipe = true; x0 = e.clientX; y0 = e.clientY;
+    });
+    deck.addEventListener('pointerup', (e) => {
+      if (!swipe) return;
+      swipe = false;
+      const dx = e.clientX - x0, dy = e.clientY - y0;
+      if (Math.abs(dx) < 44 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+      swiped = Date.now();
+      select((now + (dx < 0 ? 1 : -1) + cards.length) % cards.length);
+    });
+    // a card peeking out of the fan, clicked, comes to the front (not the click a swipe may leave behind it, on the
+    // card it has just sent back)
+    deck.addEventListener('click', (e) => {
+      if (Date.now() - swiped < 600) return;
+      const c = (e.target as HTMLElement).closest<HTMLElement>('.vcard');
+      if (c && c.dataset.slot !== '0') select(cards.indexOf(c));
+    });
+    deck.addEventListener('pointercancel', () => (swipe = false));
+
+    // a mouse: the card in front leans a little under the pointer, as a card does when it is picked up, and the sheen
+    // on its metal moves with the lean (vip.css reads the pointer's place, --vc-sx and --vc-sy, -1 to 1)
+    if (mouse && !still) {
+      deck.addEventListener('pointermove', (e) => {
+        if (e.pointerType === 'touch') return;
+        const f = faceOf(now);
+        if (!f) return;
+        const r = cards[now].getBoundingClientRect();
+        const x = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+        const y = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
+        cards[now].classList.add('tilting');
+        f.style.setProperty('--ry', `${((x - 0.5) * 8).toFixed(2)}deg`);
+        f.style.setProperty('--rx', `${((0.5 - y) * 6).toFixed(2)}deg`);
+        f.style.setProperty('--vc-sx', ((x - 0.5) * 2).toFixed(3));
+        f.style.setProperty('--vc-sy', ((y - 0.5) * 2).toFixed(3));
+      });
+      deck.addEventListener('pointerleave', () => rest(now));
+    }
+
+    moveInk();
+    addEventListener('resize', moveInk);
+    if (document.fonts) document.fonts.ready.then(moveInk);
+
+    // The entrance, once, as the field arrives (watched with an IntersectionObserver, so pictures loading above can't
+    // make it late): the card in front rises into place and the fan opens behind it, then the tabs and the words.
+    // Only with motion, and only when the field is still below the screen; until then they wait unseen.
+    const parts = [field.querySelector<HTMLElement>('.vtabs'), field.querySelector<HTMLElement>('.vpanels')].filter((el): el is HTMLElement => Boolean(el));
+    if (!still && root.classList.contains('motion') && deck.getBoundingClientRect().top > innerHeight * 0.9) {
+      [deck, ...parts].forEach((el) => (el.style.opacity = '0'));
+      const open = (play: boolean) => {
+        [deck, ...parts].forEach((el) => el.style.removeProperty('opacity'));
+        if (!play || typeof deck.animate !== 'function') return;
+        cards.forEach((c) => {
+          const slot = Number(c.dataset.slot);
+          c.animate([{ transform: 'translateY(7%)', opacity: 0 }, { transform: getComputedStyle(c).transform, opacity: 1 }],
+            { duration: slot ? 900 : 760, delay: slot ? 220 + slot * 90 : 40, easing: EASE, fill: 'backwards' });
+        });
+        parts.forEach((el, i) => el.animate([{ opacity: 0, transform: 'translateY(14px)' }, { opacity: 1, transform: 'none' }],
+          { duration: 700, delay: 180 + i * 90, easing: EASE, fill: 'backwards' }));
+      };
+      // (as soon as a sliver of it is on screen: a reader who stops with the field just in view must not look at an
+      // empty one; and if the page has been taken past it meanwhile, it is simply there)
+      const io = new IntersectionObserver((entries) => {
+        const en = entries[entries.length - 1];
+        if (!en.isIntersecting && en.boundingClientRect.top > 0) return;
+        io.disconnect();
+        open(en.isIntersecting);
+      }, { rootMargin: '0px 0px -6% 0px' });
+      whenSettled(() => io.observe(deck));
+    }
   }
 
-  document.querySelectorAll<HTMLElement>('.vfield').forEach((field) => {
+  document.querySelectorAll<HTMLElement>('[data-vfield]').forEach((field) => {
     try {
-      const deck = field.querySelector<HTMLElement>('[data-deal]');
-      if (!deck) return;
-      const tiers = Array.from(deck.querySelectorAll<HTMLElement>('.vtier'));
-      const pick = (s: string) => tiers.map((t) => t.querySelector<HTMLElement>(s)).filter((el): el is HTMLElement => Boolean(el));
-      const cards = pick('.vcard');
-      meter(field, deck, tiers);
-      if (still) return;
-      if (mouse) tilt(cards);
-      if (root.classList.contains('motion')) entrance(deck, cards, pick('.vtier-body'));
+      setUp(field);
     } catch (err) {
       console.error(err);
-      field.querySelectorAll('.vcard, .vtier-body').forEach((el) => el.removeAttribute('style'));
+      field.querySelectorAll<HTMLElement>('.vdeck, .vtabs, .vpanels').forEach((el) => el.style.removeProperty('opacity'));
     } finally {
+      // (vip.css keeps the stage unseen until now, and shows it on its own should this never run)
       field.classList.add('vf-ready');
     }
   });
