@@ -38,12 +38,20 @@ const EM: Record<string, number> = {
 const wordEm = (w: string) => [...w.toUpperCase()].reduce((s, c) => s + (/\d/.test(c) ? .918 : EM[c] ?? 1.05), 0);
 const len = Math.max(...title.split(/\s+/).map(wordEm), 3).toFixed(2);
 
-/** One short line for under the poster: the first sentence of the night's text, or, when that sentence runs
- *  long, the words before its colon or dash (the whole text is on the night's page). A past night's poster is
- *  narrower, so its sentence is cut sooner: the line always ends whole within its two lines, in both languages. */
+/** One short line for under the poster: as many whole sentences of the night's text as fit (Velvet's dress code
+ *  comes with its first sentence), or, when even the first runs long, the words before its colon or dash. A past
+ *  night's poster is narrower, so its line is cut sooner: the line always ends whole within its two lines, in both
+ *  languages. */
 const shortLine = (s: string, max = 60) => {
-  const first = s.match(/^.+?[.!?…](?=\s|$)/)?.[0] ?? s;
-  if (first.length <= max) return first;
+  const sentences = s.match(/[^.!?…]+[.!?…]+(?=\s|$)/g) ?? [s];
+  let line = '';
+  for (const x of sentences) {
+    const next = `${line} ${x.trim()}`.trim();
+    if (next.length > max) break;
+    line = next;
+  }
+  if (line) return line;
+  const first = sentences[0].trim();
   const head = first.split(/:\s|\s[—–]\s/)[0].trim();
   return head.length >= 12 && head.length < first.length ? `${head.replace(/[,;]$/, '')}.` : first;
 };
@@ -60,7 +68,8 @@ const when = past
 const entry = price(e.entry, lang);
 const lineId = `poster-${e.slug}-line`;
 // in Russian a short word ("и", "в") never ends a line: it goes down with the word after it
-const line = keepShort(shortLine(tr(e.text, lang), past ? 50 : 60).replace(/&/g, '&amp;').replace(/</g, '&lt;'), lang);
+// (and a hyphenated word never breaks at its hyphen: "Дресс-код")
+const line = keepShort(shortLine(tr(e.text, lang), past ? 50 : 60).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/(\S)-(?=\S)/g, '$1\u2011'), lang);
 // The beam: which light (the night's own, red unless content.ts says amber), and how it crosses this poster. Each
 // date tilts it its own way and at its own height, so a row of posters never repeats one picture.
 const tone = e.light === 'amber' ? 'amber' : 'red';

@@ -1,13 +1,15 @@
 ---
 // Finding the club (styles in styles/visit.css): the About page's contacts (and the end of the home page, when the
-// club brings it back there). Read top to bottom: the heading and the address; the car at the side door, drawn
-// (LineArt), as a band across the page: a long black saloon, the door's red seam behind it caught on the roof, the
-// shoulder and the wet asphalt; under it the facts in a row (hours, shows, dress code, entry) and the ways to get
-// here. (2026-11-21, «Между»: it was a round peephole with a film of the door; the drawing says how a guest arrives,
-// and a drawing never shows a face or a number plate.)
+// club brings it back there). Read top to bottom: the heading and the address; the car at the side entrance, drawn
+// (LineArt), as a band across the page on a plate of black stock torn out as the photographs are (cut.css): a long
+// black saloon, the door's red seam behind it caught on the roof, the shoulder and the wet asphalt; under it one
+// line about the side entrance, then the facts in a row (hours, shows, dress code, entry) and the way there.
+// (2026-11-21, «Между»: it was a round peephole with a film of the door; the drawing says how a guest arrives, and a
+// drawing never shows a face or a number plate. 2026-11-22: the plate is torn, as every plate on the site.)
 // Whatever the page puts inside <Visit> sits under the block, in the same section (About: the ways to reach us).
 import LineArt from './LineArt.astro';
 import { visit } from '../data/content';
+import { lineArt } from '../data/lineart';
 import { type Lang, ui, tr } from '../data/i18n';
 import { site } from '../data/site';
 interface Props {
@@ -46,7 +48,7 @@ import VariantSwitch from './VariantSwitch.astro';
 import { choosing, show } from '../data/variants';
 import '../styles/visit.css';
 ---
-<!-- VISIT: read top to bottom: where, the car at the side door across the page, then when and the way there -->
+<!-- VISIT: read top to bottom: where, the car at the side entrance across the page, then when and the way there -->
 <section class:list={['sec vs', { 'vx-host': choosing('contact') }]} id={id} aria-labelledby={`${id}-h`} data-visit>
   <VariantSwitch name="contact" />
   <div class="wrap vs-wrap">
@@ -54,8 +56,11 @@ import '../styles/visit.css';
       <h2 class="t-l" id={`${id}-h`} set:html={tr(visit.title, lang)} />
       <p class="vs-addr" style={`--len:${street.length}`}><span class="vs-street">{street}{city && <span class="vs-sep">,</span>}</span>{city && <> <span class="vs-city">{city}</span></>}</p>
     </div>
-    <figure class="vs-plate">
-      <LineArt name="car" class="vs-car" />
+    <figure class="vs-fig">
+      <div class="vs-plate ab-plate"><LineArt name="car" class="vs-car" label={tr(lineArt.car.alt, lang)} /></div>
+      <figcaption class="vs-cap">{ru
+        ? 'Боковой вход: машина встаёт у\u00a0самой двери. Водителю есть где подождать.'
+        : 'The side entrance: the car pulls up at the door. Your driver has a place to wait.'}</figcaption>
     </figure>
     <!-- the facts in the order a guest asks: when, the show, what to wear, the door (--n: how many, for the row) -->
     <dl class="vs-facts" style={`--n:${facts.length}`}>

@@ -4,6 +4,7 @@
 import '../styles/fonts.css';
 import '../styles/global.css';
 import '../styles/cut.css';
+import '../styles/colour.css';
 import '../styles/nav.css';
 import '../styles/ask.css';
 import '../styles/apply.css';
@@ -223,6 +224,14 @@ const preload = lang === 'ru'
             version v5 uses them now (FooterNight.astro), so they are in the page only when that version is */}
         {showV('footer', 'v5') && <symbol id="hl-lily" viewBox="0 0 256 256"><path fill-rule="evenodd" d={LILY} /></symbol>}
         {showV('footer', 'v5') && <symbol id="hl-word" viewBox={WORDMARK_BOX}><path fill-rule="evenodd" d={WORDMARK} /></symbol>}
+        {/* the red that stays (styles/colour.css): the picture goes grey, except where it is red (red light, red
+            velvet, a red coat), which keeps its colour; orange keeps a little, pink, purple and blue none */}
+        <filter id="keep-red" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+          <feColorMatrix in="SourceGraphic" type="matrix" values="0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0 0 0 1 0" result="grey" />
+          <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 4 -4 -2 0 -0.3" result="red" />
+          <feComposite in="SourceGraphic" in2="red" operator="in" result="kept" />
+          <feMerge><feMergeNode in="grey" /><feMergeNode in="kept" /></feMerge>
+        </filter>
       </defs>
     </svg>
     {!bare && gate && <AgeGate lang={lang} />}

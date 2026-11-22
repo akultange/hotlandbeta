@@ -1,56 +1,45 @@
 ---
-// The gallery in brief, take two (the home page's «Галерея», data/variants.ts 'gallery': v2; styles in
-// styles/filmstrip.css): the pictures as a strip of real film. A length of half-frame 35 mm film (upright frames,
-// as a half-frame camera makes them) lying flat and level on the wall, in the site's cold materials: a matte base
-// of near-black graphite with its grain; the sprocket holes cut clean through it along both edges (four to a frame,
-// as on the real thing), so the page shows through them, and the film's thickness shows as a thin steel edge inside
-// each hole and along the strip's foot; the frame numbers and the film's name printed faint in steel along the
-// edges; in each frame a different photograph, square-cut, in black and white. It runs off the screen
-// at both sides. As the page scrolls it slides sideways past you, from its first frames to its last, and a finger
-// laid on it moves it too (with reduced motion it stays, a row to scroll by hand). Under the mouse a frame comes
-// up brighter and plays its film if it has one (on phones, the frame that settles in view plays). Each frame opens
-// the gallery.
+// The gallery in brief (the home page's «Галерея», data/variants.ts 'gallery': v2; styles in styles/filmstrip.css): a
+// row of the gallery's prints, cut from the newspaper as every photograph on the site is (styles/cut.css: the torn
+// edge, the white fibre, the dot screen, each at its own slight tilt). They stand side by side on one line from the
+// page's left margin and run off the screen at the right. As the page scrolls the row slides sideways past you, from
+// its first prints to its last, and a finger laid on it moves it too (with reduced motion it stays, a row to scroll
+// by hand). Under the mouse a print straightens and plays its film if it has one (on phones, the print that settles
+// in view plays). Each print opens the gallery.
+// (Until 2026-11-22 it was a strip of half-frame 35 mm film, the pictures in its frames between the sprocket holes;
+// it became prints when every photograph on the site was cut from the newspaper. Its motion stayed.)
 import { photo } from '../data/images';
 import { type Lang } from '../data/i18n';
 import { galleryPhotos } from '../data/gallery';
 
 interface Props { lang: Lang; href: string; next?: Record<string, string> }
 const { href, next = {} } = Astro.props;
-// twelve frames, each a different picture from the gallery (all upright, so they fill the half-frame)
+// eight prints (a phone shows the first six: filmstrip.css), the club's places among the artists: the stage, the
+// dressing room, the pole, a table, the curtain, the bar
 const names = [
-  'gal-01-pole-red-smoke', 'gal-04-blue-velvet-chair', 'gal-02-duet-red-blue', 'gal-06-dressing-room',
-  'gal-03-on-the-bar', 'gal-07-red-stripes', 'gal-09-duet-curtain', 'gal-10-red-light',
-  'gal-11-foam-bath', 'gal-12-corset-chair', 'gal-14-armchair-duet', 'gal-15-behind-the-curtain',
+  'bar-menu-entry', 'gal-06-dressing-room', 'gal-01-pole-red-smoke', 'bar-menu-kitchen',
+  'gal-15-behind-the-curtain', 'gal-03-on-the-bar', 'gal-09-duet-curtain', 'gal-12-corset-chair',
 ];
-const frames = names
+const prints = names
   .map((name) => galleryPhotos.find((s) => s.src.includes(`/${name}.`)))
   .filter((s): s is (typeof galleryPhotos)[number] => Boolean(s));
-// the film's own numbering starts part way along the roll, as a cut strip does
-const FIRST = 7;
-const sets = await Promise.all(frames.map((s) => photo(s.thumb ?? s.src, '(max-width: 899px) 40vw, 16vw')));
+const sets = await Promise.all(prints.map((s) => photo(s.thumb ?? s.src, '(max-width: 699px) 64vw, (max-width: 899px) 40vw, 24vw')));
+/** A picture's width over its height, from its ratio ('2/3'): the print's width in the row (filmstrip.css). */
+const rn = (r: string) => { const [a, b] = r.split('/').map(Number); return (a / b).toFixed(4); };
 ---
 <div class="gfs" data-gfs>
   <div class="gfs-run" data-lenis-prevent-horizontal>
-    <div class="gfs-body" data-gfs-strip>
-    <!-- under the strip: its thickness (the same film, cut the same, a hair lower, in steel) -->
-    <div class="gfs-wall gfs-cut" aria-hidden="true"></div>
-    <div class="gfs-strip gfs-cut">
-      <ol class="gfs-frames" role="list">
-        {frames.map((s, i) => (
-          <li class="gfs-frame">
-            <a class="gfs-a" href={href} tabindex="-1" aria-hidden="true" {...next}>
-              <span class="gfs-img" data-loop={s.film}>
-                <img src={s.thumb ?? s.src} {...sets[i]} alt="" loading="lazy" decoding="async" />
-              </span>
-            </a>
-            {/* the edge print: the frame's number and an arrow under it; the film's name over every fourth */}
-            <span class="gfs-no" aria-hidden="true"><i>▸</i>{i % 2 ? `${FIRST + Math.floor(i / 2)}A` : FIRST + i / 2}</span>
-            {i % 4 === 1 && <span class="gfs-brand" aria-hidden="true">HOTLAND 400</span>}
-          </li>
-        ))}
-      </ol>
-    </div>
-    </div>
+    <ol class="gfs-row" role="list" data-gfs-strip>
+      {prints.map((s, i) => (
+        <li class="gfs-item" style={`--rn:${rn(s.ratio)}`}>
+          <a class="gfs-a" href={href} tabindex="-1" aria-hidden="true" {...next}>
+            <span class="photo gfs-ph" style={`aspect-ratio:${s.ratio}`} data-loop={s.film}>
+              <img src={s.thumb ?? s.src} {...sets[i]} alt="" loading="lazy" decoding="async" draggable="false" />
+            </span>
+          </a>
+        </li>
+      ))}
+    </ol>
   </div>
 </div>
 
@@ -59,30 +48,35 @@ const sets = await Promise.all(frames.map((s) => photo(s.thumb ?? s.src, '(max-w
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
   gsap.registerPlugin(ScrollTrigger);
 
-  // With motion (.is-live): as the strip passes through the screen it slides sideways, from its first frames just
-  // in from the left to its last ones just in from the right, at about the page's own pace (a phone's strip is
-  // eight frames long so that it gets there: filmstrip.css). A finger laid on it moves it too: a sideways drag adds
-  // to where the scroll has brought it, between its two ends, and it glides on a little when let go; an
-  // up-and-down drag stays the page's own scroll (touch-action: pan-y; the browser then cancels ours).
-  // Without motion nothing here runs: the strip is a row to scroll by hand (filmstrip.css).
+  // With motion (.is-live): as the row passes through the screen it slides sideways, from its first print on the
+  // page's left margin to its last on the right margin, at about the page's own pace (no faster: the client found
+  // a faster strip too much; a phone's row is six prints long so that it gets there: filmstrip.css). A finger laid
+  // on it moves it too: a sideways drag adds to where the scroll has brought it, between its two ends, and it glides
+  // on a little when let go; an up-and-down drag stays the page's own scroll (touch-action: pan-y; the browser then
+  // cancels ours). Without motion nothing here runs: the row is one to scroll by hand (filmstrip.css).
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.querySelectorAll<HTMLElement>('[data-gfs]').forEach((box) => {
     const run = box.querySelector<HTMLElement>('.gfs-run');
     const strip = box.querySelector<HTMLElement>('[data-gfs-strip]');
     if (!run || !strip) return;
     if (still || !document.documentElement.classList.contains('motion')) return;
+    // the page's margin, as the row has it before the script takes over (its own padding, var(--pad))
+    let pad = parseFloat(getComputedStyle(run).paddingLeft) || 16;
     box.classList.add('is-live');
 
-    // where the strip stands: `at`, where the page's scroll has brought it, plus `off`, what a finger has added
+    // where the row stands: `at`, where the page's scroll has brought it, plus `off`, what a finger has added
     const st = { at: 0, off: 0 };
-    let first = 0, last = 0; // its two ends: the first frames just in from the left, the last ones just in from the right
+    let first = 0, last = 0; // its two ends: the first print on the left margin, the last on the right margin
     const measure = () => {
-      first = box.clientWidth * 0.06;
-      last = Math.min(first, box.clientWidth * 0.8 - strip.scrollWidth);
+      const W = box.clientWidth;
+      // (on a screen wider than the page's column, the margin is the column's)
+      const edge = Math.max(pad, (W - 1440) / 2 + pad);
+      first = edge;
+      last = Math.min(first, W - edge - strip.scrollWidth);
     };
     const draw = () => {
       const x = Math.min(first, Math.max(last, st.at + st.off));
-      // (what would run past an end is let go, so the strip answers at once when the scroll or the finger turns back)
+      // (what would run past an end is let go, so the row answers at once when the scroll or the finger turns back)
       st.off = x - st.at;
       gsap.set(strip, { x });
     };
@@ -95,8 +89,16 @@ const sets = await Promise.all(frames.map((s) => photo(s.thumb ?? s.src, '(max-w
       onUpdate: draw,
       scrollTrigger: { trigger: box, start: 'top bottom', end: 'bottom top', scrub: 0.6, invalidateOnRefresh: true, onRefresh: draw },
     });
+    addEventListener('resize', () => {
+      // (the margin follows the window: read it again from a probe with the row's own padding)
+      const probe = document.createElement('div');
+      probe.style.cssText = 'position:absolute;visibility:hidden;padding-left:var(--pad)';
+      box.append(probe);
+      pad = parseFloat(getComputedStyle(probe).paddingLeft) || pad;
+      probe.remove();
+    });
 
-    // the finger (and a pen; a mouse has the scroll, and the frames are links to click)
+    // the finger (and a pen; a mouse has the scroll, and the prints are links to click)
     let held: { id: number; x: number; moved: boolean } | null = null;
     let glide: gsap.core.Tween | null = null;
     let trail: { t: number; x: number }[] = [];
@@ -132,7 +134,7 @@ const sets = await Promise.all(frames.map((s) => photo(s.thumb ?? s.src, '(max-w
     };
     run.addEventListener('pointerup', letGo);
     run.addEventListener('pointercancel', letGo);
-    // a drag is not a tap: the frame under the finger does not open the gallery
+    // a drag is not a tap: the print under the finger does not open the gallery
     run.addEventListener('click', (e) => {
       if (e.timeStamp - dragEnded < 400) { e.preventDefault(); e.stopPropagation(); }
     }, true);

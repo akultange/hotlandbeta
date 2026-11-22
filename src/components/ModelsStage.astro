@@ -6,8 +6,10 @@
 // So: a dark stage, one screen tall. The artists stand in a line in the dark; only the one in the light is shown
 // big and bright (in black and white until the new shoot, as every picture is). Each is framed as the row frames her
 // (data/artists.ts frameOf: her eyes on one line, her face one size), so she fills her frame as brightly as she did
-// in the row, and her story flies out of the stage without a jump. Her neighbours wait on either side, smaller,
-// dimmer and nearly colourless, each in her own hard-cut frame; further out they sink into the black. Every few
+// in the row, and her story flies out of the stage without a jump. Every portrait is a print cut from the newspaper,
+// as every photograph on the site is (the torn edge, the white fibre, the dot screen, a slight tilt; the one in the
+// light stands straight: styles/spotlight.css). Her neighbours wait on either side, smaller, dimmer and nearly
+// colourless; further out they sink into the black. Every few
 // seconds the light moves on: the camera pulls back a touch, the line glides, the next artist steps into the light
 // while the last one sinks back into the dark, and the camera pushes in on her. The line loops, and only the few
 // near the light are drawn, so seven artists or twenty-seven behave the same.
@@ -48,7 +50,7 @@ const sets = await Promise.all(artists.map(async (a) => ({ main: await photo(`/m
     <div class="bighead bh-line">
       <h2 class="t-l" id={`${id}-title`}>{ru ? 'Артистки' : 'Artists'}</h2>
       <div class="bighead-side">
-        <p class="body" set:html={keepShort(ru ? 'Лица HOTLAND. Знакомьтесь, остальное на сцене.' : 'The faces of HOTLAND. Say hello here; the rest happens on stage.', lang)} />
+        <p class="body" set:html={keepShort(ru ? 'Лица HOTLAND. Здесь знакомство, остальное на сцене.' : 'The faces of HOTLAND. You meet them here; the rest is on stage.', lang)} />
       </div>
     </div>
   </div>
@@ -57,10 +59,12 @@ const sets = await Promise.all(artists.map(async (a) => ({ main: await photo(`/m
     <div class="mst-cam" data-cam>
       {artists.map((a, i) => (
         <figure class:list={['mst-a', { on: i === 0 }]} data-i={i} style={frameVars(artistFrames[i])} aria-hidden={i === 0 ? undefined : 'true'}>
-          {near(i)
-            ? <img src={`/media/${a.photo}.webp`} {...sets[i].main} alt={a.alt[lang]} loading="lazy" decoding="async" draggable="false" />
-            : <img data-src={`/media/${a.photo}.webp`} data-srcset={sets[i].main.srcset} data-sizes={sets[i].main.sizes} data-alt={a.alt[lang]} alt="" loading="lazy" decoding="async" draggable="false" />}
-          {a.hot && <img class="mst-hot" data-src={`/media/${a.hot}.webp`} data-srcset={sets[i].hot.srcset} data-sizes={sets[i].hot.sizes} alt="" loading="lazy" decoding="async" draggable="false" />}
+          <span class="mst-print">
+            {near(i)
+              ? <img class="mst-main" src={`/media/${a.photo}.webp`} {...sets[i].main} alt={a.alt[lang]} loading="lazy" decoding="async" draggable="false" />
+              : <img class="mst-main" data-src={`/media/${a.photo}.webp`} data-srcset={sets[i].main.srcset} data-sizes={sets[i].main.sizes} data-alt={a.alt[lang]} alt="" loading="lazy" decoding="async" draggable="false" />}
+            {a.hot && <img class="mst-hot" data-src={`/media/${a.hot}.webp`} data-srcset={sets[i].hot.srcset} data-sizes={sets[i].hot.sizes} alt="" loading="lazy" decoding="async" draggable="false" />}
+          </span>
         </figure>
       ))}
     </div>
@@ -127,7 +131,7 @@ const sets = await Promise.all(artists.map(async (a) => ({ main: await photo(`/m
         if (c.style.visibility) c.style.visibility = '';
         // coming near the light: her photograph (only the nearest have it from the start)
         if (a < 2.6) {
-          const im = c.firstElementChild as HTMLImageElement | null;
+          const im = c.querySelector<HTMLImageElement>('img.mst-main');
           if (im?.dataset.src) {
             if (im.dataset.srcset) { im.sizes = im.dataset.sizes || ''; im.srcset = im.dataset.srcset; }
             im.src = im.dataset.src;

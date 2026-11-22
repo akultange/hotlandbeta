@@ -1,24 +1,31 @@
 ---
 // The Афиша: the special nights as posters set in type (PosterCard.astro), month by month, as a printed programme
-// has them, then every night's own programme, the four acts by the hour beside a guest under the laser (the line
-// art's "shoulder"). Styles: styles/posters.css.
+// has them, then every night's own programme: the four acts by the hour beside a photograph of the show (torn like
+// every picture on the site: Photo.astro, cut.css). Once every night on the list has passed, the months give way to a
+// quiet line beside the rocks glass in chalk (the line art, an accent). Styles: styles/posters.css.
 import Base from '../../../layouts/Base.astro';
 import PageTitle from '../../../components/PageTitle.astro';
 import PosterCard from '../../../components/PosterCard.astro';
+import Photo from '../../../components/Photo.astro';
 import LineArt from '../../../components/LineArt.astro';
 import { type Lang, ui, tr, langPaths } from '../../../data/i18n';
-import { events, eventsLead, night, type Event } from '../../../data/content';
+import { events, eventsLead, night, media, type Event } from '../../../data/content';
+import { site } from '../../../data/site';
 import { keepShort } from '../../../data/format';
 
 export const getStaticPaths = langPaths;
 const lang = Astro.params.lang as Lang;
 const t = ui[lang];
 const ru = lang === 'ru';
+const shows = site.showTimes;
+// a hyphenated word never breaks at its hyphen ("шоу-балет", "дресс-код")
+const nb = (s: string) => s.replace(/(\S)-(?=\S)/g, '$1\u2011');
 // The nights by month, in date order: each month's name (in the Poster voice, as month names are on the Афиша) over
 // its own row of posters. A month carries the date of its last night, so the site's script (scripts/site.ts, "Events
 // that have passed") takes its name away with its posters once that night has been.
 const months: { key: string; name: string; year: string; last: string; nights: Event[] }[] = [];
-for (const e of [...events].sort((a, b) => a.date.localeCompare(b.date))) {
+const byDate = [...events].sort((a, b) => a.date.localeCompare(b.date));
+for (const e of byDate) {
   const key = e.date.slice(0, 7);
   let m = months.find((x) => x.key === key);
   if (!m) {
@@ -29,8 +36,25 @@ for (const e of [...events].sort((a, b) => a.date.localeCompare(b.date))) {
   m.nights.push(e);
   m.last = e.date;
 }
+// The page's description, from the list itself: each night with its date ("Courchevel 11 декабря"), then the show.
+const dayMonth = (s: string) => {
+  const [y, mo, d] = s.split('-').map(Number);
+  return new Date(y, mo - 1, d).toLocaleDateString(ru ? 'ru-RU' : 'en-GB', { day: 'numeric', month: 'long' });
+};
+const nightsList = byDate.map((e) => `${tr(e.title, lang)} ${dayMonth(e.date)}`).join(', ');
+const description = ru
+  ? `Афиша HOTLAND. Особые вечера: ${nightsList}. Шоу-программа каждую ночь в ${shows[0]} и ${shows[1]}.`
+  : `Events at HOTLAND. Special nights: ${nightsList}. The show runs every night at ${shows[0]} and ${shows[1]}.`;
+const empty = ru
+  ? `Новых особых вечеров пока нет. Шоу-программа каждую ночь в ${shows[0]} и ${shows[1]}.`
+  : `No special nights on the list yet. The show runs every night at ${shows[0]} and ${shows[1]}.`;
+// the photograph beside the four acts: the show itself, a singer under the beams with the company behind her
+const stage = {
+  img: 'gallery-22-teal-singer.webp',
+  alt: { ru: 'Шоу: певица у микрофона в лучах прожекторов, за ней артистки', en: 'The show: a singer at the microphone in the spotlights, artists behind her' },
+};
 ---
-<Base lang={lang} title={ru ? 'Афиша' : 'Events'} description={ru ? 'Афиша HOTLAND: Courchevel в пятницу, Velvet в субботу, Ritual в воскресенье. А шоу-балет каждую ночь в 23:30 и 01:30.' : 'Events at HOTLAND: Courchevel on Friday, Velvet on Saturday, Ritual on Sunday. And the dance show every night at 23:30 and 01:30.'}>
+<Base lang={lang} title={ru ? 'Афиша' : 'Events'} description={description}>
   <PageTitle
     crumbs={[{ href: `/${lang}/`, label: 'HOTLAND' }, { label: t.nav.program }]}
     title={ru ? 'Афиша' : 'Events'}
@@ -53,28 +77,29 @@ for (const e of [...events].sort((a, b) => a.date.localeCompare(b.date))) {
       ))}
     </div>
     <div class="wrap">
-      <p class="body" data-events-empty hidden>{ru ? 'Новые особые вечера скоро. А шоу-балет каждую ночь в 23:30 и 01:30.' : 'New special nights are coming. The dance show is on every night at 23:30 and 01:30.'}</p>
+      <div class="afisha-quiet" data-events-empty hidden>
+        <LineArt name="glass" class="afisha-quiet-art" />
+        <p class="body" set:html={keepShort(nb(empty), lang)} />
+      </div>
     </div>
   </section>
 
-  <!-- 02 Every night: the four acts by the hour (the Dial), beside the guest under the laser, hung as every drawing
-       on the site hangs: on lacquer inside one hairline (posters.css). The laser follows the hour: off after four,
-       when the room's amber catches him instead (lineart.css). -->
+  <!-- 02 Every night: the four acts by the hour (the Dial) beside a photograph of the show -->
   <section class="sec nightly" aria-labelledby="nightly-h">
     <div class="wrap">
       <div class="bighead bh-line">
         <h2 class="t-l" id="nightly-h">{tr(night.title, lang)}</h2>
-        <div class="bighead-side"><p class="body" set:html={keepShort(tr(night.lead, lang), lang)} /></div>
+        <div class="bighead-side"><p class="body" set:html={keepShort(nb(tr(night.lead, lang)), lang)} /></div>
       </div>
       <div class="nightly-in">
-        <LineArt name="shoulder" class="nightly-art" />
+        <Photo class="nightly-pic" src={media(stage.img)} alt={tr(stage.alt, lang)} pos="50% 30%" />
         <ol class="rows nightly-acts">
           {night.acts.map((a) => (
             <li class="row nightly-act">
               <span class="nightly-time">{a.time}</span>
               <div class="nightly-words">
                 <h3 class="nightly-t">{tr(a.title, lang)}</h3>
-                <p class="nightly-x" set:html={keepShort(tr(a.text, lang), lang)} />
+                <p class="nightly-x" set:html={keepShort(nb(tr(a.text, lang)), lang)} />
               </div>
             </li>
           ))}

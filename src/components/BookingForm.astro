@@ -17,7 +17,9 @@ const f = t.form;
 // the nights a poster can book: date → name
 const nights = Object.fromEntries(events.map((e) => [e.date, tr(e.title, lang)]));
 const occ = Object.entries(f.occasions);
-const [consentA, ...consentB] = f.consent.split(',');
+// (only the policy's own name in the consent's sentence is the link, as in the dialog: Book.astro)
+const [, consentA, consentLink, consentB] =
+  f.consent.match(/^(.*?)(политику конфиденциальности|the privacy policy)(.*)$/) ?? f.consent.match(/^(.*\s)(\S+\s+\S+)()$/) ?? ['', '', f.consent, ''];
 import { show } from '../data/variants';
 ---
 <form class="form" id="book-form" data-booking data-thanks={`/${lang}/booking/thanks/`} data-sending={f.sending} data-wa={site.whatsapp} data-nights={JSON.stringify(nights)} novalidate>
@@ -49,7 +51,7 @@ import { show } from '../data/variants';
     <div class="field full"><label for="bf-wishes">{f.wishes}</label><textarea id="bf-wishes" name="wishes"></textarea></div>
   </div>
   <div class="hp" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off" /></label></div>
-  <label class="consent"><input type="checkbox" name="consent" required /><span>{consentA}, <a href={`/${lang}/privacy/`}>{consentB.join(',').trim()}</a></span></label>
+  <label class="consent"><input type="checkbox" name="consent" required /><span>{consentA}<a href={`/${lang}/privacy/`}>{consentLink}</a>{consentB}</span></label>
   <div class="btns">
     <button class="btn btn-crimson" type="submit">{f.submit}</button>
   </div>
@@ -89,7 +91,7 @@ import { show } from '../data/variants';
       const when = new Intl.DateTimeFormat(ru ? 'ru-RU' : 'en-GB', { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(y, m - 1, d));
       const name = nights[day];
       nightIn.value = [name, when].filter(Boolean).join(', ');
-      nightLine.innerHTML = `<span>${ru ? 'Особый вечер' : 'Special night'}</span> <b></b>`;
+      nightLine.innerHTML = `<span>${ru ? 'Вечер' : 'Night'}</span> <b></b>`;
       nightLine.querySelector('b')!.textContent = nightIn.value;
       nightLine.hidden = false;
     }
@@ -112,7 +114,7 @@ import { show } from '../data/variants';
       };
     };
     const asMessage = (d: ReturnType<typeof collect>) => [
-      ru ? 'Здравствуйте! Хочу забронировать в HOTLAND:' : 'Hello! I’d like to book at HOTLAND:',
+      ru ? 'Здравствуйте. Хочу забронировать в HOTLAND:' : 'Hello, I’d like to book at HOTLAND:',
       [d.typeLabel, d.night, `${ru ? 'гостей' : 'guests'}: ${d.guests}`].filter(Boolean).join(', '),
       d.occasion && d.occasion !== 'none' ? d.occasionLabel : '',
       `${d.name}, ${d.phone}`,
@@ -123,7 +125,7 @@ import { show } from '../data/variants';
       e.preventDefault();
       if (!form.checkValidity()) {
         form.querySelector<HTMLElement>(':invalid')?.focus();
-        if (err) { err.hidden = false; err.textContent = ru ? 'Заполните обязательные поля.' : 'Please fill in the required fields.'; }
+        if (err) { err.hidden = false; err.textContent = ru ? 'Укажите имя и телефон и подтвердите, что вам есть 18.' : 'Please enter your name and phone number, and confirm you’re 18 or over.'; }
         return;
       }
       if (err) err.hidden = true;

@@ -1,9 +1,10 @@
 /* The troupe: the six acts as a wall of portraits (Troupe.astro, ArtistCard.astro). Loaded after global.css (Base.astro).
    Desktop: three columns hung at different heights, like pictures on a gallery wall; the script in
    Troupe.astro lets them drift a little apart while the page scrolls. Phones: two columns, the right one
-   lower. No frames: each portrait fades into the black. The hang uses `top`, never `translate` (the reveal
-   animations use `translate`, and GSAP moves the items with `transform`). (The artists page is hidden since
-   2026-11-13; the portraits are black and white until the new shoot, the grade on their frame, global.css.) */
+   lower. Each portrait is a print cut from the newspaper, as every photograph on the site is (cut.css on .pt-frame:
+   the torn edge, its fibre, the dot screen, the fall into the page at its foot). The hang uses `top`, never
+   `translate` (the reveal animations use `translate`, and GSAP moves the items with `transform`). (The artists page
+   is hidden since 2026-11-13; until 2026-11-22 the portraits had no frame and faded into the black on every side.) */
 
 /* ---------- The wall ---------- */
 .troupe {
@@ -21,16 +22,7 @@
 
 /* ---------- One act: portrait, then its name and one line ---------- */
 .troupe .pt { display: grid; gap: 0; align-content: start; color: var(--fg); }
-.troupe .pt-frame {
-  --tr-fade:
-    linear-gradient(180deg, transparent 0%, #000 11%, #000 60%, transparent 97%),
-    linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%),
-    radial-gradient(ellipse 80% 76% at 50% 44%, #000 62%, transparent 100%);
-  aspect-ratio: 3 / 4; background: var(--bg);
-  /* no frame: the picture comes out of the dark at the top and sides, and sinks back into it at the bottom */
-  -webkit-mask-image: var(--tr-fade); -webkit-mask-composite: source-in;
-  mask-image: var(--tr-fade); mask-composite: intersect;
-}
+.troupe .pt-frame { aspect-ratio: 3 / 4; }
 /* The portraits are shot on a flat black of their own (#090909). So that no picture ever shows its edge, that
    black becomes the page's: a touch of contrast takes it down to true black, and a layer of the page colour
    lifts it back up to the page (on the charcoal home section) or leaves it black (on black pages). */
@@ -78,16 +70,6 @@
   /* the last act, when it hangs in the lower column, sits at the foot of its row: when its line is shorter than its
      neighbour's, its words still end where the wall's room for the drop ends, so no hidden air comes under it */
   .tr-item:last-child:nth-child(even) { align-self: end; }
-  /* the portraits run out to the edges of the screen (they dissolve there anyway); the words keep the page margin */
-  .wrap > .troupe { margin-inline: calc(-1 * var(--pad)); }
-  .wrap > .troupe .tr-item:nth-child(odd) .pt-cap { padding-left: var(--pad); padding-right: 6px; }
-  .wrap > .troupe .tr-item:nth-child(even) .pt-cap { padding-right: var(--pad); }
-  .troupe .pt-frame {
-    --tr-fade:
-      linear-gradient(180deg, transparent 0%, #000 9%, #000 62%, transparent 97%),
-      linear-gradient(90deg, transparent 0%, #000 9%, #000 91%, transparent 100%),
-      radial-gradient(ellipse 82% 78% at 50% 44%, #000 64%, transparent 100%);
-  }
   .troupe .pt-cap { display: block; margin-top: -6px; padding-right: 0; }
   .troupe .pt-name { display: inline; font-size: clamp(22px, 4.4vw, 30px); line-height: 1.08; }
   .troupe .pt-text { margin-top: 8px; font-size: clamp(15px, 2.4vw, 16px); line-height: 1.5; }

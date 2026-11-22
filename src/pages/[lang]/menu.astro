@@ -1,13 +1,15 @@
 ---
 // The menu page: the page's header (as every page's), then the bar card: three tabs (bar, kitchen, entry and
 // shows), pinned under the header while you read, the chosen list set large in two columns, and beside it the tab's
-// drawing in a case of lacquer black, which stays in view (styles/menu.css). Then the hookah lounge (the bottle
-// sets are hidden for now). Without scripts the three lists simply follow one another, each under its own heading.
-// (2026-11-21, «Между»: the tabs' photographs, the artist on the bar, at the table and at the pole, gave way to the
-// line art, one drawing a tab: the glass for the bar, the cigar after dinner for the kitchen, the bottle on the table
-// for the night and its show. The tabs' 3D icons went with them: the tabs are plain words now, the chosen one lit.
-// Under the case, a line names what stands in it, beside a point of its amber light, the way a good catalogue
-// captions a plate: the drawing's own words, data/lineart.ts.)
+// photograph, which stays in view (styles/menu.css). Then the hookah lounge (the bottle sets are hidden for now).
+// Without scripts the three lists simply follow one another, each under its own heading.
+// (2026-11-22, the final pass: the case of lacquer black with one drawing in it read as a placeholder, so the tab's
+// picture is the club's own photograph again, torn from the newspaper as every photograph is (cut.css): the whisky
+// and the cigar for the bar, the table laid for dinner for the kitchen, the show for the entry. Not the artist on
+// the bar, at the table and at the pole that stood there before «Между». The drawings (LineArt.astro) are the
+// list's accent now: the tab's own one, small, stands on the tabs' hairline at its far end, the glass for the bar,
+// the cigar after dinner for the kitchen, the bottle for the night and its show, and draws itself again when its tab
+// is chosen. The bar's list leads with the spirits, whisky first: content.ts.)
 import Base from '../../layouts/Base.astro';
 import Photo from '../../components/Photo.astro';
 import PageTitle from '../../components/PageTitle.astro';
@@ -15,7 +17,7 @@ import LineArt from '../../components/LineArt.astro';
 import '../../styles/menu.css'; // after the layout, so it follows global.css
 import { type Lang, tr, langPaths } from '../../data/i18n';
 import { barMenu, bar, kitchen, entryShows, hookah, media, type Item } from '../../data/content';
-import { lineArt } from '../../data/lineart';
+import { photo } from '../../data/images';
 import { keepShort } from '../../data/format';
 
 export const getStaticPaths = langPaths;
@@ -26,32 +28,35 @@ const ru = lang === 'ru';
 const cost = (x: Item) => {
   if (x.price === null) return tr(barMenu.onRequest, lang);
   const from = x.from ? '<span class="pr-from">' + (ru ? 'от' : 'from') + '</span>' : '';
-  return from + x.price.toLocaleString(ru ? 'ru-RU' : 'en-GB') + '<span class="pr-cur"> ₽</span>';
+  return from + x.price.toLocaleString(ru ? 'ru-RU' : 'en-GB') + '<span class="pr-cur"> ₽</span>';
 };
 /** The few words under a name, and the house cocktails' mark. */
 const own = ru ? 'фирменный' : 'signature';
 const tabs = [
-  { id: 'bar', label: tr(barMenu.tabs.bar, lang), art: 'glass' },
-  { id: 'kitchen', label: tr(barMenu.tabs.kitchen, lang), art: 'cigar' },
-  { id: 'entry', label: tr(barMenu.tabs.entry, lang), art: 'bottle' },
+  { id: 'bar', label: tr(barMenu.tabs.bar, lang), art: 'glass', shot: barMenu.shots.bar },
+  { id: 'kitchen', label: tr(barMenu.tabs.kitchen, lang), art: 'cigar', shot: barMenu.shots.kitchen },
+  { id: 'entry', label: tr(barMenu.tabs.entry, lang), art: 'bottle', shot: barMenu.shots.entry },
 ] as const;
+// the tabs' photographs, each with a phone's own copy (data/images.ts); the bar's is on the first screen
+const shots = await Promise.all(tabs.map((x, i) => photo(media(x.shot.img), '(min-width: 900px) clamp(300px, 31vw, 460px), 92vw', i > 0)));
 ---
-<Base lang={lang} title={ru ? 'Меню' : 'Menu'} description={tr(barMenu.lead, lang)}>
+<Base lang={lang} title={tr(barMenu.title, lang)} description={tr(barMenu.lead, lang)}>
   <!-- the page's header, as every page's: its name, its second line and a short lead -->
   <PageTitle title={tr(barMenu.title, lang)} sub={tr(barMenu.sub, lang)} lead={tr(barMenu.intro, lang)} />
 
-  <!-- the bar card: the tabs (pinned while you read), the chosen list, and its drawing beside it -->
+  <!-- the bar card: the tabs (pinned while you read), the chosen list, and its photograph beside it -->
   <section class="sec bm" id="menu">
     <div class="wrap bm-in">
-      <!-- the case: one drawing a tab, the chosen one in front, and its caption under the case (decoration: the
-           lists say everything) -->
-      <div class="bm-media" aria-hidden="true">
-        <div class="bm-case">
-          {tabs.map((x, i) => <LineArt name={x.art} class={i === 0 ? 'bm-art on' : 'bm-art'} />)}
-        </div>
-        <p class="bm-cap">
-          {tabs.map((x, i) => <span class:list={['bm-cap-t', { on: i === 0 }]}>{tr(lineArt[x.art].alt, lang)}</span>)}
-        </p>
+      <!-- the tab's photograph: one for each tab, each in a frame of its own (so each takes its own treatment,
+           colour.css), the three in one place, the chosen one shown -->
+      <div class="bm-media">
+        <figure class="fig bm-shot">
+          {tabs.map((x, i) => (
+            <div class:list={['photo bm-ph', { on: i === 0 }]} aria-hidden={i === 0 ? undefined : 'true'}>
+              <img src={media(x.shot.img)} {...shots[i]} alt={tr(x.shot.alt, lang)} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" style={`--pos:${x.shot.pos}`} />
+            </div>
+          ))}
+        </figure>
       </div>
 
       <i class="bm-pin" aria-hidden="true"></i>
@@ -61,6 +66,10 @@ const tabs = [
           {tabs.map((x, i) => (
             <button type="button" role="tab" id={`tab-${x.id}`} aria-controls={x.id} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}>{x.label}</button>
           ))}
+        </div>
+        <!-- the tab's drawing, standing on the tabs' hairline at its far end (decoration: the tabs say everything) -->
+        <div class="bm-arts" aria-hidden="true">
+          {tabs.map((x, i) => <LineArt name={x.art} class={i === 0 ? 'bm-art on' : 'bm-art'} />)}
         </div>
       </div>
 
@@ -95,7 +104,7 @@ const tabs = [
 
         <div class="bm-panel" id="entry" role="tabpanel" aria-labelledby="tab-entry">
           <h2 class="bm-panel-h">{tabs[2].label}</h2>
-          <div class="mrows" style="margin-top: 0">
+          <div class="mrows">
             {entryShows.map((it) => (
               <div class="mrow"><span class="nm">{tr(it.name, lang)}</span><span class:list={['pr', { req: it.price === null }]} set:html={cost(it)} />{it.desc && <small class="ds">{tr(it.desc, lang)}</small>}</div>
             ))}
@@ -114,9 +123,9 @@ const tabs = [
       const root = document.documentElement;
       const tabs = Array.from(bm.querySelectorAll('[role="tab"]'));
       const panels = tabs.map((t) => document.getElementById(t.getAttribute('aria-controls')));
-      // (one drawing a tab, in the tabs' order, and one caption for each drawing)
+      // (one photograph and one drawing a tab, in the tabs' order)
+      const imgs = Array.from(bm.querySelectorAll('.bm-ph'));
       const arts = Array.from(bm.querySelectorAll('.bm-art'));
-      const caps = Array.from(bm.querySelectorAll('.bm-cap-t'));
       const ink = bm.querySelector('.tabs-ink');
       // The chosen tab's drawing draws itself again, the pen first and the light last, as LineArt.astro draws a
       // drawing the first time it comes into view (styles/lineart.css). Only with motion (html.motion), and only
@@ -147,11 +156,14 @@ const tabs = [
           t.setAttribute('aria-selected', on ? 'true' : 'false');
           t.tabIndex = on ? 0 : -1;
           panels[i].hidden = !on;
+          if (imgs[i]) {
+            imgs[i].classList.toggle('on', on);
+            if (on) imgs[i].removeAttribute('aria-hidden'); else imgs[i].setAttribute('aria-hidden', 'true');
+          }
           if (arts[i]) {
             arts[i].classList.toggle('on', on);
             if (on && changed) redraw(arts[i]);
           }
-          if (caps[i]) caps[i].classList.toggle('on', on);
         });
         if (focus) tab.focus();
         moveInk();
@@ -193,7 +205,7 @@ const tabs = [
       if (document.fonts) document.fonts.ready.then(moveInk);
       if ('IntersectionObserver' in window) {
         // Stuck or not: the tabs are stuck once the mark standing where they start has gone up under the header.
-        // Only then do they carry the smoked band behind them and under the header (menu.css, .is-stuck).
+        // Only then do they carry the matte band behind them and under the header (menu.css, .is-stuck).
         const pin = bm.querySelector('.bm-pin');
         let watch = null;
         const watchPin = () => {

@@ -1,97 +1,50 @@
-/* ---------- The gallery in brief, take two: a strip of film (GalleryFilmStrip.astro) ----------
-   Half-frame 35 mm film, measured from the real thing and scaled by the strip's height --sh (35 mm):
-   frames 18 x 24 mm (upright, 3:4) one millimetre apart, so a frame every 19 mm; along both edges a row of
-   sprocket holes every 4.75 mm (four to a frame), 2.8 x 1.98 mm, 2 mm in from the edge.
-   It lies flat and level on the wall, in the site's own cold materials (2026-11-20; it used to be the one warm
-   thing left: a brown base over a warm light, amber print, turned in 3D so its foot sloped across the screen).
-   Layers, back to front: its thickness (the same film, cut the same, a hair lower and lighter, so a thin steel
-   edge shows inside the top of each hole and along the strip's foot); the strip itself: a matte base of near-black
-   graphite with its grain, the holes cut clean through it (the page's concrete shows through), the pictures
-   square-cut and in black and white, the edge print in the Label's small capitals, in steel. (2026-11-21,
-   «Между»: the cold sheen across the plastic and the soft shadow under the strip are gone: nothing glossy, no
-   shadow under a part.) It runs off the screen at both sides.
-   Without motion, or before the script: a row to move by hand. With motion (.is-live, set by the script): the strip
+/* ---------- The gallery in brief: a row of prints (GalleryFilmStrip.astro) ----------
+   The gallery's photographs as the site shows every photograph: cut from the newspaper (styles/cut.css puts the
+   torn edge, the white fibre, the dot screen and each print's slight tilt on the .photo frame; under the pointer a
+   print straightens). They stand on one line, all one height (--gh), each as wide as its own picture, and run from
+   the page's left margin off the screen at the right.
+   (Until 2026-11-22 this was a strip of half-frame 35 mm film, graphite with its sprocket holes: the one picture on
+   the home page that was not a print. The motion is the strip's.)
+   Without motion, or before the script: a row to move by hand. With motion (.is-live, set by the script): the row
    slides sideways as the page scrolls, and a finger laid on it moves it too. */
 .gfs {
-  --sh: clamp(300px, 50svh, 500px);                 /* the strip's height: 35 mm */
-  --mm: calc(var(--sh) / 35);                       /* one millimetre of film */
-  --thick: max(1.5px, calc(var(--mm) * .14));        /* how much of the film's edge shows */
-  /* the sprocket holes, cut out of the film: a hole every 4.75 mm, along both edges, their corners cut almost square */
-  --hole: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4.75 1.98'%3E%3Crect x='.975' width='2.8' height='1.98' rx='.14' fill='%23000'/%3E%3C/svg%3E");
-  /* (cut at the screen's sides only: the strip is longer than the screen is wide) */
+  --gh: clamp(220px, min(48svh, 30vw), 470px);   /* the prints' height */
+  --gg: clamp(28px, 3vw, 48px);                  /* the room between two prints */
+  /* (cut at the screen's sides only: the row is longer than the screen is wide) */
   position: relative; overflow-x: clip; overflow-y: visible;
 }
-/* the row, moved by hand: a finger or a trackpad scrolls it. The 6 mm under the strip, inside the scrolling row,
-   hold its edge and are taken back, so the next section's air starts at the strip's foot. */
-.gfs-run { position: relative; overflow-x: auto; scrollbar-width: none; padding: 0 var(--pad) calc(var(--mm) * 6); margin-bottom: calc(var(--mm) * -6); }
+/* the row, moved by hand: a finger or a trackpad scrolls it. The few pixels above and below are the tilted prints'
+   corners (a scrolling row would cut them), taken back so the section's rhythm is the prints' own edges. */
+.gfs-run {
+  position: relative; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none;
+  padding: 8px var(--pad) 12px; margin: -8px 0 -12px;
+}
 .gfs-run::-webkit-scrollbar { display: none; }
-.gfs-body { position: relative; width: max-content; }
-/* with motion the script moves the strip itself, so nothing scrolls inside the row: a sideways drag is the
-   script's, and the page's own up-and-down scroll stays the browser's (pan-y) */
-.gfs.is-live .gfs-run { overflow: visible; padding: 0; margin: 0; touch-action: pan-y; }
-.gfs.is-live .gfs-body { will-change: transform; }
+.gfs-row { list-style: none; margin: 0; padding: 0; display: flex; align-items: flex-start; gap: var(--gg); width: max-content; }
+/* with motion the script moves the row itself, so nothing scrolls inside it: a sideways drag is the script's, and the
+   page's own up-and-down scroll stays the browser's (pan-y) */
+.gfs.is-live .gfs-run { overflow: visible; padding-inline: 0; touch-action: pan-y; }
+.gfs.is-live .gfs-row { will-change: transform; }
 
-/* the holes, cut through both the strip and its thickness */
-.gfs-cut {
-  -webkit-mask-image: linear-gradient(#000, #000), var(--hole), var(--hole);
-  mask-image: linear-gradient(#000, #000), var(--hole), var(--hole);
-  -webkit-mask-size: 100% 100%, calc(var(--mm) * 4.75) calc(var(--mm) * 1.98), calc(var(--mm) * 4.75) calc(var(--mm) * 1.98);
-  mask-size: 100% 100%, calc(var(--mm) * 4.75) calc(var(--mm) * 1.98), calc(var(--mm) * 4.75) calc(var(--mm) * 1.98);
-  -webkit-mask-position: 0 0, 0 calc(var(--mm) * 2), 0 calc(100% - var(--mm) * 2);
-  mask-position: 0 0, 0 calc(var(--mm) * 2), 0 calc(100% - var(--mm) * 2);
-  -webkit-mask-repeat: no-repeat, repeat-x, repeat-x; mask-repeat: no-repeat, repeat-x, repeat-x;
-  /* the whole strip, less the two rows of holes */
-  -webkit-mask-composite: source-out, source-over, source-over; mask-composite: subtract, add, add;
-}
-/* the film's thickness: the same cut strip, a hair lower, in blackened steel, the base's cut edge */
-.gfs-wall {
-  position: absolute; inset: 0; translate: 0 var(--thick);
-  background: var(--steel);
-}
-.gfs-strip {
-  position: relative; height: var(--sh);
-  padding: 0 calc(var(--mm) * 3);
-  /* the base itself: matte graphite, its top edge catching one hairline of light */
-  background: linear-gradient(180deg, rgba(236, 236, 232, .1) 0 1px, transparent 1px) var(--graphite);
-}
-/* the base's grain, under the pictures */
-.gfs-frames::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .07;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0 0 / 160px 160px;
-}
-.gfs-frames {
-  list-style: none; margin: 0; padding: 0; height: 100%;
-  display: flex; align-items: center; gap: var(--mm);
-}
-.gfs-frame { position: relative; flex: none; width: calc(var(--mm) * 18); height: calc(var(--mm) * 24); }
-.gfs-a { position: relative; z-index: 1; display: block; width: 100%; height: 100%; -webkit-tap-highlight-color: transparent; -webkit-user-drag: none; }
-/* the picture in its frame: square-cut, a fine dark line where the image ends on the film */
-.gfs-img {
-  position: relative; display: block; width: 100%; height: 100%; overflow: hidden;
-  background: var(--lacquer); box-shadow: 0 0 0 1px rgba(0, 0, 0, .7);
-}
-/* the picture at full strength, with no vignette or shadow over it (the client: "remove shadow from gallery
-   images"); under the pointer it comes up a touch brighter */
-.gfs-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: contrast(1.05); transition: filter .5s ease; -webkit-user-drag: none; }
-@media (hover: hover) { .gfs-a:hover .gfs-img img { filter: brightness(1.06) contrast(1.05); } }
+/* a print: as tall as the row, as wide as its picture (--rn, its width over its height) */
+.gfs-item { flex: none; width: calc(var(--gh) * var(--rn, .6667)); height: var(--gh); }
+.gfs-a { display: block; width: 100%; height: 100%; -webkit-tap-highlight-color: transparent; -webkit-user-drag: none; }
+.gfs-ph { display: block; width: 100%; height: 100%; }
+.gfs-ph img { -webkit-user-drag: none; }
 
-/* the edge print: the frame's number and an arrow, in the margin under the frame; the film's name over some
-   frames, in the top margin. Small and quiet, as it is on film: the Label's capitals (serial numbers), in steel,
-   faint on the graphite. */
-.gfs-no, .gfs-brand {
-  position: absolute; z-index: 1; left: calc(var(--mm) * 2);
-  font: var(--label-wght) max(11px, calc(var(--mm) * 1.05))/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase;
-  color: var(--steel-hi); opacity: .5;
-  font-variant-numeric: tabular-nums; white-space: nowrap; pointer-events: none;
+/* tablets: the prints a little smaller */
+@media (max-width: 899px) {
+  .gfs { --gh: clamp(260px, 44vw, 400px); --gg: 24px; }
 }
-.gfs-no { top: calc(100% + var(--mm) * .2); display: flex; align-items: center; gap: calc(var(--mm) * .5); }
-.gfs-no i { font-style: normal; font-size: .85em; }
-.gfs-brand { bottom: calc(100% + var(--mm) * .2); left: calc(var(--mm) * 6); }
-
+/* phones: six prints, not eight: as many as go by in one pass of the screen at the page's own pace (the row must not
+   run faster than the page scrolls). The next print, peeking in at the right, fades into the black, as every row
+   that runs off a phone's screen does. */
 @media (max-width: 699px) {
-  .gfs { --sh: clamp(250px, 74vw, 330px); }
-  /* A phone's strip is eight frames long, not twelve: as much film as goes by in one pass of the screen at the
-     page's own pace (it must not run faster than the page scrolls: the client found that too fast). So the pass
-     ends on the strip's last frame; with twelve it stopped four short of it. The rest are in the gallery. */
-  .gfs-frame:nth-child(n + 9) { display: none; }
+  .gfs { --gh: clamp(250px, 78vw, 360px); --gg: 22px; }
+  .gfs-item:nth-child(n + 7) { display: none; }
+  .gfs-run { -webkit-mask-image: var(--peek-fade); mask-image: var(--peek-fade); }
+}
+/* a phone held sideways: the row within the short screen */
+@media (orientation: landscape) and (max-height: 500px) {
+  .gfs { --gh: min(64svh, 280px); }
 }

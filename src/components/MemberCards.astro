@@ -1,8 +1,9 @@
 ---
 // The club's three cards (membership; styles in styles/vip.css), on the navy cloth with its chalk stripe (global.css,
 // .cloth: the suit sections). «Между», 2026-11-21: the three are a black-on-black set, each made of what a good suit
-// and a good car are made of. Silver is charcoal cloth with a chalk stripe; Black is blackened steel, bead-blasted,
-// with one bright edge; Bordeaux is black nappa with a seam of red light down it. Each is set as a real club card:
+// and a good car are made of. Выдержка 12 (until 2026-11-22 Silver) is charcoal cloth with a chalk stripe; Выдержка 18
+// (Black) is blackened steel, bead-blasted, with one bright edge; Выдержка 25 (Bordeaux) is black nappa with a seam of
+// red light down it. Their names read like the age on a bottle (content.ts, tiers). Each is set as a real club card:
 // which card it is at the head in the Label, the club's logo at the foot as the club drew it (Logo.astro, with its
 // needle of red light at the L), and the member's number in the Dial, hairline and tall like a watch's figures. A
 // number, never a name. Under each card: its name, what it is, what comes with it, a request button and the price.
@@ -27,6 +28,8 @@ const serial = ['0412', '0186', '0418'];
 const numberOf = (i: number) => serial[i] ?? String(i + 1).padStart(4, '0');
 const hasHead = Astro.slots.has('head');
 const pad2 = (n: number) => String(n).padStart(2, '0');
+// a hyphenated word never breaks at its hyphen ("ужин-сет")
+const nb = (s: string) => s.replace(/(\S)-(?=\S)/g, '$1\u2011');
 /** The tiers' names: under the section's own heading when it has one, else straight under the page's title. */
 const Title = hasHead ? 'h3' : 'h2';
 ---
@@ -38,17 +41,17 @@ const Title = hasHead ? 'h3' : 'h2';
         <div class="vcard" aria-hidden="true">
           <div class="vcard-in">
             {finish[i % finish.length] === 'nappa' && <span class="vcard-seam"></span>}
-            <span class="vcard-tier">{p.name}</span>
+            <span class="vcard-tier">{tr(p.name, lang)}</span>
             <Logo class="vcard-logo" sign="tight" />
             <span class="vcard-no"><span>№</span>{numberOf(i)}</span>
           </div>
         </div>
         <div class="vtier-body">
-          <Title class="card-title">{p.name}</Title>
-          <p class="vtier-sub" set:html={keepShort(tr(p.sub, lang), lang)} />
-          <ul class="lily-list">{p.items.map((x) => <li><span set:html={keepShort(tr(x, lang), lang)} /></li>)}</ul>
+          <Title class="card-title">{tr(p.name, lang)}</Title>
+          <p class="vtier-sub" set:html={keepShort(nb(tr(p.sub, lang)), lang)} />
+          <ul class="lily-list">{p.items.map((x) => <li><span set:html={keepShort(nb(tr(x, lang)), lang)} /></li>)}</ul>
           <div class="vtier-foot">
-            <a class:list={['btn btn-sm', i === tiers.length - 1 ? 'btn-crimson' : 'btn-line']} href={`/${lang}/booking/?type=card`} aria-label={`${tr(vip.request, lang)}: ${p.name}`}>{tr(vip.request, lang)}</a>
+            <a class:list={['btn btn-sm', i === tiers.length - 1 ? 'btn-crimson' : 'btn-line']} href={`/${lang}/booking/?type=card`} aria-label={`${tr(vip.request, lang)}: ${tr(p.name, lang)}`}>{tr(vip.request, lang)}</a>
             <span class="vtier-price">{ui[lang].priceOnRequest}</span>
           </div>
         </div>

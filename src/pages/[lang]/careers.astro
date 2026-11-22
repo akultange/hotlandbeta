@@ -23,9 +23,10 @@ const ru = lang === 'ru';
 // Each role's picture, from the gallery: which one, and how it is cut for a card. The pictures are dark at their
 // edges, so each is drawn larger than its frame (zoom) around the part that matters (at: where that part is in the
 // picture), and the frame holds the lit middle. The last one, the hall, is a wide picture: on a phone its card is
-// wide too.
+// wide too. (2026-11-22: the artists' card shows the stage, three dancers against the light, in place of an artist
+// in a bodysuit at the pole: a content card, not the gallery.)
 const shots = [
-  { img: 'gallery-04-pole-spin.webp', at: '54% 43%', zoom: 1.5 },
+  { img: 'gallery-23-eclipse.webp', at: '59% 60%', zoom: 1.08 },
   { img: 'gallery-08-hostess-door.webp', at: '50% 46%', zoom: 1.38 },
   { img: 'gallery-07-glove-champagne.webp', at: '52% 46%', zoom: 1.18 },
   { img: 'gallery-21-flame-bar.webp', at: '50% 50%', zoom: 1.08 },
@@ -38,7 +39,7 @@ const roles = await Promise.all(careers.roles.map(async (r, i) => ({
   set: await photo(media(shots[i].img), '(min-width: 900px) min(19vw, 260px), (min-width: 600px) 46vw, 92vw'),
 })));
 const room = await photo('/media/casting-room.webp', '(min-width: 900px) min(54vw, 760px), 100vw');
-const steps = ru ? ['Роль', 'Контакты', 'Пара слов о себе'] : ['The role', 'How to reach you', 'A few words about you'];
+const steps = ru ? ['Роль', 'Как связаться', 'Пара слов о себе'] : ['The role', 'How to reach you', 'A few words about you'];
 ---
 <Base lang={lang} title={t.footer.careers} description={tr(careers.lead, lang)} closing={false}>
   <PageTitle

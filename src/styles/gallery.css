@@ -149,8 +149,9 @@ html.motion .gxd:not(.is-3d):not(.gx-still) .gxd-item { display: none; }
 @media (hover: hover) and (pointer: fine) { .gxd-ticks:hover i:not(.now):not(.past) { background: color-mix(in srgb, var(--shirt) 40%, transparent); } }
 /* the count: the picture's number in the Dial, how many in the Label */
 .gxd-count { display: flex; align-items: baseline; gap: 8px; }
-/* (a touch apart, and never under 44px: smaller, the Dial's narrow 0 and 1 run together into two bars) */
-.gxd-num { min-width: 1.1em; font: 200 clamp(44px, 3.4vw, 56px)/.8 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; letter-spacing: .05em; color: var(--fg); }
+/* (a touch apart, and never under 44px: smaller, the Dial's narrow 0 and 1 run together into two bars; its figures
+   are tabular, so «/ 18» stands close beside it without moving as the number changes) */
+.gxd-num { font: 200 clamp(44px, 3.4vw, 56px)/.8 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; letter-spacing: .05em; color: var(--fg); }
 .gxd-of { font: var(--label-wght) 13px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); color: var(--ash); font-variant-numeric: tabular-nums; }
 @media (max-width: 899px) {
   :is(.gxd.is-3d, html.motion .gxd:not(.gx-still)) { --gx-step: clamp(300px, 46svh, 440px); }

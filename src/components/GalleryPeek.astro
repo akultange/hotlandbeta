@@ -1,14 +1,11 @@
 ---
 // The gallery in brief: the one way into the gallery wherever a page offers it (the home page, before the
-// artists' faces; the show page, after the troupe; styles in styles/peek.css). It should read at a glance as what
-// it is: photographs. So the pictures are prints, hung to dry on a fine steel wire across the screen, each held by
-// a small steel clip and hanging a little crooked; as the line comes into view they swing on their clips once and
-// settle. Under the mouse a print straightens and lifts, and plays its film if it has one (on phones, the print
-// that settles in view plays). Above them the heading row as every section's: the title, one line with what's
-// inside (so many photos and films) and the link to the gallery; each print opens the gallery too.
-// Desktop: five prints along the wire; tablets: four; phones: the wire runs on past the screen's edge, to swipe.
-// Where each print hangs (along the wire, its width, its tilt) is in styles/peek.css: the wire sags in a parabola
-// and each clip sits on it at the same fraction of the width.
+// artists' faces). It should read at a glance as what it is: photographs. The heading row as every section's (the
+// title, one line with what's inside, so many photos and films, and the link to the gallery), then the gallery's
+// prints in a row that slides sideways as the page scrolls (GalleryFilmStrip.astro: torn from the newspaper, as
+// every photograph on the site is); each print opens the gallery too.
+// (A second take stays in the code, out of the page, data/variants.ts 'gallery': the prints hung to dry on a steel
+// wire, swinging on their clips as the line comes into view; styles in styles/peek.css.)
 // The gallery's end offers a plain link on to the part of this page that comes after the block (data-next;
 // GalleryNext.astro). Each page says which (`next`: that part's id, its name on the button, the line above it)
 // and what this section is called in its links (`id`). Without them it is the home page's: #gallery, then on to
@@ -52,7 +49,7 @@ const prints = await Promise.all(picks.map((s) => photo(s.thumb ?? s.src, '(max-
     <div class="bighead bh-line gpk-head">
       <h2 class="t-l" id={titleId}>{tr(galleryTitle, lang)}</h2>
       <div class="bighead-side">
-        <p class="body">{ru ? `Клуб изнутри: ${count}. Остальное только вживую.` : `Inside the club: ${count}. The rest, in person only.`}</p>
+        <p class="body">{ru ? `${count} из клуба. Остальное только вживую.` : `${count} from the club. The rest, in person only.`}</p>
         <a class="lnk" href={href} {...next}>{ru ? 'Вся галерея' : 'The whole gallery'}</a>
       </div>
     </div>

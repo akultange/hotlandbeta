@@ -5,7 +5,7 @@
 //   v2  a black screen where the film plays only inside the giant HOTLAND letters, the words centred beneath;
 //       on a computer, scrolling opens the letters until the film fills the screen, then the page goes on;
 //   v3  the film across the whole screen behind frosted glass (blurred and dimmed), with HOTLAND cut clear out of
-//       the frost and edged in chrome, so the word is a window onto the night. The pointer, or a finger, wipes
+//       the frost and edged in a hairline, so the word is a window onto the night. The pointer, or a finger, wipes
 //       the fog away where it passes. It opens frosted, the word already clear, the film coming up out of the black.
 //       On a phone held upright (2026-11-19: the club didn't want the name split over two lines) the clear part is
 //       the door's line of light grown into a gap: a tall slit down the middle of the frost with the red light
@@ -80,7 +80,7 @@ const glass = [
 ].join(';');
 
 const film = {
-  label: ru ? 'Видео: ночь в HOTLAND, артистка на круглой сцене, лучи, пилон' : 'Video: a night at HOTLAND, an artist on the round stage, beams, the pole',
+  label: ru ? 'Видео: вечер в HOTLAND, артистка у пилона на круглой сцене, лучи света' : 'Video: an evening at HOTLAND, an artist at the pole on the round stage, beams of light',
   pause: ru ? 'Пауза' : 'Pause',
   play: ru ? 'Смотреть' : 'Play',
 };
@@ -90,7 +90,8 @@ const copy = {
   // (no-break spaces keep a short word with the one after it, so no line ends on "в", "с" or "The")
   // (2026-11-19: the club found the second sentence, «Шоу, ужин и бар каждую ночь с 22:00 до 06:00», one too many: the
   // line under the motto only says what the place is; the hours are in the menu sheet, the footer and «О нас»)
-  lead: ru ? 'Премиальный мужской клуб в Москве' : 'A premium gentlemen’s club in Moscow',
+  // (2026-11-22: «премиальный» went: the line says what the place is; the black, the steel and the cuff say the rest)
+  lead: ru ? 'Мужской клуб в Москве' : 'A gentlemen’s club in Moscow',
   book: t.bookTable,
 };
 // Before the first paint: which take shows (dev and preview builds only).
@@ -105,7 +106,7 @@ const starter = `(function (v) { v.poster = matchMedia('${PHONE}').matches ? v.d
 ---
 {CHOOSING && <script is:inline set:html={chooser} />}
 <section class:list={['hero', { 'hv-test': CHOOSING }]} style={`--wl:${nm.land.width};--ngu:${nm.gap};--nsu:${nm.axis};--wr:${(735 / W).toFixed(5)};--wr-m:${(stackH / land.width).toFixed(5)};--ax:${(stemX * 100).toFixed(2)}%;--ay:${(stemY * 100).toFixed(2)}%;--axn:${stemX.toFixed(4)};--ayn:${stemY.toFixed(4)}`}>
-  <h1 class="sr-only">{ru ? 'HOTLAND, премиальный мужской клуб в Москве' : 'HOTLAND, a premium gentlemen’s club in Moscow'}</h1>
+  <h1 class="sr-only">{ru ? 'HOTLAND, мужской клуб в Москве' : 'HOTLAND, a gentlemen’s club in Moscow'}</h1>
   {takes.map((take) => (
     <div class:list={['hv', `h${take}`]} data-take={take} style={take === 'v3' ? glass : undefined}>
       <div class:list={['hv-film', `h${take}-film`]}>
@@ -114,10 +115,10 @@ const starter = `(function (v) { v.poster = matchMedia('${PHONE}').matches ? v.d
       </div>
       {take === 'v2' && <div class="hv2-shade" aria-hidden="true"></div>}
       {take === 'v3' && (
-        /* v3: the frost over the film with the word cut clear out of it, the chrome edge of the letters, a band
+        /* v3: the frost over the film with the word cut clear out of it, the hairline edge of the letters, a band
            of light along it now and then, and the dimming as the page moves on */
         <Fragment>
-          <div class="hv3-frost" aria-hidden="true"><div class="hv3-tint"><span class="hv3-glow"></span></div></div>
+          <div class="hv3-frost" aria-hidden="true"><div class="hv3-tint"></div></div>
           <div class="hv3-edge" aria-hidden="true"></div>
           <div class="hv3-shine" aria-hidden="true"><i></i></div>
           <div class="hv3-dim" aria-hidden="true"></div>

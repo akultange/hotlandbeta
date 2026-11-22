@@ -5,7 +5,7 @@
    round bites and sharp V-notches, and shows the paper's white fibre
    along the tear: the paper ends at --tear-N, the printed picture at --tear-N-in, and the fibre is what lies
    between. A cut side is a straight scissor line, a little off square, with no fibre. The picture is printed: a
-   fine dot screen lets the paper show through its shadows. Six tears take turns down a page (by the place of the
+   fine dot screen; under it the frame stays dark, so a picture still loading shows black, not a white sheet. Six tears take turns down a page (by the place of the
    piece's own box among its neighbours), so two side by side never tear alike; two have a corner ripped away.
    Each piece lies at its own slight tilt, pinned up rather than ruled, and straightens under the pointer.
    Which pictures: the shared frame (.photo: Photo.astro and every part that uses it), the artists' portraits
@@ -31,11 +31,11 @@
 }
 
 :root {
-  --paper: #ebe7de;            /* newsprint: the torn fibre, and what shows through the print's dots */
+  --paper: #ebe7de;            /* newsprint: the torn fibre */
   --tear: var(--tear-1);
   --tear-in: var(--tear-1-in);
   --cut-lean: -.7deg;
-  /* the print: a dot of full ink every 3px, the paper showing through 10% between them */
+  /* the print: a dot of full ink every 3px, the page's black showing through 10% between them */
   --print: radial-gradient(circle at 50% 50%, #000 0 .9px, rgb(0 0 0 / .9) 1.3px) 0 0 / 3px 3px;
 }
 
@@ -47,10 +47,11 @@
 :nth-child(6n+5) > :is(.photo, .pt-frame, .poster-frame, .ab-plate, .mem-plate), :nth-child(6n+5) > :only-child > :is(.photo, .pt-frame, .poster-frame), .gxd-item:nth-child(6n+5) .gxd-ph { --tear: var(--tear-5); --tear-in: var(--tear-5-in); --cut-lean: -1deg; }
 :nth-child(6n+6) > :is(.photo, .pt-frame, .poster-frame, .ab-plate, .mem-plate), :nth-child(6n+6) > :only-child > :is(.photo, .pt-frame, .poster-frame), .gxd-item:nth-child(6n+6) .gxd-ph { --tear: var(--tear-6); --tear-in: var(--tear-6-in); --cut-lean: .4deg; }
 
-/* the paper: where it ends (the frame's mask), and its colour under the print */
+/* the paper: where it ends (the frame's mask). Under the print the frame stays dark, so a picture still on its way
+   shows black, not a blank white sheet; the white of the paper is the fibre at the tear */
 .photo:not(.ph, .film-band *, .mdl-card *),
 .gxd:not(.is-3d) .gxd-ph {
-  background-color: var(--paper);
+  background-color: #0b0b0c;
   -webkit-mask: var(--tear) 0 0 / 100% 100% no-repeat;
   mask: var(--tear) 0 0 / 100% 100% no-repeat;
 }
@@ -62,7 +63,7 @@
 }
 /* the pictures that also fall into the page at their foot keep that fall under the tear */
 .pt-frame {
-  background-color: var(--paper);
+  background-color: #0b0b0c;
   -webkit-mask: var(--tear) 0 0 / 100% 100% no-repeat, linear-gradient(180deg, #000 68%, transparent 100%);
   -webkit-mask-composite: source-in;
   mask: var(--tear) 0 0 / 100% 100% no-repeat, linear-gradient(180deg, #000 68%, transparent 100%);

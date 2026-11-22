@@ -2,18 +2,17 @@
 // The job application, as a full-screen page of its own over the site (styles/apply.css). The client: "the
 // current UX is shit, a full-page popup would be better": instead of a trip to the careers page and a form at
 // its foot, the application opens where you are, in three short steps.
-//   1. «Кем вы будете в HOTLAND?»: the five roles as plates with their names (the booking's own); a tap chooses
-//      one and moves on.
+//   1. «Выберите роль»: the five roles, one to a row (the booking's own kinds); a tap chooses one and moves on.
 //   2. «Как с вами связаться?»: name, phone, and where to reply (WhatsApp, Telegram or a call).
-//   3. «Пару слов о себе»: a few words (optional), a pointer to Telegram for photos and films, the consent.
+//   3. «Пара слов о себе»: a few words (optional), a pointer to Telegram for photos and films, the consent.
 // Then thanks; or, if sending fails, the same application again (nothing typed is lost), or WhatsApp with it
 // already in the message.
 // One dialog for the whole site (Base.astro), opened by any link or button with data-apply; data-apply-role="2"
 // comes with that role chosen and opens on step 2. The links still go to /careers/ (with ?role= and #apply), so
 // without scripts nothing is lost, and /careers/#apply opens the dialog straight away. Desktop: the dressing room on
 // the left (the casting call's own picture: the bulb-lit mirror and its free chair, nobody in it; until 2026-11-21 it
-// was two artists at a mirror in their underwear), the steps on the right. Phones: the steps fill the screen, the
-// buttons at the foot.
+// was two artists at a mirror in their underwear), the steps on the right, dressed as the booking's are (apply.css).
+// Phones: the steps fill the screen, the buttons at the foot.
 // It sends to /api/careers (the managers' Telegram), as the careers form did. Personal data never goes into the URL.
 import { photo } from '../data/images';
 import { type Lang, ui, tr } from '../data/i18n';
@@ -28,25 +27,25 @@ const f = ui[lang].form;
 const L = ru
   ? {
       title: 'Анкета', close: 'Закрыть', back: 'Назад', next: 'Дальше', send: 'Отправить',
-      h1: 'Кем вы будете в HOTLAND?', lead1: 'Выберите роль. Ответим в течение двух дней, всё между нами.',
+      h1: 'Выберите роль', lead1: 'Ответим в течение двух дней. Всё останется между нами.',
       h2: 'Как с вами связаться?', as: 'Роль', change: 'изменить', via: 'Где удобнее ответить',
-      h3: 'Пару слов о себе', about: 'О себе', aboutPh: 'Опыт, где вы работали или выступали, ссылка на портфолио',
+      h3: 'Пара слов о себе', about: 'О себе', aboutPh: 'Опыт, где вы работали или выступали, ссылка на портфолио',
       tg: 'Фото и видео удобнее прислать в Telegram:', tgLink: 'написать',
-      doneH: 'Спасибо! Анкета у нас', doneText: 'Ответим в течение двух дней. Ваш номер видят только менеджеры клуба.', ok: 'Хорошо',
+      doneH: 'Спасибо, анкета у нас', doneText: 'Ответим в течение двух дней. Ваш номер видят только менеджеры клуба.', ok: 'Хорошо',
       failH: 'Не получилось отправить', failText: 'Анкета сохранена: попробуйте отправить ещё раз. Или напишите нам в WhatsApp, анкета уже в сообщении.', retry: 'Отправить ещё раз',
       needContact: 'Укажите имя и телефон.', needConsent: 'Отметьте согласие на обработку данных.',
-      hello: 'Здравствуйте! Хочу работать в HOTLAND.',
+      hello: 'Здравствуйте. Хочу работать в HOTLAND.',
     }
   : {
       title: 'Application', close: 'Close', back: 'Back', next: 'Next', send: 'Send',
-      h1: 'Who will you be at HOTLAND?', lead1: 'Choose a role. We reply within two days, just between us.',
+      h1: 'Choose a role', lead1: 'We reply within two days. It all stays between us.',
       h2: 'How do we reach you?', as: 'Role', change: 'change', via: 'Where should we reply',
       h3: 'A few words about you', about: 'About you', aboutPh: 'Experience, where you’ve worked or performed, a link to your portfolio',
       tg: 'Photos and videos are easiest on Telegram:', tgLink: 'message us',
-      doneH: 'Thank you! We have your application', doneText: 'We’ll reply within two days. Only the club’s managers see your number.', ok: 'Done',
+      doneH: 'Thank you, we have your application', doneText: 'We’ll reply within two days. Only the club’s managers see your number.', ok: 'Done',
       failH: 'We couldn’t send it', failText: 'Your application is kept: try sending it again. Or message us on WhatsApp, your application is already in the message.', retry: 'Try again',
       needContact: 'Please enter your name and phone.', needConsent: 'Please tick the consent box.',
-      hello: 'Hello! I’d like to work at HOTLAND.',
+      hello: 'Hello. I’d like to work at HOTLAND.',
     };
 const vias = ['WhatsApp', 'Telegram', f.call];
 // The consent's sentence is i18n's; only the policy's own name in it is the link, so a tap on the rest ticks the box
@@ -54,7 +53,9 @@ const vias = ['WhatsApp', 'Telegram', f.call];
 const [, consentA, consentLink, consentB] =
   f.consent.match(/^(.*?)(политику конфиденциальности|the privacy policy)(.*)$/) ?? f.consent.match(/^(.*\s)(\S+\s+\S+)()$/) ?? ['', '', f.consent, ''];
 const unit = (t: string) => t.replace(/(\d) (?=\p{L})/gu, '$1\u00a0');
-const pic = await photo('/media/casting-room.webp', '42vw');
+// (the picture covers a panel as tall as the screen, so a 16:9 photograph is drawn 178vh wide, whatever the panel's
+// width: its copy is chosen by that, not by the panel's own width, which "auto" would measure; a phone shows none)
+const pic = await photo('/media/casting-room.webp', '(min-width: 900px) 178vh, 1px', false);
 ---
 <dialog class="apl" id="apply-dlg" aria-labelledby="apl-title" data-lenis-prevent data-wa={site.whatsapp} data-l={JSON.stringify({ needContact: L.needContact, needConsent: L.needConsent, hello: L.hello })}>
   <h2 class="sr-only" id="apl-title">{L.title}</h2>

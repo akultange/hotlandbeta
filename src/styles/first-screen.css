@@ -21,10 +21,12 @@
   --wh: calc((100cqw - 2 * var(--inl)) * var(--wr));
 }
 
-/* ---------- The words: a line in the title's face, a line of text, two buttons ---------- */
+/* ---------- The words: a line in the title's face, a line of text, two buttons ----------
+   (in the system's voices: the line is said as a section's title is, .t-l, the text face at 500 drawn a little
+   tight; the line under it a lead, a step under shirt white) */
 .hv-copy { position: relative; z-index: 1; display: grid; justify-items: start; gap: clamp(10px, 1vw, 14px); }
-.hero-tag { font: 450 clamp(34px, 3.4vw, 54px)/1.05 var(--display); letter-spacing: -.012em; color: var(--fg); }
-.hv-lead { max-width: 36ch; color: #cfd0d3; text-wrap: pretty; }
+.hero-tag { font: 500 clamp(34px, 3.4vw, 54px)/1.05 var(--f-text); letter-spacing: -.022em; color: var(--fg); }
+.hv-lead { max-width: 36ch; color: var(--fg-2); text-wrap: pretty; }
 .hv-act { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 14px; margin-top: clamp(10px, 1.2vw, 18px); }
 
 /* ---------- Where things stand (the header's take v3, and the door) ----------

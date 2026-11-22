@@ -174,27 +174,27 @@ html.motion .vfield:not(.vf-ready) :is(.vcard, .vtier-body) { opacity: 0; animat
 @media (prefers-reduced-motion: reduce) { .vcard-in { transition: none; } }
 
 /* ---------- The membership page (membership/index.astro): the cloth the whole width of the page ----------
-   The page's name is the cards' heading, so the cloth starts close under it and holds its own air. After the cards,
-   the two things a member carries in, drawn in chalk (LineArt.astro): the card, with the way to ask for one, and the
-   cuff and watch, with the dress code. Side by side on a wide screen, one under the other on a phone. Each hangs in
-   one hairline, as every drawing on the site does, but with no lacquer behind it: the chalk lies on the suit's own
-   cloth, the way a tailor marks it, and the cuff's chalk stripe runs beside the cloth's. Both plates are one shape
-   (the cuff's own, 10:7: his sleeve comes in at the plate's edge, so the cut is the frame's), the card stands in its
-   plate with a mat of air round it, and their words stand on one line under them. */
+   The page's name is the cards' heading, so the cloth starts close under it and holds its own air. At the cloth's
+   foot, under a hairline, the two things a member carries in: the card, with the way to ask for one, and the cuff and
+   watch, with the dress code. Each is a line of words with its drawing beside it (LineArt.astro), small and with no
+   frame: the chalk lies on the suit's own cloth, the way a tailor marks it. Side by side on a wide screen, one under
+   the other on a phone. (Until 2026-11-22 each drawing hung large in a plate of its own, and read as a picture still
+   to come; the line art is the site's accent, never its pictures.) */
 .ptitle + .sec.cloth.mem-suit { margin-top: clamp(40px, 5vw, 80px); padding-top: clamp(48px, 5.6vw, 96px); }
-.mem-pair {
-  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 56px var(--gap);
-  margin-top: var(--sec-y);
+.mem-notes {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px var(--gap);
+  margin-top: clamp(56px, 6vw, 96px); padding-top: clamp(32px, 3.4vw, 52px); border-top: 1px solid var(--rule);
 }
-.mem-fig { display: grid; align-content: start; justify-items: stretch; gap: clamp(20px, 2.2vw, 32px); min-width: 0; }
-.mem-plate { display: grid; place-items: center; aspect-ratio: 10 / 7; overflow: hidden; box-shadow: inset 0 0 0 1px var(--rule); }
-.mem-plate .la-cuff { width: 100%; }
-.mem-plate .la-card { width: 78%; }
-.mem-cap { display: grid; justify-items: start; gap: 10px; }
+.mem-note { display: grid; grid-template-columns: clamp(132px, 14vw, 210px) minmax(0, 1fr); align-items: center; gap: clamp(20px, 2.6vw, 44px); min-width: 0; }
+.mem-art { width: 100%; }
+.mem-cap { display: grid; justify-items: start; gap: 8px; min-width: 0; }
 /* what it is, quietly, in the text face; then what to know, larger */
 .mem-k { font: 400 15px/1.4 var(--f-text); color: var(--ash); }
-.mem-v { font: 500 clamp(22px, 1.9vw, 30px)/1.15 var(--f-text); letter-spacing: -.014em; color: var(--fg); }
-.mem-cap .lnk { margin-top: 10px; }
+.mem-v { font: 500 clamp(21px, 1.7vw, 28px)/1.18 var(--f-text); letter-spacing: -.014em; color: var(--fg); text-wrap: balance; }
+.mem-cap .lnk { margin-top: 12px; }
 @media (max-width: 899px) {
-  .mem-pair { grid-template-columns: minmax(0, 1fr); }
+  .mem-notes { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 599px) {
+  .mem-note { grid-template-columns: 108px minmax(0, 1fr); gap: 18px; }
 }

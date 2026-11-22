@@ -28,7 +28,7 @@ const hours = `${site.hours[0].open}–${site.hours[0].close}`;
           <p class="fv4-tag">{ru ? 'Только между нами' : 'Just between us'}</p>
         </div>
         <div class="fv4-foot">
-          <p class="fv4-addr">{site.address[lang]}<br />{hours}, {ru ? 'каждую ночь' : 'every night'}</p>
+          <p class="fv4-addr">{site.address[lang]}<br />{ru ? 'Каждую ночь' : 'Every night'} {hours}</p>
           <a class="fv4-route" href={site.mapUrl} target="_blank" rel="noopener"><Ic name="route" /><span>{ru ? 'Маршрут' : 'Directions'}</span></a>
         </div>
       </div>

@@ -1,17 +1,18 @@
 /* =====================================================================
    About us (pages/[lang]/about.astro). Loaded after global.css (Base.astro).
-   One page, five pieces:
-   - the club: the low leather lounge chair, drawn, and the words beside it;
+   One page, five pieces, each section the home page's own (its heading row, .bighead, then what it heads):
+   - the club: the main room photographed (a torn newspaper cut, as every photograph is: cut.css) and beside it the
+     club's rooms, one to a row;
    - house rules: the four rules as a programme, each under its numeral in the Dial, beside the door drawn with
      its seam of light and the sealed pouches on the counter;
-   - finding us: the home page's block (Visit.astro, styles in visit.css, the car drawn at the side door) and,
-     under it, four ways to reach us;
+   - finding us: Visit.astro (styles in visit.css: the car at the side entrance drawn) and, under it, four ways
+     to reach us;
    - the casting call, as on the home page (CastingCall.astro, styles in casting.css);
    - then the footer's own closing invitation.
-   Every section keeps the site's air above and below (.sec, --sec-y). A drawing hangs as an architect's sheet
-   does: on lacquer, the deepest black, inside one hairline, with a mat of air round it and a fine mark in each
-   corner, so its lines stand on a ground of their own and not on the concrete's grain (the light in it, amber or
-   red, fades out before the sheet's edge). No words on a drawing.
+   Every section keeps the site's air above and below (.sec, --sec-y). A drawing stands on a plate of black stock,
+   torn out as the photographs are (cut.css tears .ab-plate and leans it a little): lacquer, the deepest black, with
+   a mat of air round the drawing, so its lines stand on a ground of their own and not on the concrete's grain (the
+   light in it, amber or red, fades out before the plate's edge). No words on a drawing or a photograph.
    The door in an arch (components/ClubDoor.astro) is on no page at the moment; its styles stay at the end.
    ===================================================================== */
 
@@ -19,48 +20,33 @@
    animation itself is global.css: html.motion .is-in) */
 html.motion [data-rise]:not(.is-in) { opacity: 0; }
 
-/* A drawing's sheet: lacquer inside one hairline, square, with a mat of air round the drawing, and in each corner a
-   mark like the registration marks on a drawing sheet, in the shirt white of the drawing's own details (45%: the
-   weight its second line is drawn in, lineart.css). The marks are painted, not elements: two hairlines a corner.
-   The same sheet hangs every drawing on the site's other pages that are mine (Visit, the 404, the page after "No").
-   The drawing inside is as wide as the sheet allows and keeps its own proportions (LineArt.astro). */
-.ab-plate {
-  --mark: color-mix(in srgb, var(--shirt) 45%, transparent);
-  --arm: clamp(10px, 1.1vw, 16px);
-  margin: 0; padding: clamp(22px, 3.8vw, 60px);
-  background:
-    linear-gradient(var(--mark), var(--mark)) 0 0 / var(--arm) 1px no-repeat,
-    linear-gradient(var(--mark), var(--mark)) 0 0 / 1px var(--arm) no-repeat,
-    linear-gradient(var(--mark), var(--mark)) 100% 0 / var(--arm) 1px no-repeat,
-    linear-gradient(var(--mark), var(--mark)) 100% 0 / 1px var(--arm) no-repeat,
-    linear-gradient(var(--mark), var(--mark)) 0 100% / var(--arm) 1px no-repeat,
-    linear-gradient(var(--mark), var(--mark)) 0 100% / 1px var(--arm) no-repeat,
-    linear-gradient(var(--mark), var(--mark)) 100% 100% / var(--arm) 1px no-repeat,
-    linear-gradient(var(--mark), var(--mark)) 100% 100% / 1px var(--arm) no-repeat,
-    var(--lacquer);
-  box-shadow: inset 0 0 0 1px var(--rule);
-}
+/* A drawing's plate: lacquer, torn (cut.css), with a mat of air round the drawing. The same plate holds every
+   drawing on the other pages that are mine (Visit's car, the 404's door, the page after "No"). The drawing inside
+   is as wide as the plate allows and keeps its own proportions (LineArt.astro). */
+.ab-plate { margin: 0; padding: clamp(22px, 3.8vw, 60px); background: var(--lacquer); }
 .ab-art { width: 100%; }
 
-/* ---------- The club: the chair, and the words beside it ---------- */
-.ab-club-in { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); align-items: center; }
-.ab-chair { grid-column: 1 / span 6; }
-.ab-words { grid-column: 8 / span 4; display: grid; justify-items: start; gap: clamp(16px, 1.6vw, 22px); }
-.ab-words-h { text-wrap: balance; }
-.ab-words .lead { max-width: 30ch; color: var(--fg); text-wrap: pretty; }
-.ab-words .body { max-width: 36ch; text-wrap: pretty; }
-@media (max-width: 1099px) {
-  .ab-words { grid-column: 8 / span 5; }
-}
-/* phones and tablets: the chair, then the words under it */
+/* ---------- The club: the main room, and the rooms beside it ----------
+   The photograph takes seven columns at its own 3:2, the rooms the last four (five on a small laptop), their first
+   rule level with the picture's top edge. */
+.ab-club-in { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); align-items: start; }
+.ab-shot { grid-column: 1 / span 7; }
+.ab-rooms { grid-column: 9 / span 4; margin: 0; border-bottom: 1px solid var(--rule); }
+@media (max-width: 1099px) { .ab-rooms { grid-column: 8 / span 5; } }
+/* a room: its serial number in the Label, its name in the text face, one line under it; a hairline above each */
+.ab-room { display: grid; gap: 6px; padding: clamp(14px, 1.5vw, 20px) 0; border-top: 1px solid var(--rule); }
+.ab-room:first-child { border-top-color: var(--rule-2); }
+.ab-room dt { display: flex; align-items: baseline; gap: 14px; font: 500 clamp(20px, 1.64vw, 25px)/1.1 var(--f-text); letter-spacing: -.01em; color: var(--fg); }
+.ab-room-n { flex: none; width: 2.4em; font: var(--label-wght) 12px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); color: var(--steel-hi); font-variant-numeric: tabular-nums lining-nums; }
+.ab-room dd { margin: 0 0 0 calc(2.4 * 12px + 14px); font: 400 16px/1.5 var(--f-text); color: var(--fg-2); text-wrap: pretty; }
+/* phones and tablets: the photograph, then the rooms under it */
 @media (max-width: 899px) {
-  .ab-club-in { grid-template-columns: minmax(0, 1fr); row-gap: clamp(28px, 7vw, 44px); }
-  .ab-chair, .ab-words { grid-column: 1; }
-  .ab-chair { width: min(100%, 560px); }
+  .ab-club-in { grid-template-columns: minmax(0, 1fr); row-gap: clamp(28px, 7vw, 40px); }
+  .ab-shot, .ab-rooms { grid-column: 1; }
 }
 
 /* ---------- House rules: the programme beside the door (the heading row is every section's .bighead.bh-line) ---------- */
-/* (a column of air between the four rules and the door, as between the chair and its words above) */
+/* (a column of air between the four rules and the door, as between the main room and its rooms above) */
 .ab-rules-in { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); align-items: center; }
 .ab-rules-list { grid-column: 1 / span 5; list-style: none; margin: 0; padding: 0; border-bottom: 1px solid var(--rule); }
 .ab-pouches { grid-column: 7 / span 6; }
@@ -200,6 +186,7 @@ html.motion [data-rise]:not(.is-in) { opacity: 0; }
 
 /* ---------- A phone held sideways (or any screen as short): see landscape.css ---------- */
 @media (orientation: landscape) and (max-height: 500px) {
-  /* the drawings within the screen */
-  .ab-chair, .ab-pouches { width: min(100%, calc((100svh - var(--hdr) - 32px) * 1.4)); }
+  /* the drawing and the photograph within the screen */
+  .ab-pouches { width: min(100%, calc((100svh - var(--hdr) - 32px) * 1.4)); }
+  .ab-shot { width: min(100%, calc((100svh - var(--hdr) - 32px) * 1.5)); }
 }

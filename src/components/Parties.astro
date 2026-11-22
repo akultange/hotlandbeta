@@ -16,8 +16,9 @@ interface Props {
 const { lang, id = 'events' } = Astro.props;
 const ru = lang === 'ru';
 const p = (s: string) => `/${lang}/${s}/`;
-// Russian typesetting: a short word stays on the line of the word after it ("на сцену", "и своя").
-const keep = (s: string) => (ru ? s.replace(/(?<=^|\s)(в|во|на|за|до|по|с|со|к|ко|и|а|о|у|не|ни|от|из|для|без)\s/gi, '$1\u00a0') : s);
+// Russian typesetting: a short word stays on the line of the word after it ("на сцену", "и своя"), and a hyphenated
+// word never breaks at its hyphen ("шоу-программа").
+const keep = (s: string) => (ru ? s.replace(/(?<=^|\s)(в|во|на|за|до|по|с|со|к|ко|и|а|о|у|не|ни|от|из|для|без)\s/gi, '$1\u00a0') : s).replace(/(\S)-(?=\S)/g, '$1\u2011');
 // where each picture sits in its panel: the cake, the raised glasses, the candelabra, the spotlit curtain
 const pos: Record<string, string> = { birthday: '50% 66%', bachelor: '50% 40%', corporate: '50% 48%', hire: '50% 50%' };
 const shots = await Promise.all(occasions.map((o) => photo(media(o.img), '(max-width: 899px) 80vw, 30vw')));

@@ -14,15 +14,17 @@
   column-gap: clamp(32px, 5vw, 96px); height: var(--shw-h);
 }
 /* A wide screen: the guest under the laser between the list and the stage, his laser running out toward the
-   picture; the picture a narrower, upright frame, closer to the portraits' own shape. The drawing hangs as every
-   drawing on the site does, on lacquer inside one hairline, its plate as tall as the stage (the list, the plate
-   and the picture one row, top and foot). He stands at the plate's foot, his jacket running out at its edge (so the
-   cut is the frame's), and over him the dark of the room. */
+   picture; the picture a narrower, upright frame, closer to the portraits' own shape. The drawing is an accent, with
+   no plate and no frame (2026-11-22: alone in a tall black plate it read as a picture still to come): he stands at
+   the foot of his column, level with the picture's foot, in the page's own dark, and his jacket fades into it. */
 .shw-art { display: none; }
 @media (min-width: 1200px) {
   .shw-body { grid-template-columns: minmax(0, 4fr) minmax(0, 3fr) minmax(0, 5fr); grid-template-areas: "list art stage" "text art stage"; column-gap: clamp(28px, 3vw, 56px); }
-  .shw-art { display: block; grid-area: art; position: relative; overflow: hidden; background: var(--lacquer); box-shadow: inset 0 0 0 1px var(--rule); }
-  .shw-man { position: absolute; left: 0; bottom: 0; width: 100%; }
+  .shw-art { display: block; grid-area: art; position: relative; overflow: hidden; }
+  .shw-man {
+    position: absolute; left: 0; bottom: 0; width: 100%;
+    -webkit-mask-image: linear-gradient(180deg, #000 72%, transparent 100%); mask-image: linear-gradient(180deg, #000 72%, transparent 100%);
+  }
 }
 /* the list runs from the top of the picture, the words end at its foot */
 .shw-list { grid-area: list; display: grid; grid-auto-rows: 1fr; border-top: 1px solid var(--rule-2); }

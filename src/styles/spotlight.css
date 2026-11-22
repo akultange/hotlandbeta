@@ -1,7 +1,9 @@
 /* =====================================================================
    The artists, take two: the spotlight stage (ModelsStage.astro). A dark stage, one screen tall: the artist in the
-   light shown whole in the middle; her neighbours on either side smaller and dim, each in her own hard-cut frame
-   (all of them in black and white until the new shoot: the grade, global.css); under the stage her two lines and
+   light shown whole in the middle; her neighbours on either side smaller and dim. Every portrait is a print cut
+   from the newspaper, as every photograph on the site is (2026-11-22: the torn edge with its white fibre, the dot
+   screen and a slight tilt, drawn from cut.css's own tears; the one in the light stands straight), and all of them
+   in black and white until the new shoot (the grade, global.css); under the stage her two lines and
    every name in the Label's small capitals, as the header's sections are, the one in the light in white over a
    seam of the light that fills while she stands there (the red of the show; amber after 04:00, as every line).
    The script sets each artist's place, size and light from where the light is. (Until 2026-11-20 the neighbours
@@ -22,27 +24,56 @@
   touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab; outline: none;
 }
 .mst-stage.drag { cursor: grabbing; }
-.mst-stage:focus-visible .mst-a.on { outline: var(--seam) solid var(--lit); outline-offset: 8px; }
+/* the keyboard is on the stage: a line of the light round the one in the light (drawn by the stage, where she stands:
+   on her own torn edge the tear would cut it away) */
+.mst-stage::after {
+  content: ''; position: absolute; left: 50%; bottom: 14px; z-index: 150; pointer-events: none;
+  width: calc(var(--mst-cw) + 20px); height: calc(var(--mst-ch) + 20px); translate: -50% 0;
+  outline: var(--seam) solid var(--lit); opacity: 0;
+}
+.mst-stage:focus-visible::after { opacity: 1; }
 
 /* the line of artists: each one stands on the floor, set in place by the script */
 .mst-cam { position: absolute; inset: 0; transform-origin: 50% 85%; }
+/* Each artist is a print cut from the newspaper (styles/cut.css: the same tears, the same paper, the same dot
+   screen): the frame is the paper, torn (its mask); the fibre is the paper between the tear's two edges, drawn over
+   the picture (::before); the picture is printed (.mst-print, the dot screen, not zoomed with the picture, so the
+   dots are every print's), and under it the frame stays dark, as cut.css's frames do, so a portrait still on its way
+   shows black, not a white sheet. The six tears take turns along the line, each print at its own slight tilt; the
+   one in the light stands straight. The script's dimming (its filter on the frame) dims the paper with the picture:
+   a print in the dark. */
 .mst-a {
-  --e: 1;
+  --tear: var(--tear-1); --tear-in: var(--tear-1-in); --cut-lean: -.7deg;
   position: absolute; left: 50%; bottom: 24px; width: var(--mst-cw); height: var(--mst-ch); margin: 0;
-  overflow: hidden; background: var(--lacquer);
+  overflow: hidden; background: #0b0b0c;
+  -webkit-mask: var(--tear) 0 0 / 100% 100% no-repeat; mask: var(--tear) 0 0 / 100% 100% no-repeat;
+  rotate: var(--cut-lean); transition: rotate .6s var(--ease-out);
   transform-origin: 50% 100%; will-change: transform, filter, opacity;
 }
-/* each frame's edge: a hairline just inside it, as on a poster (it shows where a dim picture ends) */
-.mst-a::after { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; box-shadow: inset 0 0 0 1px var(--rule); }
+.mst-a:nth-child(6n+2) { --tear: var(--tear-2); --tear-in: var(--tear-2-in); --cut-lean: .5deg; }
+.mst-a:nth-child(6n+3) { --tear: var(--tear-3); --tear-in: var(--tear-3-in); --cut-lean: -.3deg; }
+.mst-a:nth-child(6n+4) { --tear: var(--tear-4); --tear-in: var(--tear-4-in); --cut-lean: .9deg; }
+.mst-a:nth-child(6n+5) { --tear: var(--tear-5); --tear-in: var(--tear-5-in); --cut-lean: -1deg; }
+.mst-a:nth-child(6n+6) { --tear: var(--tear-6); --tear-in: var(--tear-6-in); --cut-lean: .4deg; }
+.mst-a.on { rotate: 0deg; }
+.mst-a::before {
+  content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background: var(--paper);
+  -webkit-mask: var(--tear) 0 0 / 100% 100% no-repeat, var(--tear-in) 0 0 / 100% 100% no-repeat;
+  -webkit-mask-composite: source-out;
+  mask: var(--tear) 0 0 / 100% 100% no-repeat, var(--tear-in) 0 0 / 100% 100% no-repeat;
+  mask-composite: subtract;
+}
+.mst-print { position: absolute; inset: 0; overflow: hidden; -webkit-mask: var(--print); mask: var(--print); }
 .mst-a img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; -webkit-user-drag: none; }
 /* framed as the row frames her (styles/models.css): zoomed in around her eyes, which stand at the same point on every
    card, her face one size, so she fills her frame; her second photograph puts her eyes at the very same point. The
    camera's slow push-in grows from her eyes. */
-.mst-a > img {
+.mst-print > img {
   transform-origin: calc(var(--ox, .5) * 100%) calc(var(--oy, .5) * 100%);
   transform: scale(var(--az, 1)) translate(calc((var(--ox, .5) - var(--aex, .5)) * 100%), calc((var(--oy, .5) - var(--aey, .5)) * 100%));
 }
-.mst-a > img.mst-hot {
+.mst-print > img.mst-hot {
   transform: scale(var(--bz, 1)) translate(calc((var(--ox, .5) - var(--bex, .5)) * 100%), calc((var(--oy, .5) - var(--bey, .5)) * 100%));
 }
 /* without scripts: only the first artist, in the light */
@@ -50,8 +81,9 @@
 .mst:not(.is-live) .mst-a { translate: -50% 0; }
 /* the camera creeps in on the one in the light while she stands there (both her photographs, in step) */
 @media (prefers-reduced-motion: no-preference) {
-  .mst-a.on > img { animation: mst-push 10s ease-out both; }
+  .mst-a.on .mst-print > img { animation: mst-push 10s ease-out both; }
 }
+@media (prefers-reduced-motion: reduce) { .mst-a { transition: none; } }
 @keyframes mst-push { from { scale: 1; } to { scale: 1.07; } }
 /* her second photograph: on a computer it shows under the pointer; a phone has no hover, and there her story (a tap
    on her) brings it in, as the row's does */
@@ -62,7 +94,8 @@
 
 /* the arrows: square plates at the stage's sides, where anyone sees them */
 .mst-arrow { position: absolute; top: 50%; z-index: 160; width: 60px; height: 60px; margin-top: -30px; padding: 0; }
-.mst-arrow svg { position: relative; z-index: 2; width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+/* (their marks cut square, as the viewer's and her story's are) */
+.mst-arrow svg { position: relative; z-index: 2; width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: square; stroke-linejoin: miter; }
 .mst-prev { left: max(var(--pad), calc((100% - var(--max)) / 2 + var(--pad))); }
 .mst-next { right: max(var(--pad), calc((100% - var(--max)) / 2 + var(--pad))); }
 

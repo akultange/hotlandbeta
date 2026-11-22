@@ -16,5 +16,5 @@ const to = `/${lang}/about/#contacts`;
     <title>HOTLAND</title>
     <script is:inline define:vars={{ to }}>location.replace(to);</script>
   </head>
-  <body style="background:#0e0d0d;color:#ecece8;font-family:sans-serif"><a href={to} style="color:inherit">{lang === 'ru' ? 'Контакты здесь' : 'Contacts are here'}</a></body>
+  <body style="margin:0;padding:24px;background:#0e0d0d;color:#ecece8;font:400 16px/1.6 'Inter Tight','Helvetica Neue',Arial,sans-serif"><a href={to} style="color:inherit;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.28em">{lang === 'ru' ? 'Контакты на странице «О нас»' : 'Contacts are on the About page'}</a></body>
 </html>

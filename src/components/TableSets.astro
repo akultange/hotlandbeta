@@ -83,7 +83,9 @@ const beam = (wide: number, size: number) => `${((Math.atan((wide * size * 62) /
             <p class="ts-what">{tie(tr(s.what, lang))}</p>
             <ul class="lily-list ts-perks">{s.perks.map((x) => <li>{tie(tr(x, lang))}</li>)}</ul>
             <div class="ts-foot">
-              <a class:list={['btn btn-sm', i === last ? 'btn-crimson' : 'btn-silver']} href={`/${lang}/booking/?type=set`}>{tr(sets.cta, lang)}<span class="sr-only">: {name}</span></a>
+              <!-- (a set comes to a table: the booking opens with the table chosen, on its second step; the booking has
+                   no kind of its own for a set) -->
+              <a class:list={['btn btn-sm', i === last ? 'btn-crimson' : 'btn-line']} href={`/${lang}/booking/?type=table`}>{tr(sets.cta, lang)}<span class="sr-only">: {name}</span></a>
             </div>
           </article>
         );

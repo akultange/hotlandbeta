@@ -24,10 +24,10 @@ const L = ru
       callback: 'Заказать звонок', question: 'Задать вопрос',
       hCallback: 'Перезвоним вам', hQuestion: 'Задайте вопрос',
       leadCallback: 'Оставьте имя и номер: менеджер клуба позвонит сам.',
-      leadQuestion: 'Напишите, что хотите узнать, и мы ответим так, как вам удобно.',
+      leadQuestion: 'Напишите вопрос и выберите, где ответить.',
       text: 'Вопрос', via: 'Как ответить', call: 'Звонок',
       sendCallback: 'Заказать звонок', sendQuestion: 'Отправить вопрос',
-      doneCallback: 'Спасибо! Менеджер скоро позвонит.', doneQuestion: 'Спасибо! Скоро ответим.',
+      doneCallback: 'Спасибо. Менеджер скоро позвонит.', doneQuestion: 'Спасибо. Менеджер скоро ответит.',
       doneText: 'Номер видят только менеджеры клуба. Всё остальное между нами.', ok: 'Хорошо',
       failTitle: 'Не получилось отправить', failText: 'Всё, что вы ввели, сохранено: попробуйте ещё раз. Или напишите нам в WhatsApp, текст уже в сообщении.', retry: 'Отправить ещё раз',
       close: 'Закрыть',
@@ -36,12 +36,12 @@ const L = ru
     }
   : {
       callback: 'Request a call', question: 'Ask a question',
-      hCallback: 'We’ll call you', hQuestion: 'Ask us anything',
+      hCallback: 'We’ll call you', hQuestion: 'Your question',
       leadCallback: 'Leave your name and number, and a club manager will call you.',
-      leadQuestion: 'Tell us what you’d like to know, and how you’d like the answer.',
+      leadQuestion: 'Write your question and choose where we answer.',
       text: 'Your question', via: 'How should we answer', call: 'Phone call',
       sendCallback: 'Request a call', sendQuestion: 'Send your question',
-      doneCallback: 'Thank you! A manager will call you soon.', doneQuestion: 'Thank you! We’ll answer soon.',
+      doneCallback: 'Thank you. A manager will call you shortly.', doneQuestion: 'Thank you. A manager will answer shortly.',
       doneText: 'Only the club’s managers see your number. The rest stays between us.', ok: 'All right',
       failTitle: 'We couldn’t send it', failText: 'Nothing you typed is lost: try again. Or message us on WhatsApp, your words are already in the message.', retry: 'Try again',
       close: 'Close',
@@ -255,8 +255,8 @@ const script = { callback: L.callback, question: L.question, call: L.call, sendi
       };
     };
     const asMessage = (d: ReturnType<typeof collect>) => (mode === 'callback'
-      ? [ru ? 'Здравствуйте! Перезвоните мне, пожалуйста.' : 'Hello! Please call me back.', `${d.name}, ${d.phone}`]
-      : [ru ? 'Здравствуйте! У меня вопрос:' : 'Hello! I have a question:', d.wishes, `${d.name}, ${d.phone}`]
+      ? [ru ? 'Здравствуйте. Перезвоните мне, пожалуйста.' : 'Hello. Please call me back.', `${d.name}, ${d.phone}`]
+      : [ru ? 'Здравствуйте. У меня вопрос:' : 'Hello. I have a question:', d.wishes, `${d.name}, ${d.phone}`]
     ).filter(Boolean).join('\n');
 
     form.addEventListener('submit', async (e) => {

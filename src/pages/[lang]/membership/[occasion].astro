@@ -1,4 +1,10 @@
 ---
+// An occasion's page (birthday, bachelor, corporate, the whole club). Under the title, the occasion's own photograph
+// as a band; then what comes with a party, beside the occasion's picture (content.ts, `scene`); the club's three cards;
+// three more photographs; and the request. Every picture is the club's own photograph, torn from the newspaper like
+// every picture on the site (Photo.astro, cut.css). The line art stays an accent: the occasion's drawing in chalk,
+// small, under the request's words (the glass for a birthday's toast, the cigar for the groom's night, the bottle for
+// the company's table, the door for the whole club, shut to everyone else that night).
 import Base from '../../../layouts/Base.astro';
 import Photo from '../../../components/Photo.astro';
 import PageTitle from '../../../components/PageTitle.astro';
@@ -7,7 +13,7 @@ import LineArt from '../../../components/LineArt.astro';
 import { type LineArtName } from '../../../data/lineart';
 import { type Lang, ui, tr, langs } from '../../../data/i18n';
 import { site } from '../../../data/site';
-import { occasions, parties, vip, bookingFine, gallery, media, type Occasion } from '../../../data/content';
+import { occasions, parties, vip, bookingFine, media, type Occasion } from '../../../data/content';
 
 export function getStaticPaths() {
   return langs.flatMap((lang) => occasions.map((o) => ({ params: { lang, occasion: o.slug }, props: { o } })));
@@ -17,16 +23,10 @@ const { o } = Astro.props as { o: Occasion };
 const t = ui[lang];
 const ru = lang === 'ru';
 const title = tr(o.title, lang);
-const altOf = (file: string) => gallery.find((x) => x.img === file)?.alt;
+// the three more pictures: 4:3, 1:1 and 3:4, side by side at one height (global.css, .trio)
 const ratios = ['4/3', '1/1', '3/4'];
-// The parties' title over the list of what comes with a party, in two lines as on the home page: "Ваш праздник,"
-// and, after a break set here at the comma, the quiet "ваш сценарий", whose two words always stay together (a
-// narrow measure used to do the breaking, and left "Ваш" alone on a line of its own).
-const listTitle = tr(parties.title, lang)
-  .replace(/<em>(.*?)<\/em>/, (_, s: string) => `<em>${s.replace(/ /g, '\u00a0')}</em>`)
-  .replace(/,\s*(?=<em>)/, ',<br>');
 // Russian typesetting: a short word stays on the line of the word after it ("за каждый", "без счёта"), and a
-// hyphenated word never breaks at its hyphen ("караоке-зала").
+// hyphenated word never breaks at its hyphen ("шоу-программа").
 const keep = (s: string) => (ru ? s.replace(/(?<=^|\s)(в|во|на|за|до|по|под|с|со|к|ко|и|а|о|у|не|ни|от|из|для|без)\s/gi, '$1\u00a0') : s).replace(/(\S)-(?=\S)/g, '$1\u2011');
 // The request is the booking dialog (Book.astro), opened by a link to the booking page with a party and this
 // occasion chosen, so it starts on its second step (a new tab opens the booking page with the same choice). Beside
@@ -34,14 +34,11 @@ const keep = (s: string) => (ru ? s.replace(/(?<=^|\s)(в|во|на|за|до|п
 const occasion = (t.form.occasions as Record<string, string>)[o.slug];
 const bookHref = `/${lang}/booking/?type=event${occasion ? `&occasion=${o.slug}` : ''}`;
 const lower = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
-// Beside what comes with a party, a drawing in chalk lines (LineArt.astro) for the occasion: the glass for a
-// birthday's toast, the cigar for the groom's night, the bottle for the company's table, and for the whole club its
-// door, shut to everyone else that night.
 const art: Record<Occasion['slug'], LineArtName> = { birthday: 'glass', bachelor: 'cigar', corporate: 'bottle', hire: 'door' };
 const requestSteps = [
   `${ru ? 'Праздник' : 'A party'}: ${lower(occasion ?? title)}`,
-  ru ? 'Сколько вас и ваши пожелания' : 'How many of you, and your wishes',
-  ru ? 'Как с вами связаться' : 'How we reach you',
+  ru ? 'Сколько гостей и ваши пожелания' : 'How many guests, and your wishes',
+  ru ? 'Как с вами связаться' : 'How to reach you',
 ];
 ---
 <Base lang={lang} title={title} description={tr(o.text, lang)} waContext={title} closing={false}>
@@ -56,18 +53,20 @@ const requestSteps = [
     <a class="btn btn-crimson" href={bookHref}>{tr(parties.cta, lang)}</a>
   </PageTitle>
 
-  <!-- 01 Included: the parties' title and what comes with a party on the left; the occasion's drawing on the right,
-       hung as every drawing on the site hangs, on lacquer inside one hairline -->
-  <section class="sec">
+  <!-- 01 What comes with a party: the heading and the four rows on the left; the occasion's photograph on the right,
+       its top level with the heading's -->
+  <section class="sec" aria-labelledby="occ-in-h">
     <div class="wrap">
       <div class="g12">
         <div class="occ-words">
-          <h2 class="t-l" set:html={listTitle} />
+          <h2 class="t-l" id="occ-in-h" set:html={ru ? 'Что входит <em>в&nbsp;праздник</em>' : 'What comes <em>with a party</em>'} />
           <div class="rows">
             {parties.included.map((x, i) => <div class="row num"><span class="n">0{i + 1}</span><span class="k">{keep(tr(x, lang))}</span><span></span></div>)}
           </div>
         </div>
-        <div class={`occ-plate occ-plate-${art[o.slug]}`}><LineArt name={art[o.slug]} class="occ-art" /></div>
+        <div class="occ-pic">
+          <Photo src={media(o.scene.img)} alt={tr(o.scene.alt, lang)} ratio="4/3" pos={o.scene.pos} />
+        </div>
       </div>
     </div>
   </section>
@@ -88,30 +87,30 @@ const requestSteps = [
     </div>
   </section>
 
+  <!-- 03 Three more photographs of such a night, side by side at one height -->
   <section class="sec-t">
     <div class="wrap trio">
-      {o.more.map((f, i) => {
-        const alt = altOf(f);
-        return <Photo src={media(f)} alt={alt ? tr(alt, lang) : ''} ratio={ratios[i]} />;
-      })}
+      {o.more.map((f, i) => <Photo src={media(f.img)} alt={tr(f.alt, lang)} ratio={ratios[i]} pos={f.pos} />)}
     </div>
   </section>
 
-  <!-- 04 Request: the words; the three steps with the main button; the messengers. On a wide screen the words and
-       the messengers stand on the left and the steps on the right; on a phone they come in that order, so the
-       steps and the main button are met before the messengers. The first step is the one you are on. -->
-  <section class="sec soot" id="request">
+  <!-- 04 Request: the words, and under them the occasion's drawing; the three steps with the main button; the
+       messengers. On a wide screen the words and the messengers stand on the left and the steps on the right; on a
+       phone they come in that order, so the steps and the main button are met before the messengers. The first step
+       is the one you are on. -->
+  <section class="sec soot" id="request" aria-labelledby="rq-h">
     <div class="wrap">
       <div class="g12">
         <div class="stack rq-words">
-          <h2 class="t-l" set:html={ru ? 'Отправить <em>заявку</em>' : 'Send <em>a request</em>'} />
+          <h2 class="t-l" id="rq-h" set:html={ru ? 'Заявка <em>на&nbsp;праздник</em>' : 'Request <em>a party</em>'} />
           <p class="body">{tr(bookingFine, lang)}</p>
+          <LineArt name={art[o.slug]} class={`rq-art rq-art-${art[o.slug]}`} />
         </div>
         <div class="stack rq-steps">
           <div class="rows">
             {requestSteps.map((s, i) => <div class="row num" aria-current={i === 0 ? 'step' : undefined}><span class="n">0{i + 1}</span><span class="k">{keep(s)}</span><span></span></div>)}
           </div>
-          <div class="btns"><a class="btn btn-crimson" href={bookHref}>{ru ? 'Оставить заявку' : 'Enquire'}</a></div>
+          <div class="btns"><a class="btn btn-crimson" href={bookHref}>{tr(parties.cta, lang)}</a></div>
         </div>
         <div class="btns rq-msg">
           <a class="btn btn-line btn-sm" href={site.whatsapp} target="_blank" rel="noopener">WhatsApp</a>
@@ -123,32 +122,29 @@ const requestSteps = [
 </Base>
 
 <style>
-  /* What comes with a party: the parties' title and the four rows under it on the left; on the right the occasion's
-     drawing on its plate, the plate's top level with the title's. The glass, the cigar and the bottle stand in the
-     middle of one shape of plate (4:3), three quarters of its height, with a mat of air round them as a print has; the
-     door, a piece of wall, fills a plate of its own shape (3:2), cut by the frame on every side. One column (the same
-     screens as every .g12, global.css): the title, the rows, then the plate. */
+  /* What comes with a party: the heading and the four rows under it on the left; the occasion's photograph on the
+     right (4:3, torn like every picture: cut.css), its top level with the heading's. One column (the same screens as
+     every .g12, global.css): the heading, the rows, then the photograph. */
   .occ-words { grid-column: 1 / span 5; display: grid; align-content: start; gap: var(--head-gap); }
   .occ-words .rows { text-wrap: pretty; }
-  .occ-plate {
-    position: relative; grid-column: 7 / span 6; align-self: start; aspect-ratio: 4 / 3; overflow: hidden;
-    background: var(--lacquer); box-shadow: inset 0 0 0 1px var(--rule);
-  }
-  .occ-plate :global(.occ-art) { position: absolute; inset: 12% 0; width: 100%; height: 76%; }
-  /* (the cigar's box is mostly its smoke: it takes the plate's height, so the ember and the ashtray stand as large as
-     the glass does, the smoke rising to the plate's top) */
-  .occ-plate-cigar :global(.occ-art) { inset: 0 0 8%; height: 92%; }
-  .occ-plate-door { aspect-ratio: 3 / 2; }
-  .occ-plate-door :global(.occ-art) { inset: 0; height: 100%; }
+  .occ-pic { grid-column: 7 / span 6; align-self: start; }
   /* The request block. A wide screen: the words and, under them, the messengers on the left; the steps and the main
      button on the right, beside both. One column (the same screens as every .g12, global.css): the words, the
      steps and the main button, then the messengers. */
   .rq-words { grid-column: 1 / span 4; }
   .rq-steps { grid-column: 6 / span 7; grid-row: 1 / span 2; }
   .rq-msg { grid-column: 1 / span 4; grid-row: 2; align-self: start; margin-top: 24px; }
+  /* the occasion's drawing, an accent under the words: small, in chalk on the concrete, no frame; each sized by its own
+     shape, so the four stand at about one weight (the bottle is tall, the cigar mostly smoke, the door a piece of wall) */
+  .rq-words :global(.rq-art) { width: clamp(104px, 9.4vw, 136px); margin: 8px 0 0 -6px; }
+  .rq-words :global(.rq-art-cigar) { width: clamp(136px, 12vw, 176px); }
+  .rq-words :global(.rq-art-bottle) { width: clamp(64px, 5.6vw, 84px); margin-left: 0; }
+  .rq-words :global(.rq-art-door) { width: clamp(160px, 14vw, 216px); margin-left: 0; }
   @media (max-width: 639px), (max-width: 899px) and (orientation: portrait), (max-width: 899px) and (min-height: 501px) {
     .rq-steps, .rq-msg { grid-row: auto; }
     .rq-msg { margin-top: 0; }
+    /* (a phone: the steps and the main button come straight after the words; the drawing waits for a wider screen) */
+    .rq-words :global(.rq-art) { display: none; }
   }
   /* the step you are on: shirt white over a line of the light along its rule (red; amber after four), as a chosen
      thing is marked everywhere on the site; the two to come are quieter */

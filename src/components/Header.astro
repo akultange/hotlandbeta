@@ -98,7 +98,7 @@ import { show } from '../data/variants';
       <a class="btn btn-crimson mnav-book" style="--i:8" href={`/${lang}/booking/`}>{t.bookTable}</a>
       <div class="mnav-visit" style="--i:9">
         <p>{site.address[lang]}</p>
-        <p>{ru ? 'Каждую ночь' : 'Nightly'} {hours}</p>
+        <p>{ru ? 'Каждую ночь' : 'Every night'} {hours}</p>
         {show('contact', 'gio') && <a class="mnav-phone" data-v="contact:gio" href={site.phoneHref}>{site.phone}</a>}
       </div>
       <!-- the ways to reach the club: four plain frames, two to a row, each with its line icon -->

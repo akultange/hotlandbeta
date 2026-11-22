@@ -16,14 +16,14 @@ const ru = lang === 'ru';
 // (the guest has just booked: the page ends with the thanks, without the closing «Ваш стол уже ждёт» and another
 // booking button under it)
 ---
-<Base lang={lang} title={ru ? 'Заявка принята' : 'Request received'} noindex closing={false}>
+<Base lang={lang} title={ru ? 'Заявка принята' : 'Request received'} description={ru ? 'Заявка на бронь у менеджера: он перезвонит и подтвердит её.' : 'Your booking request is with your manager, who will call back to confirm it.'} noindex closing={false}>
   <section class="thanks thanks-sent">
     <div class="wrap stack center">
       <div class="thanks-table" aria-hidden="true"><LineArt name="lamp" class="thanks-lamp" /></div>
       <h1 class="t-xl" set:html={ru ? 'Заявка <em>принята</em>' : 'Request <em>received</em>'} />
-      <p class="lead" set:html={keepShort(ru ? 'Менеджер перезвонит и подтвердит бронь, обычно в течение 15 минут. Если срочно, напишите нам.' : 'Your manager will call to confirm, usually within 15 minutes. If it’s urgent, message us.', lang)} />
+      <p class="lead" set:html={keepShort(ru ? 'Менеджер перезвонит, обычно в течение 15 минут, и подтвердит бронь. Если вопрос срочный, напишите в WhatsApp.' : 'Your manager will call back, usually within 15 minutes, to confirm. If it’s urgent, message us on WhatsApp.', lang)} />
       <div class="btns">
-        <a class="btn btn-crimson" href={`/${lang}/program/`}>{ru ? 'Смотреть афишу' : 'See the events'}</a>
+        <a class="btn btn-crimson" href={`/${lang}/program/`}>{ru ? 'Афиша' : 'Events'}</a>
         <a class="btn btn-line" href={site.whatsapp} target="_blank" rel="noopener">WhatsApp</a>
         <a class="btn btn-line" href={`/${lang}/`}>{ru ? 'На главную' : 'Home'}</a>
       </div>

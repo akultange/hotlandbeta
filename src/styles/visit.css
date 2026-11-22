@@ -1,40 +1,34 @@
 /* Finding the club (Visit.astro): the About page's contacts (and the home page's end, when it comes back there).
    Loaded after global.css (Base.astro); its classes start with .vs.
 
-   Read top to bottom: the heading and the address; the car at the side door, drawn, as a band across the page (a
-   long black saloon on wet asphalt, the door's red seam behind it, caught on the roof, the shoulder and the
-   asphalt); under the band the facts in a row, like the line of figures under a drawing (a label, then the answer),
-   and at the row's far end the way there. The drawing hangs on a drawing sheet, as every drawing on these pages
-   does (about.css, .ab-plate): lacquer inside one hairline, a mat of air, a mark in each corner. Phones: one column
-   in the same order, the facts one under another. The air above and below is every section's (.sec, --sec-y).
+   Read top to bottom: the heading and the address; the car at the side entrance, drawn, as a band across the page
+   (a long black saloon on wet asphalt, the door's red seam behind it, caught on the roof, the shoulder and the
+   asphalt); one line under the band about the side entrance; then the facts in a row, like the line of figures
+   under a drawing (a label, then the answer), and at the row's far end the way there. The drawing stands on a
+   plate of black stock torn out as the photographs are (cut.css tears .ab-plate): lacquer, with a mat of air round
+   the car, as every drawing on these pages stands (about.css, .ab-plate). Phones: one column in the same order, the
+   facts one under another. The air above and below is every section's (.sec, --sec-y).
    (2026-11-21, «Между»: the round peephole with its film of the door gave way to the drawing, and the street in
    brushed metal letters to plain shirt white. 2026-11-22: the car came out from beside the words to run the width
-   of the page, as large as the drawing deserves; the words were a column beside a small plate.) */
+   of the page, as large as the drawing deserves; then its plate was torn, as every plate on the site is, in place
+   of the drawing sheet's corner marks.) */
 
 /* desktop: the heading row, the band, then the facts with the way there at the row's end */
 .vs-wrap { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: clamp(32px, 4vw, 64px); align-items: end; }
 .vs-head { grid-column: 1 / -1; display: grid; justify-items: start; gap: clamp(10px, 1vw, 14px); }
-.vs-plate { grid-column: 1 / -1; }
+.vs-fig { grid-column: 1 / -1; margin: var(--head-gap) 0 0; }
 .vs-facts { grid-column: 1; }
 .vs-btns { grid-column: 2; }
 
-/* ---------- The drawing: the band, on its sheet ---------- */
-.vs-plate {
-  --mark: color-mix(in srgb, var(--shirt) 45%, transparent);
-  --arm: clamp(10px, 1.1vw, 16px);
-  margin: var(--head-gap) 0 0; padding: clamp(18px, 3.4vw, 56px) clamp(18px, 6vw, 112px);
-  background:
-    linear-gradient(var(--mark), var(--mark)) 0 0 / var(--arm) 1px no-repeat,
-    linear-gradient(var(--mark), var(--mark)) 0 0 / 1px var(--arm) no-repeat,
-    linear-gradient(var(--mark), var(--mark)) 100% 0 / var(--arm) 1px no-repeat,
-    linear-gradient(var(--mark), var(--mark)) 100% 0 / 1px var(--arm) no-repeat,
-    linear-gradient(var(--mark), var(--mark)) 0 100% / var(--arm) 1px no-repeat,
-    linear-gradient(var(--mark), var(--mark)) 0 100% / 1px var(--arm) no-repeat,
-    linear-gradient(var(--mark), var(--mark)) 100% 100% / var(--arm) 1px no-repeat,
-    linear-gradient(var(--mark), var(--mark)) 100% 100% / 1px var(--arm) no-repeat,
-    var(--lacquer);
-  box-shadow: inset 0 0 0 1px var(--rule);
+/* ---------- The drawing: the band, on its torn plate, and the line under it ---------- */
+/* (a band this long is torn along its long edges and cut straight at its ends: cut.css's third tear, whatever the
+   plate's place among its neighbours) */
+figure.vs-fig .vs-plate {
+  --tear: var(--tear-3); --tear-in: var(--tear-3-in); --cut-lean: -.25deg;
+  padding: clamp(18px, 3.4vw, 56px) clamp(18px, 6vw, 112px); background: var(--lacquer);
 }
+/* (the line about the side entrance: a caption, the quiet words a step under the facts' answers) */
+.vs-cap { max-width: 60ch; margin-top: 14px; font: 400 16px/1.5 var(--f-text); color: var(--ash); text-wrap: pretty; }
 /* (the car no wider than its lines stay fine at: past about a thousand pixels the band only grows taller) */
 .vs-car { width: min(100%, 1000px); margin-inline: auto; }
 
@@ -71,9 +65,10 @@
 @media (max-width: 899px) {
   .vs-wrap { grid-template-columns: minmax(0, 1fr); }
   .vs-wrap > * { grid-column: 1 !important; }
-  .vs-plate { margin-top: 26px; padding: clamp(14px, 4vw, 28px); }
+  .vs-fig { margin-top: 26px; }
+  figure.vs-fig .vs-plate { padding: clamp(14px, 4vw, 28px); }
   .vs-car { width: 100%; }
-  .vs-facts { grid-template-columns: minmax(0, 1fr); margin-top: 26px; }
+  .vs-facts { grid-template-columns: minmax(0, 1fr); margin-top: 22px; }
   .vs-fact {
     grid-template-columns: minmax(7.5em, 9.5em) minmax(0, 1fr); align-items: baseline; gap: 4px 20px;
     padding: 14px 0; border-top-color: var(--rule);
@@ -90,7 +85,6 @@
   .vs-addr { font-size: min(clamp(30px, 9vw, 44px), calc((100vw - 2 * var(--pad)) / (var(--len, 18) * .57))); line-height: 1.1; }
   .vs-city { display: block; }
   .vs-sep { display: none; }
-  .vs-plate { --arm: 9px; }
   .vs-fact { grid-template-columns: 6.6em minmax(0, 1fr); gap: 12px; padding: 12px 0; }
   .vs-fact dd { font-size: 16.5px; }
   .vs-btns { margin-top: 26px; }
