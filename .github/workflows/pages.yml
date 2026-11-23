@@ -1,4 +1,6 @@
-# Every push to main builds the site and publishes it on GitHub Pages: https://akultange.github.io/hotlandbeta/
+# Every push to main builds the site and publishes it on GitHub Pages: https://akultange.github.io/hotlandbeta/, or, in
+# the repository hotland-latest (LUKA LATEST, this branch's copy for review), https://akultange.github.io/hotland-latest/
+# with the switch between the versions showing (SiteSwitch.astro).
 # (Settings → Pages → Source: GitHub Actions). Actions → this workflow → Run workflow publishes it again by hand.
 name: GitHub Pages
 
@@ -39,6 +41,7 @@ jobs:
         env:
           SITE_URL: ${{ steps.pages.outputs.origin }}
           PAGES_BASE: ${{ steps.pages.outputs.base_path }}
+          PUBLIC_SITE_SWITCH: ${{ github.event.repository.name == 'hotland-latest' && '1' || '' }}
       - uses: actions/upload-pages-artifact@v4
         with:
           path: dist

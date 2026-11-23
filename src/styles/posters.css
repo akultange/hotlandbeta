@@ -197,7 +197,7 @@ html.motion .poster.is-in .poster-top { animation: poster-date-in 1s var(--ease-
   /* (a shot framed closer and lower, content.ts zoom and drop, has its figure high in the photograph: a higher band) */
   .posters .poster-shot[style*="--pz"] :is(img, video) { object-position: 50% 16%; }
   /* (the name comes down to 40px or under here: the Dial takes 200, or its hairline breaks up on a phone) */
-  .posters .poster-name { font-weight: 200; }
+  .posters .poster-name { font-weight: 320; }
 }
 /* ---------- (and on the smallest phones (an SE): the posters a swipe row, two and a bit across ---------- */
 @media (orientation: landscape) and (max-height: 500px) and (max-width: 699px) {

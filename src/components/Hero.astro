@@ -230,6 +230,9 @@ const starter = `(function (v) { v.poster = matchMedia('${PHONE}').matches ? v.d
     answered() && take === shown() && inView && (v.dataset.user === 'play' || (!reduce && v.dataset.user !== 'pause'));
   // after every click handler of the answer has run (the gate's own adds .out)
   document.querySelector('[data-gate-yes]')?.addEventListener('click', () => setTimeout(run, 0));
+  // (the door as a place opens over three seconds and only then lets the page go: the film starts when it does, or it
+  // stood waiting for «Смотреть» after the 3D door, 2026-11-23)
+  addEventListener('hotland:gate', () => setTimeout(run, 0));
   // The film is fetched only once the page has loaded (its poster stands in until then), and only the cut this screen
   // needs: the upright one on a phone held upright, the wide one anywhere else.
   const phoneCut = matchMedia('(max-width: 899px) and (orientation: portrait)');

@@ -4,7 +4,8 @@
 // drawing, which stays in view (styles/menu.css). Then the hookah lounge (the bottle sets are hidden for now).
 // Without scripts the three lists simply follow one another, each under its own heading.
 // (2026-11-22, the client's call: no photograph beside the list. The tab's line drawing stands there, large (the
-// glass for the bar, the cigar after dinner for the kitchen, the bottle for the night and its show; LineArt.astro),
+// glass for the bar, the cloche lifted off a warm dish for the kitchen, the cigar for the night and its show; 2026-11-23,
+// Luka: the cigar belongs to the entrance and the show, not the kitchen; LineArt.astro),
 // and draws itself again, the pen first and the light last, whenever its tab is chosen. The bar's list leads with
 // the spirits, whisky first: content.ts.)
 import Base from '../../layouts/Base.astro';
@@ -30,8 +31,8 @@ const cost = (x: Item) => {
 const own = ru ? 'фирменный' : 'signature';
 const tabs = [
   { id: 'bar', label: tr(barMenu.tabs.bar, lang), art: 'glass' },
-  { id: 'kitchen', label: tr(barMenu.tabs.kitchen, lang), art: 'cigar' },
-  { id: 'entry', label: tr(barMenu.tabs.entry, lang), art: 'bottle' },
+  { id: 'kitchen', label: tr(barMenu.tabs.kitchen, lang), art: 'cloche' },
+  { id: 'entry', label: tr(barMenu.tabs.entry, lang), art: 'cigar' },
 ] as const;
 ---
 <Base lang={lang} title={tr(barMenu.title, lang)} description={tr(barMenu.lead, lang)}>

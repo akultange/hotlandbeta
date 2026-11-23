@@ -2,6 +2,28 @@
 
 Built with [Astro](https://astro.build). Russian (`/ru/`) and English (`/en/`). A static site, with one small server part for the forms.
 
+## This branch: LUKA LATEST
+
+`luka-latest` is Gio's «Между» (`redesign/mezhdu`) with Luka's changes (2026-11-23), published for review at
+https://akultange.github.io/hotland-latest/ (the repository `hotland-latest` holds a copy of this branch; its Pages
+workflow is this one, which shows the switch between the three versions there). Neither `main` (Luka's first version)
+nor `redesign/mezhdu` (Gio's) is changed by it. What it changes:
+
+- **The home film plays** for a visitor who has just answered the 18+ door, the door as a place (3D) included
+  (Hero.astro listens for the door's `hotland:gate`; before, after the 3D door the film waited for «Смотреть»).
+- **The giant HOTLAND** has square ends on the T and the L, like its other letters (`data/wordmark.ts`).
+- **Buttons are cast concrete blocks**: the main action a pale block, the second a black one, square, with their
+  arris and the concrete's grain; under the pointer the block goes black and its joints light up, a grid of red light
+  struck like the door's sign (global.css, Buttons). No lapel cuts.
+- **Colour is back, graded**: every photograph and film carries one house grade in its file (`tools/grade`:
+  purple, magenta and pink to the club's crimson and wine, blue to steel, skin and lamplight kept warm), and each place
+  decides how far forward its pictures stand (`styles/colour.css`). The posters keep Gio's torn paper and dot screen.
+- **No hairline giants**: the tall condensed titles and numbers are light, never hairline, so they stay crisp.
+- **The menu's drawings**: a new one for the kitchen, a cloche lifted off a warm dish (`tools/lineart/cloche.py`);
+  the cigar moved to the entrance and the show.
+- **Luka's three club cards** are back on the home page and the membership page, on Gio's steel field, with Gio's
+  card-and-dress-code strip under them on the membership page (MemberCards.astro, `styles/vip.css`).
+
 ## Run
 
 ```bash

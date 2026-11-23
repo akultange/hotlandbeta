@@ -175,7 +175,7 @@
   left: -3px; top: 3px; width: 7px; height: 7px; border-radius: 50%;
   background: var(--lit-core); box-shadow: 0 0 3px 1px var(--lit), 0 0 10px 2px color-mix(in srgb, var(--lit) 40%, transparent);
 }
-.fv5-t { font: 150 clamp(64px, 7.4vw, 124px)/.8 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; color: var(--fg); }
+.fv5-t { font: 300 clamp(64px, 7.4vw, 124px)/.8 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; color: var(--fg); }
 .fv5-c { font: 500 clamp(16px, 1.2vw, 18px)/1.35 var(--f-text); color: var(--fg-2); }
 .fv5-now { margin-left: 10px; font: var(--label-wght) 11px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase; color: var(--fg); vertical-align: 2px; }
 .fv5-stop.now .fv5-c { color: var(--fg); }
@@ -223,7 +223,7 @@
   .fv5-stop { grid-template-columns: 3.4em minmax(0, 1fr); align-items: center; gap: 14px; padding: 8px 0 8px 26px; font-size: 22px; }
   .fv5-dot { top: 50%; width: 13px; height: 1px; }
   .fv5-stop.now .fv5-dot { left: -3px; top: calc(50% - 3px); width: 7px; height: 7px; }
-  .fv5-t { font-size: 56px; font-weight: 170; }
+  .fv5-t { font-size: 56px; font-weight: 320; }
   .fv5-c { font-size: 16px; }
   .fv5-addr { font-size: 30px; }
   .fv5-nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 18px; }

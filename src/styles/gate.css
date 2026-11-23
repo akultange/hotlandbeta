@@ -213,8 +213,8 @@ html.js:not(.age-ok) { background-color: var(--gate-end); }
 .gate-foot a:hover, .gate-foot a:active, .gate-foot a[aria-current] { color: var(--fg); }
 /* a short rule between the two languages and the privacy page */
 .gate-foot a:nth-child(3) { margin-left: 12px; padding-left: 26px; background: linear-gradient(var(--rule-2), var(--rule-2)) 0 50% / 1px 12px no-repeat; }
-/* the door's second button stands on concrete, not on the page */
-.gate .btn-line { background: rgba(8, 9, 10, .4); }
+/* (the door's second button is the black concrete block like every other: global.css, Buttons; until 2026-11-23 it
+   was a translucent frame over the door's concrete) */
 
 /* a phone: the links stand where the page's dock will be */
 @media (max-width: 899px) {

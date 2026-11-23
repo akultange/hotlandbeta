@@ -98,7 +98,7 @@ html.motion .mdl-card .photo.is-in, html.motion .mdl-card .photo.is-in > img { a
 .mdl-line i { position: absolute; left: 0; right: 0; top: -.5px; height: var(--seam); background: var(--lit-core); box-shadow: var(--seam-glow); transform-origin: 0 50%; transform: scaleX(.125); transition: transform .7s var(--ease-out); }
 .mdl-count { display: inline-flex; align-items: baseline; gap: 8px; font: var(--label-wght) 13px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); color: var(--ash); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .mdl-now { display: inline-block; overflow: hidden; padding: .12em .04em; margin: -.12em -.04em; }
-.mdl-now b { display: inline-block; font: 200 44px/.8 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; letter-spacing: .05em; color: var(--fg); }
+.mdl-now b { display: inline-block; font: 340 44px/.8 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; letter-spacing: .05em; color: var(--fg); }
 /* without scripts the row still scrolls; there is nothing for the buttons and the counter to do */
 html:not(.js) :is(.mdl-nav, .mdl-foot) { display: none; }
 
@@ -180,7 +180,7 @@ html.mdv-lock { overflow: hidden; }
   /* her name in the Dial, a hairline in capitals, as big as the space above the words allows (the script fits it:
      --bs), faint: the page's own name for her, behind her */
   position: absolute; left: var(--ix, 60%); top: var(--bt, 80px); z-index: 0; margin: 0; white-space: nowrap; pointer-events: none;
-  font: 110 var(--bs, 163px)/.8 var(--f-flex); font-stretch: var(--dial-wdth); text-transform: uppercase; letter-spacing: 0;
+  font: 280 var(--bs, 163px)/.8 var(--f-flex); font-stretch: var(--dial-wdth); text-transform: uppercase; letter-spacing: 0;
   color: rgba(236, 236, 232, .16);
 }
 .mdv-stage { position: absolute; inset: 0; z-index: 1; touch-action: none; user-select: none; -webkit-user-select: none; }
@@ -207,7 +207,7 @@ html.mdv-lock { overflow: hidden; }
   font: var(--label-wght) 13px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); color: var(--ash); font-variant-numeric: tabular-nums;
 }
 /* (the number at 48px and a touch apart: at 40px the Dial's narrow 0 and 1 ran together into two bars) */
-.mdv-n b { font: 200 48px/.8 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; letter-spacing: .05em; color: var(--fg); }
+.mdv-n b { font: 340 48px/.8 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: tabular-nums lining-nums; letter-spacing: .05em; color: var(--fg); }
 /* the buttons: square plates, smoked and solid, inside one hairline; under the pointer the hairline comes up to
    shirt white */
 .mdv-btn {

@@ -16,3 +16,4 @@ _unused/
 public/api/secrets.php
 public/api/logs/
 tools/door3d/out/
+__pycache__/

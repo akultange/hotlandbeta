@@ -301,7 +301,7 @@ html.gx-lock { overflow: hidden; }
 .gxv-ui > * { pointer-events: auto; }
 /* (the count: the number in the Dial, how many in the Label, standing on the middle line of «Закрыть») */
 .gxv-n { position: absolute; left: var(--pad); top: calc(20px + env(safe-area-inset-top)); display: flex; align-items: baseline; gap: 8px; font: var(--label-wght) 13px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); color: var(--ash); font-variant-numeric: tabular-nums; pointer-events: none; }
-.gxv-n b { font: 200 48px/.8 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: lining-nums tabular-nums; letter-spacing: .05em; color: var(--fg); }
+.gxv-n b { font: 340 48px/.8 var(--f-flex); font-stretch: var(--dial-wdth); font-variant-numeric: lining-nums tabular-nums; letter-spacing: .05em; color: var(--fg); }
 /* the controls: square plates, smoked and solid, inside one hairline (never round, never blurred glass); under the
    pointer the hairline comes up to shirt white */
 .gxv-close, .gxv-nav { background: var(--smoke); box-shadow: inset 0 0 0 1px var(--rule-2); }
