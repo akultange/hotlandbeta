@@ -389,13 +389,17 @@ h1, h2, .t-xxl, .t-xl, .t-l { overflow-wrap: break-word; }
 /* ---------- Buttons & links ----------
    (2026-11-21, «Между») Square, in the Label's capitals. The main action is the cuff: a band of shirt white with one
    corner cut at the angle of a notch lapel (--cut), its words black. The second is the frame: one pixel of shirt
-   white round the words. On hover, or under the keyboard, a line of the light draws itself round the button's
-   outline, its cut corner too, and stays lit (::after; 2026-11-22, the client asked for a stroke). No colour in a
-   fill, no shadow, no glass. (2026-11-22: the client tried a red key and a
-   steel one, and chose the cuff.)
+   white round the words, its bottom right corner cut (--cut-2). A section's way on (.lnk) is the frame, small, with
+   an arrow. No colour in a fill, no shadow, no glass. (2026-11-22: the client tried a red key and a steel one, and
+   chose the cuff.)
+   The hover (2026-11-23, the client's pick of eighteen, «Strike»): a line of the light strikes through the words,
+   from the middle out to the button's edges, and fades, and the words flash red as it passes; once each time the
+   pointer comes. The frame's line turns full white under it, and the way on's arrow steps on. (Before it, a stroke
+   drawn round the outline while the white slid over.) The keyboard's focus is a line of the light that stays: the
+   site's own outline round the cuff, the frame's own line turned red.
    The classes stay as every page already writes them: .btn-crimson is the cuff (or .btn-cuff), .btn-line and
    .btn-silver the frame (or .btn-frame), .btn-sm the smaller size. A part that draws on a button's ::before or
-   ::after takes over the cuff's band or the seam. */
+   ::after takes over the cuff's band or the strike. */
 .btn {
   position: relative; isolation: isolate;
   display: inline-flex; align-items: center; justify-content: center; gap: 12px;
@@ -405,69 +409,50 @@ h1, h2, .t-xxl, .t-xl, .t-l { overflow-wrap: break-word; }
   transition: color .2s, border-color .2s, scale .2s ease;
 }
 .btn:active { scale: .98; }
-/* the stroke: a line of the light (red, amber after four) that draws itself round the outline from the bottom left
-   corner, up, across, down and back along the foot, when the pointer or the keyboard comes, and stays lit; it fades
-   when it goes. The line is the outline's own 1px with a glow inside it; a conic sweep (--trace) reveals it. */
-@property --trace { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+/* the strike: a 1px line of the light across the button's middle, through the words, with the glow every line of the
+   light has (its white-hot middle; on the cuff the red itself, or the middle would vanish into the white band) */
 .btn::after, .lnk::before {
-  content: ''; position: absolute; inset: -1px; z-index: 1; pointer-events: none;
-  border: 1px solid var(--lit);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lit) 28%, transparent);
-  -webkit-mask: conic-gradient(from 225deg, #000 var(--trace), transparent 0);
-  mask: conic-gradient(from 225deg, #000 var(--trace), transparent 0);
-  opacity: 0; transition: --trace .7s var(--ease-io), opacity .25s ease;
+  content: ''; position: absolute; z-index: 2; left: -1px; right: -1px; top: calc(50% - .5px); height: 1px; pointer-events: none;
+  background: var(--lit-core); box-shadow: var(--seam-glow);
+  opacity: 0; scale: 0 1;
 }
-@media (hover: hover) { :is(.btn:hover::after, .lnk:hover::before) { --trace: 360deg; opacity: 1; } }
-:is(.btn:focus-visible::after, .lnk:focus-visible::before) { --trace: 360deg; opacity: 1; }
-@media (prefers-reduced-motion: reduce) { :is(.btn::after, .lnk::before) { transition: opacity .2s ease; } }
-/* the cuff: the band is drawn behind the words (::before), so its cut corner never cuts the seam or the focus line */
+@keyframes strike { 0% { opacity: 1; scale: 0 1; } 50% { opacity: 1; scale: 1 1; } 100% { opacity: 0; scale: 1 1; } }
+@keyframes strike-lit { 50% { color: var(--lit); } }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  :is(.btn, .lnk):hover { animation: strike-lit .7s var(--ease-io); }
+  .btn:hover::after, .lnk:hover::before { animation: strike .7s var(--ease-io) forwards; } /* (never inside :is(): it takes no pseudo-element) */
+}
+/* the cuff: the band is drawn behind the words (::before), so its cut corner never cuts the strike or the focus line
+   (the site's own outline of the light, :focus-visible in Base) */
 .btn-crimson, .btn-cuff, .hdr-book { color: var(--lacquer); }
 :is(.btn-crimson, .btn-cuff, .hdr-book)::before {
   content: ''; position: absolute; inset: -1px; z-index: -1; pointer-events: none;
-  background: var(--shirt); clip-path: var(--cut); transition: clip-path .55s var(--ease-io);
+  background: var(--shirt); clip-path: var(--cut);
 }
-/* the hover (2026-11-22, the client: "fancier"): the white band slides away to the right as the stroke draws the
-   outline round, and the words turn white: the cuff becomes its own outline of light. Its stroke follows the cut. */
-:is(.btn-crimson, .btn-cuff, .hdr-book)::after { clip-path: var(--cut); background: linear-gradient(to bottom right, transparent calc(50% - 1px), var(--lit) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)) 0 0 / 9px 16px no-repeat border-box; }
-.btn-crimson, .btn-cuff, .hdr-book { transition: color .35s ease .1s, scale .2s ease; }
-@media (hover: hover) {
-  :is(.btn-crimson, .btn-cuff, .hdr-book):hover { color: var(--shirt); }
-  :is(.btn-crimson, .btn-cuff, .hdr-book):hover::before { clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%, 100% 16px); }
-}
+:is(.btn-crimson, .btn-cuff, .hdr-book)::after { background: var(--lit); }
 /* the frame: one pixel of shirt white, its bottom right corner cut at the cuff's lapel angle (--cut-2; 2026-11-22,
-   the client's call), the cut drawn as a hairline of its own. Cut by clip-path, so the keyboard's focus is drawn
-   inside the edge, and its stroke turns the cut corner too. */
+   the client's call), the cut drawn as a hairline of its own; under the pointer the line turns full white. Cut by
+   clip-path, which would cut an outline away, so under the keyboard its own line turns to the light, doubled inside
+   (the way on, .lnk, the same). */
 :is(.btn-line, .btn-silver, .btn-frame, .btn-bone) {
   --frame-c: color-mix(in srgb, var(--shirt) 55%, transparent);
   color: var(--fg); border-color: var(--frame-c); clip-path: var(--cut-2);
   background: linear-gradient(to bottom right, transparent calc(50% - 1px), var(--frame-c) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)) 100% 100% / 9px 16px no-repeat border-box;
 }
 @media (hover: hover) { :is(.btn-line, .btn-silver, .btn-frame, .btn-bone):hover { --frame-c: var(--shirt); } }
-:is(.btn-line, .btn-silver, .btn-frame, .btn-bone):focus-visible { outline: none; }
-/* the hover: shirt white fills the frame from the left, its words turn black, as the stroke draws round it */
-:is(.btn-line, .btn-silver, .btn-frame, .btn-bone)::before {
-  content: ''; position: absolute; inset: -1px; z-index: -1; pointer-events: none; background: var(--shirt);
-  clip-path: polygon(0 0, 0 0, 0 calc(100% - 16px), 0 100%, 0 100%); transition: clip-path .55s var(--ease-io);
-}
-:is(.btn-line, .btn-silver, .btn-frame, .btn-bone) { transition: color .35s ease .1s, border-color .2s, scale .2s ease; }
-@media (hover: hover) {
-  :is(.btn-line, .btn-silver, .btn-frame, .btn-bone):hover { color: var(--lacquer); }
-  :is(.btn-line, .btn-silver, .btn-frame, .btn-bone):hover::before { clip-path: var(--cut-2); }
-}
-:is(.btn-line, .btn-silver, .btn-frame, .btn-bone)::after, .lnk::before { background: linear-gradient(to bottom right, transparent calc(50% - 1px), var(--lit) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)) 100% 100% / 9px 16px no-repeat border-box; }
+:is(.btn-line, .btn-silver, .btn-frame, .btn-bone, .lnk):focus-visible { outline: none; --frame-c: var(--lit); box-shadow: inset 0 0 0 1px var(--lit); }
 .btn-sm { height: 44px; padding: 0 18px; font-size: 12px; }
 /* A section's way on («Вся афиша», «Вся галерея»): the frame, small, with an arrow (2026-11-22: the client retired
-   the underlined link; on a section's heading row it stands at the right, see Section headings) */
+   the underlined link; on a section's heading row it stands at the right, see Section headings). Under the pointer
+   its line turns full white and the arrow steps on, lit white. */
 .lnk {
   --frame-c: color-mix(in srgb, var(--shirt) 55%, transparent);
   position: relative; isolation: isolate;
   display: inline-flex; align-items: center; justify-content: center; gap: 12px;
   height: 44px; padding: 0 18px; border: 1px solid var(--frame-c); clip-path: var(--cut-2);
-  background:
-    linear-gradient(to bottom right, transparent calc(50% - 1px), var(--frame-c) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)) 100% 100% / 9px 16px no-repeat border-box,
-    linear-gradient(var(--shirt), var(--shirt)) 0 0 / 0% 100% no-repeat border-box;
+  background: linear-gradient(to bottom right, transparent calc(50% - 1px), var(--frame-c) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)) 100% 100% / 9px 16px no-repeat border-box;
   font: var(--label-wght) 12px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase; white-space: nowrap; color: var(--fg);
-  transition: border-color .2s, background-size .55s var(--ease-io), color .35s ease .1s, scale .2s ease;
+  transition: border-color .2s, color .2s, scale .2s ease;
 }
 .lnk::after {
   content: ''; flex: none; width: 22px; height: 11px; background: var(--steel-hi);
@@ -475,10 +460,9 @@ h1, h2, .t-xxl, .t-xl, .t-l { overflow-wrap: break-word; }
   transition: translate .45s var(--ease-out), background-color .2s;
 }
 @media (hover: hover) {
-  .lnk:hover { --frame-c: var(--shirt); color: var(--lacquer); background-size: 9px 16px, 100% 100%; }
-  .lnk:hover::after { translate: 5px 0; background-color: var(--lacquer); }
+  .lnk:hover { --frame-c: var(--shirt); }
+  .lnk:hover::after { translate: 5px 0; background-color: var(--shirt); }
 }
-.lnk:focus-visible { outline: none; }
 .lnk:active { scale: .98; }
 /* A link in running text (.tl, and every link in a document's text): a 1px underline that catches the red */
 .tl, .prose a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .28em; text-decoration-color: var(--rule-2); transition: text-decoration-color .2s; }
