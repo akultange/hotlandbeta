@@ -51,9 +51,10 @@ html.motion [data-rise]:not(.is-in) { opacity: 0; }
 .ab-rules-list { grid-column: 1 / span 5; list-style: none; margin: 0; padding: 0; border-bottom: 1px solid var(--rule); }
 .ab-pouches { grid-column: 7 / span 6; }
 @media (max-width: 1099px) { .ab-rules-list { grid-column: 1 / span 6; } }
-/* a rule: its numeral in the Dial at the left, its name and the rule itself beside it; a hairline above each */
+/* a rule: its numeral in the Dial at the left (a Roman numeral, as a code numbers its articles: I to IV), its name and
+   the rule itself beside it; a hairline above each */
 .ab-rule {
-  display: grid; grid-template-columns: clamp(36px, 3.2vw, 48px) minmax(0, 1fr); column-gap: clamp(14px, 1.6vw, 24px); row-gap: 8px;
+  display: grid; grid-template-columns: clamp(46px, 4.2vw, 64px) minmax(0, 1fr); column-gap: clamp(14px, 1.6vw, 24px); row-gap: 8px;
   align-items: start; padding: clamp(18px, 1.8vw, 26px) 0; border-top: 1px solid var(--rule);
 }
 .ab-rule:first-child { border-top-color: var(--rule-2); }

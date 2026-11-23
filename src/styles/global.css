@@ -400,25 +400,21 @@ h1, h2, .t-xxl, .t-xl, .t-l { overflow-wrap: break-word; }
 }
 
 /* ---------- Buttons & links ----------
-   (LUKA LATEST, 2026-11-23: Luka found the lapel cuts read like a game's buttons.) A button is a block cast in the
-   club's own concrete, square, as the wall it comes from: the main action a pale block (the cuff's white, now a
-   material: light cast concrete with its grain and pores, the words black), the second a block of black concrete
-   with one pale rim, and a section's way on (.lnk) the black block, small, with an arrow. Each has its arris: a
-   lighter hairline along the top edge where the light catches it, a darker one along the foot. No cut corner, no
-   colour in a fill, no glass.
-   The hover: light under the door. The block goes black, as a door does with the light behind it, and the light
-   leaks out along its foot: a white-hot seam drawn from the middle out to both ends, its glow rising a little way up
-   the block's face and spilling down the wall below it. Nothing crosses the words. It is struck as the door's sign
-   is (it catches, falters once and holds). The light follows the hour (--lit: red, amber after 04:00). The keyboard's
-   focus lights it too and keeps it lit; a tap lights it while pressed. (Before it: Gio's strike through the words,
-   then for an hour a grid of red joints over the whole block, a page of graph paper.) The classes stay as every page
-   writes them: .btn-crimson is the pale block (or .btn-cuff), .btn-line and .btn-silver the black one (or
-   .btn-frame), .btn-sm the smaller size. */
+   (LUKA LATEST, 2026-11-23.) Square, flat, in the Label's capitals: the main action a block of the shirt's white,
+   its words black; the second the dark, a hairline of the shirt round it; a section's way on (.lnk) the dark one,
+   small, with an arrow. No texture, no cut corner, no glass.
+   The hover is the logo: the button is written as HOTLAND's L is. The block goes black, and at its left edge the
+   club's own needle of light is struck, the very artwork of the logo's L (data/art.ts signGlow: the tapered blade,
+   the spur at its middle pointing in, its aura), standing taller than the block as the L stands above and below the
+   word; its red falls on the block's face beside it. It is struck as the sign is: the spur catches first, falters
+   once, then the blade runs up and down from it. The needle keeps the logo's own red at every hour, as the logo does.
+   The keyboard's focus lights it too and holds it; a tap lights it while pressed. (Before it, the same day: concrete
+   blocks with a seam of light under them, a grid of red joints, Gio's strike through the words, a flat blind; Gio:
+   no line, and the concrete doesn't come off.) The classes stay as every page writes them: .btn-crimson is the white
+   block (or .btn-cuff), .btn-line and .btn-silver the dark one (or .btn-frame), .btn-sm the smaller size. */
 :root {
-  /* the two concretes */
-  --block-pale: #d4d2cb;
-  --block-dark: #1f2023;
-  --block-night: #0a0a0b; /* the block with the light behind it */
+  --needle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 127.8 596.58'%3E%3Cdefs%3E%3CradialGradient cx='-144.98' cy='1112.8' fx='-144.98' fy='1112.8' r='.29' gradientTransform='translate(32177.6421 1150932.1147) scale(221.5026 -1034)' gradientUnits='userSpaceOnUse' id='hs1'%3E%3Cstop offset='0' stop-color='%2383030d' stop-opacity='.62'/%3E%3Cstop offset='.2' stop-color='%2368030b' stop-opacity='.46'/%3E%3Cstop offset='.42' stop-color='%234c0209' stop-opacity='.27'/%3E%3Cstop offset='.67' stop-color='%23350207' stop-opacity='.12'/%3E%3Cstop offset='1' stop-color='%23250105' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient cx='-145.56' cy='1113.07' fx='-145.56' fy='1113.07' r='.29' gradientTransform='translate(13137.1692 864046.8783) scale(89.7984 -776)' gradientUnits='userSpaceOnUse' id='hs2'%3E%3Cstop offset='0' stop-color='%23f10717' stop-opacity='.82'/%3E%3Cstop offset='.13' stop-color='%23d80715' stop-opacity='.71'/%3E%3Cstop offset='.31' stop-color='%23b90412' stop-opacity='.53'/%3E%3Cstop offset='.54' stop-color='%2398030e' stop-opacity='.28'/%3E%3Cstop offset='.77' stop-color='%237d020c' stop-opacity='.11'/%3E%3Cstop offset='1' stop-color='%23540108' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient cx='-146.66' cy='1113.22' fx='-146.66' fy='1113.22' r='.29' gradientTransform='translate(5914.1777 761746.5769) scale(39.9104 -684)' gradientUnits='userSpaceOnUse' id='hs3'%3E%3Cstop offset='0' stop-color='%23ff1820' stop-opacity='.96'/%3E%3Cstop offset='.2' stop-color='%23f3141c' stop-opacity='.88'/%3E%3Cstop offset='.43' stop-color='%23e11016' stop-opacity='.61'/%3E%3Cstop offset='.65' stop-color='%23be090f' stop-opacity='.31'/%3E%3Cstop offset='.85' stop-color='%239b070e' stop-opacity='.1'/%3E%3Cstop offset='1' stop-color='%2378060b' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient cx='-145.38' cy='1120.63' fx='-145.38' fy='1120.63' r='.29' gradientTransform='translate(17775.9597 110124.3965) scale(121.7267 -98)' gradientUnits='userSpaceOnUse' id='hs4'%3E%3Cstop offset='0' stop-color='%23e40c1b' stop-opacity='.48'/%3E%3Cstop offset='.26' stop-color='%23cc0818' stop-opacity='.36'/%3E%3Cstop offset='.5' stop-color='%23ad0511' stop-opacity='.21'/%3E%3Cstop offset='.76' stop-color='%238d050d' stop-opacity='.08'/%3E%3Cstop offset='1' stop-color='%2364030a' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient cx='-145.65' cy='1133.18' fx='-145.65' fy='1133.18' r='.29' gradientTransform='translate(13450.6657 45629.4674) scale(91.7939 -40)' gradientUnits='userSpaceOnUse' id='hs5'%3E%3Cstop offset='0' stop-color='%23fc1320' stop-opacity='.72'/%3E%3Cstop offset='.27' stop-color='%23e8111b' stop-opacity='.53'/%3E%3Cstop offset='.52' stop-color='%23ce0a14' stop-opacity='.3'/%3E%3Cstop offset='.76' stop-color='%23a10811' stop-opacity='.1'/%3E%3Cstop offset='1' stop-color='%2375040a' stop-opacity='0'/%3E%3C/radialGradient%3E%3ClinearGradient x1='80.45' y1='1575.8' x2='80.45' y2='1078.71' gradientTransform='translate(0 1629.6875) scale(1 -1)' gradientUnits='userSpaceOnUse' id='hs6'%3E%3Cstop offset='0' stop-color='%23250409' stop-opacity='.1'/%3E%3Cstop offset='.12' stop-color='%2339060c' stop-opacity='.72'/%3E%3Cstop offset='.24' stop-color='%23750710' stop-opacity='.95'/%3E%3Cstop offset='.37' stop-color='%23ca3f41'/%3E%3Cstop offset='.46' stop-color='%23d46165'/%3E%3Cstop offset='.51' stop-color='%23d46165'/%3E%3Cstop offset='.55' stop-color='%23db686e'/%3E%3Cstop offset='.63' stop-color='%23d13e47'/%3E%3Cstop offset='.73' stop-color='%238f1012'/%3E%3Cstop offset='.85' stop-color='%2356060e' stop-opacity='.88'/%3E%3Cstop offset='1' stop-color='%23250409' stop-opacity='.1'/%3E%3C/linearGradient%3E%3ClinearGradient x1='63.9' y1='1332.15' x2='105.35' y2='1332.15' gradientTransform='translate(0 1629.6875) scale(1 -1)' gradientUnits='userSpaceOnUse' id='hs7'%3E%3Cstop offset='0' stop-color='%23280007' stop-opacity='0'/%3E%3Cstop offset='.25' stop-color='%23380008' stop-opacity='.22'/%3E%3Cstop offset='.65' stop-color='%23380004' stop-opacity='.59'/%3E%3Cstop offset='1' stop-color='%23260006' stop-opacity='.68'/%3E%3C/linearGradient%3E%3ClinearGradient x1='59.69' y1='1500.45' x2='59.69' y2='1156' gradientTransform='translate(0 1629.6875) scale(1 -1)' gradientUnits='userSpaceOnUse' id='hs8'%3E%3Cstop offset='0' stop-color='%23ff171c' stop-opacity='0'/%3E%3Cstop offset='.19' stop-color='%23ff2927' stop-opacity='.34'/%3E%3Cstop offset='.35' stop-color='%23ff4c43' stop-opacity='.78'/%3E%3Cstop offset='.48' stop-color='%23ff736a' stop-opacity='.99'/%3E%3Cstop offset='.54' stop-color='%23ff746b'/%3E%3Cstop offset='.61' stop-color='%23ff534a' stop-opacity='.93'/%3E%3Cstop offset='.75' stop-color='%23ff342e' stop-opacity='.62'/%3E%3Cstop offset='1' stop-color='%23ff1a20' stop-opacity='0'/%3E%3C/linearGradient%3E%3ClinearGradient x1='60.45' y1='1329.78' x2='99.02' y2='1329.78' gradientTransform='translate(0 1629.6875) scale(1 -1)' gradientUnits='userSpaceOnUse' id='hs9'%3E%3Cstop offset='0' stop-color='%23ff5c50' stop-opacity='.56'/%3E%3Cstop offset='.24' stop-color='%23ff3f36' stop-opacity='.65'/%3E%3Cstop offset='.61' stop-color='%23ff2c29' stop-opacity='.36'/%3E%3Cstop offset='1' stop-color='%23ff2a28' stop-opacity='0'/%3E%3C/linearGradient%3E%3ClinearGradient x1='58.42' y1='1435.25' x2='58.42' y2='1222.35' gradientTransform='translate(0 1629.6875) scale(1 -1)' gradientUnits='userSpaceOnUse' id='hs10'%3E%3Cstop offset='0' stop-color='%23ff6c62' stop-opacity='0'/%3E%3Cstop offset='.37' stop-color='%23ff9e94' stop-opacity='.6'/%3E%3Cstop offset='.49' stop-color='%23ffa297' stop-opacity='.8'/%3E%3Cstop offset='.55' stop-color='%23ff9488' stop-opacity='.75'/%3E%3Cstop offset='.69' stop-color='%23ff675c' stop-opacity='.45'/%3E%3Cstop offset='1' stop-color='%23ff493f' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cellipse cx='63.9' cy='298.29' rx='63.9' ry='298.29' fill='url(%23hs1)'/%3E%3Cellipse cx='66.2' cy='301.75' rx='25.91' ry='223.86' fill='url(%23hs2)' opacity='.58'/%3E%3Cellipse cx='60.91' cy='302.91' rx='11.51' ry='197.32' fill='url(%23hs3)' opacity='.76'/%3E%3Cellipse cx='78.87' cy='302.33' rx='35.12' ry='28.27' fill='url(%23hs4)'/%3E%3Cellipse cx='80.59' cy='302.33' rx='26.48' ry='11.54' fill='url(%23hs5)'/%3E%3Cpath d='M59.24,53.89c2.13,59.48,3.85,139.39,4.98,189.19.46,21.11.43,36.23,3.71,44.54,4.2,10.56,16.35,12.75,36.96,14.55-20.27,1.86-30.51,3.88-35.15,11.27-3.51,5.56-4.03,21.66-4.57,38.57-1.62,54.23-3.34,131.14-5.94,198.96-1.75-61.7-2.72-130.07-3.07-191.26-.22-32.57-.22-84.32.05-116.17C56.56,179.26,57.51,112.22,59.24,53.89Z' fill='url(%23hs6)'/%3E%3Cpath d='M64.22,243.08c.46,21.11.43,36.23,3.71,44.54,4.2,10.56,16.35,12.75,36.96,14.55-20.27,1.86-30.51,3.88-35.15,11.27-3.51,5.56-4.03,21.66-4.57,38.57L64.22,243.08Z' fill='url(%23hs7)'/%3E%3Cpath d='M58.95,129.24c-.19,51.18-1.57,101.6-1.75,136.68-.27,33.81-.09,79.51.09,107.29.21,35.46.91,75.58,1.81,100.48.18-32.37,1.33-72.35,1.67-102.33.49-28.06,1.05-49.18,1.47-61.64.33-10.71-.57-35.89-.92-53.63C60.96,215.81,60.04,163.69,58.95,129.24Z' fill='url(%23hs8)'/%3E%3Cpath d='M60.26,285.25c5.11,9.7,15.04,15.07,37.95,16.91-19.86.6-29.24,2.94-37.76,12.4C61.22,307,61.23,295.38,60.26,285.25Z' fill='url(%23hs9)'/%3E%3Cpath d='M58.34,194.44c-.39,30.31-.44,63.25-.56,91.97-.07,34.67.13,80.23.56,120.93.21-41.83.74-83.68.74-121.05C59.06,257.95,58.78,225.48,58.34,194.44Z' fill='url(%23hs10)'/%3E%3C/svg%3E");
+  --needle-red: rgb(241 7 23); /* the logo's own red, for the light the needle throws on the block */
 }
 .btn, .lnk {
   position: relative; isolation: isolate;
@@ -426,59 +422,65 @@ h1, h2, .t-xxl, .t-xl, .t-l { overflow-wrap: break-word; }
   border: 0; border-radius: 0;
   font: var(--label-wght) 13px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase; white-space: nowrap;
   color: var(--fg); -webkit-tap-highlight-color: transparent;
-  /* the block: its colour, the concrete over it, its arris and rim (on the element itself, so a part can still use
-     its ::before, as the parties' card link does; the light behind it is its ::after) */
-  background-color: var(--block-dark);
-  background-image: var(--stone); background-size: var(--stone-size); background-blend-mode: overlay;
-  box-shadow: inset 0 1px 0 rgb(236 236 232 / .2), inset 0 -1px 0 rgb(0 0 0 / .55), inset 0 0 0 1px rgb(236 236 232 / .16);
-  transition: color .22s ease, background-color .22s ease, box-shadow .22s ease, scale .2s ease;
+  background-color: transparent;
+  box-shadow: inset 0 0 0 1px rgb(236 236 232 / .42);
+  transition: color .3s ease, background-color .3s ease, box-shadow .3s ease, scale .2s ease;
 }
+/* (going dark is at once, as a room goes dark when the sign is struck: a white block fading to black would pass
+   through grey) */
+:is(.btn, .lnk):is(:hover, :focus-visible, :active) { transition: scale .2s ease; }
 .btn { height: 52px; padding: 0 28px; }
 .btn:active, .lnk:active { scale: .98; }
-:is(.btn-crimson, .btn-cuff, .hdr-book) {
-  color: var(--lacquer); background-color: var(--block-pale);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / .5), inset 0 -1px 0 rgb(0 0 0 / .3), inset 0 0 0 1px rgb(0 0 0 / .1);
-}
-/* the light under it (::after, behind the words): the seam along the block's foot, with a bloom; the glow rising up
-   the block's face; the spill on the wall below, 14px of it */
+:is(.btn-crimson, .btn-cuff, .hdr-book) { color: var(--lacquer); background-color: var(--shirt); box-shadow: inset 0 0 0 1px var(--shirt); }
+/* the needle: the logo's L, standing on the block's left edge (its line 46% into the artwork, its spur half way up),
+   taller than the block by a third above and below */
 .btn::after, .lnk::after {
-  content: ''; position: absolute; inset: 0 0 -14px; z-index: -1; pointer-events: none;
-  background:
-    linear-gradient(var(--lit-core), var(--lit-core)) 50% calc(100% - 14px) / 100% 1px no-repeat,
-    linear-gradient(color-mix(in srgb, var(--lit) 70%, transparent), color-mix(in srgb, var(--lit) 70%, transparent)) 50% calc(100% - 13px) / 100% 3px no-repeat,
-    linear-gradient(0deg, color-mix(in srgb, var(--lit) 30%, transparent), color-mix(in srgb, var(--lit) 9%, transparent) 38%, transparent) 50% calc(100% - 14px) / 100% 64% no-repeat,
-    radial-gradient(50% 100% at 50% 0, color-mix(in srgb, var(--lit) 34%, transparent), transparent) 50% 100% / 100% 14px no-repeat;
-  opacity: 0; transition: opacity .3s ease;
+  content: ''; position: absolute; z-index: 2; left: 0; top: 50%; height: 216%; aspect-ratio: 127.8 / 596.58;
+  translate: -46% -50.6%; pointer-events: none;
+  background: var(--needle) 0 0 / 100% 100% no-repeat;
+  filter: brightness(1.35) drop-shadow(0 0 2px rgb(255 40 48 / .9)) drop-shadow(0 0 7px rgb(241 7 23 / .55));
+  opacity: 0; transform-origin: 50% 50.6%;
 }
-@keyframes seam-catch { 0% { opacity: 0; } 14% { opacity: 1; } 24% { opacity: .25; } 40%, 100% { opacity: 1; } }
-@keyframes seam-out { from { clip-path: inset(0 50% 0 50%); } to { clip-path: inset(0 0 0 0); } }
+@keyframes needle-strike {
+  0% { opacity: 0; transform: scaleY(.05); }
+  10% { opacity: 1; transform: scaleY(.05); }
+  20% { opacity: .2; transform: scaleY(.05); }
+  30% { opacity: 1; transform: scaleY(.05); }
+  72%, 100% { opacity: 1; transform: scaleY(1); }
+}
+/* lit: the block black, its hairline faint, the words white, the needle's red on the block's face beside it */
 :is(.btn, .lnk):is(:focus-visible, :active) {
-  color: var(--shirt); background-color: var(--block-night); box-shadow: inset 0 0 0 1px rgb(236 236 232 / .1);
+  color: var(--shirt); box-shadow: inset 0 0 0 1px rgb(236 236 232 / .2);
+  background: radial-gradient(46% 120% at 0 50%, color-mix(in srgb, var(--needle-red) 30%, transparent), color-mix(in srgb, var(--needle-red) 8%, transparent) 55%, transparent 80%) var(--lacquer);
 }
 :is(.btn, .lnk):is(:focus-visible, :active)::after { opacity: 1; }
 :is(.btn, .lnk):focus-visible { outline: none; }
 @media (hover: hover) {
   :is(.btn, .lnk):hover {
-    color: var(--shirt); background-color: var(--block-night); box-shadow: inset 0 0 0 1px rgb(236 236 232 / .1);
+    color: var(--shirt); box-shadow: inset 0 0 0 1px rgb(236 236 232 / .2);
+    background: radial-gradient(46% 120% at 0 50%, color-mix(in srgb, var(--needle-red) 30%, transparent), color-mix(in srgb, var(--needle-red) 8%, transparent) 55%, transparent 80%) var(--lacquer);
   }
-  .btn:hover::after, .lnk:hover::after { opacity: 1; transition: none; animation: seam-catch .5s linear both, seam-out .4s var(--ease-out) both; }
+  .btn:hover::after, .lnk:hover::after { opacity: 1; animation: needle-strike .62s cubic-bezier(.5, 0, .2, 1) both; }
 }
 @media (hover: hover) and (prefers-reduced-motion: reduce) {
-  .btn:hover::after, .lnk:hover::after { animation: none; transition: opacity .2s ease; }
+  .btn:hover::after, .lnk:hover::after { animation: none; }
 }
 .btn-sm { height: 44px; padding: 0 18px; font-size: 12px; }
-/* A section's way on («Вся афиша», «Вся галерея»): the black block, small, with an arrow cut into its face (drawn on
-   the block itself, under the light), which steps on and turns white under the pointer. */
+/* A section's way on («Вся афиша», «Вся галерея»): the dark one, small, with an arrow drawn on it, which steps on and
+   turns white under the pointer (the arrow is the block's own background, over the needle's red) */
 .lnk {
   height: 44px; padding: 0 52px 0 18px; font-size: 12px;
-  --arrow-steel: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 12'%3E%3Cpath d='M0 6h24.6M19 .8 24.6 6 19 11.2' fill='none' stroke='%239ba0a7' stroke-width='1.5'/%3E%3C/svg%3E"); --arrow-shirt: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 12'%3E%3Cpath d='M0 6h24.6M19 .8 24.6 6 19 11.2' fill='none' stroke='%23ecece8' stroke-width='1.5'/%3E%3C/svg%3E");
-  background-image: var(--arrow-steel), var(--stone);
-  background-size: 22px 11px, var(--stone-size); background-repeat: no-repeat, repeat, repeat;
-  background-position: calc(100% - 18px) 50%, 0 0, 0 0; background-blend-mode: normal, overlay, overlay;
-  transition: color .22s ease, background-color .22s ease, box-shadow .22s ease, scale .2s ease, background-position .45s var(--ease-out);
+  --arrow-steel: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 12'%3E%3Cpath d='M0 6h24.6M19 .8 24.6 6 19 11.2' fill='none' stroke='%239ba0a7' stroke-width='1.5'/%3E%3C/svg%3E");
+  --arrow-shirt: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 12'%3E%3Cpath d='M0 6h24.6M19 .8 24.6 6 19 11.2' fill='none' stroke='%23ecece8' stroke-width='1.5'/%3E%3C/svg%3E");
+  background: var(--arrow-steel) calc(100% - 18px) 50% / 22px 11px no-repeat transparent;
+  transition: color .3s ease, background-color .3s ease, box-shadow .3s ease, scale .2s ease, background-position .45s var(--ease-out);
 }
-.lnk:is(:focus-visible, :active) { background-image: var(--arrow-shirt), var(--stone); }
-@media (hover: hover) { .lnk:hover { background-image: var(--arrow-shirt), var(--stone); background-position: calc(100% - 13px) 50%, 0 0, 0 0; } }
+.lnk:is(:focus-visible, :active) {
+  background: var(--arrow-shirt) calc(100% - 13px) 50% / 22px 11px no-repeat, radial-gradient(46% 120% at 0 50%, color-mix(in srgb, var(--needle-red) 30%, transparent), color-mix(in srgb, var(--needle-red) 8%, transparent) 55%, transparent 80%) var(--lacquer);
+}
+@media (hover: hover) {
+  .lnk:hover { background: var(--arrow-shirt) calc(100% - 13px) 50% / 22px 11px no-repeat, radial-gradient(46% 120% at 0 50%, color-mix(in srgb, var(--needle-red) 30%, transparent), color-mix(in srgb, var(--needle-red) 8%, transparent) 55%, transparent 80%) var(--lacquer); }
+}
 /* A link in running text (.tl, and every link in a document's text): a 1px underline that catches the red */
 .tl, .prose a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .28em; text-decoration-color: var(--rule-2); transition: text-decoration-color .2s; }
 :is(.tl, .prose a):is(:hover, :focus-visible) { text-decoration-color: var(--lit); }
@@ -1319,7 +1321,7 @@ input:is(:-webkit-autofill, :autofill) { -webkit-text-fill-color: var(--fg); car
   position: fixed; left: 0; top: 0; z-index: 60; width: 88px; height: 88px; margin: -44px 0 0 -44px;
   display: grid; place-items: center; pointer-events: none;
   font: var(--label-wght) 12px/1 var(--f-label); font-stretch: var(--label-wdth); letter-spacing: var(--label-track); text-transform: uppercase; color: var(--lacquer);
-  background: var(--block-pale) var(--stone); background-size: var(--stone-size); background-blend-mode: overlay;
+  background: var(--shirt);
   opacity: 0; scale: .2; transition: opacity .3s ease, scale .45s var(--ease-out);
 }
 .reel-cursor.on { opacity: 1; scale: 1; }

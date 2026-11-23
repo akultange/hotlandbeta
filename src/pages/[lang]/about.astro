@@ -53,7 +53,8 @@ const rooms = ru
       ['Hookah lounge', 'A pause between shows'],
     ];
 
-// A short name for each house rule (the rules themselves come from content.ts).
+// A short name for each house rule (the rules themselves come from content.ts). They are numbered as a code is, in
+// Roman numerals: I to IV, the Dial's tall strokes standing like the logo's needle.
 const ruleNames = ru
   ? ['Телефон в чехле', 'Без съёмки', 'Свой менеджер', '18+ и дресс-код']
   : ['Phone in a pouch', 'No cameras', 'Your own manager', '18+ and dress code'];
@@ -156,7 +157,7 @@ import '../../styles/about.css';
         <ol class="ab-rules-list" role="list">
           {houseRules.map((r, i) => (
             <li class="ab-rule" data-rise>
-              <span class="ab-rule-n" aria-hidden="true">{i + 1}</span>
+              <span class="ab-rule-n" aria-hidden="true">{['I', 'II', 'III', 'IV', 'V', 'VI'][i]}</span>
               <h3 class="ab-rule-t">{ruleNames[i]}</h3>
               <p class="ab-rule-x" set:html={nowrapHyphens(keep(tr(r, lang)))} />
             </li>
