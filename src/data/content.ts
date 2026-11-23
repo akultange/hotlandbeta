@@ -24,7 +24,7 @@ export const houseRules: L[] = [
   { ru: 'Телефон остаётся у входа в запечатанном чехле до конца вечера.', en: 'Your phone stays at the door, sealed in a pouch, until you leave.' },
   { ru: 'Фото и видео в зале запрещены. Без исключений.', en: 'No photos or video inside. No exceptions.' },
   { ru: 'Личный менеджер встречает у двери и ведёт вас весь вечер.', en: 'A personal manager meets you at the door and looks after you all night.' },
-  { ru: 'Вход строго 18+, с паспортом. Дресс-код: элегантно, без спортивного.', en: 'Strictly 18+, with ID. Dress code: smart, no sportswear.' },
+  { ru: 'Вход строго 18+, с паспортом. Дресс-код: элегантно, без\u00a0спортивного. Кроме адидасов.', en: 'Strictly 18+, with ID. Dress code: smart, no sportswear. Adidas excepted.' },
 ];
 
 /* ---------- One night in four acts ---------- */
@@ -413,7 +413,7 @@ export const visit = {
   rows: [
     { k: { ru: 'Часы', en: 'Hours' }, v: { ru: '22:00–06:00, каждую ночь', en: '22:00–06:00, every night' } },
     { k: { ru: 'Шоу', en: 'Shows' }, v: { ru: '23:30 и 01:30', en: '23:30 and 01:30' } },
-    { k: { ru: 'Дресс-код', en: 'Dress code' }, v: { ru: 'Элегантно, без спортивного', en: 'Smart, no sportswear' } },
+    { k: { ru: 'Дресс-код', en: 'Dress code' }, v: { ru: 'Элегантно, без\u00a0спортивного. Кроме адидасов', en: 'Smart, no sportswear. Adidas excepted' } },
     { k: { ru: 'Вход', en: 'Entry' }, v: { ru: 'Строго 18+, с паспортом', en: 'Strictly 18+, with ID' } },
   ] as { k: L; v: L }[],
   shot: { img: 'contacts-door.webp', loop: 'contacts-door-loop.mp4', alt: { ru: 'Вход в клуб: чёрная дверь, бархатный канат, снег на мокрой брусчатке', en: 'The way in: a black door, a velvet rope, snow on wet cobbles' } } as Shot,
