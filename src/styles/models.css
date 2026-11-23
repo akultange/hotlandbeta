@@ -177,8 +177,8 @@ html.mdv-lock { overflow: hidden; }
   background: radial-gradient(50% 64% at var(--vx, 36%) 54%, rgba(236, 236, 232, .045) 0%, rgba(236, 236, 232, 0) 70%), var(--lacquer);
 }
 .mdv-big {
-  /* her name in the Dial, a hairline in capitals, as big as the space above the words allows (the script fits it:
-     --bs), faint: the page's own name for her, behind her */
+  /* her name in the Dial, light (never hairline: 2026-11-23) in capitals, as big as the space above the words allows
+     (the script fits it: --bs), faint: the page's own name for her, behind her */
   position: absolute; left: var(--ix, 60%); top: var(--bt, 80px); z-index: 0; margin: 0; white-space: nowrap; pointer-events: none;
   font: 280 var(--bs, 163px)/.8 var(--f-flex); font-stretch: var(--dial-wdth); text-transform: uppercase; letter-spacing: 0;
   color: rgba(236, 236, 232, .16);
